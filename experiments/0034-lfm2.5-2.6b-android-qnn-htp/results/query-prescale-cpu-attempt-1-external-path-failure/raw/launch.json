@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/verify_query_prescale_cpu.py",
+    "--root",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-20260911T093452Z-73227",
+    "--baseline",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/monolith.onnx",
+    "--embedding-dir",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage",
+    "--token-file",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage/short.int32le"
+  ],
+  "resource_guard": {
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/lfm-prescale-20260911t093452z-73227.service",
+    "limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "12884901888",
+      "memory.swap.max": "0"
+    },
+    "new_disk_bytes": 0,
+    "nice": 10
+  },
+  "start_unix": 1789119292.256843,
+  "unit": "lfm-prescale-20260911t093452z-73227"
+}

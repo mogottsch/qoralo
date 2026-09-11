@@ -1,0 +1,788 @@
+{
+  "baseline": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/monolith.onnx",
+  "debug": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-20260911T093452Z-73227/models/baseline-debug.onnx",
+  "debug_artifact": {
+    "bytes": 1646020,
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-20260911T093452Z-73227/models/baseline-debug.onnx",
+    "sha256": "cdb9283638ad814a29e70e664d5d95eaaf6d5f23c6169dc3e8b1030a7b089479"
+  },
+  "derivative": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-20260911T093452Z-73227/models/query-prescale.onnx",
+  "frozen_criteria": {
+    "baseline_onnx_sha256": "55674c5d5937ea442551b4d9a063630a2e6105f8171e02cbfe5b7a134d9c5db6",
+    "classification": "frozen_before_execution_ar171_query_prescale_cpu_check",
+    "criteria": {
+      "coverage": "Exactly60 original outputs per route with identical shapes/dtypes and bound input hashes.",
+      "finite": "Report every nonfinite value and every tensor delta; do not discard finite or nonfinite output because of argmax or threshold disagreement.",
+      "instrumentation": "Every original debug-copy output must reproduce the unchanged baseline bit-for-bit before captured query/key operands can support same-state probes. Otherwise stop and report discrepancy; no retry.",
+      "next_gate": "Review actual numerical observations before any separately authorized AOT, regardless of CPU agreement. No speedup or quality-equivalence conclusion.",
+      "numeric_tolerances": "Both allclose thresholds are descriptive, not numerical/quality acceptance or an automatic AOT gate. Bitwise identity is mandatory only for instrumentation equivalence."
+    },
+    "fp16_proxy": "For each of8 baseline attention sites use identical captured FP32 query/key operands, round ingress to IEEE FLOAT16; compare round16(round16(FP32-accumulate(Q16*K16))*0.125) against round16(FP32-accumulate(round16(Q16*0.125)*K16)). Retain both score arrays; report every cast's finite/subnormal/nonzero-to-zero/overflow counts and score deltas (full tensor and causal unmasked entries). NumPy FLOAT32 BLAS accumulation, gradual underflow, no emulation of actual HTP kernels, fusion, accumulator, rounding or flush-to-zero policy.",
+    "inputs": "Identical 41 serialized arrays: CPU-dequantized embeddings for all171 exact short IDs, INT64 positions0..170, causal FLOAT32 mask and38 zero initial states. No historical qnn-net-run position files.",
+    "metrics": {
+      "descriptive_allclose_thresholds": [
+        "abs_delta <= 1e-6 + 1e-5*abs(reference)",
+        "abs_delta <= 0.02 + 0.02*abs(reference)"
+      ],
+      "logit_ranking": [
+        "global_argmax",
+        "top20_ids_and_scores",
+        "top20_intersection",
+        "entire128000_vocab_stable_rank_changed_count",
+        "maximum_rank_displacement"
+      ],
+      "per_tensor": [
+        "shape",
+        "dtype",
+        "element_count",
+        "bitwise_equal",
+        "unequal_elements",
+        "finite_counts",
+        "NaN_counts",
+        "infinity_counts",
+        "finite_pair_max_abs_delta",
+        "finite_pair_mean_abs_delta",
+        "relative_delta_with_denominator_max_abs_reference_1e-12",
+        "FLOAT16_cast_subnormal_zero_underflow_and_overflow_counts"
+      ]
+    },
+    "model": "LiquidAI/LFM2.5-2.6B",
+    "model_revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "outputs": "All38 state tensors and22 logit chunks retained separately for unchanged baseline, derivative, and baseline debug-output copy.",
+    "quantization": "Unchanged architecture-aware block32 Q4 ONNX baseline; CPU embedding dequantization and FP32 graph interfaces. No weights or quantization change.",
+    "resources": {
+      "blas_openmp_threads": 2,
+      "cpu_quota_percent": 200,
+      "maximum_new_disk_bytes": 6442450944,
+      "memory_max_bytes": 12884901888,
+      "nice": 10,
+      "ort_inter_op_threads": 1,
+      "ort_intra_op_threads": 2,
+      "per_worker_timeout_seconds": 300,
+      "retry_count": 0,
+      "scratch": "New exclusive directory under experiment .local on /dev/mapper/cryptoroot, never tmpfs. External weights referenced read-only and hash-checked before/after, not copied or rewritten.",
+      "sequential_cpu_only": true,
+      "swap_max_bytes": 0,
+      "total_runtime_max_seconds": 1200
+    },
+    "schema_version": 1,
+    "scope": "One AR171 canonical-short, zero-initial-state CPU comparison. No AR1 change, accelerator AOT, QNN runtime, phone, generation campaign or app activity.",
+    "token_ids_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "workload_short_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+  },
+  "immutable_artifacts": [
+    {
+      "bytes": 1644650,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/monolith.onnx",
+      "sha256": "55674c5d5937ea442551b4d9a063630a2e6105f8171e02cbfe5b7a134d9c5db6"
+    },
+    {
+      "bytes": 684,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage/short.int32le",
+      "sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc"
+    },
+    {
+      "bytes": 3824,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/query-prescale-numerical-check.json",
+      "sha256": "0e8120a0f35197fd515301b218a841583cb795ed5b6c38e5926d5660574a1b34"
+    },
+    {
+      "bytes": 471859200,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/mlp-shards.onnx_data",
+      "sha256": "3913d70c62eedd6d3489f675d04f638f309bd3120b9d0272ea50946a93a95b5f"
+    },
+    {
+      "bytes": 1855348736,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/model_q4.onnx_data",
+      "sha256": "d3cf09855c69d5226d9ce481a83bce31981496e2a686a7879750a3f82e90f457"
+    },
+    {
+      "bytes": 131072000,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage/embedding-quant.u8",
+      "sha256": "bfbb021f4be80aff16b95cd70128da859ad58acc68e9235b744006fb5a4e5361"
+    },
+    {
+      "bytes": 32768000,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage/embedding-scales.f32le",
+      "sha256": "cb9d693395870eee715c8577ada47dd6e6ad35add5868b539c707f534f9296e0"
+    },
+    {
+      "bytes": 4096000,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage/embedding-zp.u8",
+      "sha256": "fd8d7bd18f1debba31f510261af197450b490e9286ec0ebe099c32795a5ee97c"
+    },
+    {
+      "bytes": 22228,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/verify_query_prescale_cpu.py",
+      "sha256": "a4bf14dfe8beccf7ca446727e56c853c1c1db57cfdf634c71c61a30f19f1cb94"
+    },
+    {
+      "bytes": 5602,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/prescale_ar171_queries.py",
+      "sha256": "53e250e32669f794050dc4ddf99dd9a1b11ccb8d96854daeda570108a1812699"
+    }
+  ],
+  "inputs": [
+    {
+      "bytes": 1400960,
+      "dtype": "float32",
+      "file": "000.npy",
+      "name": "/model/embed_tokens/GatherBlockQuantized/output_0",
+      "sha256": "4eb4aad6403b929e34d31b32452d2cbdcc2b5f458ca1df84f318a23483399605",
+      "shape": [
+        1,
+        171,
+        2048
+      ]
+    },
+    {
+      "bytes": 1496,
+      "dtype": "int64",
+      "file": "001.npy",
+      "name": "position_ids",
+      "sha256": "74ecb35c10be1a08529d5d4819aaeeada3c94afc9540d8f5be8470a16c64164c",
+      "shape": [
+        1,
+        171
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "002.npy",
+      "name": "past_conv.0",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "003.npy",
+      "name": "past_conv.1",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "004.npy",
+      "name": "past_key_values.2.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "005.npy",
+      "name": "past_key_values.2.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "006.npy",
+      "name": "past_conv.3",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "007.npy",
+      "name": "past_conv.4",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "008.npy",
+      "name": "past_key_values.5.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "009.npy",
+      "name": "past_key_values.5.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "010.npy",
+      "name": "past_conv.6",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "011.npy",
+      "name": "past_conv.7",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "012.npy",
+      "name": "past_conv.8",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "013.npy",
+      "name": "past_key_values.9.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "014.npy",
+      "name": "past_key_values.9.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "015.npy",
+      "name": "past_conv.10",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "016.npy",
+      "name": "past_conv.11",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "017.npy",
+      "name": "past_conv.12",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "018.npy",
+      "name": "past_key_values.13.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "019.npy",
+      "name": "past_key_values.13.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "020.npy",
+      "name": "past_conv.14",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "021.npy",
+      "name": "past_conv.15",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "022.npy",
+      "name": "past_conv.16",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "023.npy",
+      "name": "past_key_values.17.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "024.npy",
+      "name": "past_key_values.17.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "025.npy",
+      "name": "past_conv.18",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "026.npy",
+      "name": "past_conv.19",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "027.npy",
+      "name": "past_conv.20",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "028.npy",
+      "name": "past_key_values.21.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "029.npy",
+      "name": "past_key_values.21.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "030.npy",
+      "name": "past_conv.22",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "031.npy",
+      "name": "past_conv.23",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "032.npy",
+      "name": "past_key_values.24.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "033.npy",
+      "name": "past_key_values.24.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "034.npy",
+      "name": "past_conv.25",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "035.npy",
+      "name": "past_conv.26",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "036.npy",
+      "name": "past_key_values.27.key",
+      "sha256": "29784155f3600632356c842b0c488de6fbfd2f59732f51d15a7400d688322078",
+      "shape": [
+        1,
+        8,
+        64,
+        3925
+      ]
+    },
+    {
+      "bytes": 8038528,
+      "dtype": "float32",
+      "file": "037.npy",
+      "name": "past_key_values.27.value",
+      "sha256": "fdfee96d4d7f3393c9df4ffdad67ead3de3f096d16effede87cc70c83990f710",
+      "shape": [
+        1,
+        8,
+        3925,
+        64
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "038.npy",
+      "name": "past_conv.28",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 24704,
+      "dtype": "float32",
+      "file": "039.npy",
+      "name": "past_conv.29",
+      "sha256": "510787f8c7a9c43d9f98e95890acf8110fb25ecbc4038e4bd268ac5198930f3c",
+      "shape": [
+        1,
+        2048,
+        3
+      ]
+    },
+    {
+      "bytes": 2801792,
+      "dtype": "float32",
+      "file": "040.npy",
+      "name": "attention_mask",
+      "sha256": "08ce7cfe44da365181ec5c98b807ec933a24989475f95d2cce808dd6a3d17630",
+      "shape": [
+        1,
+        1,
+        171,
+        4096
+      ]
+    }
+  ],
+  "original_outputs": [
+    "present_conv.0",
+    "present_conv.1",
+    "present.2.key",
+    "present.2.value",
+    "present_conv.3",
+    "present_conv.4",
+    "present.5.key",
+    "present.5.value",
+    "present_conv.6",
+    "present_conv.7",
+    "present_conv.8",
+    "present.9.key",
+    "present.9.value",
+    "present_conv.10",
+    "present_conv.11",
+    "present_conv.12",
+    "present.13.key",
+    "present.13.value",
+    "present_conv.14",
+    "present_conv.15",
+    "present_conv.16",
+    "present.17.key",
+    "present.17.value",
+    "present_conv.18",
+    "present_conv.19",
+    "present_conv.20",
+    "present.21.key",
+    "present.21.value",
+    "present_conv.22",
+    "present_conv.23",
+    "present.24.key",
+    "present.24.value",
+    "present_conv.25",
+    "present_conv.26",
+    "present.27.key",
+    "present.27.value",
+    "present_conv.28",
+    "present_conv.29",
+    "logits_vocab_0_6144",
+    "logits_vocab_6144_12288",
+    "logits_vocab_12288_18432",
+    "logits_vocab_18432_24576",
+    "logits_vocab_24576_30720",
+    "logits_vocab_30720_36864",
+    "logits_vocab_36864_43008",
+    "logits_vocab_43008_49152",
+    "logits_vocab_49152_55296",
+    "logits_vocab_55296_61440",
+    "logits_vocab_61440_67584",
+    "logits_vocab_67584_73728",
+    "logits_vocab_73728_79872",
+    "logits_vocab_79872_86016",
+    "logits_vocab_86016_92160",
+    "logits_vocab_92160_98304",
+    "logits_vocab_98304_104448",
+    "logits_vocab_104448_110592",
+    "logits_vocab_110592_116736",
+    "logits_vocab_116736_122880",
+    "logits_vocab_122880_126976",
+    "logits_vocab_126976_128000"
+  ],
+  "resource_guard": {
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/lfm-prescale-20260911t093452z-73227.service",
+    "limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "12884901888",
+      "memory.swap.max": "0"
+    },
+    "new_disk_bytes": 136666184,
+    "nice": 10
+  },
+  "rewrite": {
+    "aot_or_accelerator_work": false,
+    "changes": [
+      {
+        "key": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      },
+      {
+        "key": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/key_r",
+        "original_matmul": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scores",
+        "query": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/query",
+        "removed_mul": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scaled_scores",
+        "retired_score": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scores",
+        "scaled_query": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scaled_query",
+        "scaled_score": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scaled_scores"
+      }
+    ],
+    "derivative_sha256": "b93c65c9c419f915bad81046f34c91c632ce6dd1bed4137751f36204d64492a0",
+    "initializers_and_interfaces_unchanged": true,
+    "site_count": 8,
+    "source_sha256": "55674c5d5937ea442551b4d9a063630a2e6105f8171e02cbfe5b7a134d9c5db6"
+  }
+}

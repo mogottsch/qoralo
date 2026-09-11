@@ -4,6 +4,14 @@
 
 **The corrected native-INT64 integrated route now completes physically. One direct-QNN process loaded AR171, consumed all 171 canonical-short tokens, finite-scanned 60 outputs, bridged 38 states in memory, freed AR171, loaded AR1 once, and completed 15 finite-scanned decode calls for 16 total emitted tokens. First output arrived in 10.501 seconds and final output in 34.834 seconds in one cold diagnostic.**
 
+## AR171 query-prescale numerical check: first attempt blocked
+
+The approved source-only derivative moves the eight exact `0.125` score multiplications onto each query before score MatMul. [`protocol/query-prescale-numerical-check.json`](protocol/query-prescale-numerical-check.json) freezes the same-input, all-60-output, ranking and FP16-boundary metrics before execution. Synthetic fixtures pass; they do not establish LFM numerical safety.
+
+[`results/query-prescale-cpu-attempt-1-external-path-failure/`](results/query-prescale-cpu-attempt-1-external-path-failure/) preserves the first bounded CPU attempt. The unchanged baseline executed on the canonical 171-token/zero-state input: all 38 state tensors and 22 logit chunks are finite, endpoint argmax 597. ONNX Runtime 1.26 rejected the derivative during session initialization because the external-data symlink resolved outside its model directory. There was **no derivative execution, debug-copy execution, FP16 probe, or numerical comparison**. The original 60 outputs and 41 input arrays remain hash-bound outside Git; original model/data/input/tool hashes were verified unchanged after the failure. No automatic retry occurred.
+
+The failed service used 5,256,253,440 bytes peak cgroup memory, no swap, and 143,376,832 bytes of retained local files. These are resource observations, not model speed measurements. A separately authorized isolated regular-file copy amendment is needed to continue without weakening ORT path validation. No accelerator AOT, QNN runtime, phone, app, speedup or quality-equivalence claim follows.
+
 ## Evidence correction: qnn-net-run position ingestion
 
 [`results/qnn-net-run-position-ingestion-audit/`](results/qnn-net-run-position-ingestion-audit/) binds the exact QAIRT 2.49.40 source, documentation, commands, graph descriptors, and raw position files used by the prior qnn-net-run diagnostics.

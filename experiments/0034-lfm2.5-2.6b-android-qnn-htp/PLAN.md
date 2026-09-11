@@ -1,5 +1,9 @@
 # Plan: LFM2.5-2.6B QNN/HTP
 
+## Current host numerical check
+
+The AR171-only query-prescale derivative and frozen CPU validation criteria are prepared. First bounded attempt `query-prescale-20260911T093452Z-73227` retained 60 finite unchanged-baseline outputs (argmax 597), then stopped at ORT external-data containment validation before derivative execution. No comparison or FP16-proxy result exists for that attempt; originals are preserved. Continuing requires the separately authorized storage-only amendment: independent, hash-identical in-directory data copies, unchanged runtime/input/graph/numeric criteria, and the same aggregate disk/resource bounds. No AOT or phone work follows without numerical review.
+
 ## Completed
 
 1. Preserved `0029` and `0033` as immutable prior evidence and reserved independent `0034` ownership.

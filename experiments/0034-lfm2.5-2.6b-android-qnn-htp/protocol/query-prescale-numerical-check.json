@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "classification": "frozen_before_execution_ar171_query_prescale_cpu_check",
+  "scope": "One AR171 canonical-short, zero-initial-state CPU comparison. No AR1 change, accelerator AOT, QNN runtime, phone, generation campaign or app activity.",
+  "model": "LiquidAI/LFM2.5-2.6B",
+  "model_revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+  "quantization": "Unchanged architecture-aware block32 Q4 ONNX baseline; CPU embedding dequantization and FP32 graph interfaces. No weights or quantization change.",
+  "workload_short_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+  "baseline_onnx_sha256": "55674c5d5937ea442551b4d9a063630a2e6105f8171e02cbfe5b7a134d9c5db6",
+  "token_ids_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+  "inputs": "Identical 41 serialized arrays: CPU-dequantized embeddings for all171 exact short IDs, INT64 positions0..170, causal FLOAT32 mask and38 zero initial states. No historical qnn-net-run position files.",
+  "outputs": "All38 state tensors and22 logit chunks retained separately for unchanged baseline, derivative, and baseline debug-output copy.",
+  "metrics": {
+    "per_tensor": ["shape", "dtype", "element_count", "bitwise_equal", "unequal_elements", "finite_counts", "NaN_counts", "infinity_counts", "finite_pair_max_abs_delta", "finite_pair_mean_abs_delta", "relative_delta_with_denominator_max_abs_reference_1e-12", "FLOAT16_cast_subnormal_zero_underflow_and_overflow_counts"],
+    "descriptive_allclose_thresholds": ["abs_delta <= 1e-6 + 1e-5*abs(reference)", "abs_delta <= 0.02 + 0.02*abs(reference)"],
+    "logit_ranking": ["global_argmax", "top20_ids_and_scores", "top20_intersection", "entire128000_vocab_stable_rank_changed_count", "maximum_rank_displacement"]
+  },
+  "criteria": {
+    "coverage": "Exactly60 original outputs per route with identical shapes/dtypes and bound input hashes.",
+    "instrumentation": "Every original debug-copy output must reproduce the unchanged baseline bit-for-bit before captured query/key operands can support same-state probes. Otherwise stop and report discrepancy; no retry.",
+    "finite": "Report every nonfinite value and every tensor delta; do not discard finite or nonfinite output because of argmax or threshold disagreement.",
+    "numeric_tolerances": "Both allclose thresholds are descriptive, not numerical/quality acceptance or an automatic AOT gate. Bitwise identity is mandatory only for instrumentation equivalence.",
+    "next_gate": "Review actual numerical observations before any separately authorized AOT, regardless of CPU agreement. No speedup or quality-equivalence conclusion."
+  },
+  "fp16_proxy": "For each of8 baseline attention sites use identical captured FP32 query/key operands, round ingress to IEEE FLOAT16; compare round16(round16(FP32-accumulate(Q16*K16))*0.125) against round16(FP32-accumulate(round16(Q16*0.125)*K16)). Retain both score arrays; report every cast's finite/subnormal/nonzero-to-zero/overflow counts and score deltas (full tensor and causal unmasked entries). NumPy FLOAT32 BLAS accumulation, gradual underflow, no emulation of actual HTP kernels, fusion, accumulator, rounding or flush-to-zero policy.",
+  "resources": {
+    "sequential_cpu_only": true,
+    "ort_intra_op_threads": 2,
+    "ort_inter_op_threads": 1,
+    "blas_openmp_threads": 2,
+    "nice": 10,
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 12884901888,
+    "swap_max_bytes": 0,
+    "per_worker_timeout_seconds": 300,
+    "total_runtime_max_seconds": 1200,
+    "maximum_new_disk_bytes": 6442450944,
+    "retry_count": 0,
+    "scratch": "New exclusive directory under experiment .local on /dev/mapper/cryptoroot, never tmpfs. External weights referenced read-only and hash-checked before/after, not copied or rewritten."
+  }
+}

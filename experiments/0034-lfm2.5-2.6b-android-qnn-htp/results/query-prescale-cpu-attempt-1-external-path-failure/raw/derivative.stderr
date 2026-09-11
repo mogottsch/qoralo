@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/verify_query_prescale_cpu.py", line 395, in <module>
+    main()
+    ~~~~^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/verify_query_prescale_cpu.py", line 363, in main
+    analyze(root) if args.worker == 'analyze' else worker(root, args.worker)
+                                                   ~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/verify_query_prescale_cpu.py", line 255, in worker
+    session = ort.InferenceSession(prepared[variant], settings, providers=['CPUExecutionProvider'])
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/venv/lib/python3.14/site-packages/onnxruntime/capi/onnxruntime_inference_collection.py", line 530, in __init__
+    self._create_inference_session(providers, provider_options, disabled_optimizers)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/venv/lib/python3.14/site-packages/onnxruntime/capi/onnxruntime_inference_collection.py", line 636, in _create_inference_session
+    sess.initialize_session(providers, provider_options, disabled_optimizers)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+onnxruntime.capi.onnxruntime_pybind11_state.Fail: [ONNXRuntimeError] : 1 : FAIL : External data path validation failed for initializer: cos_cache. Error: External data path for model escapes model directory. External data path: "model_q4.onnx_data" resolved path: "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/model_q4.onnx_data" model directory: "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-20260911T093452Z-73227/models"

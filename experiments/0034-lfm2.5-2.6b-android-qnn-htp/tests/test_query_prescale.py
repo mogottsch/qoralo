@@ -1,0 +1,142 @@
+"""Small source/rounding fixtures only; never loads the LFM model or any SDK."""
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+
+import numpy as np
+import onnx
+from onnx import TensorProto, helper, numpy_helper
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+from prescale_ar171_queries import EMBED, rewrite, stage
+from verify_query_prescale_cpu import compare, dump_arrays, load_arrays, probe, rankings, round16
+
+
+def fixture():
+    inputs = [helper.make_tensor_value_info(EMBED, TensorProto.FLOAT, [1, 171, 2048]),
+              helper.make_tensor_value_info('attention_mask', TensorProto.FLOAT, [1, 1, 171, 4096])]
+    nodes, outputs = [], []
+    for i in range(8):
+        p = f'layer-{i}/htp_chunk'
+        inputs += [helper.make_tensor_value_info(p + '/query', TensorProto.FLOAT, [1, 32, 171, 64]),
+                   helper.make_tensor_value_info(p + '/key_r', TensorProto.FLOAT, [1, 32, 64, 4096])]
+        nodes += [helper.make_node('MatMul', [p + '/query', p + '/key_r'], [p + '/scores'], name=p + '/scores'),
+                  helper.make_node('Mul', [p + '/scores', '__attn_scale'], [p + '/scaled_scores'], name=p + '/scaled_scores')]
+        outputs += [helper.make_tensor_value_info(p + '/scaled_scores', TensorProto.FLOAT, [1, 32, 171, 4096])]
+    return helper.make_model(helper.make_graph(nodes, 'test', inputs, outputs,
+                             [numpy_helper.from_array(np.asarray(0.125, np.float32), '__attn_scale')]),
+                             opset_imports=[helper.make_opsetid('', 21)], ir_version=10)
+
+
+class QueryPrescaleTest(unittest.TestCase):
+    def test_first_attempt_retains_baseline_without_comparison_claim(self):
+        exp = Path(__file__).resolve().parents[1]
+        path = exp / 'results/query-prescale-cpu-attempt-1-external-path-failure'
+        result = json.loads((path / 'result.json').read_text())
+        self.assertEqual(result['baseline_outputs'], 60)
+        self.assertTrue(result['baseline_all_finite'])
+        for field in ('derivative_executions', 'debug_executions', 'fp16_proxy_executions'):
+            self.assertEqual(result[field], 0)
+        self.assertIsNone(result['all60_comparison'])
+        self.assertIsNone(result['logit_ranking_changes'])
+        self.assertIn('escapes model directory', (path / 'raw/derivative.stderr').read_text())
+        self.assertEqual(len(json.loads((path / 'raw/baseline-manifest.json').read_text())), 60)
+        self.assertEqual(len(json.loads((path / 'raw/inputs-manifest.json').read_text())), 41)
+        self.assertTrue(all(x['unchanged'] for x in json.loads((path / 'immutable-after.json').read_text())))
+
+    def test_only_eight_score_pairs_change_and_original_is_immutable(self):
+        baseline = fixture()
+        before = baseline.SerializeToString()
+        derived, changes = rewrite(baseline)
+        self.assertEqual(baseline.SerializeToString(), before)
+        self.assertEqual(len(changes), 8)
+        self.assertEqual(len(derived.graph.node), len(baseline.graph.node))
+        self.assertEqual([x.SerializeToString() for x in derived.graph.initializer], [x.SerializeToString() for x in baseline.graph.initializer])
+        for i in range(8):
+            multiply, matmul = derived.graph.node[2 * i:2 * i + 2]
+            self.assertEqual(multiply.op_type, 'Mul')
+            self.assertEqual(matmul.op_type, 'MatMul')
+            self.assertEqual(matmul.input[0], multiply.output[0])
+            self.assertEqual(matmul.output[0], baseline.graph.node[2 * i + 1].output[0])
+        onnx.checker.check_model(derived)
+
+    def test_reject_ar1_wrong_scale_and_an_extra_score_consumer(self):
+        for case in ('ar1', 'scale', 'fanout'):
+            model = fixture()
+            if case == 'ar1':
+                model.graph.input[0].type.tensor_type.shape.dim[1].dim_value = 1
+            elif case == 'scale':
+                model.graph.initializer[0].CopyFrom(numpy_helper.from_array(np.asarray(0.25, np.float32), '__attn_scale'))
+            else:
+                model.graph.node.append(helper.make_node('Identity', ['layer-0/htp_chunk/scores'], ['extra'], name='extra'))
+            with self.subTest(case=case), self.assertRaises(ValueError):
+                rewrite(model)
+
+    def test_stage_is_exclusive_and_does_not_rewrite_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            source = path / 'source.onnx'
+            onnx.save(fixture(), source)
+            before = source.read_bytes()
+            record = stage(source, path / 'derived/model.onnx')
+            self.assertEqual(source.read_bytes(), before)
+            self.assertTrue(record['initializers_and_interfaces_unchanged'])
+            with self.assertRaises(FileExistsError):
+                stage(source, path / 'derived/model.onnx')
+
+    def test_rounding_distinguishes_subnormal_zero_underflow_and_overflow(self):
+        source = np.asarray([0, 2.0 ** -24, 2.0 ** -27, 1, 70000, np.nan, np.inf], np.float32)
+        _, record = round16(source)
+        self.assertEqual(record['finite_nonzero_rounded_to_zero'], 1)
+        self.assertEqual(record['finite_rounded_to_infinity'], 1)
+        self.assertEqual(record['rounded_subnormal_count'], 1)
+        self.assertEqual(record['input']['finite'], 5)
+        self.assertEqual(record['rounded']['positive_inf'], 2)
+
+    def test_power_of_two_reassociation_can_lose_subnormal_query(self):
+        post, pre, record = probe(np.asarray([[2.0 ** -24]], np.float32), np.asarray([[1024]], np.float32))
+        self.assertNotEqual(float(post[0, 0]), float(pre[0, 0]))
+        self.assertEqual(record['casts']['pre_query_scale']['finite_nonzero_rounded_to_zero'], 1)
+        self.assertGreater(record['scores']['finite_pair_max_abs_delta'], 0)
+
+    def test_prescaling_can_avoid_intermediate_overflow_not_equivalence(self):
+        post, pre, record = probe(np.asarray([[40000]], np.float32), np.asarray([[2]], np.float32))
+        self.assertTrue(np.isinf(post).all())
+        self.assertTrue(np.isfinite(pre).all())
+        self.assertEqual(record['casts']['post_unscaled_matmul']['finite_rounded_to_infinity'], 1)
+        self.assertFalse(record['scores']['tight_allclose'])
+
+    def test_signed_zero_is_not_bitwise_equal_and_nonfinite_is_retained(self):
+        record = compare(np.asarray([0, 1, np.inf], np.float32), np.asarray([-0., 2, np.nan], np.float32))
+        self.assertFalse(record['bitwise_equal'])
+        self.assertEqual(record['finite_pair_count'], 2)
+        self.assertEqual(record['finite_pair_max_abs_delta'], 1)
+        self.assertEqual(record['reference']['positive_inf'], 1)
+        self.assertEqual(record['candidate']['nan'], 1)
+
+    def test_exclusive_arrays_and_integrity_check(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'arrays'
+            dump_arrays(path, {'positions': np.arange(171, dtype=np.int64)[None, :]})
+            self.assertEqual(load_arrays(path)['positions'].shape, (1, 171))
+            with self.assertRaises(FileExistsError):
+                dump_arrays(path, {'other': np.ones(1)})
+            (path / '000.npy').write_bytes(b'broken')
+            with self.assertRaises(ValueError):
+                load_arrays(path)
+
+    def test_full_vocabulary_ranking_change_and_stable_ties(self):
+        a = np.zeros((1, 1, 128000), np.float32)
+        b = a.copy()
+        b[0, 0, 3] = 1
+        record = rankings({'logits_vocab_0_128000': a}, {'logits_vocab_0_128000': b})
+        self.assertEqual(record['reference_argmax'], 0)
+        self.assertEqual(record['candidate_argmax'], 3)
+        self.assertEqual(record['entire_vocab_rank_changed_count'], 4)
+        self.assertEqual(record['maximum_rank_displacement'], 3)
+
+
+if __name__ == '__main__':
+    unittest.main()
