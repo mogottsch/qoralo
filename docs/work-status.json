@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T00:35:26+00:00",
+  "updated_at": "2026-09-11T00:46:30+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -24,11 +24,11 @@
     {
       "id": "tts-review",
       "title": "Short E2E review",
-      "status": "reviewing",
+      "status": "standby",
       "owner": "Nik",
-      "now": "Review export receipts; AUDIO/Player technical audit already passed.",
-      "next": "Rows/catalog/12files/playback unchanged; not single-pass/long/listening acceptance.",
-      "reported_at": "2026-09-11T00:31:39+00:00",
+      "now": "All SHORT technical audits closed; rows/catalog/12files/playback unchanged.",
+      "next": "No more audit, UI/model/audio replay or cleanup; human listening NOT REVIEWED.",
+      "reported_at": "2026-09-11T00:43:38+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 600,
       "links": []
@@ -36,12 +36,12 @@
     {
       "id": "app",
       "title": "Short product E2E",
-      "status": "reviewing",
+      "status": "standby",
       "owner": "Janek",
-      "now": "Final SHORT239 app95103/test07a installed; local export complete, final audit pending.",
-      "next": "Multi-stage real short flow; five episodes retained. Stop models/phone; no rebuild.",
-      "reported_at": "2026-09-11T00:35:26+00:00",
-      "reported_by": "Janek — final installed artifact and retained export handoff",
+      "now": "FINAL audit: genuine multi-stage SHORT source→audio/Player→local SAF COMPLETE.",
+      "next": "95103 app/07a test, five episodes/export retained. Long/listening limits remain.",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Pi + Nik final saved export acceptance; Janek ad66eb3 handoff",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -104,12 +104,12 @@
     {
       "id": "publication",
       "title": "Morning handoff",
-      "status": "active",
+      "status": "standby",
       "owner": "Kate",
-      "now": "Final installed APK paths +retained21.07 s master linked in morning handoff.",
-      "next": "Existing player unchanged/not_reviewed; no new sample, reopen, autoplay or push.",
-      "reported_at": "2026-09-11T00:35:26+00:00",
-      "reported_by": "Kate — exact final artifact handoff",
+      "now": "Final installed app/export/sample bindings frozen in linked morning handoff.",
+      "next": "Existing players unchanged; no reopen/autoplay, episode cleanup or push.",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Kate — final local handoff freeze",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -145,9 +145,9 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "handed back; phone/models stopped",
-      "next": "Saved installed pair and export result only; no new device query.",
-      "reported_at": "2026-09-11T00:35:26+00:00",
+      "now": "STOPPED / handed back",
+      "next": "Preserve all five episodes and owned Downloads export unless later requested.",
+      "reported_at": "2026-09-11T00:43:38+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -155,11 +155,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "reviewing",
+      "status": "standby",
       "owner": "Janek / Nik / Ben",
-      "now": "final bindings / saved audit only",
-      "next": "No rebuild, model replay or new listening artifact.",
-      "reported_at": "2026-09-11T00:35:26+00:00",
+      "now": "technical work closed; handoff frozen",
+      "next": "No rebuild, source-probe expansion, model or audio replay needed.",
+      "reported_at": "2026-09-11T00:43:38+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -171,7 +171,7 @@
       "owner": "Pi / Moritz",
       "now": "paused for privacy",
       "next": "Git pushes and external publication are held; safe local work continues.",
-      "reported_at": "2026-09-10T21:44:25+00:00",
+      "reported_at": "2026-09-11T00:43:38+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 900,
       "links": []
@@ -180,51 +180,51 @@
   "agents": [
     {
       "name": "Pi",
-      "task": "Coordinate conditional attempt",
-      "reported_at": "2026-09-10T20:19:14+00:00",
-      "reported_by": "Pi latest snapshot; Kate capture",
+      "task": "Final handoff / privacy hold",
+      "reported_at": "2026-09-11T00:46:30+00:00",
+      "reported_by": "Pi final technical closure",
       "stale_after_seconds": 900
     },
     {
       "name": "Ben",
       "task": "DP work closed; standby",
-      "reported_at": "2026-09-10T22:04:01+00:00",
-      "reported_by": "Pi — authoritative current state",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Final technical closure / no further work needed",
       "stale_after_seconds": 900
     },
     {
       "name": "Nik",
-      "task": "Audit actual local SAF export",
-      "reported_at": "2026-09-11T00:31:39+00:00",
-      "reported_by": "Pi — authoritative current state",
+      "task": "Final audits closed; standby",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Final technical closure / no further work needed",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Finalize bindings; no rebuild",
-      "reported_at": "2026-09-11T00:35:26+00:00",
-      "reported_by": "Pi — authoritative current state",
+      "task": "Final handoff committed; standby",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Final technical closure / no further work needed",
       "stale_after_seconds": 900
     },
     {
       "name": "Jere",
-      "task": "Agent prompt-priority support",
-      "reported_at": "2026-09-10T22:57:21+00:00",
-      "reported_by": "Pi — authoritative current state",
+      "task": "Standby",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Final technical closure / no further work needed",
       "stale_after_seconds": 900
     },
     {
       "name": "Jens",
       "task": "Standby",
-      "reported_at": "2026-09-10T21:44:25+00:00",
-      "reported_by": "Pi — authoritative current state",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Final technical closure / no further work needed",
       "stale_after_seconds": 900
     },
     {
       "name": "Kate",
-      "task": "Final APK/sample handoff",
-      "reported_at": "2026-09-11T00:35:26+00:00",
-      "reported_by": "Kate — current handoff",
+      "task": "Maintain final board / handoff",
+      "reported_at": "2026-09-11T00:43:38+00:00",
+      "reported_by": "Final technical closure / no further work needed",
       "stale_after_seconds": 900
     }
   ],
