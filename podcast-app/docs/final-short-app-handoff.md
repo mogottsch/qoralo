@@ -1,6 +1,6 @@
 # Final usable SHORT app handoff
 
-**Phone/model work is stopped. The real multi-stage short workflow now reaches local SAF export, with Nik's final saved audit accepted.** Long1–2minute chapter support remains unresolved. Listening quality of the new audio is **not_reviewed**.
+**Phone/model work is stopped. The real multi-stage short workflow reaches local SAF export, with Nik's final saved audit accepted. Moritz has accepted the exact21.067s short master.** Long1–2minute chapter support remains unresolved; this feedback does not approve the long sample or other hashes.
 
 ## What to open
 
@@ -34,7 +34,7 @@ SHA256 **`3b631cc55da41f4e87ae3f251204c8d162c377bdf38092b41da0017e8baa0a44`**. C
 
 The real new Downloads export is **`podcast-short-product-export-20260911t002719z.wav`**, URI `content://com.android.providers.downloads.documents/document/1364`, with the same bytes/hash. [Exact export receipts](../evidence/short-product-result/short-product-export-20260911t002719z/).
 
-Kate's local listening page contains the exact master and chapters, with no autoplay. Only Moritz can accept their hashes; the earlier accepted canonical sample is a different WAV.
+After the short-master listening-page link, Moritz said: **“the samples sound good, but please open the handoff”** (2026-09-11, relayed by Pi). The [additive listening record](../evidence/short-product-result/short-product-cont-20260910t234257z/listening-review-2026-09-11.json) marks only master hash3b631…a0a44 **accepted**. No separate chapter-file verdict or long29.8s/full-coverage approval is inferred. Kate's page remains without autoplay; the earlier accepted canonical sample is a different WAV. Original collection-time `not_reviewed` records remain unchanged.
 
 ## Route, retained data and limits
 
@@ -44,4 +44,4 @@ The separate long experimental properties/pack remain preserved, but are **not t
 
 Five episodes remain: the original user data and all owned partial/test episodes were not cleared. The final continuation changed only the named owned lock/audio/playback state; the final export changed no durable values or episode files at all. PID/settings/control/lock handback passed. Full DB/WAL, inventories, conditions, global logs and private provider UI remain local/hash-bound; historical missing post-file evidence is separately documented, never retrofilled.
 
-ORT/QNN profiles were off for the short product flow, so direct per-graph counters are unavailable by design. This is not a warm benchmark, universal Android/TalkBack certification, numerical-fidelity proof or long-chapter/listening acceptance. All pushes remain held.
+ORT/QNN profiles were off for the short product flow, so direct per-graph counters are unavailable by design. This is not a warm benchmark, universal Android/TalkBack certification, numerical-fidelity proof or long-chapter/other-hash listening acceptance. All pushes remain held.
