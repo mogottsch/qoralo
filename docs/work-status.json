@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:10:45+00:00",
+  "updated_at": "2026-09-11T10:12:13+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -87,12 +87,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "active",
+      "status": "preparing",
       "owner": "Ben",
-      "now": "Ben reports paired K probe PREPARED and bounded host compile→load→forward STARTED;5 tests pass, CPU reference byte-matches both2,097,152-element outputs.",
-      "next": "Frozen request/bindings; K3 fullchain6.853916 vs Cat-only10.028991. K15 grids unequal/not aligned. No QNN outcome/fidelity/speed claim until result.",
-      "reported_at": "2026-09-11T10:10:45+00:00",
-      "reported_by": "Ben — actual bounded compile/load/forward start",
+      "now": "Paired K host run COMPLETE:1 compile/1 load/1 forward;4,194,304 outputs finite; one QnnBackend delegate/zero kernel calls.",
+      "next": "K3/K15 consumer contradicts fullchain at3 nonzero positions; near-Cat-only is not deleted-internal-Q/full-model causality. Package first outcome; no rerun.",
+      "reported_at": "2026-09-11T10:12:13+00:00",
+      "reported_by": "Ben — completed bounded paired consumer probe",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -145,10 +145,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Jens LFM prepare-only compiler and Ben Qwen paired compile→load→forward reported active; Janek/Jere work remains bounded.",
-      "next": "Qwen:4GiB/CPU0–3/nice15,120s compile/60s runtime;4 inputs16MiB. No phone slot/app touch; await owner outcomes.",
-      "reported_at": "2026-09-11T10:10:45+00:00",
-      "reported_by": "Ben — actual Qwen execution start",
+      "now": "Ben Qwen paired run complete/released reservation; Jens LFM compiler active; Janek/Jere bounded work ongoing.",
+      "next": "Qwen compile28.229s/runtime7.007s are guard durations, not setup performance (lazy-init load boundary). Inventory scratch before owned empty-dir cleanup.",
+      "reported_at": "2026-09-11T10:12:13+00:00",
+      "reported_by": "Ben — completed first outcome and resource release",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -175,9 +175,9 @@
     },
     {
       "name": "Ben",
-      "task": "Run bounded paired K probe compile/load/forward",
-      "reported_at": "2026-09-11T10:10:45+00:00",
-      "reported_by": "Ben — reported start",
+      "task": "Package Qwen first outcome; inventory scratch/owned empty-dir cleanup",
+      "reported_at": "2026-09-11T10:12:13+00:00",
+      "reported_by": "Ben — no rerun",
       "stale_after_seconds": 900
     },
     {
