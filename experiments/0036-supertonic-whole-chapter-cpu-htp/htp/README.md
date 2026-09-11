@@ -27,8 +27,9 @@ old graphs or consume old release files. New static shapes are genuine derivativ
 Vector extends only the nonlearned INT64 arange table to `max(3200,L)`, preserving
 its1000-element prefix, theta and all learned initializers. The retained seven-node
 stable Softplus identity is explicit. This is not claimed to be a neutral reshape
-or long-text quality proof. No vocoder lowering is assumed before the natural
-CPU duration/common L is known.
+or long-text quality proof. CPU's natural duration29.56986237s/425 active latents
+informed the frozen common L512 (35.66585034s capacity); it is not used as HTP's
+prediction. The original-op L512 vocoder compiled without parity lowering.
 
 `tools/compile_context.py` constructs one fresh external QNN EPContext per stage:
 ORT1.27.1, QAIRT2.49.0.260730, SoC43/v73, burst, IO-quantization offload0,
@@ -51,9 +52,11 @@ CPU profiling is on, a disclosed measurement-setting difference.
 cleanup. Only serial R5CW81PR8SY and a unique owned `/data/local/tmp/` directory
 are used. No APK install/uninstall, app-data operation, playback, reboot, global
 process kill or active-job interruption occurs. The runner has5GiB address-space
-and1800s bounds; the0.5s RSS sampler stops only its own process above3GiB. Sampling
-is not a hard device-wide memory limit and excludes DSP/VTCM allocation. Raw
-thermal-service snapshots are private; battery/charging-history data is not read.
+and1800s bounds; the0.5s sampler stops only its own process above3GiB RSS or below
+600MiB device MemAvailable. Initial preflight requires3GiB MemAvailable and current
+battery temperature below42C. Sampling is not a hard device-wide memory limit and
+excludes DSP/VTCM allocation. Raw thermal-service snapshots are private; only the
+current numeric battery temperature is extracted, not raw battery/charging history.
 
 ## Evidence so far
 
@@ -67,7 +70,18 @@ thermal-service snapshots are private; battery/charging-history data is not read
   duration was not compiled again. Text's normal cleanup check passed.
 - Seven source/structural tests pass and the Android runner builds with
   `-Wall -Wextra -Werror`. This is not a synthesis/listening result.
-- Final latent extent, vector/vocoder contexts and the first physical full render
-  await the CPU natural-duration capacity measurement and sequential phone slot.
+- NEW T3200/L512 vector and L512 vocoder constructors also passed:167.617s /
+  5,978,578,944B cgroup peak and2.501s /602,632,192B respectively; no OOM, containers
+  absent, zero Run. All four contexts are ready in a295,512,880B private standalone
+  stage. No source ONNX or host prepare library is staged.
+- Direct CPU/HTP source-graph comparison found exact computation-node, public ABI
+  and learned-initializer byte equality. The vector positional table alone uses
+  different protobuf storage (`raw_data` versus `int64_data`), with all3200 integer
+  values exactly equal. See `results/common-source-equivalence.json`.
+- Shared immutable noise is `[1,144,512]`, SHA `aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40`.
+  All staged tensor hashes were checked against the frozen common manifest.
+- Awaiting the scheduled sequential phone slot for the first physical full render.
+  The487-word chapter's approximately29.57s CPU natural prediction is a serious
+  speech-coverage concern, not a duration to override or repair.
 
 Only Moritz can accept/reject an exact WAV. Listening verdict is `not_reviewed`.

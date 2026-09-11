@@ -1,0 +1,179 @@
+{
+  "experiment": "0036",
+  "evidence_class": "host_constructor_only_no_execution",
+  "components": [
+    {
+      "status": "constructor_export_passed_not_execution_proof",
+      "component": "vector",
+      "session_Run_calls": 0,
+      "constructor_calls": 1,
+      "profiling_enabled": false,
+      "runtime_version": "1.27.1",
+      "provider_options": {
+        "offload_graph_io_quantization": "0",
+        "htp_performance_mode": "burst",
+        "soc_model": "43",
+        "backend_path": "libQnnHtp.so"
+      },
+      "constructor_seconds": 167.61699489300008,
+      "inputs": [
+        {
+          "name": "noisy_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            512
+          ]
+        },
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "latent_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            512
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        },
+        {
+          "name": "current_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        },
+        {
+          "name": "total_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "denoised_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            512
+          ]
+        }
+      ],
+      "providers": [
+        "QNNExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "artifacts": {
+        "vector-context.onnx": {
+          "bytes": 1023,
+          "sha256": "9ef99d9409b50bea4e451e1d57a1aebc937c164ff4d0a689124760a0d2e938a4"
+        },
+        "vector-context_qnn.bin": {
+          "bytes": 148629552,
+          "sha256": "9edba913957e1f65ffb67d281b40f4ef547602423461d263644d3e2ff7ed4ab8"
+        }
+      },
+      "all_pins_reverified": true,
+      "elapsed_seconds": 169.45631039899854,
+      "process_ru_maxrss_kib": 5576028,
+      "memory.peak": "5978578944\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory.max": "8589934592\n",
+      "source": {
+        "bytes": 256528965,
+        "sha256": "5f7094dabaaca4c2f57652e5502aafb010d652837f4ef4fb55a0e6d9e87ccc95"
+      },
+      "container_absent_verified": true
+    },
+    {
+      "status": "constructor_export_passed_not_execution_proof",
+      "component": "vocoder",
+      "session_Run_calls": 0,
+      "constructor_calls": 1,
+      "profiling_enabled": false,
+      "runtime_version": "1.27.1",
+      "provider_options": {
+        "offload_graph_io_quantization": "0",
+        "htp_performance_mode": "burst",
+        "soc_model": "43",
+        "backend_path": "libQnnHtp.so"
+      },
+      "constructor_seconds": 2.5007990450012585,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            512
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "wav_tts",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1572864
+          ]
+        }
+      ],
+      "providers": [
+        "QNNExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "artifacts": {
+        "vocoder-context.onnx": {
+          "bytes": 729,
+          "sha256": "d4f08236b4ea22ac1369aa83d2627cca2d45b12d896e911abff7240261f7b4cc"
+        },
+        "vocoder-context_qnn.bin": {
+          "bytes": 54282656,
+          "sha256": "f71c7b25ca4a501d4269f4b88d70c1a37bfab351d156e95d483e0121046cf306"
+        }
+      },
+      "all_pins_reverified": true,
+      "elapsed_seconds": 2.8727735859993118,
+      "process_ru_maxrss_kib": 661676,
+      "memory.peak": "602632192\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory.max": "8589934592\n",
+      "source": {
+        "bytes": 101449890,
+        "sha256": "c1b3a067426dffd74ca94536c0e2926dfeca6c8a4cb70078883543117a87d6bc"
+      },
+      "container_absent_verified": true
+    }
+  ]
+}

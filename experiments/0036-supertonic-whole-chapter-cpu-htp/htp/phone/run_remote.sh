@@ -22,10 +22,12 @@ while kill -0 "$pid" 2>/dev/null; do
   rss=${rss:-0}; hwm=${hwm:-0}; pss=${pss:-0}
   [ "$hwm" -gt "$peak" ] && peak=$hwm
   [ "$pss" -gt "$pss_peak" ] && pss_peak=$pss
-  printf '%s %s %s %s\n' "$(date +%s)" "$rss" "$hwm" "$pss" >>evidence/memory-samples.txt
+  available=$(awk '/^MemAvailable:/{print $2}' /proc/meminfo)
+  available=${available:-0}
+  printf '%s %s %s %s %s\n' "$(date +%s)" "$rss" "$hwm" "$pss" "$available" >>evidence/memory-samples.txt
   # Protect the installed app: bound this process, never kill another process.
-  if [ "$rss" -gt 3145728 ]; then
-    reason=sampled_rss_over_3GiB
+  if [ "$rss" -gt 3145728 ] || [ "$available" -lt 614400 ]; then
+    reason=sampled_rss_over_3GiB_or_device_available_below_600MiB
     kill -TERM "$pid" 2>/dev/null
     sleep 2
     kill -KILL "$pid" 2>/dev/null

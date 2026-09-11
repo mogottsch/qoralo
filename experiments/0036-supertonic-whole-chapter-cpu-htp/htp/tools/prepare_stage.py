@@ -19,8 +19,13 @@ def main():
     expected={'text_ids.i64':3200*8,'text_mask.f32':3200*4,'style_dp.f32':128*4,
               'style_ttl.f32':12800*4,'noise.f32':144*a.latent_length*4,
               'current_step.f32':5*4,'total_step.f32':4}
+    common_manifest=json.loads((common/'manifest.json').read_text())
+    common_manifest_sha=sha(common/'manifest.json')
+    if (common_manifest['text_extent'],common_manifest['active_text_positions'],common_manifest['latent_extent'])!=(3200,3167,a.latent_length):raise ValueError('common frozen extents differ')
+    if common_manifest['reference_sha256']!='cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b':raise ValueError('wrong unchanged product reference')
     for name,size in expected.items():
-        if (common/name).stat().st_size!=size:raise ValueError('common input extent mismatch: '+name)
+        record=common_manifest['tensors'][name]
+        if (common/name).stat().st_size!=size or record['bytes']!=size or sha(common/name)!=record['sha256']:raise ValueError('common input extent/hash mismatch: '+name)
     a.stage.mkdir(parents=True,exist_ok=False)
     for part in ('lib','contexts','bundle'):(a.stage/part).mkdir()
     shutil.copy2(ROOT/'.local/bin/runner',a.stage/'runner')
@@ -40,6 +45,9 @@ def main():
             if path.stat().st_size!=record['bytes'] or sha(path)!=record['sha256']:raise ValueError('context bytes changed')
             shutil.copy2(path,a.stage/'contexts'/name)
     for name in (*expected,'manifest.json'):shutil.copy2(common/name,a.stage/'bundle'/name)
+    if sha(common/'manifest.json')!=common_manifest_sha or sha(a.stage/'bundle/manifest.json')!=common_manifest_sha:raise ValueError('common manifest changed during preparation')
+    for name in expected:
+        if sha(a.stage/'bundle'/name)!=common_manifest['tensors'][name]['sha256']:raise ValueError('copied input differs')
     files=[p for p in sorted(a.stage.rglob('*')) if p.is_file()]
     manifest={str(p.relative_to(a.stage)):{'bytes':p.stat().st_size,'sha256':sha(p)} for p in files}
     (a.stage/'stage-manifest.sha256').write_text(''.join(f'{r["sha256"]}  {name}\n' for name,r in manifest.items()))
