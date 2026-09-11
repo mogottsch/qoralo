@@ -51,6 +51,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import dev.vibevoice.podcast.runtime.ScriptTextCapacity
+import dev.vibevoice.podcast.runtime.SupertonicTextCapacity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -86,6 +90,14 @@ fun ReviewScreen(
     onLock: () -> Unit,
 ) {
     var expanded by remember(chapters) { mutableStateOf(setOf(chapters.firstOrNull()?.stableChapterId).filterNotNull().toSet()) }
+    val capacityState = remember(chapters) { mutableStateOf<ScriptTextCapacity?>(null) }
+    LaunchedEffect(chapters) {
+        capacityState.value = withContext(Dispatchers.Default) { SupertonicTextCapacity.configured(chapters.map { it.text }) }
+    }
+    val capacity = capacityState.value
+    val working = job?.status in setOf(JobStatus.QUEUED, JobStatus.RUNNING)
+    val canLock = capacity?.fits == true && !working
+    LaunchedEffect(chapters) { if (lockOpen) onDismissLock() } // A changed revision invalidates an open confirmation.
     PhoneContent {
         Scaffold(
             topBar = { TopAppBar(title = { Text("Review script") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) },
@@ -96,7 +108,7 @@ fun ReviewScreen(
                             Icon(Icons.Default.AutoAwesome, null)
                             Text("Edit with agent", Modifier.padding(start = 8.dp), softWrap = true)
                         }
-                        PrimaryAction("Lock script & create audio", onShowLock, icon = Icons.Default.Lock)
+                        PrimaryAction("Lock script & create audio", onShowLock, enabled = canLock, icon = Icons.Default.Lock)
                     }
                 }
             },
@@ -111,6 +123,20 @@ fun ReviewScreen(
                         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                             Text("Draft", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
                             Text("${chapters.size} chapters")
+                        }
+                    }
+                }
+                if (capacity == null) item { Text("Checking voice input capacity…", style = MaterialTheme.typography.bodySmall) }
+                else if (!capacity.fits) item {
+                    Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(14.dp), modifier = Modifier.fillMaxWidth()) {
+                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("Audio unavailable for this draft", style = MaterialTheme.typography.titleSmall)
+                            Text(capacity.message, style = MaterialTheme.typography.bodyMedium)
+                            capacity.chapters.filter { !it.fits }.forEach { part ->
+                                Text("Chapter ${part.position + 1}: ${part.normalizedCodePoints?.toString() ?: "no speakable text"} normalized characters" +
+                                    (capacity.maxNormalizedCodePoints?.let { " (limit $it)" } ?: ""), style = MaterialTheme.typography.bodySmall)
+                            }
+                            Text("This is an input-text check, not proof of audio duration or speech coverage. Long-chapter audio remains unverified.", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }
@@ -148,7 +174,7 @@ fun ReviewScreen(
     }
 
     if (agentOpen) AgentEditorSheet(messages, job, onCloseAgent, onRequestEdit)
-    if (lockOpen) AlertDialog(
+    if (lockOpen && canLock) AlertDialog(
         onDismissRequest = onDismissLock,
         icon = { Icon(Icons.Default.Lock, null, tint = MaterialTheme.colorScheme.tertiary) },
         title = { Text("Ready to create audio?") },

@@ -261,6 +261,13 @@ fun InstructionsScreen(
                         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
                     )
                 }
+                item {
+                    val limit = dev.vibevoice.podcast.runtime.SupertonicTextCapacity.textLengthForManifest(dev.vibevoice.podcast.BuildConfig.SUPERTONIC_MANIFEST_SHA256)
+                        ?.minus(dev.vibevoice.podcast.runtime.SupertonicTextCapacity.LANGUAGE_TAG_CODEPOINTS)
+                    Text(if (limit != null) "Current voice input limit: $limit normalized characters per chapter. Longer scripts can still be generated and reviewed, but cannot be locked for audio with this voice. Your instructions are not changed."
+                        else "Voice input capacity is not configured. Scripts can still be generated and reviewed; audio locking is unavailable.",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 12.dp))
+                }
                 item { Text("Things you could mention", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)) }
                 item {
                     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

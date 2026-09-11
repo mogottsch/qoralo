@@ -62,8 +62,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         val request = JSONObject().put("schemaVersion", 1).put("sourceId", source.id).put("title", source.title)
             .put("chunkIndex", chunkIndex).put("chunkCount", chunkCount).put("text", source.text)
         val json = JSONObject(generate("source_notes", request.toString()))
-        val notes = json.getString("notes").trim()
-        require(notes.isNotBlank() && notes.length <= SourcePreparer.MAX_NOTE_CHARS) { "Gemma returned invalid source notes" }
+        val notes = validatedSourceNotes(json.getString("notes"))
         return SourceMaterial("${source.id}-notes-$chunkIndex", source.title, notes)
     }
 
@@ -138,7 +137,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         .put("sources", JSONArray(sources.map { JSONObject().put("id", it.id).put("title", it.title).put("text", it.text) }))
 
     private fun systemInstruction(mode: String): String = when (mode) {
-        "source_notes" -> "Summarize the supplied source chunk faithfully for later podcast writing. Return only JSON: {\"notes\":\"...\"}."
+        "source_notes" -> sourceNotesInstruction()
         "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
         "chapter" -> error("A chapter request requires its concrete single-chapter instruction")
         "edit" -> SCRIPT_EDIT_INSTRUCTION

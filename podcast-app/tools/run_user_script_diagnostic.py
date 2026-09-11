@@ -54,14 +54,17 @@ def main():
     parser.add_argument('--candidate',type=Path,required=True);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--run-id',required=True);parser.add_argument('--original-episode',required=True)
     parser.add_argument('--original-job',required=True);parser.add_argument('--execute',action='store_true')
+    parser.add_argument('--revision-id');parser.add_argument('--revision-sha256')
     args=parser.parse_args();candidate=json.loads(args.candidate.read_text());candidate_sha=digest(args.candidate)
-    require(re.fullmatch(r'user-script-[a-z0-9-]{1,48}',args.run_id),'invalid run ID')
-    require(candidate['kind']=='user-script-diagnostic','wrong candidate kind')
+    capacity_only=candidate['kind']=='user-capacity-guard'
+    require(re.fullmatch(r'(?:capacity-ui|user-script)-[a-z0-9-]{1,48}',args.run_id),'invalid run ID')
+    require(candidate['kind'] in ('user-script-diagnostic','user-capacity-guard'),'wrong candidate kind')
+    if capacity_only:require(args.run_id.startswith('capacity-ui-') and args.revision_id and args.revision_sha256,'missing exact capacity draft binding')
     require(digest(Path(__file__))==candidate['controllerSha256'],'controller changed')
     for kind in ('app','test'):require(digest(Path(candidate[kind]['path']))==candidate[kind]['sha256'],'APK changed')
     require(candidate['hostGuardSha256']==host_identity()['sha256'],'guard changed')
     if not args.execute:
-        print(json.dumps({'mode':'plan_only','adbUsed':False,'candidateSha256':candidate_sha,'scope':'one fresh normal-input SCRIPT copy, reviewON; zero edit/TTS/Play','driverSeconds':540,'instrumentSeconds':600}));return
+        print(json.dumps({'mode':'plan_only','adbUsed':False,'candidateSha256':candidate_sha,'scope':'existing full draft capacity guard/UI; ZERO model/jobs/data writes' if capacity_only else 'one fresh normal-input SCRIPT copy, reviewON; zero edit/TTS/Play','driverSeconds':90 if capacity_only else 540,'instrumentSeconds':120 if capacity_only else 600}));return
     close_inherited_fds();os.umask(0o077);out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     device=Device('/home/moritz/Android/Sdk/platform-tools/adb','R5CW81PR8SY',out)
     guard=PhoneGuard(device,out,args.candidate,candidate_sha,host_identity()['sha256'])
@@ -168,6 +171,10 @@ def main():
         require(cleanup.get('allActualPidsAbsent') and 'files' in after_state and 'database' in after_state,'incomplete independent preservation observations')
         preservation=compare_script(rows(before),rows(after_state['database']),owned)
         preservation['files']=compare_files(files_before,after_state['files'],owned)
+        if capacity_only:
+            require(rows(before)['installed_models']==rows(after_state['database'])['installed_models'],'capacity-only changed model catalog')
+            preservation['allRowsCatalogAndEpisodeFilesUnchanged']=True
+            preservation['newModelCalls']=0
         save('preservation.json',preservation)
     with (PROJECT.parent/'artifacts/locks/phone.lock').open('a+') as lock:
         os.set_inheritable(lock.fileno(),False)
@@ -177,7 +184,10 @@ def main():
             before=stable('before');validate_snapshot(before);before_rows=rows(before)
             original=next(r for r in before_rows['episodes'] if r['id']==args.original_episode)
             original_job=next(j for j in before_rows['generation_jobs'] if j['id']==args.original_job)
-            require(original['phase']=='FAILED' and original['reviewEnabled']==1 and original_job['episodeId']==args.original_episode and original_job['kind']=='SCRIPT' and original_job['status']=='FAILED','original case changed')
+            require(original['phase']==('SCRIPT_DRAFT' if capacity_only else 'FAILED') and original['reviewEnabled']==1 and original_job['episodeId']==args.original_episode and original_job['kind']=='SCRIPT' and original_job['status']==('COMPLETE' if capacity_only else 'FAILED'),'original case changed')
+            if capacity_only:
+                revision=next(r for r in before_rows['script_revisions'] if r['id']==args.revision_id)
+                require(original['activeRevisionId']==args.revision_id and original['lockedRevisionId'] is None and revision['contentHash']==args.revision_sha256,'capacity draft revision changed')
             sources=[s for s in before_rows['episode_sources'] if s['episodeId']==args.original_episode];require(len(sources)==1,'not the observed one-source case')
             files_before=private_inventory(device,out,'before')
             require(device.shell(f'run-as {APP} sh -c '+shlex.quote('if test -e files/short-product-e2e/active.json || test -e files/user-failure-diagnostics/active.json; then echo ARMED; else echo CLEAR; fi')).strip()=='CLEAR','foreign diagnostic control; preserve it')
@@ -200,9 +210,16 @@ def main():
                 '-e','originalEpisodeId',args.original_episode,'-e','originalJobId',args.original_job,
                 '-e','originalSourceSha256',sources[0]['sha256'],'-e','originalInstructionsSha256',hashlib.sha256(original['instructions'].encode()).hexdigest(),
                 TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
+            if capacity_only:
+                command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ExistingDraftCapacityTest#fullDraftCannotLockOrDispatchAudio',
+                    '-e','capacityDiagnostic','existing-draft-no-model-v1','-e','diagnosticRun',args.run_id,
+                    '-e','appApkSha256',candidate['app']['sha256'],'-e','testApkSha256',candidate['test']['sha256'],
+                    '-e','originalEpisodeId',args.original_episode,'-e','revisionId',args.revision_id,'-e','revisionSha256',args.revision_sha256,
+                    TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
             launched=True
-            device.run(command,timeout=600)
-            minimal_ownership();remember(pull_private())
+            device.run(command,timeout=120 if capacity_only else 600)
+            if not capacity_only:minimal_ownership()
+            remember(pull_private())
         except BaseException as error:
             save('private-controller-failure.json',{'error':repr(error),'launched':launched})
         finally:
@@ -211,8 +228,8 @@ def main():
                 device.enforce_quota=False
                 actions=[]
                 if launched:
-                    actions += [('minimal-ownership',minimal_ownership),('private-log',capture_logs),
-                                ('private-receipts-before',lambda: remember(pull_private()))]
+                    if not capacity_only:actions += [('minimal-ownership',minimal_ownership)]
+                    actions += [('private-log',capture_logs),('private-receipts-before',lambda: remember(pull_private()))]
                 actions += [('owned-safe-closure',close_owned),('owned-control-disarm',disarm_control)]
                 if launched:actions += [('private-receipts-after',lambda: remember(pull_private()))]
                 actions += [('independent-files-after',capture_files_after),('independent-db-after',capture_database_after),

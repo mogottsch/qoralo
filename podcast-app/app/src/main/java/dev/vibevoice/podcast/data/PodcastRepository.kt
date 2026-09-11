@@ -119,7 +119,9 @@ class PodcastRepository(
                 require(job.episodeId == episodeId && job.kind == JobKind.SCRIPT && job.status == JobStatus.RUNNING) { "Script job is stale or cross-wired" }
                 insertRevision(revisionId, episode, null, title, chapters, stored)
                 val now = clock()
-                if (episode.reviewEnabled) {
+                // Even review-OFF must keep the complete generated draft if this voice cannot accept it.
+                // This checks the same normalized text that would be sent; it never shortens the script.
+                if (episode.reviewEnabled || !dev.vibevoice.podcast.runtime.SupertonicTextCapacity.configured(chapters.map { it.text.trim() }).fits) {
                     dao.updateEpisode(episode.copy(title = title, phase = EpisodePhase.SCRIPT_DRAFT, activeRevisionId = revisionId, updatedAtEpochMs = now))
                 } else {
                     dao.updateEpisode(episode.copy(
@@ -196,7 +198,10 @@ class PodcastRepository(
         require(dao.activeJobCount(episodeId) == 0) { "Wait for the current agent edit to finish before locking" }
         require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
         val revision = dao.revision(episode.activeRevisionId) ?: error("Missing draft revision")
-        require(dao.chapters(revision.id).isNotEmpty()) { "Cannot lock an empty script" }
+        val chapters = dao.chapters(revision.id)
+        require(chapters.isNotEmpty()) { "Cannot lock an empty script" }
+        // Recompute under the same transaction as the current revision lock. UI prechecks are not authority.
+        dev.vibevoice.podcast.runtime.SupertonicTextCapacity.requireFits(chapters.map { it.text })
         val now = clock()
         dao.updateEpisode(episode.copy(
             phase = EpisodePhase.LOCKED, lockedRevisionId = revision.id, lockedContentHash = revision.contentHash,

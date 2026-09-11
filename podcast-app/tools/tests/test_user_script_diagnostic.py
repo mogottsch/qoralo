@@ -56,6 +56,14 @@ class UserScriptDiagnosticTests(unittest.TestCase):
             with self.assertRaises(GuardError):compare_script(before,changed,'owned')
         changed=copy.deepcopy(after);changed['episodes'][0]['title']='altered'
         with self.assertRaises(GuardError):compare_script(before,changed,'owned')
+    def test_capacity_probe_has_unconditional_outer_rollback_and_no_generation_action(self):
+        src=(Path(__file__).resolve().parents[2]/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ExistingDraftCapacityTest.kt').read_text()
+        self.assertIn('app.database.withTransaction {',src)
+        self.assertIn('throw ProbeRollback(observed)',src)
+        self.assertIn('assertIsNotEnabled()',src)
+        for action in ('click("Create")','startAudio','startScript','queueScriptGeneration','performTextReplacement'):
+            self.assertNotIn(action,src)
+        self.assertNotIn('throw error',src)
     def test_driver_does_not_send_private_throwable_to_runner_and_no_audio_actions(self):
         src=(Path(__file__).resolve().parents[2]/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/UserScriptReproductionTest.kt').read_text()
         self.assertNotIn('throw error',src)

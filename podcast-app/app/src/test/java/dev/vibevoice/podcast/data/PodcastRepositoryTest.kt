@@ -67,6 +67,61 @@ class PodcastRepositoryTest {
         assertEquals(audioJob, repository.latestJob(episodeId)?.id)
     }
 
+    @Test fun reviewOffOversizedNarrationKeepsFullCompletedDraftAndDoesNotQueueAudio() = runTest {
+        val id = episodeAtInstructions(); val text = "Full requested narration. ".repeat(200).trim()
+        val job = repository.queueScriptGeneration(id, "Keep the full chapter", false)
+        repository.claimJob(id, job, JobKind.SCRIPT, "writing")
+        val revision = repository.commitGeneratedScript(id, job, "Full draft", listOf(ChapterDraft("c1", "Full chapter", text)))
+        val episode = repository.episode(id)
+        assertEquals(EpisodePhase.SCRIPT_DRAFT, episode.phase); assertFalse(episode.reviewEnabled)
+        assertEquals(revision, episode.activeRevisionId); assertEquals(null, episode.lockedRevisionId)
+        assertEquals(null, episode.lockedAtEpochMs); assertEquals(JobKind.SCRIPT, repository.latestJob(id)?.kind)
+        assertEquals(JobStatus.COMPLETE, repository.latestJob(id)?.status)
+        assertEquals(text, repository.activeRevision(id).second.single().text)
+        assertTrue(repository.resolveArtifact(repository.activeRevision(id).first.relativePath).isFile)
+    }
+
+    @Test fun manualCapacityBlockIsTransactionalAndDoesNotAlterDraftOrJobs() = runTest {
+        val id = episodeAtInstructions(); val text = "Narration. ".repeat(500).trim()
+        val job = repository.queueScriptGeneration(id, "Full narration", true)
+        repository.claimJob(id, job, JobKind.SCRIPT, "writing")
+        repository.commitGeneratedScript(id, job, "Full draft", listOf(ChapterDraft("c1", "One", text)))
+        val before = repository.episode(id); val revision = repository.activeRevision(id)
+        try { repository.lockAndQueueAudio(id); fail("capacity must reject") }
+        catch (error: dev.vibevoice.podcast.runtime.AudioTextCapacityException) {
+            assertFalse(error.capacity.fits); assertTrue(error.message!!.contains("full draft stays editable"))
+        }
+        assertEquals(before, repository.episode(id)); assertEquals(revision, repository.activeRevision(id))
+        assertEquals(job, repository.latestJob(id)?.id); assertEquals(JobStatus.COMPLETE, repository.latestJob(id)?.status)
+    }
+
+    @Test fun lockRechecksChangedRevisionInsteadOfUsingEarlierCapacityApproval() = runTest {
+        val id = episodeAtInstructions(); val job = repository.queueScriptGeneration(id, "Narration", true)
+        repository.claimJob(id, job, JobKind.SCRIPT, "writing")
+        val base = repository.commitGeneratedScript(id, job, "Draft", listOf(ChapterDraft("c1", "One", "Short narration.")))
+        assertTrue(dev.vibevoice.podcast.runtime.SupertonicTextCapacity.configured(repository.activeRevision(id).second.map { it.text }).fits)
+        val edit = repository.queueAgentEdit(id, "Develop the full chapter")
+        repository.claimJob(id, edit, JobKind.AGENT_EDIT, "editing")
+        val full = "Full narration. ".repeat(300).trim()
+        val newRevision = repository.applyAgentRevision(id, edit, base, "Draft", listOf(ChapterDraft("c1", "One", full)), "Expanded")
+        try { repository.lockAndQueueAudio(id); fail("must check the new full revision") }
+        catch (_: dev.vibevoice.podcast.runtime.AudioTextCapacityException) { }
+        assertEquals(newRevision, repository.episode(id).activeRevisionId)
+        assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(id).phase)
+        assertEquals(full, repository.activeRevision(id).second.single().text)
+        assertEquals(JobKind.AGENT_EDIT, repository.latestJob(id)?.kind)
+    }
+
+    @Test fun exactConfiguredCapacityCanStillLockWithoutModelInvocation() = runTest {
+        val limit = dev.vibevoice.podcast.runtime.SupertonicTextCapacity.textLengthForManifest(dev.vibevoice.podcast.BuildConfig.SUPERTONIC_MANIFEST_SHA256)!! - 9
+        val id = episodeAtInstructions(); val job = repository.queueScriptGeneration(id, "Boundary", true)
+        repository.claimJob(id, job, JobKind.SCRIPT, "writing")
+        repository.commitGeneratedScript(id, job, "Draft", listOf(ChapterDraft("c1", "One", "a".repeat(limit-1)+".")))
+        val audio = repository.lockAndQueueAudio(id)
+        assertEquals(EpisodePhase.LOCKED, repository.episode(id).phase)
+        assertEquals(audio, repository.latestJob(id)?.id); assertEquals(JobKind.AUDIO, repository.latestJob(id)?.kind)
+    }
+
     @Test fun reviewOffAtomicallyLocksAndQueuesAudio() = runTest {
         val episodeId = episodeAtInstructions()
         val jobId = repository.queueScriptGeneration(episodeId, "Keep it short", false)
