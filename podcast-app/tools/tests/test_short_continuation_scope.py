@@ -78,7 +78,7 @@ class ContinuationScopeTests(unittest.TestCase):
         test=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text().split('@Test fun continueOwnedReviewToAudioAndExport()',1)[1].split('private fun verifyAssembly',1)[0]
         for forbidden in ['newEpisode(', 'createEpisode(', 'generateScript(', 'Send change request', 'setContent', 'writeRevision(']:self.assertNotIn(forbidden,test)
         controller=(PROJECT/'tools/run_short_product_gate.py').read_text()
-        self.assertIn('host_seconds=390 if continuation else 930',controller)
+        self.assertIn('host_seconds=150 if export_only else 390 if continuation else 930',controller)
         self.assertIn('compare(rows(before),rows(before),owned,scope)',controller)
 
 

@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from prepare_wiring_gate import PROJECT, digest
 from duration_phone_guard import host_identity
-from run_short_product_gate import CONTRACT_SHA, CONTINUATION_SHA, PACKS, PRIOR
+from run_short_product_gate import CONTRACT_SHA, CONTINUATION_SHA, EXPORT_SHA, PACKS, PRIOR
 
 BASE_APK_SHA='78488901d63032b87d2d575c6bec5b7f578b3a7ee38c92e3c633ed943dcb96ab'
 CONTROLLERS=['tools/run_short_product_gate.py','tools/short_product_preservation.py']
@@ -24,9 +24,13 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source-commit',required=True);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--reuse-app-candidate',type=Path)
     parser.add_argument('--continuation',action='store_true')
+    parser.add_argument('--export-only',action='store_true')
     args=parser.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
-    contract_sha=CONTINUATION_SHA if args.continuation else CONTRACT_SHA
-    asset='short-product-continuation' if args.continuation else 'short-product-e2e'
+    assert not (args.continuation and args.export_only)
+    assert not args.export_only or args.reuse_app_candidate, 'export-only must reuse the unchanged app'
+    contract_sha=EXPORT_SHA if args.export_only else CONTINUATION_SHA if args.continuation else CONTRACT_SHA
+    asset='short-product-export' if args.export_only else 'short-product-continuation' if args.continuation else 'short-product-e2e'
+    asset_source='androidTest' if args.export_only else 'debug'
     previous=json.loads(args.reuse_app_candidate.read_text()) if args.reuse_app_candidate else None
     def git(*argv):return subprocess.check_output(['git',*argv],cwd=PROJECT.parent)
     source=git('rev-parse',args.source_commit).decode().strip()
@@ -39,7 +43,7 @@ def main():
         for path in build_paths:
             require_path=PROJECT.parent/path
             assert require_path.read_bytes()==git('show',source+':'+path),path
-        for path in CONTROLLERS+['tools/prepare_short_product_gate.py','tools/short_product_artifacts.init.gradle','tools/tests/test_short_product_scope.py','tools/tests/test_short_continuation_scope.py']:
+        for path in CONTROLLERS+['tools/prepare_short_product_gate.py','tools/short_product_artifacts.init.gradle','tools/tests/test_short_product_scope.py','tools/tests/test_short_continuation_scope.py','tools/tests/test_short_export_scope.py']:
             assert (PROJECT/path).read_bytes()==git('show',source+':podcast-app/'+path),path
         build_root=out/'build-source';build_root.mkdir()
         with tarfile.open(fileobj=io.BytesIO(git('archive',source,'--',*build_paths))) as tar:tar.extractall(build_root,filter='data')
@@ -57,10 +61,11 @@ def main():
         (project/'local.properties').write_text(properties.replace('native.runtime.enabled=true','native.runtime.enabled=false'))
         for route in ('gemma-4-e2b','supertonic-3'):
             assert digest(PROJECT/'.local/model-packs'/route/'current/manifest.json')==PACKS[route]
-        assert digest(project/f'app/src/debug/assets/{asset}/contract.json')==contract_sha
+        assert digest(project/f'app/src/{asset_source}/assets/{asset}/contract.json')==contract_sha
         assert digest(project/'app/src/main/cpp/podcast_runtime.cpp')=='a3de4cd62a83275977036516ff1e0c04a3beda454794e7c331aed7b936ad8b35'
         if previous:
-            assert previous['kind']==('short-production-continuation' if args.continuation else 'short-production-plumbing') and previous['contractSha256']==contract_sha
+            if args.export_only:assert previous['kind']=='short-production-continuation' and previous['app']['sha256']==PRIOR['dev.vibevoice.podcast.internal']
+            else:assert previous['kind']==('short-production-continuation' if args.continuation else 'short-production-plumbing') and previous['contractSha256']==contract_sha
             assert digest(Path(previous['app']['path']))==previous['app']['sha256']
             for path in build_paths:
                 if '/src/androidTest/' not in path and '/src/test/' not in path and '/src/testDebug/' not in path:
@@ -69,9 +74,9 @@ def main():
                  'compiledAppSourceAndBuildInputsUnchanged':True,'sourceAppCommit':previous['sourceCommit'],'noAppRepackOrRebuild':True})
         source_blobs={line.split('\t')[1].removeprefix('podcast-app/'):line.split('\t')[0].split()[2]
                       for line in git('ls-tree','-r',source,'--','podcast-app/app/src').decode().splitlines()}
-        if args.continuation:
+        if args.continuation or args.export_only:
             assert git('rev-parse',source+':podcast-app/app/src/main')==git('rev-parse','9e3b513:podcast-app/app/src/main'),'continuation must not change production main code'
-        save('source-proof.json',{'sourceCommit':source,'productionMainUnchangedForContinuation':args.continuation,'effectiveAppSrcTree':git('rev-parse',source+':podcast-app/app/src').decode().strip(),
+        save('source-proof.json',{'sourceCommit':source,'productionMainUnchangedForContinuation':args.continuation or args.export_only,'effectiveAppSrcTree':git('rev-parse',source+':podcast-app/app/src').decode().strip(),
              'allSourceBlobs':source_blobs,'buildInputs':{p.removeprefix('podcast-app/'):digest(PROJECT.parent/p) for p in build_paths},
              'explicitProperty':'-Ppodcast.shortProductE2e=true','longDefaultPropertiesUnchanged':True,
              'localPropertiesSha256':digest(project/'local.properties'),'sharedSourceOrGradleOutputsReplaced':False,'nativeCompilation':False,
@@ -101,7 +106,9 @@ def main():
         with zipfile.ZipFile(out/'app.apk') as archive:
             actual={n:hashlib.sha256(archive.read(n)).hexdigest() for n in archive.namelist() if n.startswith('lib/') and n.endswith('.so')}
             assert actual==native,'native byte drift; stop, no rebuild/replacement authorized'
-            assert hashlib.sha256(archive.read(f'assets/{asset}/contract.json')).hexdigest()==contract_sha
+            if not args.export_only:assert hashlib.sha256(archive.read(f'assets/{asset}/contract.json')).hexdigest()==contract_sha
+        if args.export_only:
+            with zipfile.ZipFile(out/'test.apk') as archive:assert hashlib.sha256(archive.read(f'assets/{asset}/contract.json')).hexdigest()==contract_sha
         save('native-byte-proof.json',{'baseline':native,'candidate':actual,'allNineExact':True,'noCmakeOrModelCompilation':True})
         command('trusted-runtime.log',['python3',str(PROJECT/'tools/verify_apk_runtime.py'),'--apk',str(out/'app.apk'),'--output',str(out/'trusted-runtime.json')])
         sdk=Path('/home/moritz/Android/Sdk/build-tools/35.0.0')
@@ -113,14 +120,17 @@ def main():
         if args.continuation:
             command('focused-continuation-python.log',['python3','-m','unittest','discover','-s',str(PROJECT/'tools/tests'),'-p','test_short_continuation_scope.py','-v'])
             python_count+=int(re.search(r'Ran (\d+) tests', (out/'focused-continuation-python.log').read_text()).group(1))
+        if args.export_only:
+            command('focused-export-python.log',['python3','-m','unittest','discover','-s',str(PROJECT/'tools/tests'),'-p','test_short_export_scope.py','-v'])
+            python_count+=int(re.search(r'Ran (\d+) tests', (out/'focused-export-python.log').read_text()).group(1))
         save('host-checks.json',{'focusedJvm':counts,'focusedPython':python_count,'appAndTestAssembly':'app byte-exact reuse; test assembly passed' if previous else 'passed','native9':'byte-exact reuse',
              'dependencyInventory':len(artifacts),'physicalExecution':False,'fullBaselineOrUiMatrixRerun':False,'longReadiness':False})
-        candidate={'schemaVersion':1,'kind':'short-production-continuation' if args.continuation else 'short-production-plumbing','sourceCommit':source,'sourceDirty':False,'phoneAuthorized':False,
-            'contractSha256':contract_sha,'contract':json.loads((project/f'app/src/debug/assets/{asset}/contract.json').read_text()),
+        candidate={'schemaVersion':1,'kind':'short-product-export-only' if args.export_only else 'short-production-continuation' if args.continuation else 'short-production-plumbing','sourceCommit':source,'sourceDirty':False,'phoneAuthorized':False,
+            'contractSha256':contract_sha,'contract':json.loads((project/f'app/src/{asset_source}/assets/{asset}/contract.json').read_text()),
             'hostGuardSha256':host_identity()['sha256'],'controllerSources':{p:digest(PROJECT/p) for p in CONTROLLERS},
             'privacyControllerSha256':digest(PROJECT/'tools/run_tts_only_gate.py'),'expectedPriorInstalledApks':PRIOR,
             'buildProperty':'-Ppodcast.shortProductE2e=true','modelPacks':{r:{'root':str(PROJECT/'.local/model-packs'/r/'current'),'manifestSha256':PACKS[r]} for r in ('gemma-4-e2b','supertonic-3')},
-            'scope':'MULTI-STAGE real owned review continuation; ZERO new LLM, ONE AUDIO job' if args.continuation else 'ONE owned short genuine production workflow; NOT a long input retry/full chapter readiness','status':'awaiting exact independent review and separate Pi phone release'}
+            'scope':'EXPORT-ONLY existing Ready master; ZERO new LLM/TTS/jobs; unchanged app' if args.export_only else 'MULTI-STAGE real owned review continuation; ZERO new LLM, ONE AUDIO job' if args.continuation else 'ONE owned short genuine production workflow; NOT a long input retry/full chapter readiness','status':'awaiting exact independent review and separate Pi phone release'}
         for kind in ('app','test'):
             p=out/(kind+'.apk');candidate[kind]={'path':str(p),'bytes':p.stat().st_size,'sha256':digest(p)}
         candidate['evidenceBindings']={p.relative_to(out).as_posix():{'bytes':p.stat().st_size,'sha256':digest(p)} for p in out.rglob('*')

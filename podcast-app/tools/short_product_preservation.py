@@ -103,6 +103,31 @@ def compare(before, after, owned, continuation=None):
             'allowedGlobalChanges':'only supertonic-3 catalog upsert' if continuation else 'only normal verified catalog upserts for the two exact exercised IDs; existing IDs retained'}
 
 
+def compare_export(before, after, scope):
+    """Export-only: all durable data fixed except the owned playback save timestamp."""
+    owned=scope['episode']['id']
+    ep=next((r for r in before['episodes'] if r['id']==owned),None)
+    require(ep is not None and {k:ep[k] for k in scope['episode']}==scope['episode'],'export-only Ready artifact preconditions changed')
+    audio=sorted([r for r in before['chapter_audio'] if r['episodeId']==owned],key=lambda r:r['position'])
+    require(audio==scope['chapters'],'export-only chapter audio bindings changed')
+    job=next((r for r in before['generation_jobs'] if r['id']==scope['audioJobId']),None)
+    require(job is not None and job['kind']=='AUDIO' and job['status']=='COMPLETE' and job['episodeId']==owned,'export-only completed audio job changed')
+    playback=next((r for r in before['playback_state'] if r['episodeId']==owned),None)
+    require(playback is not None and {k:playback[k] for k in scope['playback']}==scope['playback'],'export-only playback preconditions changed')
+    counts={}
+    for table in TABLES:
+        key='rowId' if table=='chapters' else ('episodeId' if table=='playback_state' else 'id')
+        previous={r[key]:r for r in before[table]};current={r[key]:r for r in after[table]}
+        require(set(previous)==set(current),'export-only added/deleted rows: '+table)
+        for identity,row in previous.items():
+            observed=current[identity]
+            if table=='playback_state' and identity==owned:
+                require({k:v for k,v in row.items() if k!='updatedAtEpochMs'}=={k:v for k,v in observed.items() if k!='updatedAtEpochMs'},'export-only changed playback values')
+            else:require(row==observed,'export-only modified durable row: '+table)
+        counts[table]=len(previous)
+    return {'allDurableRowsUnchangedExceptOwnedPlaybackTimestamp':True,'rowCounts':counts,'newModelJobs':0,'catalogUnchanged':True}
+
+
 def parse_inventory(raw):
     result={}
     for line in raw.decode().splitlines():

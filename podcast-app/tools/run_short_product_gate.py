@@ -14,23 +14,25 @@ from prepare_wiring_gate import PROJECT, digest
 from run_wiring_gate import APP, TEST_APP, Device, DeviceSettings, stop_child
 from duration_phone_guard import PhoneGuard, close_inherited_fds, host_identity, validate_snapshot, require
 from run_tts_only_gate import capture_conditions
-from short_product_preservation import rows, compare, parse_inventory, compare_files, validate_owned_control
+from short_product_preservation import rows, compare, compare_export, parse_inventory, compare_files, validate_owned_control
 
 CONTRACT_SHA='a39106380003a3a4c7b83c2f45066399e204d8aefade77ec88866f9062eccfc4'
 CONTINUATION_SHA='2f22bd6e500eca3f45e51c401aded0cd570bc576e8f805063f95d6dd02d23721'
+EXPORT_SHA='e9acf906dd75e51791bb386450c100de2b321b7a59dba75ba1fe6c9495b08c06'
 PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
 PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd',
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',
        'supertonic-3-t2048-l2048-parity':'116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066'}
-PRIOR={APP:'ef2894491525fc0facf81a89e1b4c4cf52bbd0ad92407dc0ef9f9a3896f36e87',
-       TEST_APP:'56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739'}
+PRIOR={APP:'95103b2cc00676e96fe4a2335d489863fcc609f48d5096d20bee2c69529fe969',
+       TEST_APP:'35faf3a6da5464746028a0433e7dc413cce97de1e8dc7f6be52e48e9e92a3625'}
 
 
 def check_sources(candidate):
-    continuation=candidate['kind']=='short-production-continuation'
-    name='short-product-continuation' if continuation else 'short-product-e2e'
-    sha=CONTINUATION_SHA if continuation else CONTRACT_SHA
-    path=PROJECT/f'app/src/debug/assets/{name}/contract.json'
+    continuation=candidate['kind']=='short-production-continuation';export_only=candidate['kind']=='short-product-export-only'
+    name='short-product-export' if export_only else 'short-product-continuation' if continuation else 'short-product-e2e'
+    sha=EXPORT_SHA if export_only else CONTINUATION_SHA if continuation else CONTRACT_SHA
+    source_set='androidTest' if export_only else 'debug'
+    path=PROJECT/f'app/src/{source_set}/assets/{name}/contract.json'
     require(digest(path)==sha and candidate['contractSha256']==sha and candidate['contract']==json.loads(path.read_text()),'contract changed')
     require(digest(PROJECT/'tools/run_tts_only_gate.py')==PRIVACY_SHA,'privacy dependency changed')
     for name,sha in candidate['controllerSources'].items():require(digest(PROJECT/name)==sha,'controller dependency changed: '+name)
@@ -107,15 +109,15 @@ def main():
     parser.add_argument('--adb',default='/home/moritz/Android/Sdk/platform-tools/adb');parser.add_argument('--serial',default='R5CW81PR8SY')
     args=parser.parse_args();value=json.loads(args.candidate.read_text())
     require(re.fullmatch(r'short-product-[a-z0-9-]{1,64}',args.run_id),'unsafe run ID')
-    require(value['kind'] in ('short-production-plumbing','short-production-continuation') and not value['sourceDirty'],'wrong candidate')
-    continuation=value['kind']=='short-production-continuation'
-    contract_sha=CONTINUATION_SHA if continuation else CONTRACT_SHA
-    host_seconds=390 if continuation else 930
+    require(value['kind'] in ('short-production-plumbing','short-production-continuation','short-product-export-only') and not value['sourceDirty'],'wrong candidate')
+    continuation=value['kind']=='short-production-continuation';export_only=value['kind']=='short-product-export-only'
+    contract_sha=EXPORT_SHA if export_only else CONTINUATION_SHA if continuation else CONTRACT_SHA
+    host_seconds=150 if export_only else 390 if continuation else 930
     check_sources(value)
     for key in ('app','test'):
         p=Path(value[key]['path']);require(p.stat().st_size==value[key]['bytes'] and digest(p)==value[key]['sha256'],'APK changed')
     if not args.execute:
-        print(json.dumps({'mode':'plan_only','adbUsed':False,'logicalGemmaRequests':0 if continuation else 5,'wholeBriefChapters':2,'hostInstrumentationSeconds':host_seconds,'multiStageContinuation':continuation,
+        print(json.dumps({'mode':'plan_only','adbUsed':False,'logicalGemmaRequests':0 if continuation or export_only else 5,'wholeBriefChapters':0 if export_only else 2,'hostInstrumentationSeconds':host_seconds,'multiStageContinuation':continuation or export_only,'exportOnly':export_only,
                           'packStaging':False,'dataClear':False,'longReadiness':False,'candidateSha256':digest(args.candidate)}));return
     require(os.environ.get('PODCAST_PHONE_PRIORITY')=='approved' and args.approved_candidate_sha256==digest(args.candidate)
             and args.approved_host_guard_sha256==host_identity()['sha256'] and args.approved_controller_sha256==digest(Path(__file__)),
@@ -123,7 +125,7 @@ def main():
     os.umask(0o077);args.output.mkdir(parents=True,exist_ok=False);out=args.output
     lock=(PROJECT.parent/'artifacts/locks/phone.lock').open('a+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);os.set_inheritable(lock.fileno(),False)
     device=Device(args.adb,args.serial,out);guard=PhoneGuard(device,out,args.candidate,args.approved_candidate_sha256,args.approved_host_guard_sha256)
-    settings=DeviceSettings(device.shell);logs=None;identity=False;closure_allowed=False;launched=False;before=None;files_before=None;owned=value['contract']['episodeId'] if continuation else None;original_control=None
+    settings=DeviceSettings(device.shell);logs=None;identity=False;closure_allowed=False;launched=False;before=None;files_before=None;owned=value['contract']['episode']['id'] if export_only else value['contract']['episodeId'] if continuation else None;original_control=None
     cleanup={'errors':[],'settingsErrors':[],'packagesAndDataRetained':True,'scratchCreated':False}
     (out/'candidate.json').write_text(json.dumps(value,indent=2));(out/'host-identity.json').write_text(json.dumps(host_identity(),indent=2))
     def interrupt(signum,frame):raise InterruptedError('signal; first attempt stops, cleanup only')
@@ -141,12 +143,19 @@ def main():
             expected[f"files/episodes/{owned}/script/{scope['revisionId']}.json"]=scope['contentHash']
             expected[f"files/episodes/{owned}/script/{scope['baseRevisionId']}.json"]=scope['baseContentHash']
             require(all(files_before.get(path)==sha for path,sha in expected.items()),'reviewed original source/revision file bytes changed')
-        device.run(['install','-r','-t',value['app']['path']],timeout=180)
+        if export_only:
+            scope=value['contract'];compare_export(rows(before),rows(before),scope)
+            require(value['app']['sha256']==PRIOR[APP],'export-only must reuse the actually installed app')
+            for path,sha in ((scope['episode']['finalAudioPath'],scope['episode']['finalAudioSha256']),(scope['episode']['timelinePath'],scope['episode']['timelineSha256'])):
+                require(files_before.get('files/episodes/'+path)==sha,'existing export master/timeline changed')
+            require(all(files_before.get('files/episodes/'+r['relativePath'])==r['sha256'] for r in scope['chapters']),'existing chapter WAV bytes changed')
+            (out/'app-reused-installed.json').write_text(json.dumps({'sha256':PRIOR[APP],'appReinstalled':False}))
+        else:device.run(['install','-r','-t',value['app']['path']],timeout=180)
         check_sources(value);guard.checkpoint('before-test-install');device.run(['install','-r','-t',value['test']['path']],timeout=180)
         with (out/'logcat.txt').open('wb') as stdout,(out/'logcat.stderr').open('wb') as stderr:
             logs=subprocess.Popen(device.prefix+['logcat','-v','threadtime','-T','1'],stdout=stdout,stderr=stderr,start_new_session=True,close_fds=True)
         check_sources(value);guard.checkpoint('before-instrument')
-        method='continueOwnedReviewToAudioAndExport' if continuation else 'oneOwnedShortEpisodeThroughRealProductionWorkflow'
+        method='exportExistingReadyEpisode' if export_only else 'continueOwnedReviewToAudioAndExport' if continuation else 'oneOwnedShortEpisodeThroughRealProductionWorkflow'
         command=f'am instrument -w -r -e class dev.vibevoice.podcast.e2e.ShortProductE2eTest#{method} -e shortProductApproved {contract_sha} -e shortProductRunId {args.run_id}'
         command+=f" -e appApkSha256 {value['app']['sha256']} -e testApkSha256 {value['test']['sha256']} {TEST_APP}/androidx.test.runner.AndroidJUnitRunner"
         launched=True;result=device.shell(command,timeout=host_seconds)
@@ -168,7 +177,7 @@ def main():
                     name=f'files/short-product-e2e/{args.run_id}/ownership.json'
                     if name in tar.getnames():
                         reported=json.load(tar.extractfile(name))['episodeId']
-                        require(not continuation or reported==owned,'continuation ownership receipt changed')
+                        require(not (continuation or export_only) or reported==owned,'existing-owned ownership receipt changed')
                         owned=reported
                     control=f'files/short-product-e2e/{args.run_id}/control-original.json'
                     if control in tar.getnames():original_control=tar.extractfile(control).read()
@@ -186,9 +195,9 @@ def main():
         if identity and before is not None:
             try:
                 after,files_after=capture_and_validate_after(device,guard,out,cleanup)
-                report=compare(rows(before),rows(after),owned,value['contract'] if continuation else None)
+                report=compare_export(rows(before),rows(after),value['contract']) if export_only else compare(rows(before),rows(after),owned,value['contract'] if continuation else None)
                 require(files_after is not None,'post-file inventory unavailable; row result alone is not full preservation')
-                report['artifacts']=compare_files(files_before,files_after,owned)
+                report['artifacts']=compare_files(files_before,files_after,None if export_only else owned)
                 report['ownedEpisodeId']=owned;report['privateSnapshots']='.private-db and .private-user-files; never publish full raw'
                 (out/'preservation.json').write_text(json.dumps(report,indent=2))
             except Exception as error:cleanup['errors'].append({'phase':'preservation','error':repr(error)})

@@ -351,6 +351,74 @@ class ShortProductE2eTest {
         }
     }
 
+    @Test fun exportExistingReadyEpisode() {
+        val approved = "e9acf906dd75e51791bb386450c100de2b321b7a59dba75ba1fe6c9495b08c06"
+        val args = InstrumentationRegistry.getArguments()
+        assumeTrue("Exact export-only release required", args.getString("shortProductApproved") == approved)
+        val raw = instrumentation.context.assets.open("short-product-export/contract.json").use { it.readBytes() }
+        require(ShortProductPolicy.hash(raw) == approved)
+        val contract = JSONObject(raw.toString(Charsets.UTF_8)); val expected = contract.getJSONObject("episode")
+        val run = requireNotNull(args.getString("shortProductRunId")); require(ShortProductPolicy.validRun(run))
+        require(Application.getProcessName() == context.packageName)
+        root = File(context.filesDir, "${ShortProductPolicy.DIRECTORY}/$run"); check(!root.exists() && root.mkdirs())
+        episodeId = expected.getString("id"); deadline = SystemClock.elapsedRealtime() + 120_000L
+        val timer = Timer("export-only-driver-bound", true)
+        timer.schedule(object : TimerTask() { override fun run() {
+            runCatching { json("driver-timeout.json", JSONObject().put("limitMs", 120_000)) }; Process.killProcess(Process.myPid())
+        } }, 120_000)
+        var scenario: ActivityScenario<MainActivity>? = null
+        try {
+            require(!File(root.parentFile, "active.json").exists()) { "Export-only must not arm or inherit model controls" }
+            json("contract.json", contract)
+            val appHash = ShortProductPolicy.hash(File(context.applicationInfo.sourceDir).readBytes())
+            val testHash = ShortProductPolicy.hash(File(instrumentation.context.applicationInfo.sourceDir).readBytes())
+            json("identity.json", JSONObject().put("appApkSha256", appHash).put("testApkSha256", testHash).put("pid", Process.myPid()).put("process", Application.getProcessName()))
+            require(appHash == args.getString("appApkSha256") && testHash == args.getString("testApkSha256"))
+            db { ShortContinuationPolicy.validateStored(context, locked = true) }
+            val ready = episode(); require(ready.phase == EpisodePhase.FROZEN_READY && ready.title == expected.getString("title"))
+            require(ready.finalAudioPath == expected.getString("finalAudioPath") && ready.finalAudioSha256 == expected.getString("finalAudioSha256"))
+            val master = app.repository.resolveArtifact(requireNotNull(ready.finalAudioPath))
+            require(master.length() == expected.getLong("finalAudioByteCount") && ShortProductPolicy.hash(master.readBytes()) == ready.finalAudioSha256)
+            val timeline = app.repository.resolveArtifact(requireNotNull(ready.timelinePath))
+            require(ShortProductPolicy.hash(timeline.readBytes()) == expected.getString("timelineSha256"))
+            val pinnedAudio = contract.getJSONArray("chapters")
+            val chapterAudio = db { app.repository.observeAudio(requireNotNull(episodeId)).first() }; require(chapterAudio.size == 2)
+            chapterAudio.forEachIndexed { index, chapter ->
+                val pin = pinnedAudio.getJSONObject(index)
+                require(chapter.stableChapterId == pin.getString("stableChapterId") && chapter.relativePath == pin.getString("relativePath"))
+                require(chapter.sha256 == pin.getString("sha256") && ShortProductPolicy.hash(app.repository.resolveArtifact(chapter.relativePath).readBytes()) == chapter.sha256)
+            }
+            val audioJob = db { app.database.podcastDao().job(contract.getString("audioJobId")) }
+            require(audioJob?.kind == JobKind.AUDIO && audioJob.status == JobStatus.COMPLETE && audioJob.episodeId == episodeId)
+            json("ownership.json", JSONObject().put("episodeId", episodeId).put("runId", run).put("masterSha256", ready.finalAudioSha256)
+                .put("priorAudioRunId", contract.getString("priorAudioRunId")).put("newModelCalls", 0).put("modelControlArmed", false))
+            rule.runOnIdle { ShortProductDiagnostics.enableUi(root, requireNotNull(episodeId)) }
+            scenario = ActivityScenario.launch(MainActivity::class.java); click(ready.title)
+            val position = contract.getJSONObject("playback").getLong("positionMs")
+            waitUntil("paused existing Player for export") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.let {
+                !it.playWhenReady && it.volume == 0f && kotlin.math.abs(it.currentPosition - position) < 100 && it.playbackParameters.speed == 1.25f
+            } == true }; ok }
+            icon("Export episode"); saveThroughLocalDocumentsUi("podcast-$run.wav")
+            waitUntil("export-only actual callback", 30_000) { ShortProductDiagnostics.exportedUri != null }
+            val uri = requireNotNull(ShortProductDiagnostics.exportedUri)
+            val bytes = context.contentResolver.openInputStream(uri)!!.use { it.readBytes() }
+            require(bytes.size.toLong() == expected.getLong("finalAudioByteCount") && ShortProductPolicy.hash(bytes) == expected.getString("finalAudioSha256"))
+            require(ShortProductPolicy.hash(master.readBytes()) == expected.getString("finalAudioSha256"))
+            json("export-proof.json", JSONObject().put("uri", uri.toString()).put("sha256", ShortProductPolicy.hash(bytes)).put("bytes", bytes.size)
+                .put("realCreateDocument", true).put("newOwnedFilename", "podcast-$run.wav").put("existingMasterUnchanged", true))
+            json("driver-result.json", JSONObject().put("status", "existing_ready_local_export_complete").put("episodeId", episodeId)
+                .put("newGemmaSends", 0).put("newTtsRequests", 0).put("newAudioJobs", 0).put("playRequested", false)
+                .put("multiStageRealWorkflow", true).put("priorAudioRunId", contract.getString("priorAudioRunId"))
+                .put("masterSha256", ready.finalAudioSha256).put("longReadiness", false).put("listening", "not_reviewed"))
+        } catch (error: Throwable) {
+            runCatching { json("driver-failure.json", JSONObject().put("error", error.stackTraceToString()).put("episodeId", episodeId)); capture("failure") }
+            throw error
+        } finally {
+            runCatching { rule.runOnIdle { ShortProductDiagnostics.player?.pause() } }; runCatching { scenario?.close() }
+            runCatching { rule.runOnIdle { ShortProductDiagnostics.disableUi() } }; timer.cancel()
+        }
+    }
+
     private fun verifyAssembly(ready: EpisodeEntity, chapters: List<ChapterEntity>, audio: List<ChapterAudioEntity>) {
         assertEquals(2, audio.size); assertEquals(chapters.map { it.stableChapterId }, audio.map { it.stableChapterId })
         val parts = audio.map { item ->
@@ -378,10 +446,11 @@ class ShortProductE2eTest {
     }
     private fun shell(command: String): String = android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand(command)).use { it.readBytes().toString(Charsets.UTF_8) }
     private fun walk(node: AccessibilityNodeInfo?): List<AccessibilityNodeInfo> = if (node == null) emptyList() else listOf(node) + (0 until node.childCount).flatMap { walk(node.getChild(it)) }
-    private fun clickNative(node: AccessibilityNodeInfo) {
+    private fun clickNative(node: AccessibilityNodeInfo, stopBefore: AccessibilityNodeInfo? = null) {
         var target: AccessibilityNodeInfo? = node
-        while (target != null && !target.isClickable) target = target.parent
-        require(target?.performAction(AccessibilityNodeInfo.ACTION_CLICK) == true)
+        while (target != null && target != stopBefore && !target.isClickable && target.actionList.none { it.id == AccessibilityNodeInfo.ACTION_CLICK }) target = target.parent
+        require(target != null && target != stopBefore) { "No actual row click action below the known container" }
+        require(target.performAction(AccessibilityNodeInfo.ACTION_CLICK))
     }
     private fun saveThroughLocalDocumentsUi(filename: String) {
         waitUntil("local DocumentsUI", 15_000) { instrumentation.uiAutomation.rootInActiveWindow?.packageName?.toString() in setOf("com.google.android.documentsui", "com.android.documentsui") }
@@ -390,9 +459,12 @@ class ShortProductE2eTest {
         if (drawer != null) clickNative(drawer)
         waitUntil("Downloads root") { walk(instrumentation.uiAutomation.rootInActiveWindow).any { it.text?.toString() == "Downloads" } }
         nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
-        val downloads = nodes.filter { it.text?.toString() == "Downloads" }
-        // With a drawer open choose its root row, never a cloud provider or an existing document.
-        if (drawer != null) clickNative(downloads.first { it.parent?.isClickable == true || it.isClickable })
+        // With a drawer open, select ONLY the named root under roots_list, not a breadcrumb/cloud entry.
+        if (drawer != null) {
+            val roots = nodes.single { it.viewIdResourceName?.endsWith(":id/roots_list") == true }
+            val downloads = walk(roots).single { it.viewIdResourceName == "android:id/title" && it.text?.toString() == "Downloads" }
+            clickNative(downloads, stopBefore = roots)
+        }
         Thread.sleep(500)
         nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
         val input = nodes.filter { it.isEditable }.single()
