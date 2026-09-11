@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-09-11",
+  "original_comparison": "htp/results/comparison-01.json",
+  "original_comparison_sha256": "0f0c30962c25faea6e4b7aab90b55c7770a14354acf4a448fbefebd46bfaf347",
+  "current_listening_verdicts": {
+    "CPU": "rejected",
+    "HTP": "rejected"
+  },
+  "reviews": {
+    "CPU": {
+      "path": "cpu/results/listening-review-20260911.json",
+      "review_sha256": "27a037d3dd3d2d86138f31101b7e8f5e3621a4a43f9025bdfb6cbd1e3f1583e9",
+      "verdict": "rejected",
+      "wav_sha256": "9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2",
+      "user_verbatim": "completelly inaudible. complete shit"
+    },
+    "HTP": {
+      "path": "htp/results/listening-review-20260911.json",
+      "review_sha256": "7eb305760124c810c0f5a18f1be0b613cc6c599b16208e9729ce526d01979b5e",
+      "verdict": "rejected",
+      "wav_sha256": "3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c",
+      "user_verbatim": "okay so htp sample is same jibberish."
+    }
+  },
+  "conclusion": "The tested unchanged whole-input configuration failed on both Android CPU and HTP. This does not establish failure of Supertonic universally or duration prediction as the sole cause.",
+  "historical_evidence_policy": "Additive overlay; original timing/WAV/ASR/comparison snapshots remain unchanged.",
+  "next_experiment": "0037-supertonic-provider-pipeline separately authorizes exact provider-prescribed segmentation/assembly;0036 outputs are not repaired or rerun."
+}

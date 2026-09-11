@@ -1,6 +1,6 @@
 # Whole-chapter Supertonic: Android CPU vs Android HTP
 
-Status: **Real full Android CPU and HTP WAVs produced; both automatic whole-chapter coverage checks failed. Moritz rejected the exact CPU WAV as unusable audio. The HTP WAV has not been human-reviewed.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
+Status: **Real full Android CPU and HTP WAVs produced; both automatic whole-chapter coverage checks failed. Moritz rejected both exact WAVs as unusable/gibberish audio.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
 
 ## Question and fixed input
 
@@ -80,6 +80,7 @@ This lowered route completed **once**, with **10 own QNN calls: duration 1, text
 | ASR word error rate | 89.09% | 88.69% |
 | Exact aligned word matches | 54 | 56 |
 | Matches in the final 30 reference words | 3 | 2 |
+| Moritz's later exact-WAV listening verdict | **Rejected** | **Rejected** |
 
 **Timing qualifications:** these are individual first completed runs, not warmed medians. CPU profiling was on and HTP profiling was off. Both interleave session setup, execution and release; HTP has six physical contexts for four logical stages. Its stage-only duration/text/vector/vocoder times are 0.7930 / 2.4219 / 5.0868 / 0.0934 seconds. The reported setup-excluded wall time also includes the remaining host copies, cleanup and evidence writes. **Memory qualifications:** HTP's Linux RSS excludes substantial DSP/shared allocations; this table does not demonstrate device-wide memory savings.
 
@@ -94,7 +95,7 @@ Both routes independently selected 425 active latent positions. Their saved mask
 
 The same qualified offline unprompted Whisper-small protocol was run **once** on the exact HTP WAV. It produced 122 words, with 373 deletions, 66 substitutions and no insertions against the same 495-word normalized reference used for CPU. The first post-decoding alignment used raw punctuation and counted 506 reference words; that private result is retained. The **unchanged saved hypothesis** was then aligned to CPU's frozen normalized reference. This was alignment-only arithmetic, not an ASR retry, decoding prompt, transcript repair or input change.
 
-**Conclusion:** both complete execution paths produced valid WAV files, but neither demonstrates speaking the entire unchanged chapter intelligibly. Qualified ASR strongly argues against whole-chapter coverage on both routes. The roughly 29.57-second natural predictions are retained rather than forced to fit the chapter. Moritz's exact-WAV listening verdict is **`rejected` for CPU**, with **HTP still `not_reviewed`**. Valid PCM is not successful speech generation. No accepted-quality throughput or registry claim follows.
+**Conclusion:** both complete execution paths produced valid WAV files, but neither demonstrates speaking the entire unchanged chapter intelligibly. Qualified ASR strongly argues against whole-chapter coverage on both routes. The roughly 29.57-second natural predictions are retained rather than forced to fit the chapter. Moritz's later exact-WAV listening verdict is **`rejected` for both CPU and HTP**. For the HTP hash above, his exact response was: “okay so htp sample is same jibberish.” The two hash-bound reviews and additive comparison review preserve the original pre-review execution/ASR/comparison snapshots. **This tested unchanged whole-input configuration failed.** That is not a conclusion that Supertonic fails universally or that duration prediction alone caused the gibberish. Experiment `0037-supertonic-provider-pipeline` separately tests the official provider's prescribed segmentation and assembly; it does not repair or redefine these0036 results. Valid PCM is not successful speech generation. No accepted-quality throughput or registry claim follows.
 
 ## Files
 
@@ -106,7 +107,9 @@ The same qualified offline unprompted Whisper-small protocol was run **once** on
 - `htp/`: standalone HTP runner, retained failed allocation diagnostics, full-sequence depth partition and evidence.
 - `htp/results/full-depth-render-01.json`: exact completed HTP WAV, 10-call/provider/stochastic/timing/memory/cleanup evidence and failed automatic coverage status.
 - `htp/results/asr-depth-full-01.json`: one unprompted HTP decode, matched normalized-reference alignment; no transcript text.
-- `htp/results/comparison-01.json`: matched CPU/HTP numeric summary and claim boundaries.
+- `htp/results/comparison-01.json`: original pre-listening matched CPU/HTP numeric snapshot and claim boundaries.
+- `htp/results/listening-review-20260911.json`: later exact-hash HTP rejection, preserving Moritz's exact words.
+- `htp/results/comparison-listening-review-20260911.json`: additive current comparison verdict: both exact WAVs rejected; original snapshots unchanged.
 - `htp/results/text-load-controls.json`: preserved 5/8 GiB controls and evidenced RPC signed-size failure path.
 - `protocol/contract.json`: frozen T3200/L512 model, input, schedule and noise metadata/hashes.
 - `cpu/results/duration-calibration-01.json`: separate Android CPU calibration evidence; 186 CPU-only profile kernel events.

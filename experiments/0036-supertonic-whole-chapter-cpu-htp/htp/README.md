@@ -1,11 +1,12 @@
 # Full unchanged product-reference chapter — HTP arm
 
-**One full depth-partitioned HTP WAV produced; qualified automatic coverage check failed.**
+**One full depth-partitioned HTP WAV produced; Moritz rejected it as gibberish.**
 The original single text context failed after duration prediction; that first
 attempt and the allocation diagnostics remain preserved below. The lower-memory
 route later completed all10 own QNN calls once, with no CPU fallback or input/
 duration repair. The phone lock is released, the unique remote stage removed,
-and the installed app and its data untouched. Listening is `not_reviewed`.
+and the installed app and its data untouched. The later exact-hash human verdict
+is `rejected`; original execution/ASR snapshots retain their capture-time status.
 
 Noncanonical experiment0036. This is **not** the226-byte campaign and does not
 produce warm-median or registry claims. All private text, token arrays, intermediate
@@ -198,4 +199,17 @@ listening-accepted whole-chapter solution. See `results/comparison-01.json` and 
 [combined experiment README](../README.md). No duration forcing, text/audio
 chunking, stitching, stretch, repair or further synthesis was performed.
 
-Only Moritz can accept/reject an exact WAV. Listening verdict is `not_reviewed`.
+## Later exact-hash human review
+
+Moritz explicitly **rejected** HTP WAV
+`3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c`:
+“okay so htp sample is same jibberish.” The authoritative additive record is
+`results/listening-review-20260911.json`. CPU's separate exact-hash rejection is
+recorded in `../cpu/results/listening-review-20260911.json`; current aggregate
+verdicts are in `results/comparison-listening-review-20260911.json`.
+
+Original execution, ASR and comparison snapshots are preserved as pre-review
+records. The **tested unchanged whole-input configuration failed on both routes**.
+This is not a universal verdict on Supertonic or proof of duration prediction as
+the sole cause. The separately authorized0037 experiment follows the provider's
+prescribed segmentation/assembly; no0036 audio is repaired, modified or rerun.
