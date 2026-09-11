@@ -99,8 +99,18 @@ current numeric battery temperature is extracted, not raw battery/charging histo
   or rule out DSP/VTCM/address-space limits. Error1002 alone is not a root cause.
 - See `results/phone-first-attempt-blocked.json`; all content-bearing logs and
   exact scalar remain private under `.local/phone-full-attempt-02/`. Cleanup0 and
-  phone-lock release are verified. Awaiting a decision on a bounded profile-off
-  text-load diagnosis, not silently retrying the failed neural route.
+  phone-lock release are verified. Pi assigned a fresh profile-off TEXT-only
+  constructor/close diagnostic with DP absent and zero Run, prepared for a separate
+  short phone slot; this is not a repeated full synthesis.
+- Exact SDK headers map1002 to `QNN_COMMON_ERROR_MEM_ALLOC`. Offline QNN System
+  binary metadata reports text DDR tensor storage2,210,381,312B and spill/fill
+  415,039,488B; duration reports577,374,464B and789,577,728B. Text exceeds2GiB in
+  one reported storage category, but this alone does not prove the failing
+  allocation. See `results/context-allocation-metadata.json`. The original runner
+  already reset its duration session before creating text, so the fresh process
+  tests persistent backend/lifetime effects versus standalone text load failure.
+  The diagnostic keeps exact context/runtime hashes,5GiB AS and live memory guards;
+  verbose native logging is enabled, profiling remains off, native alarm180s.
 - The487-word chapter's approximately29.57s CPU natural prediction and qualified
   negative CPU ASR coverage result are serious content concerns, not a duration
   to override or repair. No HTP coverage comparison can be claimed without a WAV.

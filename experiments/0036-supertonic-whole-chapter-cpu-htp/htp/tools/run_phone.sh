@@ -6,6 +6,8 @@ E="$ROOT/experiments/0036-supertonic-whole-chapter-cpu-htp/htp"
 STAGE=${1:?private stage required}
 L=${2:?common latent extent required}
 OUT=${3:?fresh private output required}
+WAIT_SECONDS=${NATIVE_WAIT_SECONDS:-1840}
+[[ $WAIT_SECONDS =~ ^[0-9]+$ && $WAIT_SECONDS -ge 180 && $WAIT_SECONDS -le 1840 ]] || exit 2
 [[ $STAGE == "$E/.local/"* && $OUT == "$E/.local/"* && ! -e $OUT && $L =~ ^[0-9]+$ ]] || exit 2
 [[ ${PHONE_SLOT_SCHEDULED:-no} == yes ]] || { echo 'Pi must schedule the shared-phone slot'; exit 3; }
 SERIAL=R5CW81PR8SY
@@ -56,7 +58,7 @@ adb push "$STAGE/." "$REMOTE/" >"$OUT/push.log" 2>&1
 adb shell "cd '$REMOTE' && sha256sum -c stage-manifest.sha256 && chmod 755 runner run_remote.sh" >"$OUT/remote-stage-verification.txt"
 start=$(date +%s.%N)
 set +e
-timeout -k 20 1840 /usr/bin/adb -s "$SERIAL" shell "cd '$REMOTE' && sh ./run_remote.sh '$L'" </dev/null 9>&- >"$OUT/adb-stdout.log" 2>"$OUT/adb-stderr.log"
+timeout -k 20 "$WAIT_SECONDS" /usr/bin/adb -s "$SERIAL" shell "cd '$REMOTE' && sh ./run_remote.sh '$L'" </dev/null 9>&- >"$OUT/adb-stdout.log" 2>"$OUT/adb-stderr.log"
 rc=$?
 set -e
 end=$(date +%s.%N)
