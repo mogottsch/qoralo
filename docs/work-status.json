@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:52:28+00:00",
+  "updated_at": "2026-09-11T10:55:41+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -41,12 +41,12 @@
     {
       "id": "gemma",
       "title": "Gemma FP16",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Full AR128 internal DLC gate PASSED/issues[]: all56 selected value MatMuls Float16 operands/output;3 cache Concats Float16/direct consumers/no value-read requantization;3 exports floating.",
-      "next": "Projected-V/probability/active IO signatures preserved. Six inactive Float16 “no encoding” annotations became zero placeholders, disclosed/not grids. Sequential full AR1 prepares with fresh headroom checks; no paired-context/physical result.",
-      "reported_at": "2026-09-11T10:49:42+00:00",
-      "reported_by": "Jere — passed full AR128 internal DLC validation",
+      "now": "Jere reports sequential full AR1 STARTED: full-ar1-20260911T105448Z-01/supervisor806533; fresh~22.13GiB RAM/~31.33GiB swap guards, same15/17/16GiB caps,2CPU/nice15/1800s.",
+      "next": "No AR128 overlap; fresh-root STOP if app priority requires. AR128 coupling checked:56 Float16 reads→7 Float16 head Concats→original fixed-point projection grids,7 exits pass; no hidden float/compiled/numerical/physical claim.",
+      "reported_at": "2026-09-11T10:55:41+00:00",
+      "reported_by": "Jere — actual sequential full AR1 start and AR128 coupling gate",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Janek implements verified-pack capacity guard/UI with persisted draft; Gemma AR1 prep, Qwen reference binding and LFM runner work remain bounded.",
-      "next": "No new app LLM/TTS/AUDIO dispatch. Plaintext-v2 prototype parked/undeployed; preserve full drafts and no hidden shortening/splitting.",
-      "reported_at": "2026-09-11T10:52:28+00:00",
-      "reported_by": "Janek — current source/UI scope",
+      "now": "Jere sequential full AR1 host run active; Janek capacity guard/UI work active; Qwen reference binding/LFM runner work remain bounded.",
+      "next": "Gemma same15GiB high/17GiB max/16GiB swap,2CPU/nice15/1800s/64GiB disk; no AR128 overlap. STOP fresh root/yield if app priority needs.",
+      "reported_at": "2026-09-11T10:55:41+00:00",
+      "reported_by": "Jere — actual AR1 host run start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -159,9 +159,9 @@
     },
     {
       "name": "Jere",
-      "task": "Prepare sequential full AR1 after headroom checks",
-      "reported_at": "2026-09-11T10:49:42+00:00",
-      "reported_by": "Jere — AR128 internal gate passed",
+      "task": "Run sequential full AR1 conversion; inspect DLC edges",
+      "reported_at": "2026-09-11T10:55:41+00:00",
+      "reported_by": "Jere — actual start",
       "stale_after_seconds": 900
     },
     {
