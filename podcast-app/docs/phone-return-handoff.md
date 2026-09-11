@@ -1,5 +1,7 @@
 # Phone-return handoff
 
+**Current final usable app and completed SHORT path:** see [final-short-app-handoff.md](final-short-app-handoff.md). App95103…fe969/test07a3177…b56e3 are the final observed pair; real multi-stage source/script/edit→lock/audio→silent Player→local SAF export completed. No further phone/model work is authorized. The historical gates below remain evidence, not the current installation nomination.
+
 **No further phone work is authorized by this handoff.** Explicit load-only, canonical TTS, failed profiled-long and completed profile-OFF slots are retained. The profile-OFF whole request returned29.80s audio, not its roughly90s target; speech coverage/listening remain unreviewed. Another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
 
 ## 1. Coherent UI candidate — FINAL host + synthetic UI approved
@@ -69,8 +71,8 @@ The one local ASR check is also complete: matching fragments span all four parag
 
 ## 6. What remains unresolved
 
-- **Product/native workflow:** canonical four-context TTS execution now produced one WAV, but the complete production generation/job/lifecycle flow and its integration with the approved UI have not been accepted. No further Gemma or TTS run is implied.
-- **Whole-chapter duration/coverage:** the installed diagnostic APK's normal/default route still has its T239/L238 limits. Source-only normal integration `70a6ac6` prepares the separate T2048/L2048 namespace with explicit experimental/coverage-unverified labelling, but is not built or deployed. Its profile-OFF WAV and completed CPU comparison do not establish the90s target or complete/intelligible speech. [Preparation and hold](normal-app-integration-preparation.md). No splitting/stitching, forced duration, fallback, graph replacement or automatic recovery is approved.
+- **Long product/native workflow:** the separate SHORT multi-stage normal workflow now completed through local export; it does not establish1–2minute chapter behavior or a clean single invocation. No further Gemma/TTS run is implied.
+- **Whole-chapter duration/coverage:** the final installed SHORT app explicitly selects T239/L238. Source-only long integration `70a6ac6` prepared the separate T2048/L2048 namespace with experimental/coverage-unverified labelling; that long default is not the installed tested short route. Its profile-OFF WAV and completed CPU comparison do not establish the90s target or complete/intelligible speech. [Preparation and hold](normal-app-integration-preparation.md). No splitting/stitching, forced duration, fallback, graph replacement or automatic recovery is approved.
 - **Product/hardware:** physical accessibility/media/export, native lifecycle and complete generation remain separate gates. UI success does not close them.
 
 Pi must choose and approve the exact next physical candidate/scope explicitly; no unchanged retry is implied. The UI and diagnostic share the application ID; installing one does not preserve the other's installed binary identity. Never mix their app/test pairs. **Normal Gradle output APKs were deliberately restored to old c893 binaries; use only the nominated frozen paths above.**

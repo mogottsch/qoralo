@@ -1,5 +1,7 @@
 # Separate SHORT production-plumbing candidate
 
+**Later outcome:** [final-short-app-handoff.md](../../docs/final-short-app-handoff.md) nominates the final reused95103 app/test07a and records the completed multi-stage SHORT export. Candidate folders below preserve every earlier preparation unchanged; attempt02/03/04/05 and continuation failures are historical, not permission to replay.
+
 **Not a retry/shortening of the long input; not full1–2minute chapter readiness. No phone execution in this evidence.**
 
 The new fixed nonprivate shelf source requests exactly two20–25word chapters, each≤190 normalized codepoints. Review ON, ONE planned agent revision, normal source_notes→outline→chapter1→chapter2 plus one separate edit request; irreversible user lock then two complete short renders, normal700ms master gap/timeline, silent app-player checks and real new local SAF export. No fake engine, seeded draft, imported WAV, text slicing, output stretching, model/native rebuild or inference retry.

@@ -1,6 +1,6 @@
 # Normal app integration — source preparation only
 
-**Not built, deployed or product-tested. Full-chapter E2E is held while duration/spoken coverage are investigated.** The current installed59e338… APK is the profile-OFF diagnostic, not a coherent normal production candidate.
+**This LONG integration remains held for duration/spoken-coverage limitations.** A separately property-pinned SHORT normal app has since completed a real multi-stage workflow through local SAF export. See [final-short-app-handoff.md](final-short-app-handoff.md) for the final installed95103… app, exact bindings and limitations; do not confuse it with the unqualified long default build.
 
 The profile-OFF call returned a real29.7969s WAV for a complete227-word input. Nik accepted bounded input→WAV operability only. This misses the roughly90s target; speech coverage/listening are not accepted. Jere's one completed local ASR pass finds discontinuous lexical matches across all four paragraphs, not evidence of complete speech. Its93/227 ordered exact-word matches are intended-text versus ASR disagreement, not measured speech WER or definitive omissions.
 
