@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:18:57+00:00",
+  "updated_at": "2026-09-11T11:20:43+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -75,12 +75,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "preparing",
+      "status": "paused",
       "owner": "Ben",
-      "now": "PAUSE effective: no Ben job active; FP32 worker completed/reaped/released earlier; weight-ablation tests finished but no ablation request/model/build/compile/phone run prepared or started.",
-      "next": "Preserve/commit source+tests and restart handoff, then closure report marks PAUSED BY MORITZ. No heavy-slot request; Jere compile untouched.",
-      "reported_at": "2026-09-11T11:17:58+00:00",
-      "reported_by": "Ben — effective pause/no active job",
+      "now": "PAUSED BY MORITZ: Ben closure committed/released localbd59343; scoped tree clean/no push or rewrite; restart handoff PAUSED-20260911.md.",
+      "next": "Completed FP3206d8332/physical696f42d retained. Partial weight-only tools+6 CPU tests preserved, but no request/attempt/model load/forward/compile/phone start. Fidelity/W4A16/prefill/reset/campaign unresolved.",
+      "reported_at": "2026-09-11T11:20:43+00:00",
+      "reported_by": "Ben — pause closure committed/released",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Jere Gemma context work remains active; Janek app capacity scope complete/handoff; Jens packages verified LFM pair under Moritz pause; Ben pause closure.",
-      "next": "LFM fidelity boundary remains unresolved despite paired equality; no further LFM phone call. No new app phone/model work for completed guard scope.",
-      "reported_at": "2026-09-11T11:18:46+00:00",
-      "reported_by": "Jens/Janek — completed verification and app prevention result",
+      "now": "Janek app capacity scope finishes retention; Jere Gemma context work remains active. Qwen/LFM paused closure complete or finalizes only.",
+      "next": "No Ben heavy/phone slot or auto-resume watcher. No Qwen work until Moritz resumes; preserve paused handoff/outcomes.",
+      "reported_at": "2026-09-11T11:20:43+00:00",
+      "reported_by": "Ben — Qwen closure release; pause retained",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Preserve/commit Qwen source/tests +restart handoff",
-      "reported_at": "2026-09-11T11:17:58+00:00",
-      "reported_by": "Ben — pause effective/no active job",
+      "task": "PAUSED BY MORITZ; restart handoff retained",
+      "reported_at": "2026-09-11T11:20:43+00:00",
+      "reported_by": "Ben — closure committed/released",
       "stale_after_seconds": 900
     },
     {
