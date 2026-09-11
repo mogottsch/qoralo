@@ -1,0 +1,13 @@
+# Structured EDIT: actual syntax and normal-validation pass
+
+One changed-decoder-setting call under source4466077f/candidate6468097a, installed appe1b33f27…/test060edd5f…. Before model load the reconstructed request matched the prior actual request SHA `0d165d3d4a2472670f2e81e65a8ad6d73b37a339178fecdc28d293693f70c4aa`. Offline comparison confirms byte-identical request/system and unchanged sampling scalars/limits. The EDIT-only SDK JSON-schema constraint is deliberately changed and hash-bound (`30febb7dd5dde64f201c4983dba6f3f4b0ee557b2547e957c4011be2e667a864`); no new native library/model, repair, unconstrained retry or fallback.
+
+The returned raw reply is8,394B SHA `4e83504ed1044f7c63441b3a70aea03efe275ade007a96f64d080aef3a56a613`. Actual Android syntax, strict response keys/version, and the normal complete-script validator passed. Independent strict host JSON parsing also passes without repair. Five chapters were returned, all original IDs retained, all five texts changed and summary nonblank. Returned narration word counts289/140/203/247/259 differ from the original; no app-side truncation occurred. This is not automatic approval of humor, factual correctness, coverage or requested-style fulfillment.
+
+**Response not applied.** The probe deliberately created no job/revision and did not modify the original episode. The existing-draft recovery transaction passed inside an always-rollback outer transaction; its real UI button was displayed/enabled but not clicked. ALL9episodes/8sources/7revisions/22chapters/12jobs, other rows/catalog and19episode files remained unchanged.0TTS/Play/export. Cleanup errors[], exact app/generation/test PIDs and controls absent, full phone lock released.
+
+SDK KV count4131 is a reported current-conversation counter, not a decoded-output-token count. Decode/prefill counters and stop reason were unavailable. Load wall6.104s and request+close wall131.894s are single functional observations, not neural-only/warm performance or an attributable slowdown comparison.
+
+Three identical37,888B private archives have SHA `a1624a5d123e1a4ff8342117c4a6c36eaa24bae48b8d77102c961294ee517307`. Seven safe original receipts are public;226 captures5,779,113B remain private/hash-bound. Raw request/reply/schema observation/exception/user data are private. Nik was disconnected; no independent review verdict or substitute reviewer is claimed. Baseline failure and all earlier evidence remain immutable. No push and no further phone/model run needed for this scope.
+
+[Installed app and how to return to the draft](../../../docs/chat-edit-repair-handoff-2026-09-11.md).

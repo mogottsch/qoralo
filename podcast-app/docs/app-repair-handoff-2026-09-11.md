@@ -1,4 +1,6 @@
-# Current app repair handoff — 2026-09-11
+# Earlier capacity-repair handoff — 2026-09-11
+
+**Superseded installation nomination:** the current app is now `e1b33f27…`, adding tested structured chat-edit replies and explicit saved-draft recovery. See [the current chat-edit handoff](chat-edit-repair-handoff-2026-09-11.md). The50a367… capacity milestone and its original results below remain preserved.
 
 ## Installed build
 

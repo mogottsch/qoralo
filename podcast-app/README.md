@@ -4,7 +4,7 @@ Greenfield Android implementation of the binding UX in `../docs/app-ux-mvp.html`
 
 ## Current tested internal build
 
-See [the 2026-09-11 app repair handoff](docs/app-repair-handoff-2026-09-11.md) for the installed `50a367…` APK, real-input SCRIPT results and tested early audio-capacity handling. Full drafts are preserved; full-length chapter narration remains unsupported/unverified by the selected voice. The frozen APK in that handoff is the tested nomination, not an arbitrary build output.
+See [the installed chat-edit repair handoff](docs/chat-edit-repair-handoff-2026-09-11.md) for the current `e1b33f27…` APK, tested structured edit replies and safe draft recovery. The [earlier capacity handoff](docs/app-repair-handoff-2026-09-11.md) retains real-input SCRIPT results and early audio-capacity evidence. Full drafts are preserved; full-length chapter narration remains unsupported/unverified by the selected voice. The frozen APK in that handoff is the tested nomination, not an arbitrary build output.
 
 ## Identity
 
