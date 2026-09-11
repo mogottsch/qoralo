@@ -1,0 +1,239 @@
+{
+  "experiment": "0036",
+  "route": "Android physical QNN/HTP all four neural stages",
+  "status": "one_full_pipeline_completed_not_listening_acceptance",
+  "canonical": false,
+  "runs": 1,
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "reference_bytes": 3190,
+  "voice": "M1/SID5",
+  "speed": 1.0,
+  "steps": 5,
+  "device_serial": "R5CW81PR8SY",
+  "model": "SM-S918B/SM8550/v73",
+  "cpu_fallback_disabled": true,
+  "neural_calls": {
+    "duration": 1,
+    "text3_a": 1,
+    "text3_b": 1,
+    "text3_c": 1,
+    "vector": 5,
+    "vocoder": 1
+  },
+  "text_depth_parts": 3,
+  "logical_neural_stages": 4,
+  "metrics": {
+    "runtime": "1.27.1",
+    "provider": "QNNExecutionProvider",
+    "profiling_enabled": false,
+    "threads": 1,
+    "text_extent": 3200,
+    "active_text_positions": 3167,
+    "latent_extent": 512,
+    "natural_active_latent": 425,
+    "predicted_duration_seconds": 29.57812691,
+    "natural_wave_frames": 1304395,
+    "emitted_frames": 1304395,
+    "vocoder_output_frames": 1572864,
+    "setup_seconds": 2.454393905,
+    "render_stage_seconds": 8.395049319,
+    "pipeline_wall_seconds": 11.15649609,
+    "maxrss_kib": 181740,
+    "stage_setup_seconds": [
+      0.415385781,
+      0.424050364,
+      0.402415938,
+      0.361274166,
+      0.547018333,
+      0.304249323
+    ],
+    "stage_run_seconds": [
+      0.792982864,
+      0.629266667,
+      1.17944776,
+      0.613175989,
+      5.086778071,
+      0.093397968
+    ],
+    "stage_names": [
+      "duration",
+      "text3_a",
+      "text3_b",
+      "text3_c",
+      "vector",
+      "vocoder"
+    ],
+    "logical_stage_run_seconds": {
+      "duration": 0.792982864,
+      "text": 2.421890416,
+      "vector": 5.086778071,
+      "vocoder": 0.093397968
+    },
+    "audio_seconds": 29.578117913832198,
+    "rtf_stage_sum": 0.28382635242231075,
+    "setup_excluded_pipeline_seconds": 8.702102185,
+    "rtf_setup_excluded_pipeline": 0.2942074343726402,
+    "peak_observed_vmhwm_kib": 181740,
+    "peak_sampled_pss_kib": 47460,
+    "rtf_including_interleaved_setup": 0.3771874911886353
+  },
+  "input_tensor_hashes": {
+    "text_ids.i64": "da2db62a0bfcedccec10b91a01bafac87165624f7d6b52133b22ff99f3b5ba22",
+    "text_mask.f32": "02b376bfe8d96b470e6fbfede1b5ab71da2fa107bd4d18a403856b5da4afe4b7",
+    "style_dp.f32": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+    "style_ttl.f32": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+    "current_step.f32": "8deb90668ea3a6845d5c04454798ccb63829a88ff827892f2dc11c808baac7af",
+    "total_step.f32": "fca31f1667a6aa1bba12fca4e4ea1becd503379d80da3213af07f6cc5702828d",
+    "noise.f32": "aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40"
+  },
+  "own_latent_mask_sha256": "46f7b834232958695b57a1e74923d4807f8a85955ca59287b90627a96e881a5c",
+  "own_initial_latent_sha256": "1d72761eeca4bfe541c6435a982bdac92b200f5b864011e289a9559f243e0341",
+  "saved_noise_and_own_natural_mask_verified": true,
+  "wav": {
+    "channels": 1,
+    "sample_width_bytes": 2,
+    "sample_rate_hz": 44100,
+    "frames": 1304395,
+    "bytes": 2608834,
+    "sha256": "3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c",
+    "rms_full_scale": 0.038977032749008274,
+    "peak_full_scale": 0.44384765625,
+    "zero_fraction": 0.014016459738039473,
+    "clip_32767_fraction": 0.0
+  },
+  "context_and_runtime_hashes": {
+    "contexts/duration-context.onnx": {
+      "bytes": 812,
+      "sha256": "1cb7deeee50a60a8f14be9e0501d18ee7df90f6e0c1bf603d3615af5ed0b05f5"
+    },
+    "contexts/duration-context_qnn.bin": {
+      "bytes": 12938104,
+      "sha256": "e9df9226f7265abae8f3e10cd4132f1233398e5d8633038ddf07434740610ddf"
+    },
+    "contexts/text3_a-context.onnx": {
+      "bytes": 1033,
+      "sha256": "87eb2d687a83079ece976d541ce3c795eecd3dd88f36293aa6eee56494c7698f"
+    },
+    "contexts/text3_a-context_qnn.bin": {
+      "bytes": 17818768,
+      "sha256": "c64da39d6a6f3ed50be8d953c80c0d61e71dde3b7ad1f503e14fb10a4e5b55f3"
+    },
+    "contexts/text3_b-context.onnx": {
+      "bytes": 1021,
+      "sha256": "6bdcc50fd62b611b9adf139236ee502568828458d6419295da4ab985c46a7908"
+    },
+    "contexts/text3_b-context_qnn.bin": {
+      "bytes": 11765040,
+      "sha256": "4d24a976ae299a8e0e97e761383dbf30c33befe259c984240216695e994a52cd"
+    },
+    "contexts/text3_c-context.onnx": {
+      "bytes": 1083,
+      "sha256": "db4b3055e7beb0a27f8db3ace7c00634a47ef529f8a07c72c2a73cb716abca65"
+    },
+    "contexts/text3_c-context_qnn.bin": {
+      "bytes": 7583272,
+      "sha256": "c836b80da29b3fbeb2e6031ef5aa3f5870e4d39cae4eb8df328cad5053332b7e"
+    },
+    "contexts/vector-context.onnx": {
+      "bytes": 1023,
+      "sha256": "9ef99d9409b50bea4e451e1d57a1aebc937c164ff4d0a689124760a0d2e938a4"
+    },
+    "contexts/vector-context_qnn.bin": {
+      "bytes": 148629552,
+      "sha256": "9edba913957e1f65ffb67d281b40f4ef547602423461d263644d3e2ff7ed4ab8"
+    },
+    "contexts/vocoder-context.onnx": {
+      "bytes": 729,
+      "sha256": "d4f08236b4ea22ac1369aa83d2627cca2d45b12d896e911abff7240261f7b4cc"
+    },
+    "contexts/vocoder-context_qnn.bin": {
+      "bytes": 54282656,
+      "sha256": "f71c7b25ca4a501d4269f4b88d70c1a37bfab351d156e95d483e0121046cf306"
+    },
+    "lib/libQnnHtp.so": {
+      "bytes": 3786064,
+      "sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604"
+    },
+    "lib/libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25"
+    },
+    "lib/libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f"
+    },
+    "lib/libQnnSystem.so": {
+      "bytes": 4072160,
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "lib/libc++_shared.so": {
+      "bytes": 1822720,
+      "sha256": "8dfbd800f0d4b8ff2b664b0e5012a4a5f08794668dccfaa29b8b1c2cdcdc18b3"
+    },
+    "lib/libonnxruntime.so": {
+      "bytes": 22399512,
+      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+    },
+    "runner": {
+      "bytes": 140168,
+      "sha256": "060787df7810cb076464e11905c8b35d85cfa23882bf44af18357fc027eaa6d2"
+    }
+  },
+  "memory_method": "runner getrusage ru_maxrss and0.5s /proc own-PID VmHWM/PSS sampling; excludes DSP/VTCM",
+  "timing_method": "steady_clock per constructor and stage; sequential load/run/release, no warm campaigns. Pipeline includes constructor/destructor/host IO; setup-excluded difference is explicitly derived.",
+  "profile_metrics": {
+    "rpc_microseconds": null,
+    "accelerator_cycles": null,
+    "hvx_cycles": null,
+    "reason": "profiling intentionally off; earlier large profile-enabled path failed SET_PROFILE6006; no fabricated counters"
+  },
+  "physical_backend_evidence": {
+    "owned_pid_logcat_sha256": "8625f4fee1535d658e97713e14a2accd4c0632c9b8fbbf586119c92552fbe25d",
+    "QnnHtpV73Skel_observed": true,
+    "cdsp_domain_observed": true,
+    "boundary": "Process-scoped native backend/RPC evidence, not per-stage profiler counters."
+  },
+  "thermal_evidence": "private thermal-before.txt and thermal-after.txt retained",
+  "private_evidence_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/phone-depth-full-attempt-01",
+  "private_wav_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/phone-depth-full-attempt-01/evidence/run/htp.wav",
+  "listening_verdict": "not_reviewed",
+  "entire_chapter_intelligible": null,
+  "coverage_boundary": "A complete all-stage run and naturally trimmed valid WAV are not proof every unchanged word was spoken. Qualified unprompted local ASR and Moritz listening remain separate.",
+  "no_app_or_data_changes": true,
+  "remote_cleanup_verified": true,
+  "coverage_status": "failed_qualified_local_asr",
+  "entire_chapter_coverage_demonstrated": false,
+  "automatic_coverage_pass": false,
+  "warm_median_rtf": null,
+  "warm_median_reason": "One completed noncanonical full render of this lowered route, not a campaign or warmed median.",
+  "failed_prior_full_attempts": 1,
+  "constructor_only_phone_controls": 2,
+  "same_initial_masked_noise_and_latent_mask_as_CPU": true,
+  "asr_summary": {
+    "model": "openai-whisper-small",
+    "model_sha256": "9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794",
+    "transcript_sha256": "37455e9ffa169c24f56a92c3478f7634e51655e807bbd34f216dc9a67c43f93f",
+    "reference_sha256": "c6cb2d182751b7d09670903314c54731be1e74621f74a54dc627e2952057cead",
+    "reference_words": 495,
+    "hypothesis_words": 122,
+    "word_error_rate": 0.8868686868686869,
+    "deletions": 373,
+    "substitutions": 66,
+    "insertions": 0,
+    "exactly_matched_reference_words": 56,
+    "last_30_reference_words_matched": 2,
+    "logical_asr_passes": 1,
+    "alignment_only_recomputed_no_new_ASR": true,
+    "automatic_coverage_pass": false,
+    "word_count_note": "487 raw whitespace words;495 regex words after frozen product normalization, matching CPU. Initial raw-reference506-word alignment remains private; no ASR retry."
+  },
+  "entire_chapter_intelligible_reason": "Not human-reviewed. Qualified unprompted local ASR88.69%WER,373deletions and2/last30 matches strongly argue against complete intelligible coverage.",
+  "thermal_context": {
+    "preflight_MemAvailable_kib": 4384596,
+    "minimum_sampled_MemAvailable_kib": 3032852,
+    "battery_before_C": 27.9,
+    "battery_after_C_from_thermal_HAL": 27.9,
+    "thermal_status_after": 0,
+    "boundary": "Device-wide available memory is not an attributable model-memory measurement."
+  }
+}

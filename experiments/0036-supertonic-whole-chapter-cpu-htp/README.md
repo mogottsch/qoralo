@@ -1,6 +1,6 @@
 # Whole-chapter Supertonic: Android CPU vs Android HTP
 
-Status: **One full Android CPU WAV produced; automatic whole-chapter coverage check failed. HTP render pending.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
+Status: **Real full Android CPU and HTP WAVs produced; both automatic whole-chapter coverage checks failed. Neither WAV has a human listening verdict.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
 
 ## Question and fixed input
 
@@ -12,7 +12,7 @@ Shared settings: official Supertonic-3 FP32 weights, M1 voice (product identity 
 
 ## Route and extent contract
 
-CPU owns duration prediction, text encoding, five vector-estimator calls, and one whole vocoder call. HTP must likewise execute its own four neural stages, fail closed against CPU fallback. CPU duration/embeddings/latents are not inputs to the HTP route.
+CPU owns duration prediction, text encoding, five vector-estimator calls, and one whole vocoder call. HTP independently executed the same four logical stages, with CPU fallback disabled. Its text stage required three **network-depth** subgraphs, each retaining the whole T3200 sequence and full attention context. CPU duration/embeddings/latents were not inputs to the HTP route.
 
 The separately labelled Android CPU duration calibration returned **29.56986237 seconds**, 1,304,030 natural frames and 425 active latent positions. Both owners agreed on **L512**, with 87 positions (20.5%) of latent-capacity margin. The full CPU render repeats its own duration prediction. This unexpectedly short duration for a 487-word chapter is a substantial coverage concern, not something to correct by forcing a longer output. Each route computes natural frames as `floor(FP32(duration * 44100))`, active latent positions as `ceil(frames / 3072)`, and writes precisely that natural number of frames. This is the model's ordinary final sample selection, not a target-duration crop. A route exceeding the common latent capacity fails rather than silently truncating.
 
@@ -58,6 +58,44 @@ It is finite, nonempty and unclipped, but that does not establish intelligibilit
 
 **Full chapter coverage is not demonstrated and the automatic check fails strongly.** No output repair, duration forcing, second render or ASR retry was performed. Moritz's listening verdict remains **`not_reviewed`**. Raw transcripts stay private.
 
+## HTP completed result and matched comparison
+
+The original single text context failed before text execution. Two fresh text-only constructor controls, with no DP context or model inputs and **zero Run calls**, failed at both 5 GiB and 8 GiB Linux address-space limits. Owned-PID native logs exposed RPC allocator `size >= 0` failures for 2,666,528,768-byte and 2,245,001,216-byte requests, both above `INT32_MAX`. These failures and the initial incomplete pipeline are retained; they are not successful full renders.
+
+The successful route splits text encoding by **network depth, not text positions**: prefix + encoder block 0 → blocks 1–2 → block 3 + style conditioning. Every part still processes the whole sequence. All 1,934 original nodes and 146 initializers are preserved byte-for-byte; only nonlearned mask/control work is repeated. An offline CPU source-equivalence check was bitwise exact. Complete hidden-state and residual-skip tensors produced by HTP are copied before closing their contexts; **no CPU validation activation is staged or substituted**. The conservative allocation plan leaves at least 268,435,455 bytes of signed-size margin after extra allowance and rounding.
+
+This lowered route completed **once**, with **10 own QNN calls: duration 1, text parts 3, vector 5, vocoder 1**. ORT 1.27.1/QNN uses the same official FP32 source weights, M1 style, frozen inputs and noise. Source-weight identity and CPU partition equivalence do not claim bitwise equality of CPU and HTP backend arithmetic. Profiling is off, CPU fallback is disabled, and owned-PID logs show the v73 HTP skeleton and cDSP transport. No profiler cycle/HVX/RPC-time values are invented.
+
+| Measurement | Android CPU | Android HTP, depth-partitioned text |
+| --- | ---: | ---: |
+| Own natural duration prediction | 29.56986237 s | 29.57812691 s |
+| Emitted frames | 1,304,030 | 1,304,395 |
+| Emitted audio duration | 29.56984127 s | 29.57811791 s |
+| Summed interleaved session setup | 0.796162 s | 2.454394 s |
+| Generation wall excluding session setup | 18.597834 s | 8.702102 s |
+| RTF, generation wall excluding setup | 0.628946 | 0.294207 |
+| Complete pipeline wall including setup | 19.393996 s | 11.156496 s |
+| Linux process peak RSS | 2,102,392 KiB | 181,740 KiB |
+| ASR hypothesis / normalized reference words | 103 / 495 | 122 / 495 |
+| ASR word error rate | 89.09% | 88.69% |
+| Exact aligned word matches | 54 | 56 |
+| Matches in the final 30 reference words | 3 | 2 |
+
+**Timing qualifications:** these are individual first completed runs, not warmed medians. CPU profiling was on and HTP profiling was off. Both interleave session setup, execution and release; HTP has six physical contexts for four logical stages. Its stage-only duration/text/vector/vocoder times are 0.7930 / 2.4219 / 5.0868 / 0.0934 seconds. The reported setup-excluded wall time also includes the remaining host copies, cleanup and evidence writes. **Memory qualifications:** HTP's Linux RSS excludes substantial DSP/shared allocations; this table does not demonstrate device-wide memory savings.
+
+The real HTP PCM16 mono 44.1 kHz WAV is private:
+
+```text
+htp/.local/phone-depth-full-attempt-01/evidence/run/htp.wav
+SHA-256 3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c
+```
+
+Both routes independently selected 425 active latent positions. Their saved masked initial noise and latent masks are **byte-identical**, not merely seeded alike. HTP emitted its own naturally predicted frame count; no speed/duration override, external text/audio chunks, stitching, stretch or repair occurred. Its live memory guards did not fire, the unique remote directory was removed, and the phone lock was released. Installed app/data were untouched.
+
+The same qualified offline unprompted Whisper-small protocol was run **once** on the exact HTP WAV. It produced 122 words, with 373 deletions, 66 substitutions and no insertions against the same 495-word normalized reference used for CPU. The first post-decoding alignment used raw punctuation and counted 506 reference words; that private result is retained. The **unchanged saved hypothesis** was then aligned to CPU's frozen normalized reference. This was alignment-only arithmetic, not an ASR retry, decoding prompt, transcript repair or input change.
+
+**Conclusion:** both complete execution paths produced valid speech files, but neither demonstrates speaking the entire unchanged chapter intelligibly. Qualified ASR strongly argues against whole-chapter coverage on both routes. The roughly 29.57-second natural predictions are retained rather than forced to fit the chapter. Moritz's exact-WAV listening verdict remains **`not_reviewed`** for both. No accepted-quality throughput or registry claim follows.
+
 ## Files
 
 - `common/prepare_inputs.py`: private frontend, voice, schedule, and shared noise bundle.
@@ -65,7 +103,11 @@ It is finite, nonempty and unclipped, but that does not establish intelligibilit
 - `cpu/runner.cc`: bounded standalone complete Android CPU runner and duration calibration mode.
 - `cpu/build.sh`, `cpu/run_phone.py`: build and phone-lock-aware execution.
 - `cpu/test_common.py`: public synthetic frontend/stochastic-layout/runner-contract tests.
-- `htp/`: Ben's separately owned implementation and evidence.
+- `htp/`: standalone HTP runner, retained failed allocation diagnostics, full-sequence depth partition and evidence.
+- `htp/results/full-depth-render-01.json`: exact completed HTP WAV, 10-call/provider/stochastic/timing/memory/cleanup evidence and failed automatic coverage status.
+- `htp/results/asr-depth-full-01.json`: one unprompted HTP decode, matched normalized-reference alignment; no transcript text.
+- `htp/results/comparison-01.json`: matched CPU/HTP numeric summary and claim boundaries.
+- `htp/results/text-load-controls.json`: preserved 5/8 GiB controls and evidenced RPC signed-size failure path.
 - `protocol/contract.json`: frozen T3200/L512 model, input, schedule and noise metadata/hashes.
 - `cpu/results/duration-calibration-01.json`: separate Android CPU calibration evidence; 186 CPU-only profile kernel events.
 - `common/asr_coverage.py`: offline unprompted Whisper-small analysis, CPU-only and bounded. The existing canonical CPU control WAV produced 0% word error over 36 normalized words; this qualifies the local analysis setup, not chapter coverage or listening acceptance.

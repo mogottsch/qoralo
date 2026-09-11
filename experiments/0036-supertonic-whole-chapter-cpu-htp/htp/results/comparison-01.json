@@ -1,0 +1,92 @@
+{
+  "experiment": "0036",
+  "result": "Both full Android pipelines produced real WAVs; both qualified automatic coverage checks failed. No listening acceptance.",
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "reference_bytes": 3190,
+  "text_extent": 3200,
+  "active_text_positions": 3167,
+  "latent_extent": 512,
+  "voice": "M1/SID5",
+  "speed": 1.0,
+  "steps": 5,
+  "sample_rate": 44100,
+  "matched_input_tensor_hashes": {
+    "text_ids.i64": "da2db62a0bfcedccec10b91a01bafac87165624f7d6b52133b22ff99f3b5ba22",
+    "text_mask.f32": "02b376bfe8d96b470e6fbfede1b5ab71da2fa107bd4d18a403856b5da4afe4b7",
+    "style_dp.f32": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+    "style_ttl.f32": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+    "current_step.f32": "8deb90668ea3a6845d5c04454798ccb63829a88ff827892f2dc11c808baac7af",
+    "total_step.f32": "fca31f1667a6aa1bba12fca4e4ea1becd503379d80da3213af07f6cc5702828d",
+    "noise.f32": "aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40"
+  },
+  "initial_masked_noise_sha256": "1d72761eeca4bfe541c6435a982bdac92b200f5b864011e289a9559f243e0341",
+  "latent_mask_sha256": "46f7b834232958695b57a1e74923d4807f8a85955ca59287b90627a96e881a5c",
+  "entire_chapter_coverage_demonstrated": false,
+  "listening_verdicts": {
+    "CPU": "not_reviewed",
+    "HTP": "not_reviewed"
+  },
+  "routes": {
+    "CPU": {
+      "metadata": "cpu/results/full-render-01.json",
+      "wav_sha256": "9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2",
+      "private_wav_path": "experiments/0036-supertonic-whole-chapter-cpu-htp/.local/cpu/20260911T123235Z-full/phone/output/cpu.wav",
+      "predicted_duration_seconds": 29.56986237,
+      "emitted_frames": 1304030,
+      "audio_seconds": 29.56984126984127,
+      "setup_seconds": 0.796161926,
+      "generation_excluding_setup_seconds": 18.597834114,
+      "rtf_excluding_setup": 0.6289460245756616,
+      "pipeline_including_setup_seconds": 19.39399604,
+      "rtf_including_setup": 0.6558708199688658,
+      "linux_ru_maxrss_kib": 2102392,
+      "profiling": true,
+      "ASR": {
+        "reference_words": 495,
+        "hypothesis_words": 103,
+        "word_error_rate": 0.8909090909090909,
+        "exactly_matched_reference_words": 54,
+        "deletions": 392,
+        "substitutions": 49,
+        "insertions": 0,
+        "last_30_reference_words_matched": 3
+      },
+      "neural_calls": 8
+    },
+    "HTP": {
+      "metadata": "htp/results/full-depth-render-01.json",
+      "wav_sha256": "3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c",
+      "private_wav_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/phone-depth-full-attempt-01/evidence/run/htp.wav",
+      "predicted_duration_seconds": 29.57812691,
+      "emitted_frames": 1304395,
+      "audio_seconds": 29.578117913832198,
+      "setup_seconds": 2.454393905,
+      "generation_excluding_setup_seconds": 8.702102185,
+      "rtf_excluding_setup": 0.2942074343726402,
+      "pipeline_including_setup_seconds": 11.15649609,
+      "rtf_including_setup": 0.3771874911886353,
+      "linux_ru_maxrss_kib": 181740,
+      "profiling": false,
+      "ASR": {
+        "reference_words": 495,
+        "hypothesis_words": 122,
+        "word_error_rate": 0.8868686868686869,
+        "exactly_matched_reference_words": 56,
+        "deletions": 373,
+        "substitutions": 66,
+        "insertions": 0,
+        "last_30_reference_words_matched": 2
+      },
+      "neural_calls": 10
+    }
+  },
+  "boundaries": [
+    "Noncanonical product-reference comparison; one completed full render per route, no warm-median/registry claim.",
+    "CPU profiling on, HTP profiling off; HTP has3 full-sequence network-depth text parts rather than1text graph. Same original nodes/weights, hostCPU source-equivalence bitwise exact.",
+    "Interleaved session create/run/close costs are retained; generation excluding setup is explicitly derived, not all-sessions-resident generation.",
+    "QNN backend/v73/cDSP observed in owned-PID logs with fallback disabled; profiler counters unavailable.",
+    "Linux process RSS does not include all DSP/shared allocations; do not infer device-wide memory savings from it.",
+    "Same qualified unprompted ASR model/settings, one decode each. HTP saved hypothesis was alignment-only rescored against CPU's identical frozen normalized reference; no ASR retry, text repair or prompt conditioning.",
+    "The initial unchanged HTP context failed signed RPC allocation, followed by2zeroRun5/8GiB controls; all preserved separately. Three-part lowered route completed once."
+  ]
+}
