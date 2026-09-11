@@ -1,0 +1,16 @@
+Toybox 0.8.12-android multicall binary (see toybox --help)
+
+usage: timeout [-iv] [-k DURATION] [-s SIGNAL] DURATION COMMAND...
+
+Run command line as a child process, sending child a signal if the
+command doesn't exit soon enough.
+
+DURATION can be a decimal fraction. An optional suffix can be "m"
+(minutes), "h" (hours), "d" (days), or "s" (seconds, the default).
+
+-i	Only kill for inactivity (restart timeout when command produces output)
+-k	Send KILL signal if child still running this long after first signal
+-s	Send specified signal (default TERM)
+-v	Verbose
+--foreground       Don't create new process group
+--preserve-status  Exit with the child's exit status

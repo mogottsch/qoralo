@@ -14,6 +14,7 @@ OUT="$EXP/.local/prefill-pair-phone-runs/$RUN_ID"
 mkdir -p "$(dirname "$OUT")"
 mkdir "$OUT"
 mkdir "$OUT/private"
+sha256sum "$EXP/tools/run_prefill_pair_phone.sh" "$EXP/tools/phone_evidence_guard.sh" "$EXP/tools/extract_core_phone_telemetry.py" >"$OUT/driver-source-SHA256SUMS"
 python3 "$EXP/tools/verify_android_stage_elf.py" "$STAGE" >"$OUT/local-elf-preflight.txt"
 (cd "$STAGE" && sha256sum -c SHA256SUMS) >"$OUT/local-hash-check.txt"
 source "$EXP/tools/phone_evidence_guard.sh"
@@ -68,8 +69,13 @@ if ! phone_capture_process_after "$ADB" "$SERIAL" direct_lfm2_qnn_runner "$OUT/p
   echo 'existing or unknown standalone runner; no staging' >&2; exit 4
 fi
 process_absence=1
+set +e
 adb_cmd shell 'timeout --help' >"$OUT/device-timeout-help.txt" 2>"$OUT/device-timeout-help.stderr"
-grep -Fq -- '-k' "$OUT/device-timeout-help.txt" || { echo 'device timeout kill-after unsupported' >&2; exit 4; }
+timeout_help_code=$?
+set -e
+printf '%s\n' "$timeout_help_code" >"$OUT/device-timeout-help-exit.txt"
+case "$timeout_help_code" in 0|125) ;; *) echo 'timeout help collection failed' >&2; exit 4 ;; esac
+grep -Fq 'usage: timeout ' "$OUT/device-timeout-help.txt" && grep -Fq -- '-k' "$OUT/device-timeout-help.txt" || { echo 'device timeout kill-after unsupported' >&2; exit 4; }
 adb_cmd shell df -k /data/local/tmp >"$OUT/storage-before.txt"
 available=$(awk 'NR==2{print $4}' "$OUT/storage-before.txt" | tr -d '\r')
 [[ "$available" =~ ^[0-9]+$ ]] && (( available > 6*1024*1024 )) || exit 4

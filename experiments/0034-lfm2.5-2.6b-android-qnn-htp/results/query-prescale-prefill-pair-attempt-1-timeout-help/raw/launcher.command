@@ -1,0 +1,1 @@
+PHONE_SLOT_CONFIRMED=1 STAGE=/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/prefill-pair-stage-20260911T105155Z-802274 RUN_ID=prefill-pair-20260911T110306Z-3963969 bash /home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_pair_phone.sh
