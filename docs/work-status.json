@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:58:43+00:00",
+  "updated_at": "2026-09-11T11:04:50+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -58,12 +58,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Jens",
-      "now": "LFM pair NOT started: monitoring-tool request rejected at parameter validation before any process/ADB/lock/phone stage/graph call.",
-      "next": "Prepared local58b11ff (67 tests; runner b0028439/stage94d56455). Janek gets next app reproduction slot; await actual release/handoff, no race/interruption.",
-      "reported_at": "2026-09-11T10:56:12+00:00",
-      "reported_by": "Jens — rejected monitoring-tool call, no execution",
+      "now": "LFM phone preflight acquired/released lock in3s; no staging/root/model call. Toybox timeout --help printed valid0.8.12 usage but exited125; strict shell stopped.",
+      "next": "Preserve first preflight outcome; correct only valid-help exit125 handling, then fresh bounded pair in confirmed gap. Identity/local13 hashes/PID absence pass; no model retry/app change.",
+      "reported_at": "2026-09-11T11:04:50+00:00",
+      "reported_by": "Jens — actual zero-action phone preflight blocker",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -77,10 +77,10 @@
       "title": "Qwen range audit",
       "status": "preparing",
       "owner": "Ben",
-      "now": "Qwen light source/tests continue; Ben takes next heavy host slot after Jere AR1 release, then Jens paired compile may follow.",
-      "next": "Planned ONE FP32 worker:18GiB RLIMIT_AS,4CPU low priority,600s+20s TERM,pressure/STOP guard; existing3.764GB checkpoint+121MB p1,49 outputs+24 taps. Not started.",
-      "reported_at": "2026-09-11T10:58:43+00:00",
-      "reported_by": "Ben — agreed shared-host order and bounded worker plan",
+      "now": "Qwen FP32 worker preparation COMPLETE:7 small tests pass; request267335…3e438 binds unchanged adapter/checkpoint/p1 and saved QDQ/QNN bundles;24 read-only hidden taps.",
+      "next": "Model not loaded; plain recurrence parameter references preserved. Ready for agreed post-AR1 heavy slot; no worker start/comparison result yet.",
+      "reported_at": "2026-09-11T11:04:50+00:00",
+      "reported_by": "Ben — completed pre-execution binding/tests",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -95,11 +95,11 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Janek",
-      "now": "LFM monitoring-tool request rejected before lock/ADB/process; Janek has next app reproduction priority. No LFM phone stage occurred.",
-      "next": "LFM prepared only and waits actual app release/handoff; no race/interruption. Phone state is a reported assignment, not live lock/connection.",
-      "reported_at": "2026-09-11T10:56:12+00:00",
-      "reported_by": "Jens — no LFM execution; Pi/Janek priority retained",
+      "owner": "Jens",
+      "now": "LFM preflight lock released after Toybox valid-help exit125 strict-shell stop; no staging/root/model/graph call.",
+      "next": "Correct help-status handling only then fresh bounded pair in reported gap. No lock held; app unchanged; await actual pair start/release.",
+      "reported_at": "2026-09-11T11:04:50+00:00",
+      "reported_by": "Jens — preflight blocker and release",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Jere AR1 conversion holds current heavy slot; Ben Qwen light source/tests only, then one FP32 worker after Jere release; Jens follows Ben.",
-      "next": "Qwen plan has no second model, QNN/compile/phone call. Await Ben actual start/release; no comparison result yet.",
-      "reported_at": "2026-09-11T10:58:43+00:00",
-      "reported_by": "Ben — agreed host sequencing and bounded plan",
+      "now": "Jere AR1 conversion active; Qwen FP32 worker preparation complete/no model load; LFM corrects preflight help-status handling.",
+      "next": "Qwen worker remains post-AR1; LFM pair unstarted. No model retry/app change from Toybox preflight block.",
+      "reported_at": "2026-09-11T11:04:50+00:00",
+      "reported_by": "Ben/Jens — pre-execution states",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Qwen light source/tests; next heavy FP32 worker after Jere release",
-      "reported_at": "2026-09-11T10:58:43+00:00",
-      "reported_by": "Ben — planned/not started",
+      "task": "Qwen FP32 worker ready; wait post-AR1 heavy slot",
+      "reported_at": "2026-09-11T11:04:50+00:00",
+      "reported_by": "Direct owner pre-execution state",
       "stale_after_seconds": 900
     },
     {
@@ -166,9 +166,9 @@
     },
     {
       "name": "Jens",
-      "task": "LFM pair prepared; await Janek release/handoff",
-      "reported_at": "2026-09-11T10:56:12+00:00",
-      "reported_by": "Jens — no execution started",
+      "task": "Correct Toybox help-status; prepare fresh LFM pair",
+      "reported_at": "2026-09-11T11:04:50+00:00",
+      "reported_by": "Direct owner pre-execution state",
       "stale_after_seconds": 900
     },
     {
