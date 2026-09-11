@@ -2,7 +2,9 @@
 
 ## Status
 
-**Active. The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The paired same-input QNN control completed: agreement improves to about 0.888, but residual current-call and prior-state effects both remain. Saved-output analysis exposes discrepancies from layer 0 onward without identifying an operator cause. Physical baseline unchanged.**
+**PAUSED BY MORITZ (2026-09-11). The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The paired same-input QNN control completed: agreement improves to about 0.888, but residual current-call and prior-state effects both remain. Saved-output analysis exposes discrepancies from layer 0 onward without identifying an operator cause. Physical baseline unchanged.**
+
+Restart handoff: [`PAUSED-20260911.md`](PAUSED-20260911.md). Latest completed result [`06d8332 / same-input FP32`](results/fp32-controlled-position1-20260911/) shows logit cosines only0.505974 (QDQ) /0.492931 (QNN) versus the unquantized same-adapter reference, despite all argmax198. The weight-only discriminator has six small tests but **no prepared request or model call**; it remains [partial source only](results/weight-only-ablation-20260911/). No Ben worker, phone lock or next-heavy-slot reservation remains. Do not resume from older proceed notices; Moritz must explicitly resume the track.
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
