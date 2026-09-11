@@ -1,6 +1,20 @@
 # Supertonic provider-prescribed segmented pipeline
 
-**Status: one complete Android chapter produced on each route. Qualified unprompted ASR strongly supports whole-chapter coverage: CPU 2.42% WER, HTP 3.03% WER. Both exact WAVs await Moritz's listening verdict.** This is a new, noncanonical product-reference experiment. It does not replace or reinterpret experiment 0036: that earlier test prohibited segmentation and both its CPU and HTP WAVs were rejected.
+**Status: one complete Android chapter produced on each route. Qualified unprompted ASR strongly supports whole-chapter coverage: CPU 2.42% WER, HTP 3.03% WER. Moritz has accepted both exact WAVs for listening quality.** This is a new, noncanonical product-reference experiment. It does not replace or reinterpret experiment 0036: that earlier test prohibited segmentation and both its CPU and HTP WAVs were rejected.
+
+## Human listening review — both exact files accepted
+
+Moritz's verbatim review: **“reviewd both cpu and htp. both are great.”**
+The single shared [additive listening record](results/listening-review-20260911.json)
+binds CPU `6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be`
+and HTP `0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209`.
+
+This accepts listening quality for **these exact files**, not universal reliability,
+a word-perfect audit, generic app-ready HTP, numerical parity or warm-performance
+acceptance. Original execution/ASR snapshots retain their capture-time
+`not_reviewed` values; the current aggregate cites this later review. The HTP strict
+source gate remains **failed**, and both 0036 rejections remain unchanged. This
+metadata-only update generated, repaired and played no audio.
 
 ## Question
 
@@ -89,7 +103,7 @@ The exact final PCM16 mono 44.1 kHz WAV is private:
 SHA-256 6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be
 ```
 
-One unprompted offline Whisper-small decode recovered **493 words against 495 normalized reference words**: 10 substitutions, two deletions, no insertions, **2.4242% WER**, and 483 exact aligned matches. Every reference decile has 46–50 exact matches; 29 of the final 30 words matched. This strongly supports full-chapter coverage, but does not prove every word was spoken correctly or grant human listening acceptance. **Moritz's verdict remains `not_reviewed`.** Raw transcripts stay private.
+One unprompted offline Whisper-small decode recovered **493 words against 495 normalized reference words**: 10 substitutions, two deletions, no insertions, **2.4242% WER**, and 483 exact aligned matches. Every reference decile has 46–50 exact matches; 29 of the final 30 words matched. This strongly supports full-chapter coverage, but does not prove every word was spoken correctly or grant human listening acceptance. **Moritz subsequently accepted this exact CPU WAV in the [shared review](results/listening-review-20260911.json).** The original ASR/execution snapshots remain unchanged. Raw transcripts stay private.
 
 The same chapter's 0036 single-pass CPU output was only 29.57 seconds with 89.09% WER and was rejected by Moritz. The new result follows the complete prescribed recipe: segmentation, normalization order, eight steps, speed 1.05 and native-wave assembly all changed together. This is not a single-factor causal experiment proving segmentation alone fixed the old failure.
 
@@ -116,7 +130,7 @@ The one HTP run completed all 15 provider chunks, with **165 reported neural Run
 | Unprompted ASR WER | **2.4242%** | **3.0303%** |
 | Exact aligned reference words / 495 | 483 | 480 |
 | Last 30 reference words matched | 29 | 29 |
-| Exact-WAV human listening verdict | `not_reviewed` | `not_reviewed` |
+| Exact-WAV human listening verdict ([shared review](results/listening-review-20260911.json)) | **`accepted`** | **`accepted`** |
 
 The preferred comparison is the matched **process-entry → final WAV-close** boundary: CPU **113.552973394 s** / HTP **88.364558664 s** = **1.285× configuration-level wall ratio**. It includes upfront and interleaved setup through the same output boundary, not post-output teardown. The earlier 1.284× generation ratio is retained only as a historical diagnostic: its CPU interval excludes upfront setup while its HTP interval includes interleaved setup. Neither is a controlled pure-provider speedup: CPU profiling is ON, HTP profiling is OFF; tensor geometry, precision/lowering, session lifecycle and later active noise differ. These are first runs, not warm medians or accepted-quality throughput. HTP's 32-case specialization/export/support checks, build and staging are outside device timing; host QNN constructors alone totaled 40.30 seconds. The reported Linux RSS/PSS does not capture all DSP/DMA/global allocations and cannot establish a total-memory improvement.
 
@@ -129,13 +143,13 @@ htp/.local/phone-provider-full-01/evidence/run/chapter.wav
 SHA-256 0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209
 ```
 
-One qualified unprompted Whisper-small decode recovered **493 words against 495 normalized reference words**: 13 substitutions, two deletions, no insertions, and **480 exact matches**. Every decile has 46–50 matches; 29 of the final 30 words matched. The same model/runtime/settings and canonical 0-WER control were verified. There was no second decode, source prompt, repair or additional TTS run. Strong automatic coverage is not Moritz's listening acceptance.
+One qualified unprompted Whisper-small decode recovered **493 words against 495 normalized reference words**: 13 substitutions, two deletions, no insertions, and **480 exact matches**. Every decile has 46–50 matches; 29 of the final 30 words matched. The same model/runtime/settings and canonical 0-WER control were verified. There was no second decode, source prompt, repair or additional TTS run. Strong automatic coverage does not itself grant listening acceptance; Moritz separately accepted this exact HTP WAV in the [shared review](results/listening-review-20260911.json).
 
 Own HTP nativeL differs from CPU at zero-based chunk **006 (96 versus 95)** and **014 (250 versus 249)**. Only chunks **000–005** have equal complete active-noise hashes. The shared stream offset diverges after 006; equal seeds are not a blanket matched-noise claim. Every HTP duration, consumed native-layout noise slice and boundary-index array was independently checked against its own recorded values.
 
 Battery temperature was 28.3°C before staging and 28.8°C at the last native sample. The memory/thermal guard did not fire. The phone directory was removed, phone and ASR locks released, and live installed APK plus all captured DB/WAL/SHM file hashes were unchanged. The one granted phone slot is consumed; no retry or listening-approval wait holds the phone.
 
-Current aggregate evidence is [`htp/results/comparison-01.json`](htp/results/comparison-01.json); the original CPU evidence remains frozen. Neither positive new result reinterprets the rejected 0036 configuration or isolates one recipe change as the cause.
+Current aggregate evidence is [`htp/results/comparison-01.json`](htp/results/comparison-01.json), with a hash-bound citation to the [single shared listening review](results/listening-review-20260911.json); original CPU and HTP execution/ASR evidence remains frozen. Neither positive new result reinterprets the rejected 0036 configuration or isolates one recipe change as the cause.
 
 ## Source and checks
 

@@ -1,4 +1,5 @@
 """Committed non-sensitive result invariants; no model/device/audio execution."""
+import hashlib
 import json
 from pathlib import Path
 import unittest
@@ -11,7 +12,7 @@ def load(name):
 
 
 class ResultEvidence(unittest.TestCase):
-    def test_exact_wav_qualified_once_no_inherited_verdict(self):
+    def test_exact_wav_qualified_once_and_additive_listening_review(self):
         run=load('first-chapter-01.json'); asr=load('asr-first-chapter-01.json'); comparison=load('comparison-01.json')
         self.assertEqual(run['wav_sha256'],'0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209')
         self.assertEqual(run['wav_sha256'],asr['wav_sha256'])
@@ -22,7 +23,31 @@ class ResultEvidence(unittest.TestCase):
         self.assertEqual(asr['substitutions']+asr['deletions']+asr['insertions'],15)
         self.assertAlmostEqual(asr['word_error_rate'],15/495)
         self.assertEqual(asr['exactly_matched_reference_words'],480)
-        self.assertEqual(comparison['current_listening_verdicts'],{'CPU':'not_reviewed','HTP':'not_reviewed'})
+        self.assertEqual(run['listening_verdict'],'not_reviewed')
+        self.assertEqual(asr['listening_acceptance'],'not_reviewed')
+        self.assertEqual(comparison['current_listening_verdicts'],{'CPU':'accepted','HTP':'accepted'})
+        repo=RESULTS.parents[3]
+        review_path=repo/comparison['listening_review']['path']
+        self.assertEqual(hashlib.sha256(review_path.read_bytes()).hexdigest(),comparison['listening_review']['sha256'])
+        review=json.loads(review_path.read_text())
+        self.assertEqual(review['reviewer'],'Moritz')
+        self.assertEqual(review['verbatim_review'],'reviewd both cpu and htp. both are great.')
+        self.assertEqual(set(review['routes']),{'CPU','HTP'})
+        self.assertTrue(review['metadata_only_integration'])
+        self.assertEqual((review['new_inference_runs'],review['new_asr_passes']),(0,0))
+        self.assertFalse(review['waveforms_modified'])
+        self.assertFalse(review['agent_initiated_playback'])
+        for route,record in review['routes'].items():
+            self.assertEqual(record['verdict'],'accepted')
+            self.assertEqual(record['wav_sha256'],comparison[route]['wav_sha256'])
+            self.assertEqual(record['private_wav_path'],comparison[route]['wav_private_path'])
+            snapshot=repo/record['execution_snapshot']
+            self.assertEqual(hashlib.sha256(snapshot.read_bytes()).hexdigest(),record['execution_snapshot_sha256'])
+            original=json.loads(snapshot.read_text())
+            key='listening_acceptance' if route=='CPU' else 'listening_verdict'
+            self.assertEqual(original[key],'not_reviewed')
+        cpu_asr=RESULTS.parents[1]/'cpu/results/asr-first-chapter-01.json'
+        self.assertEqual(json.loads(cpu_asr.read_text())['listening_acceptance'],'not_reviewed')
 
     def test_own_extents_noise_and_exact_assembly(self):
         run=load('first-chapter-01.json'); comparison=load('comparison-01.json')

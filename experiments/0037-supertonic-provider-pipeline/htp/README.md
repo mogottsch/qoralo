@@ -1,7 +1,7 @@
 # HTP provider-pipeline route
 
 **One full15-chunk HTP chapter completed; qualified unprompted ASR WER3.03%.**
-The exact WAV awaits Moritz's listening verdict. Naive latent padding is wrong;
+Moritz has accepted this exact WAV for listening quality. Naive latent padding is wrong;
 the explicit native-boundary lowering removes that large error, but remains
 numerically nonidentical. The original strict numerical gate **failed and is
 preserved as failed**. Physical execution and strong coverage do not relabel it.
@@ -9,6 +9,20 @@ preserved as failed**. Physical execution and strong coverage do not relabel it.
 This is a noncanonical, single-chapter experiment, not a warm-median benchmark,
 registry-quality claim or generic app-ready model pack. Jens's native/dynamic
 Android CPU baseline is independent and was not reshaped or delayed for this route.
+
+## Hash-bound human acceptance
+
+Moritz explicitly reviewed both new0037 files: **“reviewd both cpu and htp. both are great.”**
+The [single shared additive review](../results/listening-review-20260911.json)
+binds the HTP hash below and CPU
+`6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be`.
+
+Acceptance is listening quality for these exact files only, not universal
+reliability, a word-perfect audit, generic app-ready HTP, numerical parity or
+warm-performance acceptance. Original execution/ASR `not_reviewed` snapshots
+remain intact; the current aggregate cites the later review. The strict source
+numerical gate remains **failed**, and0036's two rejections are unchanged. No new
+waveform, run, repair or agent-initiated playback accompanied this metadata update.
 
 ## Completed phone result
 
@@ -44,7 +58,7 @@ SHA256 0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209
 | Sampled own VmRSS / PSS peaks | 77,816 / 74,440KiB |
 | Battery before staging → last native sample | 28.3 → 28.8°C |
 | Qualified unprompted ASR | 3.0303%WER;480/495 exact matches |
-| Exact-WAV human listening | `not_reviewed` |
+| Exact-WAV human listening ([shared review](../results/listening-review-20260911.json)) | **`accepted`** |
 
 All15 chunk payloads and14 zero gaps reconstruct the final PCM byte-for-byte.
 Fourteen complete chunk files were pulled before the final chapter file existed;
@@ -65,15 +79,18 @@ expected own-duration stochastic behavior, not grounds to inject CPU durations.
 One offline Whisper-small decode recovered493words vs495normalizedreference,
 13substitutions+2deletions+0insertions,480exactmatches,46–50matches in every decile,
 and29/last30words. Model/runtime/settings match the retained canonical control
-(36words,0WER). Automatic coverage is strong, but not a human quality verdict.
+(36words,0WER). Automatic coverage is strong, but not itself a human quality
+verdict; Moritz's later acceptance is separately recorded in the shared review.
 
 - `results/first-chapter-01.json`: execution snapshot, own extent/noise/index and
-  assembly validation. Its ASR status reflects the pre-ASR capture boundary.
+  assembly validation. Its ASR status reflects the pre-ASR capture boundary;
+  its `not_reviewed` listening status is likewise preserved at capture time.
 - `results/asr-first-chapter-01.json`: additive one-pass qualified coverage.
 - `results/physical-evidence-01.json`: RPC, memory, thermal and app-preservation
   metadata; all content-bearing logs remain private.
 - `results/comparison-01.json`: CPU/HTP first-route observations, setup/profile
-  qualifications, exact noise correspondence and human-review-pending state.
+  qualifications, exact noise correspondence and current accepted verdicts,
+  citing `../results/listening-review-20260911.json` by path and hash.
 
 The preferred matched process-entry → final WAV-close comparison is CPU
 113.552973394s / HTP88.364558664s = **1.285x configuration-level wall ratio**.

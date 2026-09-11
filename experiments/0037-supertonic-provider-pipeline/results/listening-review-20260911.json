@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "experiment": "0037-supertonic-provider-pipeline",
+  "canonical": false,
+  "review_date": "2026-09-11",
+  "reviewer": "Moritz",
+  "recorded_by": "Ben",
+  "review_source": "Moritz's explicit review relayed by Pi through Pi Messenger, binding both exact WAV hashes below",
+  "verbatim_review": "reviewd both cpu and htp. both are great.",
+  "scope": "Listening-quality acceptance of these two exact files only. Not universal reliability, a word-perfect audit, generic app-ready HTP, numerical parity, or warm-performance acceptance.",
+  "routes": {
+    "CPU": {
+      "verdict": "accepted",
+      "wav_sha256": "6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be",
+      "private_wav_path": "experiments/0037-supertonic-provider-pipeline/.local/cpu/20260911T140048Z-full/phone/output/chapter.wav",
+      "wav_bytes": 18526004,
+      "execution_snapshot": "experiments/0037-supertonic-provider-pipeline/cpu/results/first-chapter-01.json",
+      "execution_snapshot_sha256": "5dfe60e52c7618374f74028e8db80c6cf48496ababd31243333e56be69f5b3d6",
+      "snapshot_listening_status_preserved": "not_reviewed"
+    },
+    "HTP": {
+      "verdict": "accepted",
+      "wav_sha256": "0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209",
+      "private_wav_path": "experiments/0037-supertonic-provider-pipeline/htp/.local/phone-provider-full-01/evidence/run/chapter.wav",
+      "wav_bytes": 18538292,
+      "execution_snapshot": "experiments/0037-supertonic-provider-pipeline/htp/results/first-chapter-01.json",
+      "execution_snapshot_sha256": "826b2fbf6ba7bf208b4326c48e30bbd5ae7b87051e13b128f7a273d670c7922f",
+      "snapshot_listening_status_preserved": "not_reviewed"
+    }
+  },
+  "wav_hashes_verified_against_existing_private_files": true,
+  "metadata_only_integration": true,
+  "new_inference_runs": 0,
+  "new_asr_passes": 0,
+  "waveforms_modified": false,
+  "agent_initiated_playback": false,
+  "preservation": [
+    "One shared additive review for both routes; no separate CPU or HTP listening sidecar.",
+    "Original execution and ASR snapshots retain their capture-time not_reviewed values; this record supplies the later human verdict.",
+    "The original HTP strict numerical source gate remains failed; its non-bit-exact lowering and numerical error budget are unchanged.",
+    "All timing, profiling, geometry, stochastic-noise and memory qualifications remain unchanged.",
+    "Both experiment0036 whole-input WAV rejections remain unchanged; this review applies only to the listed experiment0037 files."
+  ]
+}
