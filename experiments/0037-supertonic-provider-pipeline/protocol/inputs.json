@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "canonical": false,
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "reference_bytes": 3190,
+  "reference_whitespace_words": 487,
+  "upstream": {
+    "repository": "https://github.com/supertone-inc/supertonic-py",
+    "tag": "v1.3.1",
+    "commit": "908a56486e821e833a80530ff0cae3ad0b046fce",
+    "files": [
+      {
+        "file": "config.py",
+        "url": "https://raw.githubusercontent.com/supertone-inc/supertonic-py/908a56486e821e833a80530ff0cae3ad0b046fce/supertonic/config.py",
+        "sha256": "9684abef9023d305b87d8b511a5c955624f5b7a92c76b57aa8b3e06f8e18ce2e",
+        "bytes": 8064,
+        "installed_1_3_1_identical": true
+      },
+      {
+        "file": "core.py",
+        "url": "https://raw.githubusercontent.com/supertone-inc/supertonic-py/908a56486e821e833a80530ff0cae3ad0b046fce/supertonic/core.py",
+        "sha256": "26664d490509edc1cc1feca2fc0f72b1ae067fd5c5b11d39c1daeba9c3e81ff4",
+        "bytes": 20003,
+        "installed_1_3_1_identical": true
+      },
+      {
+        "file": "pipeline.py",
+        "url": "https://raw.githubusercontent.com/supertone-inc/supertonic-py/908a56486e821e833a80530ff0cae3ad0b046fce/supertonic/pipeline.py",
+        "sha256": "13b16fb8556632b5985f8ba1e961096ca1ad921d01aed171972dd106df51a7cd",
+        "bytes": 16733,
+        "installed_1_3_1_identical": true
+      },
+      {
+        "file": "utils.py",
+        "url": "https://raw.githubusercontent.com/supertone-inc/supertonic-py/908a56486e821e833a80530ff0cae3ad0b046fce/supertonic/utils.py",
+        "sha256": "8bf2e0a14783de9266edba1135597e6b77b143907e445b08dcc45f694ff51ed3",
+        "bytes": 5727,
+        "installed_1_3_1_identical": true
+      },
+      {
+        "file": "loader.py",
+        "url": "https://raw.githubusercontent.com/supertone-inc/supertonic-py/908a56486e821e833a80530ff0cae3ad0b046fce/supertonic/loader.py",
+        "sha256": "9478b085ccae88fd44849a87d8a55d0ddada03e4fbb7f47f1707f04ac06e621f",
+        "bytes": 16774,
+        "installed_1_3_1_identical": true
+      },
+      {
+        "file": "__init__.py",
+        "url": "https://raw.githubusercontent.com/supertone-inc/supertonic-py/908a56486e821e833a80530ff0cae3ad0b046fce/supertonic/__init__.py",
+        "sha256": "98bc280f4cb2c475d3f8a9c790cadddc0f5b6d6b04411180e867d3a7e6f3bc18",
+        "bytes": 1840,
+        "installed_1_3_1_identical": true
+      }
+    ],
+    "license_sha256": "f41cb0ff617e2ed634215f3e62f7b33b3dc02b079c6379a2f1a9c7ce7bd84c03"
+  },
+  "model_hf_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+  "voice": "M1/SID5",
+  "language": "en",
+  "language_note": "explicit known English as in upstream examples; generic multilingual default would be na",
+  "steps": 8,
+  "speed": 1.05,
+  "chunk_target_codepoints": 300,
+  "gap_seconds": 0.3,
+  "gap_frames": 13230,
+  "sample_rate": 44100,
+  "latent_channels": 144,
+  "latent_hop": 3072,
+  "chunk_count": 15,
+  "source_nonwhitespace_characters_preserved_in_order": true,
+  "segmentation_order": "validate original characters; split RAW paragraphs/sentences; per-chunk globalNFKD and official UnicodeProcessor normalization; language tags and IDs",
+  "oversized_sentence_policy": "keep entire sentence even above300; no comma/word fallback in this exact pinned Python implementation",
+  "wave_assembly": "append full native vocoderL*3072 samples per chunk (no predicted-duration trimming),13230zero frames between chunks, no leading/trailing extra gap",
+  "session_lifecycle": "create4 ONNX sessions once; keep and reuse across all chunks",
+  "chunks": [
+    {
+      "index": 0,
+      "raw_codepoints": 300,
+      "text_extent": 309,
+      "source_content_character_count": 253,
+      "first_source_byte": 0,
+      "last_source_byte_exclusive": 308,
+      "raw_chunk_sha256": "c553855c558716786b51be5027afddb0d333f5dbf66468d5956b1babc506249d",
+      "processed_sha256": "fd2a96e50f6b653b6ec61967629f8d920d1b56a03db02d62342f4c92ee6a0fea",
+      "ids_sha256": "967a34ee612d05edc885ba2293e2fe242ed60e6610ad702c414aa505364add1d",
+      "mask_sha256": "514a8ffe390b69574274e835da403580424318dfe650a765db0e0cbf56d8e0f9",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 1,
+      "raw_codepoints": 204,
+      "text_extent": 213,
+      "source_content_character_count": 174,
+      "first_source_byte": 309,
+      "last_source_byte_exclusive": 513,
+      "raw_chunk_sha256": "98b915aef16d19ca2b04674caa7e2df604931ed965422d7eca732044bb65b906",
+      "processed_sha256": "7d4326ddb6c8dcc74e23c4b533de1ff2271ba36e80989c95afe165692afdb3e6",
+      "ids_sha256": "58731bca672f2a51d142c8f84706f53911b7763be7c3880e453a89ceb74ae89a",
+      "mask_sha256": "8b598d0123012e64be4a71e50da5364d4c8d5ddc06e87106d8dca6a20a3f2a92",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 2,
+      "raw_codepoints": 234,
+      "text_extent": 243,
+      "source_content_character_count": 196,
+      "first_source_byte": 515,
+      "last_source_byte_exclusive": 751,
+      "raw_chunk_sha256": "74ac19020f82b6b8205c64e345ab619ab5517767e74b6e3fb59e059f81439cd5",
+      "processed_sha256": "b9d88eef650b0fc5dca678f16d54a0cd51a44efc9bfc0f5ae92325cb1ca55967",
+      "ids_sha256": "df4a53b32bcce0aee85643590e006ba0a2fcb35ed901594ab3af9ff757aa10e1",
+      "mask_sha256": "d1d6e6bc73dd109fb9d786635483a233669a5d0ae0062604beb9d2306884b106",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 3,
+      "raw_codepoints": 144,
+      "text_extent": 153,
+      "source_content_character_count": 123,
+      "first_source_byte": 752,
+      "last_source_byte_exclusive": 900,
+      "raw_chunk_sha256": "ac1f424b4cd0f304f450926b7940b0d3d18ae2fded385dcf28937c8cb3a49935",
+      "processed_sha256": "28d472476645b6552ec533922ebb9d17c3f3990993672f91d9d961e211e3ad6d",
+      "ids_sha256": "5c754cdc296447b874683e2a3d46be2fa9eafac67cb84e24c8bda3fb2bd53c53",
+      "mask_sha256": "f8d2b4ed72c2b58f1071d1f65ae9addfe7d46886b9616b9e389624975ceff8e3",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 4,
+      "raw_codepoints": 179,
+      "text_extent": 188,
+      "source_content_character_count": 152,
+      "first_source_byte": 901,
+      "last_source_byte_exclusive": 1080,
+      "raw_chunk_sha256": "15a7470b09c9ce160e26ff476281e6e13f7c26eaf032796dbb4a3f5702923ce4",
+      "processed_sha256": "a268ef83b569c2df8c9977944712917d0bd0491dc5cc59349d91891528e373fb",
+      "ids_sha256": "c13d1db22d670bf1816286a2a8a441cfffd48451307de4dcd2709b41e1701f39",
+      "mask_sha256": "11dca7859aa324eaaedff77e573d4b7f10b0bc5f0241fb624cc0769a933bc64e",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 5,
+      "raw_codepoints": 289,
+      "text_extent": 298,
+      "source_content_character_count": 248,
+      "first_source_byte": 1082,
+      "last_source_byte_exclusive": 1373,
+      "raw_chunk_sha256": "db1e83b7629264344006d4f4c131b61ad9cdd11b5bfc88636a5e33ed7a25ba25",
+      "processed_sha256": "cff76aa06fd6735b129f4e5329462f180454587c1fa518112a02593b41ef7aca",
+      "ids_sha256": "e1ee6c98c53f2146232a1ae2e449be31dc1f62300da547dd4b18b2cf6496f5c8",
+      "mask_sha256": "8ed41b8d445e59c5dd80271da69b5c4329ef2ce0cb59ec5f4871a8008ad4a7ef",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 6,
+      "raw_codepoints": 97,
+      "text_extent": 106,
+      "source_content_character_count": 85,
+      "first_source_byte": 1374,
+      "last_source_byte_exclusive": 1471,
+      "raw_chunk_sha256": "c7f95987829b36007086989bb06b2604eda8b1912184db2c9545ef09838840d9",
+      "processed_sha256": "a7048fe69a73bc5946a0a08b8318b2e600585cc0f6f00089a5c8cb30d4c523b7",
+      "ids_sha256": "b9497a36d476afa0e57c05201bf956f7de5885051ab9db4fa832c799fdeea5fe",
+      "mask_sha256": "c7277761693690e50145c4191275b3fad6d74a48a6c9adb4f84c1326f4b77e34",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 7,
+      "raw_codepoints": 203,
+      "text_extent": 212,
+      "source_content_character_count": 172,
+      "first_source_byte": 1472,
+      "last_source_byte_exclusive": 1677,
+      "raw_chunk_sha256": "2e0d1873d94d1ad5be7c97c23e4c65a2232698854f2a5a157d0ec554a7e9bf27",
+      "processed_sha256": "4d56accf1f81199d4b29b8aeeabeb7af02d5247f54f06047c6c016a78a70851f",
+      "ids_sha256": "7c714f8fe621ef6b4280460fa04888f9efb2fef982f702f40b94c34049278ee2",
+      "mask_sha256": "f97316fa1957442225e30c9bf69ee030dba92200352a6f3d23057cbeda998bf9",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 8,
+      "raw_codepoints": 88,
+      "text_extent": 97,
+      "source_content_character_count": 76,
+      "first_source_byte": 1679,
+      "last_source_byte_exclusive": 1767,
+      "raw_chunk_sha256": "a79791521155b422cc93c98a672d86f340c0080882d89d05f0ebc9198465fcbf",
+      "processed_sha256": "fa0f4723f5116cf2ce2063dedfcd72623d92008be555f35ece62c650ed7973c6",
+      "ids_sha256": "0c6fdf07e3169d4434636b4248bc32e416d7509179c901afeddb08d7e879e920",
+      "mask_sha256": "bec22747f73646f5819f0b64ca695d55cf46b5e6c4d1f8e1cb3b1d264a09b2ac",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 9,
+      "raw_codepoints": 230,
+      "text_extent": 239,
+      "source_content_character_count": 194,
+      "first_source_byte": 1768,
+      "last_source_byte_exclusive": 1998,
+      "raw_chunk_sha256": "4e4b232d96d2915788313b165ee6e4150189ca1d9a7f0d776b88e2bbf5f49370",
+      "processed_sha256": "1fb7f61db92856c3b8c2a17e4549807476076d2a5220316c8c69b36ce41795e8",
+      "ids_sha256": "cb838506e79b58090f064f8c1fb9773a1d654168eae39db828e437a2ac019697",
+      "mask_sha256": "21c44c51bc85efb67ac0c677666d0d3af05bdc1f22ea9431cd80d6052de86908",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 10,
+      "raw_codepoints": 215,
+      "text_extent": 224,
+      "source_content_character_count": 182,
+      "first_source_byte": 1999,
+      "last_source_byte_exclusive": 2214,
+      "raw_chunk_sha256": "b8f917bca7657ba0c926c8c413ba25e2c2c1f7dea92685f260d07e2acbdf7426",
+      "processed_sha256": "b916ba7e724e12917435dec2c7cfdf74fdf2f462f90f8124aad896d294526755",
+      "ids_sha256": "9c86fb0b55191caa8a6da580a2afd9de6da66627597e891528ece322c5527cd5",
+      "mask_sha256": "642d9141570f69536d7ce73d415484a8b8beb8c0a2435409168d945069a35b38",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 11,
+      "raw_codepoints": 227,
+      "text_extent": 236,
+      "source_content_character_count": 195,
+      "first_source_byte": 2215,
+      "last_source_byte_exclusive": 2446,
+      "raw_chunk_sha256": "3804ab3adbf125b0773b3e12ac7b76fbb78a2fc5863c0cb07b960974076380f1",
+      "processed_sha256": "d811e407d115fffb5a974f8bd2bf0f0d5df2283c12c3158fbbaf07b98b6706f4",
+      "ids_sha256": "9e00631becc1e331c812a3e41dd54a2a9708448d6c75d49e09ca47309616021e",
+      "mask_sha256": "d0831cc3cb295b8f26be3f8c1dd8b2a0e704352a22534e4ccd49bd1d7509fedb",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 12,
+      "raw_codepoints": 243,
+      "text_extent": 252,
+      "source_content_character_count": 212,
+      "first_source_byte": 2448,
+      "last_source_byte_exclusive": 2695,
+      "raw_chunk_sha256": "7bb2b25a74d85656bf0ccce1f900b78c302a8f38496c750e5ee61098db555070",
+      "processed_sha256": "5850229ee91d45e53889fb94ffaac0a61ef28de04793bee50f81424ba1e2fca6",
+      "ids_sha256": "9d48ca635e2209affa587abdcb2d2b7df7b044a892ec2823a7d9ae10599d3db9",
+      "mask_sha256": "abefbab45323e8db85ebcd0bed1f1362318a0485009f55cca8b9e27677bdceb2",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 13,
+      "raw_codepoints": 220,
+      "text_extent": 229,
+      "source_content_character_count": 184,
+      "first_source_byte": 2696,
+      "last_source_byte_exclusive": 2916,
+      "raw_chunk_sha256": "c64281bf3e921410c9e72da06f6cb795e4caa8a616c876070092774fe006f67a",
+      "processed_sha256": "1a10e0a0bb00bc6d89fddca6490ff41097cd4c6a8edd9e00e899a81014b2f019",
+      "ids_sha256": "5c373f70a5105057b809f657a13b5873fa07f0ed32438152f71128dcf08e0ad5",
+      "mask_sha256": "7336f4bd3433b15694a55b0d4c9719299d82791951a7003486b0c2a3a36e48cb",
+      "oversized_raw_sentence": false
+    },
+    {
+      "index": 14,
+      "raw_codepoints": 271,
+      "text_extent": 280,
+      "source_content_character_count": 226,
+      "first_source_byte": 2917,
+      "last_source_byte_exclusive": 3190,
+      "raw_chunk_sha256": "643c09d2f463382924c34fb4488560a1951e85e1271f7f38d6e2fedeacfbd416",
+      "processed_sha256": "d49b234b8302d4690625c6078ef4390e973683c634418cf7b24021ac36190c37",
+      "ids_sha256": "b144684dccbcf6b69523600b2bdb284265e30e5849d8a3cc5908c95d772bf9e7",
+      "mask_sha256": "61c818989db13bf4028408060ee0205f186dc0fcb2bec5908410c88fa76aa74c",
+      "oversized_raw_sentence": false
+    }
+  ],
+  "tensors": {
+    "style_dp.f32": {
+      "shape": [
+        1,
+        8,
+        16
+      ],
+      "sha256": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+      "dtype": "float32_le"
+    },
+    "style_ttl.f32": {
+      "shape": [
+        1,
+        50,
+        256
+      ],
+      "sha256": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+      "dtype": "float32_le"
+    },
+    "current_steps.f32": {
+      "sha256": "0571cfe42be5c7b95de9afc7c7ba1286fb7a2ef10a9035f8d6b87d21a3bc8387",
+      "bytes": 32
+    },
+    "total_steps.f32": {
+      "sha256": "03e3c2420f5066a5fa6e36735ed8cc4f6a251046263e1a6024f009deeee3b952",
+      "bytes": 4
+    }
+  },
+  "numpy_version": "2.3.5",
+  "rng": {
+    "algorithm": "NumPy legacy RandomState/MT19937 standard_normal ->float32; matches np.random.seed(seed);np.random.randn(...)",
+    "seed": 20260911,
+    "provider_seed_policy": "provider sets no seed; this fixed reproducibility seed is an explicit experiment choice",
+    "stream_draws": 2160000,
+    "max_native_latent_per_chunk": 1000,
+    "noise_stream_sha256": "7c44878a5b88882b01701839a22b3cfde39078451f15354e7a33d269993b49a8",
+    "shape_policy": "Each route consumes144*its_own_nativeL consecutive values, reshapes[1,144,nativeL], applies own mask; HTP may then zero-pad into staticlayout without consuming extra RNG. If ownL differs, channel alignment and subsequent stream offsets differ; record actual offsets/active hashes, never claim seed implies equality."
+  },
+  "runner_config_sha256": "f0cc19cd2cb883bdecf4e8cd9e45bb138975aec1fd1da719092328ebffa57635",
+  "normalized_reference_sha256": "c6cb2d182751b7d09670903314c54731be1e74621f74a54dc627e2952057cead",
+  "cpu_adaptation": "host official frontend tensors, Android original dynamic graphs/exactnativeT/L,4resident sessions reused,4intra/1inter threads,profilingon; extra private per-chunk PCM files, output PCM16 matches pinned soundfile conversion",
+  "htp_adaptation": "exactnativeT DP/text contexts; vector/vocoder staticbucket padding only after Ben validates boundary-active-prefix equivalence; ownnativeL/ownGaussian offsets; remove only artificial bucket extension before provider-prescribed assembly; CPU not delayed or reshaped to fitHTP"
+}
