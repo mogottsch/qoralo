@@ -1,0 +1,137 @@
+{
+  "classification": "paired_value_precision_context_compiled_metadata_gate_pending",
+  "phase": "complete",
+  "inference": false,
+  "phone_access": false,
+  "accepted_recipe_sha256": "cf997a64ec255d53b51f4b26e42ff426e8a06acce1c8626077be79698272a67b",
+  "wrapper_sha256": "01c58d4b498990c0520e6477e529f157a7d6661d5f68882ad127a44202aa2067",
+  "elapsed_seconds": 466.30512383600035,
+  "ru_maxrss_kib": 18649060,
+  "pair_contract": {
+    "cache_count": 30,
+    "active_four_way_contract_passed": true,
+    "float_annotation_semantics": "Float16 storage has no active integer scale/offset; raw annotations remain retained"
+  },
+  "inputs": {
+    "1": {
+      "validation_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar1-20260911T105448Z-01/combined-precision-validation.json",
+      "validation_sha256": "d927e12eab5ab4851258b1f440772918f7e938a40d4f3f184690b0639ad8bd09",
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar1-20260911T105448Z-01/work/dlc-cache/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc",
+        "bytes": 2356873908,
+        "sha256": "34402f2990053a879cd67781ba327076ab80a4f64620aca019a029cc3beb858b"
+      }
+    },
+    "128": {
+      "validation_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar128-20260911T103001Z-01/combined-precision-validation.json",
+      "validation_sha256": "9936660abfb2bf2a8909e798cf04ab32957e3da4a8c28b23187467ebcc43d386",
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar128-20260911T103001Z-01/work/dlc-cache/b9b886d49ec5e87b214da9d73cacb41ab87dea8ddf950137aaa9eca9caec4643/ar128_cl4096_1_of_1.dlc",
+        "bytes": 2356879332,
+        "sha256": "d9eec6585153928e2f9f2351854849abc458de42d5426788bd22b760d2633052"
+      }
+    }
+  },
+  "substitutions": [
+    "DLC paths/hashes",
+    "fresh context output directory"
+  ],
+  "compile_options_changed": false,
+  "compiler_config": {
+    "backend": "HTP",
+    "context_custom_configs": [
+      {
+        "weight_sharing_enabled": true,
+        "file_read_memory_budget_in_mb": 0,
+        "io_memory_estimation": false,
+        "max_spill_fill_buffer_for_group": 0,
+        "group_id": 0,
+        "extended_udma": false,
+        "init_acceleration": false,
+        "lora_weight_sharing": false,
+        "lora_weight_sharing_ram_preload": false
+      }
+    ],
+    "debug": false,
+    "device_custom_configs": [
+      {
+        "id": 0,
+        "soc_id": 0,
+        "soc_model": 43,
+        "dsp_arch": "v73",
+        "pd_session": "unsigned",
+        "profiling_level": "linting",
+        "core_ids": null,
+        "core_type": 0,
+        "cores": [
+          {
+            "id": 0,
+            "perf_profile": "burst",
+            "rpc_control_latency": 100,
+            "rpc_polling_time": 9999,
+            "hmx_timeout_us": 300000,
+            "adaptive_polling_time": 0
+          }
+        ]
+      }
+    ],
+    "graph_custom_configs": [
+      {
+        "name": "ar1_cl4096_1_of_1",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "use_high_precision_fp16_sigmoid": false,
+        "monolithic_lstm": false
+      },
+      {
+        "name": "ar128_cl4096_1_of_1",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "use_high_precision_fp16_sigmoid": false,
+        "monolithic_lstm": false
+      }
+    ],
+    "log_level": "warn",
+    "op_packages": null,
+    "compiler_custom_configs": null,
+    "enable_intermediate_outputs": null,
+    "set_output_tensors": null,
+    "soc_details": "chipset:SM8550",
+    "io_tensor_mem_type": "memhandle",
+    "memory_custom_config": {
+      "mem_type": "shared_buffer"
+    },
+    "data_format_config": null,
+    "group_context_config": null,
+    "backend_binary_path": null
+  },
+  "context": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/work/context-cache/9e5f4e8dc195926c79d4739a6b344d52f7d66942608aa391c76637a6c490a403/ar1_cl4096_1_of_1.bin",
+    "bytes": 1186381824,
+    "sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+    "name": "ar1_cl4096_1_of_1"
+  },
+  "compile_calls": 1
+}

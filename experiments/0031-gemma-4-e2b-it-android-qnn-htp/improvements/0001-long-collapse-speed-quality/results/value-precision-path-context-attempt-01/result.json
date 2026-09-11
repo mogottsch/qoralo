@@ -1,0 +1,615 @@
+{
+  "classification": "positive_full_precision_path_htp_context_compile_and_interface_metadata",
+  "context": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/work/context-cache/9e5f4e8dc195926c79d4739a6b344d52f7d66942608aa391c76637a6c490a403/ar1_cl4096_1_of_1.bin",
+    "bytes": 1186381824,
+    "sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+    "name": "ar1_cl4096_1_of_1"
+  },
+  "metadata_validation": {
+    "metadata_gate_passed": true,
+    "issues": [],
+    "backend_id": 6,
+    "soc_model": 43,
+    "build_id": "v2.49.40.260810104044",
+    "graphs": {
+      "ar128_cl4096_1_of_1": {
+        "graphInputs": {
+          "count": 38,
+          "datatypes": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 35,
+            "QNN_DATATYPE_FLOAT_16": 3
+          }
+        },
+        "graphOutputs": {
+          "count": 31,
+          "datatypes": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 28,
+            "QNN_DATATYPE_FLOAT_16": 3
+          }
+        }
+      },
+      "ar1_cl4096_1_of_1": {
+        "graphInputs": {
+          "count": 38,
+          "datatypes": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 35,
+            "QNN_DATATYPE_FLOAT_16": 3
+          }
+        },
+        "graphOutputs": {
+          "count": 31,
+          "datatypes": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 28,
+            "QNN_DATATYPE_FLOAT_16": 3
+          }
+        }
+      }
+    },
+    "cache_count": 30,
+    "cache_data_format_counts": {
+      "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER": 120
+    },
+    "positional_inputs": {
+      "ar128_cl4096_1_of_1": [
+        "position_ids_cos",
+        "position_ids_sin",
+        "swa_position_ids_cos",
+        "swa_position_ids_sin"
+      ],
+      "ar1_cl4096_1_of_1": [
+        "position_ids_cos",
+        "position_ids_sin",
+        "swa_position_ids_cos",
+        "swa_position_ids_sin"
+      ]
+    },
+    "flat_buffer_required": true,
+    "native_kv_supported_claim": false,
+    "float_quantization_semantics": "Genie QnnUtils nonquantized placeholder (0,0); inactive union ignored",
+    "physical_execution_proven": false,
+    "full_cpu_free_execution_proven": false,
+    "fidelity_proven": false,
+    "metadata_sha256": "141ca57c7434deb5e021c31a8fab31635845c3d0b37857bfa0762d55cbd70701",
+    "baseline_sha256": "b43be15553726707a3c1362dec333493856d472b4aaddd52b1c9972eb9fcd73e"
+  },
+  "compiler_config": {
+    "backend": "HTP",
+    "context_custom_configs": [
+      {
+        "weight_sharing_enabled": true,
+        "file_read_memory_budget_in_mb": 0,
+        "io_memory_estimation": false,
+        "max_spill_fill_buffer_for_group": 0,
+        "group_id": 0,
+        "extended_udma": false,
+        "init_acceleration": false,
+        "lora_weight_sharing": false,
+        "lora_weight_sharing_ram_preload": false
+      }
+    ],
+    "debug": false,
+    "device_custom_configs": [
+      {
+        "id": 0,
+        "soc_id": 0,
+        "soc_model": 43,
+        "dsp_arch": "v73",
+        "pd_session": "unsigned",
+        "profiling_level": "linting",
+        "core_ids": null,
+        "core_type": 0,
+        "cores": [
+          {
+            "id": 0,
+            "perf_profile": "burst",
+            "rpc_control_latency": 100,
+            "rpc_polling_time": 9999,
+            "hmx_timeout_us": 300000,
+            "adaptive_polling_time": 0
+          }
+        ]
+      }
+    ],
+    "graph_custom_configs": [
+      {
+        "name": "ar1_cl4096_1_of_1",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "use_high_precision_fp16_sigmoid": false,
+        "monolithic_lstm": false
+      },
+      {
+        "name": "ar128_cl4096_1_of_1",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "use_high_precision_fp16_sigmoid": false,
+        "monolithic_lstm": false
+      }
+    ],
+    "log_level": "warn",
+    "op_packages": null,
+    "compiler_custom_configs": null,
+    "enable_intermediate_outputs": null,
+    "set_output_tensors": null,
+    "soc_details": "chipset:SM8550",
+    "io_tensor_mem_type": "memhandle",
+    "memory_custom_config": {
+      "mem_type": "shared_buffer"
+    },
+    "data_format_config": null,
+    "group_context_config": null,
+    "backend_binary_path": null
+  },
+  "paired_cache_contract": {
+    "cache_count": 30,
+    "active_four_way_contract_passed": true,
+    "float_annotation_semantics": "Float16 storage has no active integer scale/offset; raw annotations remain retained"
+  },
+  "inputs": {
+    "1": {
+      "validation_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar1-20260911T105448Z-01/combined-precision-validation.json",
+      "validation_sha256": "d927e12eab5ab4851258b1f440772918f7e938a40d4f3f184690b0639ad8bd09",
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar1-20260911T105448Z-01/work/dlc-cache/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc",
+        "bytes": 2356873908,
+        "sha256": "34402f2990053a879cd67781ba327076ab80a4f64620aca019a029cc3beb858b"
+      }
+    },
+    "128": {
+      "validation_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar128-20260911T103001Z-01/combined-precision-validation.json",
+      "validation_sha256": "9936660abfb2bf2a8909e798cf04ab32957e3da4a8c28b23187467ebcc43d386",
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar128-20260911T103001Z-01/work/dlc-cache/b9b886d49ec5e87b214da9d73cacb41ab87dea8ddf950137aaa9eca9caec4643/ar128_cl4096_1_of_1.dlc",
+        "bytes": 2356879332,
+        "sha256": "d9eec6585153928e2f9f2351854849abc458de42d5426788bd22b760d2633052"
+      }
+    }
+  },
+  "compile_calls": 1,
+  "guard_result": {
+    "exit_code": 0,
+    "stop_reason": null,
+    "elapsed_seconds": 475.1418775410002,
+    "final_sample": {
+      "time_ns": 1789125807061974412,
+      "MemAvailable_bytes": 25913720832,
+      "SwapTotal_bytes": 34359734272,
+      "SwapFree_bytes": 31903813632,
+      "memory_some_avg10": 1.83,
+      "memory_full_avg10": 1.83,
+      "io_some_avg10": 2.61,
+      "io_full_avg10": 2.5,
+      "memory.current": "3184148480",
+      "memory.peak": "16108171264",
+      "memory.swap.current": "9531392",
+      "memory.events": "low 0\nhigh 1353\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "pids.current": "1",
+      "owned_allocated_bytes": 1186734080,
+      "filesystem_free_bytes": 639701164032
+    },
+    "automatic_retry": false,
+    "phone_access": false,
+    "remaining_worker_cleanup": "systemd KillMode=control-group on service exit"
+  },
+  "compiler_elapsed_seconds": 466.30512383600035,
+  "compiler_ru_maxrss_kib": 18649060,
+  "first_attempt": {
+    "classification": "controller_precompile_namespace_error",
+    "native_compile_calls": 0,
+    "sdk_model_loads": 0,
+    "cause": "cache enumeration included only past_* globals and omitted24 swa_* cache outputs",
+    "correction": "exact frozen global+SWA30-output set;20 focused tests plus actual paired CSV check passed",
+    "original_result_and_sources_preserved": true
+  },
+  "source_postcheck": {
+    "checks": [
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.onnx",
+        "sha256": "077b5ce33f694e4a04210e2b37af9e5c9dd4b80d63dc741dfbedbdbea1e73c63",
+        "bytes": 18016378,
+        "unchanged": true
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.data",
+        "sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "bytes": 9119006720,
+        "unchanged": true
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/source-ar1-01/full-candidate.encodings",
+        "sha256": "cd77e4c07e6e6f87694c5dd0edd53921ec7866747690ea4b1857195cd087b831",
+        "bytes": 55322928,
+        "unchanged": true
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T095945Z-attempt-06/onnx/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.onnx",
+        "sha256": "0b36dc55b669a54469b669a86364d112cc82f3811b11c2f8662cc7dbd49527c0",
+        "bytes": 18054394,
+        "unchanged": true
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T095945Z-attempt-06/onnx/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.data",
+        "sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "bytes": 9119006720,
+        "unchanged": true
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/source-ar128-01/full-candidate.encodings",
+        "sha256": "57837ca1f62c168c9f8facc724399759e6b5637aaaf92660ece8d5e7e2411e11",
+        "bytes": 55323388,
+        "unchanged": true
+      }
+    ],
+    "elapsed_seconds": 71.94698740600143,
+    "distinct_inodes_hashed": 6,
+    "inference": false,
+    "phone_access": false
+  },
+  "retained": [
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/command.json",
+      "sha256": "63bc5dc70a13951c93b3bf2fc2671232d0b34c2599c79f352f5e5ad5cd858244",
+      "bytes": 1973,
+      "retained": "raw/precompile-01/command.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/child.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retained": "raw/precompile-01/child.stdout.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/precompile-failure.json",
+      "sha256": "8d1d96c175eed0496540bec8bcfeaa6b8a4db7d8f368704f48c4c828ed515819",
+      "bytes": 370,
+      "retained": "raw/precompile-01/precompile-failure.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/source-SHA256SUMS",
+      "sha256": "b569ef1fe60c8afe2c6934a7501fa7c765d6cdcc0d6c54d48b6bb8cf482260af",
+      "bytes": 559,
+      "retained": "raw/precompile-01/source-SHA256SUMS",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/guard-preflight.json",
+      "sha256": "5b8a8a62df81b084a05e7c5185a8740dca95fd5455d5380311a49c5d407c02b2",
+      "bytes": 815,
+      "retained": "raw/precompile-01/guard-preflight.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/supervisor.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retained": "raw/precompile-01/supervisor.stderr.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/launch-capacity.json",
+      "sha256": "c0b20d5024c2a509517b256d5e32a11059adf16420858daf539616979472ea23",
+      "bytes": 433,
+      "retained": "raw/precompile-01/launch-capacity.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/resources.jsonl",
+      "sha256": "e433357ee3b839ffc7485e7f1ad1914bc2138542ad1ca76618b083c50d42116b",
+      "bytes": 1458,
+      "retained": "raw/precompile-01/resources.jsonl.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/launch.json",
+      "sha256": "81ffc1db6a787cc3c803828ae8cea5ee8d73a075865b115048f66b87b6905627",
+      "bytes": 221,
+      "retained": "raw/precompile-01/launch.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/scratch-filesystem.txt",
+      "sha256": "fc403f8c3380fdf4f72ccb327032346721ac7ea8a67ec45d03bfffdd6eb2791b",
+      "bytes": 5,
+      "retained": "raw/precompile-01/scratch-filesystem.txt",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/guard-result.json",
+      "sha256": "6a92c4c377f112510152433d1fc250ebe6d202ebac18d777d5bca41f30544169",
+      "bytes": 789,
+      "retained": "raw/precompile-01/guard-result.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/child-command.json",
+      "sha256": "14fca964fe1c34b9d96dc1b8d1c8e003a47e00c8cbbf77a1445c0b1b9a13f885",
+      "bytes": 1069,
+      "retained": "raw/precompile-01/child-command.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/child.stderr",
+      "sha256": "f61d7f717d3b6c298dc5b524ecdb2a73aacd5a900f72405b6892c8882867e5b5",
+      "bytes": 883,
+      "retained": "raw/precompile-01/child.stderr.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/supervisor.stdout",
+      "sha256": "a6e3b689244ee26ee362d7ff75b9418f2f13f133ae891cb712165138378b4a8e",
+      "bytes": 228,
+      "retained": "raw/precompile-01/supervisor.stdout.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/child.pid",
+      "sha256": "e087dc3d3c951ca7a0f8947eebdeb8801dd12c5a829551ec60cf5854a64d4177",
+      "bytes": 8,
+      "retained": "raw/precompile-01/child.pid",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/work/result.json",
+      "sha256": "e40a9aacb0ff5e203ee74373dc79629825efa5e69a6e36bee79341232579cbc2",
+      "bytes": 475,
+      "retained": "raw/precompile-01/work-result.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/source-snapshots/compile_value_precision_context.py",
+      "sha256": "6f20fd39d55a35adf347518dae9ac6bda86022625c2d92a8c01e5e7246d474c8",
+      "bytes": 5573,
+      "retained": "raw/precompile-01/source-snapshots/compile_value_precision_context.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/source-snapshots/run_value_precision_guard.py",
+      "sha256": "83a55cd81dc211c9631fb765b5b70f3df257a5f437f5ba799bbf5ed39f59a873",
+      "bytes": 5664,
+      "retained": "raw/precompile-01/source-snapshots/run_value_precision_guard.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/source-snapshots/prepare_value_precision_derivative.py",
+      "sha256": "9919bdafd1a4676f2d5499581777075ff51430fbcb70e3be622845afd7e351ca",
+      "bytes": 8372,
+      "retained": "raw/precompile-01/source-snapshots/prepare_value_precision_derivative.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/source-snapshots/value_precision_path.py",
+      "sha256": "1474d4eda4c7633d5fc125c124249c14e846d99ff65eecb8c6de20acb64376e0",
+      "bytes": 12841,
+      "retained": "raw/precompile-01/source-snapshots/value_precision_path.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111220Z-01/source-snapshots/launch-context.sh",
+      "sha256": "7487228542d7dfd4b229a173399c2638870cf14f05bbf8e66514d5753a5b2ed1",
+      "bytes": 1167,
+      "retained": "raw/precompile-01/source-snapshots/launch-context.sh",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/command.json",
+      "sha256": "d50c0472ff888ba1afefbcf58484f0798216b8a86ecfa3b4011b17afa778e92c",
+      "bytes": 1973,
+      "retained": "raw/compile-02/command.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/child.stdout",
+      "sha256": "810f50d882c5edc826990e3e926230c9767c1b5f6b052b8fd40333f66872e6d0",
+      "bytes": 1458,
+      "retained": "raw/compile-02/child.stdout.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-SHA256SUMS",
+      "sha256": "de524c09c6c5e6a88336998829e5af7bbbe760d65bc6c9c183707286a8195c24",
+      "bytes": 559,
+      "retained": "raw/compile-02/source-SHA256SUMS",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/guard-preflight.json",
+      "sha256": "e7c668078f10a3abc2e46e85a54834ec6fa6f3efc5791e7bbe00fee2fb83b0e8",
+      "bytes": 817,
+      "retained": "raw/compile-02/guard-preflight.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/context-validation.json",
+      "sha256": "72a886d8ac941159a956cf483259a18997a1f04064a9f4ced8c068ac471f3f8c",
+      "bytes": 1781,
+      "retained": "raw/compile-02/context-validation.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/supervisor.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retained": "raw/compile-02/supervisor.stderr.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/launch-capacity.json",
+      "sha256": "5c7c151fdbb8ee0f52f506583cbc8d66cf56b6decd1fa76e79607a574a97b182",
+      "bytes": 416,
+      "retained": "raw/compile-02/launch-capacity.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/resources.jsonl",
+      "sha256": "25e485a814b9d19463e630c72ff0e6c8edc7f6505f6e258c7d49858e15c27f6b",
+      "bytes": 47235,
+      "retained": "raw/compile-02/resources.jsonl.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/launch.json",
+      "sha256": "c8950c7447d891ce944941831116d160d498b5008b96848c4b9ef74e5b95561e",
+      "bytes": 221,
+      "retained": "raw/compile-02/launch.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/context-info.json",
+      "sha256": "141ca57c7434deb5e021c31a8fab31635845c3d0b37857bfa0762d55cbd70701",
+      "bytes": 190096,
+      "retained": "raw/compile-02/context-info.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/scratch-filesystem.txt",
+      "sha256": "fc403f8c3380fdf4f72ccb327032346721ac7ea8a67ec45d03bfffdd6eb2791b",
+      "bytes": 5,
+      "retained": "raw/compile-02/scratch-filesystem.txt",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/guard-result.json",
+      "sha256": "9835ef333750bf8fe7843da20d6d275bcf2186c8c39f75cbca59210f6bfc63da",
+      "bytes": 804,
+      "retained": "raw/compile-02/guard-result.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/child-command.json",
+      "sha256": "c66b0299a9fcd4cd417acfc93e72401c9bd14560265bc99d752db3fa5779d4b3",
+      "bytes": 1069,
+      "retained": "raw/compile-02/child-command.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-postcheck.json",
+      "sha256": "6a98da4d7b2141686902f300c4f5a32d7da2c244a1bcea8d8cf4d53f2714fe0a",
+      "bytes": 2529,
+      "retained": "raw/compile-02/source-postcheck.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/child.stderr",
+      "sha256": "08b206f1761686b98b5348f4f93eea93f7f1c8855581867b78d41e001f3336d9",
+      "bytes": 587,
+      "retained": "raw/compile-02/child.stderr.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/supervisor.stdout",
+      "sha256": "a6e3b689244ee26ee362d7ff75b9418f2f13f133ae891cb712165138378b4a8e",
+      "bytes": 228,
+      "retained": "raw/compile-02/supervisor.stdout.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/child.pid",
+      "sha256": "9294c205268564bf3fbaaabcd56d01a0ca01d93dcba9fe598f92f38aeb9015c2",
+      "bytes": 8,
+      "retained": "raw/compile-02/child.pid",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/work/result.json",
+      "sha256": "c3e3f0cbd1d5a7b2ce3e32eef061b6a81f6e2b79cdc4c949598cafd70336be38",
+      "bytes": 5517,
+      "retained": "raw/compile-02/work-result.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-snapshots/compile_value_precision_context.py",
+      "sha256": "01c58d4b498990c0520e6477e529f157a7d6661d5f68882ad127a44202aa2067",
+      "bytes": 5913,
+      "retained": "raw/compile-02/source-snapshots/compile_value_precision_context.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-snapshots/run_value_precision_guard.py",
+      "sha256": "83a55cd81dc211c9631fb765b5b70f3df257a5f437f5ba799bbf5ed39f59a873",
+      "bytes": 5664,
+      "retained": "raw/compile-02/source-snapshots/run_value_precision_guard.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-snapshots/prepare_value_precision_derivative.py",
+      "sha256": "9919bdafd1a4676f2d5499581777075ff51430fbcb70e3be622845afd7e351ca",
+      "bytes": 8372,
+      "retained": "raw/compile-02/source-snapshots/prepare_value_precision_derivative.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-snapshots/value_precision_path.py",
+      "sha256": "1474d4eda4c7633d5fc125c124249c14e846d99ff65eecb8c6de20acb64376e0",
+      "bytes": 12841,
+      "retained": "raw/compile-02/source-snapshots/value_precision_path.py",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/source-snapshots/launch-context.sh",
+      "sha256": "7487228542d7dfd4b229a173399c2638870cf14f05bbf8e66514d5753a5b2ed1",
+      "bytes": 1167,
+      "retained": "raw/compile-02/source-snapshots/launch-context.sh",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/metadata-inspection/command.json",
+      "sha256": "06b35416b80c7483b6a615fad59ba1b066f80e533592b5e61e37932c3b2987ef",
+      "bytes": 976,
+      "retained": "raw/compile-02/metadata-inspection/command.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/metadata-inspection/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retained": "raw/compile-02/metadata-inspection/stderr.log.gz",
+      "lossless_gzip": true
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/metadata-inspection/result.json",
+      "sha256": "28d691c7d22d22527049c30a27257554a56ba4e8955348987352a20064bc2f17",
+      "bytes": 143,
+      "retained": "raw/compile-02/metadata-inspection/result.json",
+      "lossless_gzip": false
+    },
+    {
+      "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-context-runs/context-20260911T111531Z-02/metadata-inspection/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retained": "raw/compile-02/metadata-inspection/stdout.log.gz",
+      "lossless_gzip": true
+    }
+  ],
+  "claim_boundary": "One full paired HTP compilation with the unchanged accepted recipe and passing backend6/soc43/aliases/active30cache/120FLAT_BUFFER metadata. The full DLC precision island passed separately. No physical query or internal finalized-kernel precision/numerical/quality/speed claim.",
+  "physical_execution": false,
+  "inference": false,
+  "phone_access": false,
+  "registry_update": false,
+  "prior_exact_long_negative_unchanged": true
+}
