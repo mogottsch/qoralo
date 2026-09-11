@@ -1,0 +1,95 @@
+{
+  "comparisons": [
+    {
+      "state": 3,
+      "shape": [
+        1,
+        2,
+        256,
+        4096
+      ],
+      "device_output": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-v73-20260911/attempt-02/device/out/output_0_0.raw",
+        "bytes": 8388608,
+        "sha256": "a864b3ed7101a39e538f5126f663334df92fdf6cff48d6caa33f2f4ca32462b7"
+      },
+      "host_output": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-boundary-probe-20260911/attempt-01/runtime/data/output-0.raw",
+        "bytes": 8388608,
+        "sha256": "a864b3ed7101a39e538f5126f663334df92fdf6cff48d6caa33f2f4ca32462b7"
+      },
+      "host_byte_identical": true,
+      "finite_values": 2097152,
+      "nonzero_values": 2,
+      "versus_fullchain": {
+        "bitwise_equal_values": 2097150,
+        "max_abs_fp64": 3.175076484680176,
+        "mean_abs_fp64": 1.5139945048758818e-06
+      },
+      "versus_catonly_hypothesis": {
+        "bitwise_equal_values": 2097150,
+        "max_abs_fp64": 1.9073486328125e-06,
+        "mean_abs_fp64": 9.663381206337363e-13
+      },
+      "versus_plain_float_concat": {
+        "bitwise_equal_values": 2097150,
+        "max_abs_fp64": 7.426738739013672e-05,
+        "mean_abs_fp64": 3.632294465205632e-11
+      },
+      "anchor": {
+        "actual": 10.028992652893066,
+        "host": 10.028992652893066,
+        "fullchain": 6.853916168212891,
+        "catonly_hypothesis": 10.028990745544434,
+        "plain_float_concat": 10.028990745544434
+      },
+      "plain_float_reference_scope": "saved-array concatenation only; no unquantized full-model/attention forward"
+    },
+    {
+      "state": 15,
+      "shape": [
+        1,
+        2,
+        256,
+        4096
+      ],
+      "device_output": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-v73-20260911/attempt-02/device/out/output_0_1.raw",
+        "bytes": 8388608,
+        "sha256": "0edcd20726e3ef20d667e8df6d9ac2e624b967484f221a790df6b0dbf5c9575a"
+      },
+      "host_output": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-boundary-probe-20260911/attempt-01/runtime/data/output-1.raw",
+        "bytes": 8388608,
+        "sha256": "0edcd20726e3ef20d667e8df6d9ac2e624b967484f221a790df6b0dbf5c9575a"
+      },
+      "host_byte_identical": true,
+      "finite_values": 2097152,
+      "nonzero_values": 1,
+      "versus_fullchain": {
+        "bitwise_equal_values": 2097151,
+        "max_abs_fp64": 0.0003007650375366211,
+        "mean_abs_fp64": 1.4341594578581862e-10
+      },
+      "versus_catonly_hypothesis": {
+        "bitwise_equal_values": 2097151,
+        "max_abs_fp64": 1.1920928955078125e-07,
+        "mean_abs_fp64": 5.684341886080802e-14
+      },
+      "versus_plain_float_concat": {
+        "bitwise_equal_values": 2097151,
+        "max_abs_fp64": 0.00014793872833251953,
+        "mean_abs_fp64": 7.054268280626275e-11
+      },
+      "anchor": {
+        "actual": 1.0001479387283325,
+        "host": 1.0001479387283325,
+        "fullchain": 0.9998471736907959,
+        "catonly_hypothesis": 1.000147819519043,
+        "plain_float_concat": 1.0
+      },
+      "plain_float_reference_scope": "saved-array concatenation only; no unquantized full-model/attention forward"
+    }
+  ],
+  "new_model_SDK_ADB_calls": 0
+}

@@ -1,0 +1,8 @@
+{
+  "args": [
+    "shell",
+    "cd /data/local/tmp/vibevoice-0032-kcache-20260911-02; if test -f runner.pid; then p=$(cat runner.pid); if test -e /proc/$p && test \"$(readlink /proc/$p/cwd)\" = /data/local/tmp/vibevoice-0032-kcache-20260911-02 && tr \"\\000\" \" \" </proc/$p/cmdline | grep -q kcache_probe; then kill -TERM \"$p\"; sleep 1; kill -KILL \"$p\" 2>/dev/null || true; fi; fi"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.04082506399936392
+}

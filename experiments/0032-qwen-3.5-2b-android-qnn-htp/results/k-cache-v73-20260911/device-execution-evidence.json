@@ -1,0 +1,65 @@
+{
+  "log": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-v73-20260911/attempt-02/device/out/runner.stderr.log",
+    "bytes": 52022,
+    "sha256": "e49be89ca18b0a18aee3e6f9c43c2c37e1f7fc728a1bf5ecdd89d52982caa4af"
+  },
+  "passages": [
+    {
+      "line": 12,
+      "text": "[INFO] [Qnn ExecuTorch]: profile_level: kProfileOff"
+    },
+    {
+      "line": 27,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <V> RouterFastRPC create"
+    },
+    {
+      "line": 99,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <V> Attempting to open dynamically linked so: /data/local/tmp/vibevoice-0032-kcache-20260911-02/libQnnHtpV73Stub.so using absolute filename"
+    },
+    {
+      "line": 391,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <V> DSP ARCH graph is set to 73 for graph 0"
+    },
+    {
+      "line": 783,
+      "text": "I 00:00:00.238622 executorch:qnn_executor_runner.cpp:495] Perform 0 inference for warming up"
+    },
+    {
+      "line": 784,
+      "text": "I 00:00:00.238635 executorch:qnn_executor_runner.cpp:501] Start inference (0)"
+    },
+    {
+      "line": 785,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <I> QnnGraph_execute started. graph = 0x1"
+    },
+    {
+      "line": 823,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <V> transport execute dmahandles [status = 0]"
+    },
+    {
+      "line": 841,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <I> QnnGraph_execute done. status 0x0"
+    },
+    {
+      "line": 846,
+      "text": "I 00:00:00.266950 executorch:qnn_executor_runner.cpp:555] Total 1 inference took 9.625000 ms, avg 9.625000 ms"
+    },
+    {
+      "line": 986,
+      "text": "[INFO] [Qnn ExecuTorch]: QnnDsp <I> QnnContext_free done successfully."
+    }
+  ],
+  "physical_route": "SM-S918B / SM8550 / ARM64 Android, QnnDsp HtpProvider RouterFastRPC V73Stub, DSP graph73",
+  "successful_graph_calls_observed": 1,
+  "new_phone_compile": 0,
+  "input_file_checks_pre_and_post": 13,
+  "canonical_campaign": false,
+  "RPC_accelerator_cycles": null,
+  "counter_null_reason": "QNN profiling off; retained transport success is execution evidence, not a precise counter/timing split",
+  "model_execution_interval_ms_from_driver": 9.625,
+  "interval_limit": "one synthetic method call only, not a canonical throughput/TTFT/setup metric",
+  "peak_device_process_memory": null,
+  "memory_null_reason": "No process peak sampling was captured in this short fixture; SDK memory estimates are not measured peak",
+  "internal_finalized_encodings": null
+}
