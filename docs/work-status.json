@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T13:56:44+00:00",
+  "updated_at": "2026-09-11T14:07:14+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -33,22 +33,22 @@
       "title": "0037 provider pipeline HTP",
       "status": "preparing",
       "owner": "Ben",
-      "now": "Ben validates HTP static adaptations against pinned 0037 provider pipeline.",
-      "next": "No execution/WAV. 0036 differed in segmentation,steps,speed/frame selection; future 0037 result supports pipeline only—not chunking/DP sole cause.",
-      "reported_at": "2026-09-11T13:56:44+00:00",
-      "reported_by": "Pi — 0037 HTP static adaptation preparation",
+      "now": "HTP provider pipeline remains preparation; no HTP WAV/player.",
+      "next": "No inherited 0036 verdict. Any HTP listening page requires a real stable hash-bound WAV.",
+      "reported_at": "2026-09-11T14:07:14+00:00",
+      "reported_by": "Pi — CPU result does not imply HTP result",
       "stale_after_seconds": 900,
       "links": []
     },
     {
       "id": "0037-provider-pipeline-cpu",
       "title": "0037 provider pipeline CPU",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Jens",
-      "now": "0037 upstream recipe pinned: supertonic-py1.3.1 commit908a564 matches installed6 files/same weights. CPU follows raw sentence segmentation,then normalization/tags.",
-      "next": "Defaults8 steps/1.05 speed/.3s interchunk gaps; full nativeL×3072 per segment/no final gap. Target300 chars is not hardbound. Preparation only/no WAV.",
-      "reported_at": "2026-09-11T13:56:44+00:00",
-      "reported_by": "Pi — verified upstream CPU recipe pin",
+      "now": "Real 0037 CPU provider WAV captured: SHA6848fcd…a0be,210.044898s/9,262,980 frames;15 chunks,8 steps,1.05 speed/full native extents.",
+      "next": "CPU-only4 reused sessions/165 calls; one profiled run (setup.81318s,generation112.70926s,RTF.536596 incl gaps), not median. Qualified ASR running; listening not_reviewed.",
+      "reported_at": "2026-09-11T14:07:14+00:00",
+      "reported_by": "Pi — actual 0037 CPU WAV result",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -87,11 +87,11 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Janek → Jens / Ben",
-      "now": "Janek EDIT repair remains phone priority; 0037 provider-pipeline CPU/HTP preparation is source/preparation only.",
-      "next": "No 0037 phone execution/start reported. No app integration; no empty listening page.",
-      "reported_at": "2026-09-11T13:50:51+00:00",
-      "reported_by": "Pi — current phone priority and 0037 boundary",
+      "owner": "Janek",
+      "now": "0037 CPU WAV complete; Janek gets next app slot, actual start unreported.",
+      "next": "No HTP player or 0037 HTP phone result. Phone assignment is reported schedule, not live lock/state.",
+      "reported_at": "2026-09-11T14:07:14+00:00",
+      "reported_by": "Pi — 0037 CPU completion and app-slot order",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -100,10 +100,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jens / Ben / Jere / Janek",
-      "now": "0037 upstream CPU recipe pinned; Ben validates HTP static adaptations; Jere metadata and Janek EDIT repair remain current.",
-      "next": "No new WAV. 0037 configuration differs from0036 beyond segmentation, so no sole-cause inference; raw text/audio/ASR private.",
-      "reported_at": "2026-09-11T13:56:44+00:00",
-      "reported_by": "Pi — 0037 preparation and interpretation boundary",
+      "now": "0037 CPU provider WAV captured/ASR running; Ben HTP prep; Janek next app slot; Jere work remains bounded.",
+      "next": "No 0037 HTP WAV. CPU one profiled run only/no listening verdict; private text/audio/ASR retained locally.",
+      "reported_at": "2026-09-11T14:07:14+00:00",
+      "reported_by": "Pi — 0037 CPU result and current order",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -137,16 +137,16 @@
     },
     {
       "name": "Jens",
-      "task": "Prepare pinned 0037 native CPU provider pipeline",
-      "reported_at": "2026-09-11T13:56:44+00:00",
-      "reported_by": "Pi — recipe verification complete/preparation continues",
+      "task": "0037 CPU WAV complete; qualified ASR running",
+      "reported_at": "2026-09-11T14:07:14+00:00",
+      "reported_by": "Pi — actual CPU result",
       "stale_after_seconds": 900
     },
     {
       "name": "Ben",
-      "task": "Validate 0037 HTP static provider adaptations",
-      "reported_at": "2026-09-11T13:56:44+00:00",
-      "reported_by": "Pi — preparation only",
+      "task": "Prepare 0037 HTP provider pipeline",
+      "reported_at": "2026-09-11T14:07:14+00:00",
+      "reported_by": "Pi — no HTP result",
       "stale_after_seconds": 900
     },
     {
@@ -183,6 +183,11 @@
       "wav_sha256": "3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c",
       "state": "not_reviewed",
       "scope": "Exact HTP WAV only"
+    },
+    "provider_cpu_pending_review": {
+      "wav_sha256": "6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be",
+      "state": "not_reviewed",
+      "scope": "Exact 0037 CPU provider-pipeline WAV only; HTP absent"
     }
   }
 }
