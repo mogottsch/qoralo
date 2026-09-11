@@ -447,33 +447,63 @@ class ShortProductE2eTest {
     }
     private fun shell(command: String): String = android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand(command)).use { it.readBytes().toString(Charsets.UTF_8) }
     private fun walk(node: AccessibilityNodeInfo?): List<AccessibilityNodeInfo> = if (node == null) emptyList() else listOf(node) + (0 until node.childCount).flatMap { walk(node.getChild(it)) }
-    private fun clickNative(node: AccessibilityNodeInfo, stopBefore: AccessibilityNodeInfo? = null) {
+    private fun nativeClickTarget(node: AccessibilityNodeInfo, stopBefore: AccessibilityNodeInfo? = null): AccessibilityNodeInfo? {
         var target: AccessibilityNodeInfo? = node
         while (target != null && target != stopBefore && !target.isClickable && target.actionList.none { it.id == AccessibilityNodeInfo.ACTION_CLICK }) target = target.parent
-        require(target != null && target != stopBefore) { "No actual row click action below the known container" }
+        return target?.takeIf { it != stopBefore && it.isVisibleToUser }
+    }
+    private fun clickNative(node: AccessibilityNodeInfo, stopBefore: AccessibilityNodeInfo? = null) {
+        val target = requireNotNull(nativeClickTarget(node, stopBefore)) { "No actual row click action below the known container" }
         require(target.performAction(AccessibilityNodeInfo.ACTION_CLICK))
     }
+    private val safNodes = object : SafRootReadiness.Nodes<AccessibilityNodeInfo> {
+        override fun id(node: AccessibilityNodeInfo): String? = node.viewIdResourceName
+        override fun text(node: AccessibilityNodeInfo): String? = node.text?.toString()
+        override fun visible(node: AccessibilityNodeInfo): Boolean = node.isVisibleToUser
+        override fun canClick(node: AccessibilityNodeInfo): Boolean = node.isClickable || node.actionList.any { it.id == AccessibilityNodeInfo.ACTION_CLICK }
+        override fun parent(node: AccessibilityNodeInfo): AccessibilityNodeInfo? = node.parent
+        override fun children(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> = (0 until node.childCount).mapNotNull { node.getChild(it) }
+    }
     private fun saveThroughLocalDocumentsUi(filename: String) {
-        waitUntil("local DocumentsUI", 15_000) { instrumentation.uiAutomation.rootInActiveWindow?.packageName?.toString() in setOf("com.google.android.documentsui", "com.android.documentsui") }
-        var nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
-        val drawer = nodes.firstOrNull { it.contentDescription?.toString() in setOf("Show roots", "Show navigation drawer") }
-        if (drawer != null) clickNative(drawer)
-        waitUntil("Downloads root") { walk(instrumentation.uiAutomation.rootInActiveWindow).any { it.text?.toString() == "Downloads" } }
-        nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
-        // With a drawer open, select ONLY the named root under roots_list, not a breadcrumb/cloud entry.
-        if (drawer != null) {
-            val roots = nodes.single { it.viewIdResourceName?.endsWith(":id/roots_list") == true }
-            val downloads = walk(roots).single { it.viewIdResourceName == "android:id/title" && it.text?.toString() == "Downloads" }
-            clickNative(downloads, stopBefore = roots)
+        var nodes = emptyList<AccessibilityNodeInfo>()
+        var drawer: AccessibilityNodeInfo? = null
+        var rootsOpen = false
+        waitUntil("DocumentsUI roots control ready", 15_000) {
+            val current = instrumentation.uiAutomation.rootInActiveWindow
+            nodes = walk(current)
+            drawer = nodes.firstOrNull { it.isVisibleToUser && it.contentDescription?.toString() in setOf("Show roots", "Show navigation drawer") }
+            rootsOpen = nodes.any { it.isVisibleToUser && it.viewIdResourceName?.endsWith(":id/roots_list") == true }
+            current?.packageName?.toString() in setOf("com.google.android.documentsui", "com.android.documentsui") && (rootsOpen || drawer != null)
         }
-        Thread.sleep(500)
-        nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
-        val input = nodes.filter { it.isEditable }.single()
-        require(input.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, Bundle().apply { putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, filename) }))
-        Thread.sleep(300)
-        val save = walk(instrumentation.uiAutomation.rootInActiveWindow).single {
-            it.isEnabled && (it.viewIdResourceName?.endsWith(":id/button1") == true || it.text?.toString()?.lowercase() in setOf("save", "speichern"))
+        if (!rootsOpen) clickNative(requireNotNull(drawer))
+        // The background breadcrumb already says Downloads. Wait for the ACTUAL drawer subtree/action,
+        // not that unrelated text, before reading the asynchronously populated root list.
+        var rootAction: AccessibilityNodeInfo? = null
+        waitUntil("actionable local Downloads drawer row", 15_000) {
+            val current = instrumentation.uiAutomation.rootInActiveWindow
+            if (current?.packageName?.toString() !in setOf("com.google.android.documentsui", "com.android.documentsui")) false
+            else {
+                rootAction = SafRootReadiness.downloadsAction(current, safNodes)
+                rootAction != null
+            }
         }
-        clickNative(save)
+        json("saf-root-ready.json", JSONObject().put("requestedLocalRoot", "Downloads").put("windowId", rootAction!!.windowId)
+            .put("rootListAndUniqueVisibleRowReady", true).put("actualBoundedClickAction", true))
+        require(requireNotNull(rootAction).performAction(AccessibilityNodeInfo.ACTION_CLICK))
+        var input: AccessibilityNodeInfo? = null
+        waitUntil("local save form after drawer closes", 15_000) {
+            nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
+            input = nodes.filter { it.isVisibleToUser && it.isEditable }.singleOrNull()
+            input != null && nodes.none { it.isVisibleToUser && it.viewIdResourceName?.endsWith(":id/roots_list") == true }
+        }
+        require(input!!.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, Bundle().apply { putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, filename) }))
+        var save: AccessibilityNodeInfo? = null
+        waitUntil("exact filename and enabled Save", 15_000) {
+            nodes = walk(instrumentation.uiAutomation.rootInActiveWindow)
+            save = nodes.singleOrNull { it.isVisibleToUser && it.isEnabled &&
+                (it.viewIdResourceName?.endsWith(":id/button1") == true || it.text?.toString()?.lowercase() in setOf("save", "speichern")) }
+            save != null && nodes.any { it.isVisibleToUser && it.isEditable && it.text?.toString() == filename }
+        }
+        clickNative(requireNotNull(save))
     }
 }

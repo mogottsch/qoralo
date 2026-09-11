@@ -43,7 +43,7 @@ def main():
         for path in build_paths:
             require_path=PROJECT.parent/path
             assert require_path.read_bytes()==git('show',source+':'+path),path
-        for path in CONTROLLERS+['tools/prepare_short_product_gate.py','tools/short_product_artifacts.init.gradle','tools/tests/test_short_product_scope.py','tools/tests/test_short_continuation_scope.py','tools/tests/test_short_export_scope.py']:
+        for path in CONTROLLERS+['tools/prepare_short_product_gate.py','tools/short_product_artifacts.init.gradle','tools/tests/test_short_product_scope.py','tools/tests/test_short_continuation_scope.py','tools/tests/test_short_export_scope.py','tools/tests/fixtures/SafRootReadinessFixture.java']:
             assert (PROJECT/path).read_bytes()==git('show',source+':podcast-app/'+path),path
         build_root=out/'build-source';build_root.mkdir()
         with tarfile.open(fileobj=io.BytesIO(git('archive',source,'--',*build_paths))) as tar:tar.extractall(build_root,filter='data')

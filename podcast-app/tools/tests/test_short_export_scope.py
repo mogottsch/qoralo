@@ -3,6 +3,8 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import subprocess
+import tempfile
 import unittest
 
 PROJECT=Path(__file__).resolve().parents[2]
@@ -57,13 +59,24 @@ class ExportOnlyScopeTests(unittest.TestCase):
         source=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text()
         self.assertNotIn('downloads.first { it.parent?.isClickable',source)
         self.assertIn('endsWith(":id/roots_list")',source)
-        self.assertIn('walk(roots).single { it.viewIdResourceName == "android:id/title" && it.text?.toString() == "Downloads" }',source)
-        self.assertIn('clickNative(downloads, stopBefore = roots)',source)
+        self.assertIn('waitUntil("actionable local Downloads drawer row", 15_000)',source)
+        self.assertIn('SafRootReadiness.downloadsAction(current, safNodes)',source)
+        predicate=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/SafRootReadiness.java').read_text()
+        self.assertIn('"android:id/title".equals(nodes.id(node)) && "Downloads".equals(nodes.text(node))',predicate)
+        self.assertIn('!Objects.equals(action, list)',predicate)
+        self.assertIn('rootAction != null',source)
+        self.assertNotIn('waitUntil("Downloads root")',source)
         self.assertIn('target != stopBefore',source)
         self.assertIn('target.actionList.none { it.id == AccessibilityNodeInfo.ACTION_CLICK }',source)
         controller=(PROJECT/'tools/run_short_product_gate.py').read_text()
         self.assertIn('host_seconds=150 if export_only',controller)
         self.assertIn("'appReinstalled':False",controller)
         self.assertIn('compare_export(rows(before),rows(after)',controller)
+    def test_actual_shared_predicate_rejects_breadcrumb_and_delayed_list_until_ready(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source=PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/SafRootReadiness.java'
+            fixture=PROJECT/'tools/tests/fixtures/SafRootReadinessFixture.java'
+            subprocess.run(['javac','-d',temp,str(source),str(fixture)],check=True,timeout=30)
+            subprocess.run(['java','-cp',temp,'dev.vibevoice.podcast.e2e.SafRootReadinessFixture'],check=True,timeout=10)
 
 if __name__=='__main__':unittest.main()

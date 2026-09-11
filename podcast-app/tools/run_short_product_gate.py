@@ -24,7 +24,7 @@ PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',
        'supertonic-3-t2048-l2048-parity':'116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066'}
 PRIOR={APP:'95103b2cc00676e96fe4a2335d489863fcc609f48d5096d20bee2c69529fe969',
-       TEST_APP:'35faf3a6da5464746028a0433e7dc413cce97de1e8dc7f6be52e48e9e92a3625'}
+       TEST_APP:'f6beb67756afc4269c82ff1aa8432864c4a9d34b0db9caf0251baaa4c93a241f'}
 
 
 def check_sources(candidate):
