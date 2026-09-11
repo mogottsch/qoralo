@@ -1,14 +1,82 @@
 # HTP provider-pipeline route
 
-**All32 QNN contexts exported; guarded Android runner/stage ready, no HTP run yet.**
-Naive latent padding is wrong. The explicit native-boundary lowering removes that
-large error, but remains numerically nonidentical. The original strict numerical
-gate **failed and is preserved as failed**. Export is not physical execution or
-listening acceptance.
+**One full15-chunk HTP chapter completed; qualified unprompted ASR WER3.03%.**
+The exact WAV awaits Moritz's listening verdict. Naive latent padding is wrong;
+the explicit native-boundary lowering removes that large error, but remains
+numerically nonidentical. The original strict numerical gate **failed and is
+preserved as failed**. Physical execution and strong coverage do not relabel it.
 
 This is a noncanonical, single-chapter experiment, not a warm-median benchmark,
 registry-quality claim or generic app-ready model pack. Jens's native/dynamic
 Android CPU baseline is independent and was not reshaped or delayed for this route.
+
+## Completed phone result
+
+The one granted slot is **consumed**; phone/ASR locks are released and the owned
+remote directory was removed. Live APK and all captured DB/WAL/SHM hashes are
+unchanged. No further TTS run, ASR retry, audio repair or playback was performed.
+
+Private exact PCM16 mono44.1kHz WAV:
+
+```
+experiments/0037-supertonic-provider-pipeline/htp/.local/phone-provider-full-01/evidence/run/chapter.wav
+SHA256 0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209
+```
+
+| Measurement | First HTP provider-pipeline chapter |
+|---|---:|
+| Actual audio including14x0.3s prescribed gaps | 210.184218s |
+| Complete native speech extent | 205.984218s |
+| Constructors / maximum resident sessions | 32 / 4 |
+| Shared-session setup | 0.559414s |
+| Interleaved exactT constructors | 0.496209s |
+| All constructor time | 1.055379s |
+| Interleaved pair teardown | 0.096857s |
+| First native waveform ready from process entry | 6.441463s |
+| First closed/playable chunk from process entry | 6.457313s |
+| First completed chunk available on host from launch | 6.949330s |
+| Generation wall including interleaved setup | 87.778723s |
+| Generation excluding interleaved constructor/teardown | 87.185656s |
+| RTF including prescribed gaps/interleaved setup | 0.417628 |
+| RTF including gaps, excluding session lifecycle | 0.414806 |
+| Own-process `ru_maxrss` | 173,864KiB |
+| Sampled own VmRSS / PSS peaks | 77,816 / 74,440KiB |
+| Battery before staging → last native sample | 28.3 → 28.8°C |
+| Qualified unprompted ASR | 3.0303%WER;480/495 exact matches |
+| Exact-WAV human listening | `not_reviewed` |
+
+All15 chunk payloads and14 zero gaps reconstruct the final PCM byte-for-byte.
+Fourteen complete chunk files were pulled before the final chapter file existed;
+all15 delivered chunk hashes match the final assembly. This is chunk-level file
+availability, not sample-level streaming or playback.
+
+All165 reported neural Run calls used fail-closed QNN contexts, with own duration,
+features and state. Owned-PID/time-filtered CDSP/v73-skeleton/PD/queue/remote-handle
+logs corroborate physical RPC use and cleanup. ProfileOFF means **no hardware
+cycle/HVX counters or independent per-node device profiler count**. Nonfatal
+startup/teardown diagnostics are retained, not hidden. Linux RSS/PSS omits some
+DSP/DMA/global memory and does not prove a total-memory advantage over CPU.
+
+HTP ownnativeL differs at zero-based006(96vsCPU95) and014(250vsCPU249). Only000–005
+have matching complete active-noise hashes; all later hashes differ. This is
+expected own-duration stochastic behavior, not grounds to inject CPU durations.
+
+One offline Whisper-small decode recovered493words vs495normalizedreference,
+13substitutions+2deletions+0insertions,480exactmatches,46–50matches in every decile,
+and29/last30words. Model/runtime/settings match the retained canonical control
+(36words,0WER). Automatic coverage is strong, but not a human quality verdict.
+
+- `results/first-chapter-01.json`: execution snapshot, own extent/noise/index and
+  assembly validation. Its ASR status reflects the pre-ASR capture boundary.
+- `results/asr-first-chapter-01.json`: additive one-pass qualified coverage.
+- `results/physical-evidence-01.json`: RPC, memory, thermal and app-preservation
+  metadata; all content-bearing logs remain private.
+- `results/comparison-01.json`: CPU/HTP first-route observations, setup/profile
+  qualifications, exact noise correspondence and human-review-pending state.
+
+The observed CPU/HTP generation-wall ratio is1.284x, not a controlled pure-provider
+speedup: geometry, precision/lowering, profiling, lifecycle and later active noise
+differ. No warm median, app-ready pack or accepted-quality throughput is claimed.
 
 ## Frozen provider recipe
 
@@ -119,9 +187,10 @@ unsupported neural fallback is forbidden. See `results/context-export-01.json`.
  64MiB rounding, not a guaranteed native allocator formula. See
   `results/context-footprints-01.json`.
 - Standalone ARM64 runner builds with warnings-as-errors and FMA contraction OFF.
-  Nine tests pass, including the **actual C++ runner helpers** for FP32 own extent,
+  Nine pre-run tests passed, including the **actual C++ runner helpers** for FP32 own extent,
   all edge indices, channel-aware stream layout and provider-equivalent PCM16;
-  these tests neither link nor load ORT and perform no neural execution.
+  these tests neither link nor load ORT and perform no neural execution. Four
+  retained-result checks bring the completed-route test total to13.
 - Session lifecycle is bounded: vector/vocoder reused throughout; a current-T
   duration/text pair cache has capacity one T. All15 T values are unique, so older
   pairs have no reuse benefit.32 constructors, maximum four resident sessions;
@@ -130,7 +199,7 @@ unsupported neural fallback is forbidden. See `results/context-export-01.json`.
 - Private stage payload567,061,554 bytes:32 contexts, six pinned libraries,
   runner, common style/step/noise arrays and exact chunk tokens/masks. No raw text,
   source ONNX, CPU duration/features or precomputed edge indices are staged.
-- Actual next phone run requires>=3.5GiB available, battery<42°C,5GiB native AS,
+- The completed phone run used>=3.5GiB available, battery<42°C,5GiB native AS,
  3GiB own RSS limit,600MiB available floor,45°C thermal ceiling,1800s native alarm.
   Read-only live APK and double DB/WAL snapshot checks protect existing rows.
   Dedicated generation/test PIDs must be absent; main/Room presence alone is not
@@ -139,9 +208,9 @@ unsupported neural fallback is forbidden. See `results/context-export-01.json`.
 - Phone only in Pi's scheduled slot, full `phone.lock` lifecycle and live app/job,
   thermal/memory preflight. No app/data modification, playback or global kills.
   Current app identity is discovered live, never restored to an older experiment.
-- One initial complete HTP chapter; preserve first outcomes, exact WAV/hash,
-  chunk-ready/device-playable/host-available boundaries, provider evidence and
-  qualified unprompted ASR. No physical HTP result exists yet.
+- The one initial HTP chapter and one qualified unprompted ASR pass are complete.
+  First outcomes, exact hashes and all availability boundaries are preserved.
+  Do not consume a delayed duplicate slot message or rerun while waiting to listen.
 
 ## Reproduce source checks
 
@@ -159,5 +228,5 @@ private `.local/` directories.
 - `tools/check_controls.py --baseline ... --output ...`: native-Softplus geometry
   and native-shape stable-Softplus controls, with the original gate intact.
 - `python -m unittest discover -s htp/tests -v` from the experiment directory:
-  nine synthetic tests, no source model/ORT execution or device use. One test
-  compiles only the runner's nonneural C++ helpers without linking ORT.
+  thirteen synthetic/retained-result tests, no source model/ORT execution or
+  device use. One compiles only nonneural C++ helpers without linking ORT.

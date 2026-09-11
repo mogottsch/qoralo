@@ -1,6 +1,6 @@
 # Supertonic provider-prescribed segmented pipeline
 
-**Status: one complete native Android CPU provider-pipeline WAV produced. Qualified unprompted ASR strongly supports whole-chapter coverage (2.42% word error); human listening not yet reviewed. HTP adaptation remains Ben's parallel track.** This is a new, noncanonical product-reference experiment. It does not replace or reinterpret experiment 0036: that earlier test prohibited text/audio segmentation and its CPU WAV was rejected.
+**Status: one complete Android chapter produced on each route. Qualified unprompted ASR strongly supports whole-chapter coverage: CPU 2.42% WER, HTP 3.03% WER. Both exact WAVs await Moritz's listening verdict.** This is a new, noncanonical product-reference experiment. It does not replace or reinterpret experiment 0036: that earlier test prohibited segmentation and both its CPU and HTP WAVs were rejected.
 
 ## Question
 
@@ -47,15 +47,17 @@ Upstream uses a continuous `np.random.randn(...).astype(np.float32)` stream and 
 
 **CPU:** official frontend preparation runs on the host with the pinned package, without creating model sessions or invoking neural inference. The Android C++ port runs all four neural stages on CPU using the original dynamic ONNX graphs, with exact native T/L and the original 1,000-entry positional table unchanged. Four sessions are constructed once and reused. ORT 1.27.1, four intra-op threads, one inter-op thread, sequential execution, graph optimizations enabled, ordinary CPU arenas/memory patterns and profiling enabled. Model bytes are unchanged, including native Softplus. Native latent shapes above the original positional bound fail rather than silently extend or crop.
 
-**HTP (Ben):** exact native-T duration/text contexts avoid needless padding at those boundaries. Compact vector/vocoder buckets are only acceptable with documented CPU-source checks of masking, channel-wise noise placement and active output/prefix behavior, including EDGE-padding boundaries. Each route owns its duration, embeddings, latent inference and vocoder. CPU predictions/features are never substituted. Only artificial HTP bucket extension may be removed to restore the provider-native `nativeL * 3072` output. HTP adaptation validation does not delay or reshape the faithful dynamic CPU baseline.
+**HTP (Ben):** fifteen exact native-T duration/text pairs plus shared vector T320/L512 and vocoder L512 contexts. Naive latent padding failed source checks. The explicit candidate instead preserves the native boundary at all 28 symmetric vector EDGE pads using four own-nativeL-derived INT32 Gather-index arrays. Original weights and the 1,000-position table remain unchanged; the audited stable Softplus identity is retained. The original strict numerical source gate **failed and remains failed**: this is a structurally validated, explicitly non-bit-exact lowering, not a retroactive pass. Full source controls, observed numerical error bounds and physical-run evidence are in [`htp/README.md`](htp/README.md).
 
-**Audio availability:** each completed CPU chunk is atomically published as a valid WAV, not a partial header/payload. The phone controller pulls new completed chunks during inference at approximately one-second polling intervals. The device's first completed/playable boundary and the separately observed host-availability boundary are both measured. Nothing autoplays; no empty listening page is created.
+All neural stages execute through fail-closed QNN contexts with CPU fallback disabled. Each route owns its duration, embeddings, latent inference and vocoder; no CPU predictions/features are injected. Only artificial bucket extension is removed to restore full provider-native `nativeL * 3072` output. Vector/vocoder sessions are reused; the current exact-T duration/text pair is retained only until T changes: 32 constructors, at most four resident sessions. This case-specific prepared pack is not a generic app-ready solution. CPU's dynamic reference was neither changed nor delayed.
+
+**Audio availability:** each completed CPU or HTP chunk is atomically published as a valid WAV, not a partial header/payload. The phone controller pulls new completed chunks during inference at approximately one-second polling intervals. The device's first completed/playable boundary and the separately observed host-availability boundary are both measured. Nothing autoplays; no empty listening page is created.
 
 ## Measurement, safety and privacy
 
-One initial complete chapter per route; no automatic warm campaign or warm-median claim. Measure four-session setup, first completed/playable chunk, full generation wall time, each chunk's predicted and actual emitted duration, prescribed gap duration, emitted final WAV/hash, per-stage provider evidence, process memory and thermal context. RTF uses actual emitted duration and explicitly reports whether provider-prescribed gaps are in the denominator. Prepared host frontend/noise generation is outside device inference timing and identified separately. Per-chunk evidence writes and live transfers are disclosed overhead, not hidden.
+One initial complete chapter per route; no automatic warm campaign or warm-median claim. Measure session setup/lifecycle, first completed/playable chunk, full generation wall time, each chunk's predicted and actual emitted duration, prescribed gap duration, emitted final WAV/hash, provider evidence, process memory and thermal context. HTP's interleaved exact-T constructor/teardown costs are separated; no apples-to-apples four-session setup claim is made. RTF uses actual emitted duration and explicitly reports whether provider-prescribed gaps are in the denominator. Prepared host frontend/noise generation is outside device inference timing and identified separately. Per-chunk evidence writes and live transfers are disclosed overhead, not hidden.
 
-Phone `R5CW81PR8SY` is scheduled by Pi **behind Janek's app work**. `artifacts/locks/phone.lock` covers live checks, staging, execution, pulls and cleanup. No app installation/data changes or unrelated process termination. Initial available memory must be at least 3 GiB and battery temperature below 42°C. CPU bounds: 5 GiB address space, 4 GiB sampled RSS ceiling, 600 MiB available-memory emergency floor, 45°C battery ceiling, 1,800-second native alarm. Every attempt is retained privately, including failures.
+Phone `R5CW81PR8SY` is scheduled by Pi **behind Janek's app work**. `artifacts/locks/phone.lock` covers live checks, staging, execution, pulls and cleanup. No app installation/data changes or unrelated process termination. Initial available memory must be at least 3 GiB and battery temperature below 42°C. CPU bounds: 5 GiB address space, 4 GiB sampled RSS ceiling, 600 MiB available-memory emergency floor, 45°C battery ceiling, 1,800-second native alarm. HTP uses a stricter 3.5 GiB initial available-memory floor and 3 GiB own-RSS ceiling, with the same 5 GiB address-space, 600 MiB emergency floor, 45°C ceiling and 1,800-second native alarm. Read-only live APK and double DB/WAL snapshots verify app preservation; idle main/Room presence is not mistaken for generation. Every attempt is retained privately, including failures.
 
 Raw chapter/chunks, tensors, WAVs, profiles, ASR transcripts and content-bearing logs remain in ignored `.local/`. Public files contain source and non-sensitive metadata/hashes only. The existing offline Whisper-small control (0% word error on the canonical CPU sample) supports a single unprompted coverage check on each exact new full WAV. Only Moritz can accept or reject audio; initial status is `not_reviewed`.
 
@@ -93,6 +95,47 @@ The same chapter's 0036 single-pass CPU output was only 29.57 seconds with 89.09
 
 Phone lock and host ASR lock were released. The uniquely named phone directory was removed; app/data were untouched. First-run/profile/transport qualifications above remain applicable; no warm median or accepted-quality throughput claim is made.
 
+## Completed HTP result and first-route comparison
+
+The one HTP run completed all 15 provider chunks, with **165 reported neural Run calls** across 32 fail-closed QNN contexts. Owned-PID/time-filtered logs corroborate CDSP loading, the v73 QNN skeleton, domain-3 user PD and DSP queue creation, followed by closed remote handles. Profiling stayed OFF; hardware cycle/HVX counters and independent per-node device profiler counts are unavailable, not invented. Nonfatal driver lookup/control/teardown diagnostics are preserved.
+
+| Measurement | Native CPU | HTP candidate |
+| --- | ---: | ---: |
+| Completed provider chunks | 15 | 15 |
+| Actual final audio, including 4.2 s prescribed gaps | 210.044898 s | 210.184218 s |
+| Session constructors / maximum resident | 4 / 4 | 32 / 4 |
+| Constructor setup | 0.813180 s upfront | 1.055379 s total: shared + interleaved |
+| Interleaved HTP pair teardown | — | 0.096857 s |
+| First complete/playable chunk on device, from entry | 10.041025 s | **6.457313 s** |
+| First completed chunk on host, from launch | 10.855411 s | **6.949330 s** |
+| Generation wall, including any interleaved setup | 112.709261 s | **87.778723 s** |
+| RTF with prescribed gaps and interleaved setup | 0.536596 | **0.417628** |
+| HTP RTF excluding interleaved constructor/teardown | — | 0.414806 |
+| Own-process `ru_maxrss` (not total DSP/device memory) | 780,264 KiB | 173,864 KiB |
+| Unprompted ASR WER | **2.4242%** | **3.0303%** |
+| Exact aligned reference words / 495 | 483 | 480 |
+| Last 30 reference words matched | 29 | 29 |
+| Exact-WAV human listening verdict | `not_reviewed` | `not_reviewed` |
+
+This is an observed **1.284× generation-wall ratio**, not a controlled pure-provider speedup: CPU profiling is ON, HTP profiling is OFF; tensor geometry, precision/lowering, session lifecycle and later active noise differ. These are first runs, not warm medians or accepted-quality throughput. HTP's 32-case specialization/export/support checks, build and staging are outside device timing; host QNN constructors alone totaled 40.30 seconds. The reported Linux RSS/PSS does not capture all DSP/DMA/global allocations and cannot establish a total-memory improvement.
+
+HTP's complete native waveform for the first chunk was available at 6.441463 seconds from entry, followed by a closed playable chunk file at 6.457313 seconds. Fourteen chunk files were pulled before the final chapter file existed; all 15 delivered hashes match the final assembly. No playback is implied. The final PCM payload is byte-exactly the 15 full native chunk payloads plus the 14 prescribed zero gaps.
+
+The exact HTP PCM16 mono 44.1 kHz WAV remains private:
+
+```text
+htp/.local/phone-provider-full-01/evidence/run/chapter.wav
+SHA-256 0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209
+```
+
+One qualified unprompted Whisper-small decode recovered **493 words against 495 normalized reference words**: 13 substitutions, two deletions, no insertions, and **480 exact matches**. Every decile has 46–50 matches; 29 of the final 30 words matched. The same model/runtime/settings and canonical 0-WER control were verified. There was no second decode, source prompt, repair or additional TTS run. Strong automatic coverage is not Moritz's listening acceptance.
+
+Own HTP nativeL differs from CPU at zero-based chunk **006 (96 versus 95)** and **014 (250 versus 249)**. Only chunks **000–005** have equal complete active-noise hashes. The shared stream offset diverges after 006; equal seeds are not a blanket matched-noise claim. Every HTP duration, consumed native-layout noise slice and boundary-index array was independently checked against its own recorded values.
+
+Battery temperature was 28.3°C before staging and 28.8°C at the last native sample. The memory/thermal guard did not fire. The phone directory was removed, phone and ASR locks released, and live installed APK plus all captured DB/WAL/SHM file hashes were unchanged. The one granted phone slot is consumed; no retry or listening-approval wait holds the phone.
+
+Current aggregate evidence is [`htp/results/comparison-01.json`](htp/results/comparison-01.json); the original CPU evidence remains frozen. Neither positive new result reinterprets the rejected 0036 configuration or isolates one recipe change as the cause.
+
 ## Source and checks
 
 - `common/prepare_inputs.py`: executes pinned official segmentation/frontend, preserves source-order evidence, prepares shared stochastic stream.
@@ -103,6 +146,8 @@ Phone lock and host ASR lock were released. The uniquely named phone directory w
 - `cpu/summarize.py`, `cpu/results/first-chapter-01.json`: phase/timing/provider/memory/thermal/stochastic/WAV evidence, exact assembly checks and all 15 chunk results.
 - `cpu/results/asr-first-chapter-01.json`: unprompted automatic coverage evidence; no transcript text.
 - `protocol/assets.json`: verified official config/indexer/voice source identities and runtime constants; frozen inputs are unchanged.
+- `htp/README.md`: boundary lowering, preserved strict-gate failure, numerical qualification, case-specific setup and physical execution details.
+- `htp/results/first-chapter-01.json`, `asr-first-chapter-01.json`, `physical-evidence-01.json`, `comparison-01.json`: exact HTP run and additive coverage/provider/comparison metadata; no content-bearing transcripts or WAVs.
 
 Build: `bash experiments/0037-supertonic-provider-pipeline/cpu/build.sh`. Tests use the already-installed experiment 0007 Supertonic 1.3.1 environment:
 
