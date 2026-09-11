@@ -2,9 +2,28 @@
 
 ## Status
 
+**PAUSED by Moritz.** The latest physical query-prescale pair and saved comparisons are preserved below. No further investigation, build, model or phone work is running. See [PAUSED-HANDOFF.md](PAUSED-HANDOFF.md); push/history-rewrite holds remain.
+
 **The corrected native-INT64 integrated route now completes physically. One direct-QNN process loaded AR171, consumed all 171 canonical-short tokens, finite-scanned 60 outputs, bridged 38 states in memory, freed AR171, loaded AR1 once, and completed 15 finite-scanned decode calls for 16 total emitted tokens. First output arrived in 10.501 seconds and final output in 34.834 seconds in one cold diagnostic.**
 
-## Query-prescale AOT: context ready, physical pair in preparation
+## Completed paired physical query-prescale check
+
+[`results/query-prescale-prefill-pair-attempt-2-success/`](results/query-prescale-prefill-pair-attempt-2-success/) retains one baseline-first/candidate-second AR171 pair on the authorized S23. Both fresh processes consumed the full canonical171-token input. All41 actual native input buffers were captured **before** graph execution and match each other and the frozen host inputs byte-for-byte. All60 output buffers (38states +22logit chunks; 1,664,000 FP32 values per route) are finite and bit-for-bit identical across the two physical routes. All128000 vocabulary ranks match; both raw endpoint files contain token597.
+
+| Observation | Baseline | Query-prescale candidate |
+| --- | ---: | ---: |
+| QNN graph API call | 6.451538331s | 5.581822238s |
+| Context load | 3.853762655s | 2.600975155s |
+| Accelerator cycles | 3,364,707,232 | 2,932,203,396 |
+| Eight named scale-node cycles | 650,131,353 (`scaled_scores`) | 907,740 (`scaled_query`) |
+
+Both profile per-node sums equal their accelerator-cycle totals. Other-node cycles increased; the scale-node reduction is not a whole-model speedup. This is one ordered, instrumented pair, not general/warm/statistical throughput or an attributable full-request gain. Input/output persistence, setup and profile extraction are outside the separately measured API call. Order, caches and thermal conditions are not controlled by repetitions.
+
+**New shared fidelity caveat:** the saved correct-input physical outputs still differ substantially from the unchanged CPU baseline: only3/60 tensors satisfy the descriptive historical `rtol=0.02, atol=0.02`; maximum absolute delta is10,594.696502685547 at `present.2.key`, and maximum logit-chunk delta is7.209851264953613. There are127990 CPU-versus-physical vocabulary-rank changes despite matching argmax597. This is new correct-native-input evidence, not rehabilitation of the historical wrong-position runs. The drift is shared by both physical variants, not introduced by prescaling. Its cause was **not investigated before pause**.
+
+Both processes and the owned remote root were verified absent, all outputs were pulled, and `phone.lock` was released before pause. App/data/settings/audio were unchanged. Native arrays and exact full battery/thermal originals remain private under the ignored run directory; only explicitly labelled core extracts and hash bindings are included publicly. The earlier valid-Toybox-help/exit125 preflight is preserved separately in [`results/query-prescale-prefill-pair-attempt-1-timeout-help/`](results/query-prescale-prefill-pair-attempt-1-timeout-help/) and ran no model.
+
+## Query-prescale AOT: context ready
 
 Under the standing direction to continue the assigned optimization, one bounded prepare-only QNN build used the reviewed derivative and unchanged SM8550/V73 settings. [`results/query-prescale-aot-attempt-1-memory-limit/`](results/query-prescale-aot-attempt-1-memory-limit/) retains the first outcome: the 12 GiB cgroup limit caused an OOM, with zero swap inside the unit. No context binary, EPContext model or context metadata survived. The compiler logged graph-preparation Completion before termination, but the exact allocation/operation at OOM is unknown; this is **not successful serialized AOT**.
 
@@ -12,7 +31,7 @@ The retained framework trace reports 1,542/1,542 optimized source nodes mapped t
 
 After Janek released his completed app-build daemons, the memory-only 16 GiB iteration succeeded under the same zero-swap/two-CPU/900-second/disk bounds. [`results/query-prescale-aot-attempt-2-context-ready/`](results/query-prescale-aot-attempt-2-context-ready/) retains a **1,602,644,544-byte ordinary AR171 context**, SHA-256 `62ad1261fd3181d5e4a3d8832d3bfd553d9d9e44aa4597face98b5268f315243`. Its QAIRT build is `v2.49.40.260810104044`; the ordered 41-input/60-output ABI exactly matches the unchanged baseline. The complete framework trace again maps all 1,542 optimized nodes to 2,699 QNN operations with zero unsupported nodes, including eight query-side multiplies and no post-score multiply mappings. CPU fallback was disabled; an advertised CPU provider is not a neural assignment.
 
-The in-run cgroup peak was 14,436,642,816 bytes, explaining why the 12 GiB attempt lacked headroom. These are host-build resources, not inference performance. Source/data/library hashes remained unchanged; context/full trace stay outside Git. Physical preparation now targets one baseline/candidate AR171 prefill call each, saving all actual input/output buffers for numerical comparison and separating graph timing/profile from capture overhead. Janek's app work and Ben's queued short probe have phone priority. No graph, emulator or phone inference has yet run for this derivative.
+The in-run cgroup peak was 14,436,642,816 bytes, explaining why the 12 GiB attempt lacked headroom. These are host-build resources, not inference performance. Source/data/library hashes remained unchanged; context/full trace stay outside Git. The completed paired physical check above followed this build and is now preserved under the pause. No AR1/integrated rerun or further fidelity investigation was started.
 
 ## AR171 query-prescale numerical check (CPU only)
 

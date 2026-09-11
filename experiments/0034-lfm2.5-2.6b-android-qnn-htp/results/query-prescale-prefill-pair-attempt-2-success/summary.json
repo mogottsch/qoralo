@@ -1,0 +1,69 @@
+{
+  "all60_physical_outputs_finite": true,
+  "claim_boundaries": [
+    "One baseline-first/candidate-second pair, not warm/statistical/general throughput or full-request speedup attribution. Context-load/order/thermal/cache effects differ.",
+    "Physical baseline/candidate states/logits are bit-identical for this case only; large shared CPU-vs-HTP differences remain.",
+    "Both profile per-node sums match totals; named scale-node reduction does not equal whole-model speedup.",
+    "No AR1 or complete answer was generated; baseline output-quality limitations remain.",
+    "Only packaging/hashing/handoff after Moritz pause; no further investigation, build, model or phone run."
+  ],
+  "classification": "completed_physical_pair_paused_after_saved_verification",
+  "cleanup": {
+    "app_data_settings_audio_changes": false,
+    "baseline_process_absent": true,
+    "candidate_process_absent": true,
+    "launcher_exit": 0,
+    "phone_lock": "released",
+    "remote_root": "absent"
+  },
+  "descriptive_api_ratio": 1.1558122161395854,
+  "further_build_model_phone_activity": false,
+  "last_validation": "68-test suite passed before timeout-help handling correction; corrected shell syntax and actual physical pair passed. No new tests were run after pause.",
+  "model": "LiquidAI/LFM2.5-2.6B",
+  "new_fidelity_investigation_started": false,
+  "paused": true,
+  "phases": {
+    "baseline": {
+      "accelerator_cycles": 3364707232,
+      "api_seconds": 6.451538331,
+      "context_load_seconds": 3.853762655,
+      "endpoint_sha256": "5e9fffea1b51a56dbb43d50fd07dafb60bb542f4e1f5e853684aef8f187f64b9",
+      "endpoint_token": 597,
+      "per_node_sum_equals_top": true,
+      "scale_node_count": 8,
+      "scale_node_cycles": 650131353
+    },
+    "candidate": {
+      "accelerator_cycles": 2932203396,
+      "api_seconds": 5.581822238,
+      "context_load_seconds": 2.600975155,
+      "endpoint_sha256": "5e9fffea1b51a56dbb43d50fd07dafb60bb542f4e1f5e853684aef8f187f64b9",
+      "endpoint_token": 597,
+      "per_node_sum_equals_top": true,
+      "scale_node_count": 8,
+      "scale_node_cycles": 907740
+    }
+  },
+  "physical_pair_bitwise_equal_tensor_count": 60,
+  "physical_pair_max_abs_delta": 0.0,
+  "physical_pair_output_values": 1664000,
+  "physical_pair_vocab_rank_changes": 0,
+  "physical_vs_cpu_sha256": "fed28fc3f971da4135cf894777f7b8c4712b021e116942841291ae70e412d57d",
+  "result_sha256": "61abf2c460cd73d154729836abca3f2c989a80d03c02a5deef555af063c98ccb",
+  "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+  "run_id": "prefill-pair-20260911T110729Z-1476558",
+  "runtime": "directQNN QAIRT2.49.40/SM8550/HTPv73",
+  "same41_native_precall_inputs_and_host_inputs_bitwise": true,
+  "schema_version": 1,
+  "shared_physical_vs_cpu": {
+    "argmax_cpu": 597,
+    "argmax_physical": 597,
+    "historical_allclose_count": 3,
+    "interpretation": "New correct-native-input shared route drift; NOT introduced by prescaling and NOT rehabilitation of historical wrong-position evidence. Root cause not investigated.",
+    "max_abs_delta": 10594.696502685547,
+    "max_logit_chunk_abs_delta": 7.209851264953613,
+    "tensor_count": 60,
+    "vocab_rank_changes": 127990,
+    "worst_tensor": "present.2.key"
+  }
+}

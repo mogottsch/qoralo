@@ -1,0 +1,21 @@
+Completed before Moritz's pause. Retained commands/recipe; DO NOT rerun while paused.
+Working directory: /home/moritz/dev/vibevoice-android-spike
+
+EXP=experiments/0034-lfm2.5-2.6b-android-qnn-htp
+RUN="$EXP/.local/prefill-pair-phone-runs/prefill-pair-20260911T110729Z-1476558"
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 nice -n 10 "$EXP/.local/venv/bin/python" "$EXP/tools/verify_prefill_pair.py" --phone-run "$RUN" --host-inputs "$EXP/.local/query-prescale-20260911T094138Z-78096/inputs" --output "$RUN/comparison.json"
+
+The separate already-completed CPU-versus-physical comparison used the same
+OMP/BLAS2/nice10 environment and experiment Python, importing only:
+  verify_query_prescale_cpu.load_arrays, compare, rankings, write_json
+  verify_prefill_pair.snapshot
+It loaded:
+  cpu = load_arrays(EXP / '.local/query-prescale-20260911T094138Z-78096/baseline')
+  physical, manifest = snapshot(RUN / 'baseline/native/outputs')
+then evaluated (no model/session/proxy execution):
+  details = [{'name': name, **compare(cpu[name], physical[name])} for name in cpu]
+  logit_rankings = rankings(cpu, physical)
+and saved RUN / 'physical-vs-cpu.json'.
+The baseline/candidate physical byte identity had already been verified; this
+shared-drift comparison is not attributed to the query-prescale transformation.
+Source/array-manifest hashes are in analysis-provenance.json.

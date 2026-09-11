@@ -1,10 +1,12 @@
 # Plan: LFM2.5-2.6B QNN/HTP
 
-## Current step: prepare the paired physical prefill check
+## PAUSED — completed physical pair preserved
 
-The 12 GiB AOT OOM is preserved. The one memory-only 16 GiB iteration completed after Janek's host release, producing ordinary context `62ad1261…15243` with matching ordered41/60 ABI, 1,542/1,542 supported optimized nodes and eight query-side multiply mappings. Heavy host reservation is released; do not rerun this completed build from stale start messages.
+Moritz paused this track after the paired physical prefill and saved comparisons completed. No owned job remains active; phone PIDs/root were absent and the full lock was released. See [PAUSED-HANDOFF.md](PAUSED-HANDOFF.md). No further source investigation, builds, model/phone calls or pushes until Moritz resumes the track.
 
-Prepare one fresh direct-QNN process/canonical171 prefill call for each baseline/candidate context, with all41 actual native input buffers and60 outputs saved, finite scans, and graph API/profile timings separate from persistence/setup. Compare the pair offline; no AR1/integrated max16 replay yet and no statistical speed claim from one ordered pair. Phone scheduling follows Janek's app work then Ben's queued short probe, under the full lock without app stop/install/user-data/settings changes.
+The 12 GiB AOT OOM and successful16GiB memory-only continuation are preserved. Context `62ad1261…15243` has matching ordered41/60 ABI and complete1542-node delegation. The physical baseline/candidate pair received41byte-identical correct inputs and returned60finite bit-identical outputs. API times were6.451538331s/5.581822238s in one ordered pair only.
+
+Saved comparison against CPU exposes large shared correct-input drift (max10,594.6965 at `present.2.key`,3/60 historical-allclose), not introduced by the scale move and not a correction to historical wrong-position evidence. The cause, any integration/AR1 follow-on and further performance validation are NOT started.
 
 ## Completed host numerical check
 
@@ -138,11 +140,11 @@ The AR171-only query-prescale CPU check is complete and Pi accepted its saved so
 116. Analyzed retained corrected-route per-node profiles: prefill MLP 47.12%, attention 37.71%, score scaling 19.56%; AR1 snapshot MLP 60.29%, input boundary 6.69%, KV tiling 8.84%.
 117. Selected one profile-supported hypothesis only: move AR171 scale 0.125 from the 64× larger score tensor to query before MatMul, pending numeric/AOT validation.
 
-## In progress: performance engineering
+## Deferred while paused: performance engineering
 
 1. Corrected integrated operability and offline profile review are complete; preserve their single-diagnostic boundaries.
 2. Pi's saved query-prescale assessment is complete. Do not rerun the baseline, derivative or proxies for packaging.
-3. AOT is complete; prepare justified bounded paired numerical/performance validation with Pi's phone scheduling/full lock after Janek and Ben. This is not a mandate for unrelated lower-precision/device-state/logit/hybrid experiments.
+3. AOT and the bounded physical pair are complete. Only after resume, determine the next step from the saved shared CPU-vs-HTP drift; no new investigation or integration run has started. This is not a mandate for unrelated lower-precision/device-state/logit/hybrid experiments.
 4. Do not campaign until the selected complete route and reset-isolation contract have separate approval.
 
 ## Phone and campaign sequence
