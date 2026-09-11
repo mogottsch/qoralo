@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T12:33:01+00:00",
+  "updated_at": "2026-09-11T12:38:41+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -9,10 +9,10 @@
       "title": "0036 whole-chapter CPU pipeline",
       "status": "preparing",
       "owner": "Jens",
-      "now": "0036 exact487-word CPU DP calibration COMPLETE/lock released: T3200 predicts natural29.56986237s,1,304,030 frames/activeL425;186 CPU-only profile events.",
-      "next": "Common L512/noise frozen (35.666s capacity); full CPU render assigned next/ready but actual start unreported. Coverage concern only—not universal30s cap/full CPU result; WAV/coverage required.",
-      "reported_at": "2026-09-11T12:33:01+00:00",
-      "reported_by": "Pi — completed CPU DP calibration and next render assignment",
+      "now": "0036 full CPU WAV captured: exact private487-word input→29.569841s,1,304,030-frame44.1k mono PCM16 WAV SHA9b1c858…c46d2; CPU-only first profiled render18.59783s/RTF0.62895.",
+      "next": "Not warm median; coverage/listening unestablished. Private CPU-only paired handoff prepared, HTP omitted until real hash-bound WAV. Ben gets next full HTP slot; no browser page opened.",
+      "reported_at": "2026-09-11T12:38:41+00:00",
+      "reported_by": "Pi — actual 0036 CPU WAV milestone",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -26,10 +26,10 @@
       "title": "0036 whole-chapter HTP pipeline",
       "status": "preparing",
       "owner": "Ben",
-      "now": "Ben builds remaining L512 duration/text contexts with own DP; no forced duration.",
-      "next": "Full HTP pipeline remains preparation; real hash-bound WAV/full coverage required. Sequential phone stage has not started.",
-      "reported_at": "2026-09-11T12:33:01+00:00",
-      "reported_by": "Pi — 0036 HTP preparation after CPU calibration",
+      "now": "Ben has next 0036 full HTP slot; adequate T3200 contexts/duration work continues.",
+      "next": "No forced duration. Add HTP to listening comparison only after real stable hash-bound WAV; no phone start/result yet.",
+      "reported_at": "2026-09-11T12:38:41+00:00",
+      "reported_by": "Pi — HTP follows actual CPU WAV",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -102,11 +102,11 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Jens → Ben",
-      "now": "CPU DP calibration completed/lock released; Jens full CPU render assigned next/ready, actual start unreported. Ben HTP remains sequential.",
-      "next": "L512/noise frozen; no forced duration. Full WAV/coverage remains required; phone state is reported schedule, not live lock.",
-      "reported_at": "2026-09-11T12:33:01+00:00",
-      "reported_by": "Pi — completed calibration/released lock and next assignment",
+      "owner": "Ben",
+      "now": "0036 CPU calibration/render completed/released; Ben has next full HTP slot, actual start unreported.",
+      "next": "No forced duration. CPU WAV exists but coverage/listening unestablished; no HTP WAV/player side until exact stable hash-bound artifact.",
+      "reported_at": "2026-09-11T12:38:41+00:00",
+      "reported_by": "Pi — CPU WAV completion and HTP sequencing",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -194,6 +194,12 @@
       "path": "podcast-app/evidence/short-product-result/short-product-cont-20260910t234257z/listening-review-2026-09-11.json",
       "sha256": "cd1f8e3a090c8a003df0a2e6e058138606356e259aa2b3cb6e5833568e92d2de",
       "wav_sha256": "3b631cc55da41f4e87ae3f251204c8d162c377bdf38092b41da0017e8baa0a44"
+    },
+    "whole_chapter_cpu_pending_review": {
+      "run_id": "0036-whole-chapter-paired-20260911t123235z",
+      "wav_sha256": "9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2",
+      "state": "not_reviewed",
+      "scope": "CPU-only private handoff; HTP absent until actual hash-bound WAV"
     }
   }
 }
