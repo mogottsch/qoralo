@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T12:39:57+00:00",
+  "updated_at": "2026-09-11T12:47:00+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -24,12 +24,12 @@
     {
       "id": "0036-whole-chapter-htp",
       "title": "0036 whole-chapter HTP pipeline",
-      "status": "preparing",
+      "status": "investigating",
       "owner": "Ben",
-      "now": "Ben has next 0036 full HTP slot; adequate T3200 contexts/duration work continues.",
-      "next": "No forced duration. Add HTP to listening comparison only after real stable hash-bound WAV; no phone start/result yet.",
-      "reported_at": "2026-09-11T12:38:41+00:00",
-      "reported_by": "Pi — HTP follows actual CPU WAV",
+      "now": "0036 HTP first neural attempt blocked: own DP29.5781s/1,304,395 frames/active425, then TEXT contextFromBinary failed QNN1002 before textRun.",
+      "next": "No vector/vocoder/WAV/fallback; cleanup0/lock released/app untouched. Ben continues targeted text-only load/co-residency diagnosis; no HTP player until real hash-bound WAV.",
+      "reported_at": "2026-09-11T12:47:00+00:00",
+      "reported_by": "Pi — HTP first neural attempt result",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -102,11 +102,11 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Ben",
-      "now": "0036 CPU calibration/render completed/released; Ben has next full HTP slot, actual start unreported.",
-      "next": "No forced duration. CPU WAV exists but coverage/listening unestablished; no HTP WAV/player side until exact stable hash-bound artifact.",
-      "reported_at": "2026-09-11T12:38:41+00:00",
-      "reported_by": "Pi — CPU WAV completion and HTP sequencing",
+      "owner": "Jere",
+      "now": "HTP first attempt cleaned/released; Jere compatibility-short has next phone slot while Ben text-only diagnosis prepares.",
+      "next": "No HTP WAV/player. Phone start unreported; preserve CPU valid WAV/negative qualified ASR separately.",
+      "reported_at": "2026-09-11T12:47:00+00:00",
+      "reported_by": "Pi — HTP release and next phone scheduling",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -115,10 +115,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jens",
-      "now": "0036 CPU WAV valid but qualified coverage check negative; Ben continues unchanged full HTP comparison. Gemma metadata/stage work continues; Qwen/LFM paused.",
-      "next": "CPU raw transcript stays private. No duration forcing/repair; no human listening verdict or exact omissions inferred.",
-      "reported_at": "2026-09-11T12:39:57+00:00",
-      "reported_by": "Pi — CPU ASR-qualified assessment",
+      "now": "Ben targeted 0036 text-only load/co-residency diagnosis active; Jere compatibility-short prepares next phone slot. CPU WAV/negative ASR retained separately.",
+      "next": "HTP blocked before textRun/vector/vocoder/WAV; no fallback. No HTP player until real stable hash-bound WAV.",
+      "reported_at": "2026-09-11T12:47:00+00:00",
+      "reported_by": "Pi — HTP first-attempt boundary",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -145,9 +145,9 @@
     },
     {
       "name": "Ben",
-      "task": "Build remaining 0036 L512 HTP contexts with own DP",
-      "reported_at": "2026-09-11T12:33:01+00:00",
-      "reported_by": "Pi — current 0036 state",
+      "task": "Diagnose 0036 HTP text-only load/co-residency block",
+      "reported_at": "2026-09-11T12:47:00+00:00",
+      "reported_by": "Pi — actual HTP block/no approval wait",
       "stale_after_seconds": 900
     },
     {
@@ -166,9 +166,9 @@
     },
     {
       "name": "Jere",
-      "task": "Extract Gemma official IO/FLAT_BUFFER metadata; prepare fresh stage",
-      "reported_at": "2026-09-11T11:24:52+00:00",
-      "reported_by": "Jere — compile complete/heavy slot released",
+      "task": "Prepare compatibility-short next phone slot",
+      "reported_at": "2026-09-11T12:47:00+00:00",
+      "reported_by": "Pi — phone start unreported",
       "stale_after_seconds": 900
     },
     {
