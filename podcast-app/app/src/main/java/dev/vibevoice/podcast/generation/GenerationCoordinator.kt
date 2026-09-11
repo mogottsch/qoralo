@@ -22,7 +22,7 @@ class GenerationCoordinator(
     private val repository: PodcastRepository,
     private val artifacts: ArtifactStore,
     private val verifier: ModelPackVerifier = ModelPackVerifier(),
-    private val llmFactory: () -> LlmEngine = ::GemmaLiteRtGpuEngine,
+    private val llmFactory: () -> LlmEngine = { GemmaLiteRtGpuEngine() },
     private val ttsFactory: () -> TtsEngine = ::SupertonicQnnHtpEngine,
     private val testPackProvider: ((ModelRoute) -> dev.vibevoice.podcast.model.VerifiedModelPack)? = null,
 ) {
@@ -67,16 +67,8 @@ class GenerationCoordinator(
             progress("Loading the script editor")
             engine.load(pack)
             repository.recordVerifiedPack(pack, requireNotNull(engine.provenance))
-            val request = JSONObject()
-                .put("schemaVersion", 1)
-                .put("baseRevisionId", revision.id)
-                .put("instruction", userRequest.text)
-                .put("allowedOperations", JSONArray(listOf("rewrite", "shorten", "remove", "split", "combine", "rename")))
-                .put("title", revision.title)
-                .put("chapters", JSONArray(chapters.map {
-                    JSONObject().put("id", it.stableChapterId).put("title", it.title).put("text", it.text)
-                }))
-            val result = parseAgentResult(engine.editScript(request.toString()))
+            val request = agentEditRequest(revision, chapters, userRequest)
+            val result = parseAgentResult(engine.editScript(request))
             repository.applyAgentRevision(episodeId, jobId, revision.id, result.title, result.chapters, result.summary)
         } finally {
             engine.close()

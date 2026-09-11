@@ -325,8 +325,34 @@ class PodcastRepository(
             JobKind.AUDIO -> episode.phase == EpisodePhase.GENERATING_AUDIO && episode.lockedRevisionId == job.requestedRevisionId
             else -> false
         }
-        if (stillOwnsPhase) dao.updateEpisode(episode.copy(phase = EpisodePhase.FAILED, failurePhase = "$failureStage", failureMessage = message.take(1000), updatedAtEpochMs = now))
+        if (stillOwnsPhase) dao.updateEpisode(episode.copy(
+            phase = if (job.kind == JobKind.AGENT_EDIT) EpisodePhase.SCRIPT_DRAFT else EpisodePhase.FAILED,
+            failurePhase = failureStage, failureMessage = message.take(1000), updatedAtEpochMs = now,
+        ))
         true
+    }
+
+    /** Explicit user action for drafts hidden by older failed-edit handling. Never retries the edit. */
+    suspend fun returnToSavedDraft(episodeId: String, failedJobId: String, revisionId: String) = database.withTransaction {
+        val episode = requireEpisode(episodeId)
+        val job = requireNotNull(dao.latestJob(episodeId)) { "No failed editing request exists" }
+        require(job.id == failedJobId && episode.activeRevisionId == revisionId && canReturnToSavedDraft(episode, job)) {
+            "The saved draft or editing request changed; reopen the episode"
+        }
+        require(dao.activeJobCount() == 0) { "Wait for the current on-device job to finish" }
+        val revision = requireNotNull(dao.revision(revisionId)) { "The saved revision is missing" }
+        require(revision.episodeId == episodeId) { "The saved revision belongs to another episode" }
+        val message = requireNotNull(dao.message(requireNotNull(job.requestMessageId))) { "The editing request is missing" }
+        require(message.episodeId == episodeId && message.role == AgentRole.USER && message.baseRevisionId == revisionId) {
+            "The editing request does not belong to this revision"
+        }
+        require(dao.chapterAudio(episodeId).isEmpty()) { "An episode with audio history cannot be reopened by edit recovery" }
+        val chapters = dao.chapters(revisionId)
+        validateScript(revision.title, chapters.map { ChapterDraft(it.stableChapterId, it.title, it.text) })
+        val artifact = artifacts.resolveEpisodeFile(revision.relativePath)
+        require(artifact.isFile && artifacts.sha256(artifact) == revision.contentHash) { "The saved revision file failed its integrity check" }
+        // Only reopen the existing draft. Retain the failed job, request, failure metadata and all immutable content.
+        dao.updateEpisode(episode.copy(phase = EpisodePhase.SCRIPT_DRAFT, updatedAtEpochMs = clock()))
     }
 
     suspend fun runningJobs(): List<GenerationJobEntity> = dao.runningJobs()

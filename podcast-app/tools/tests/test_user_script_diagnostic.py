@@ -1,4 +1,9 @@
 import copy
+import contextlib
+import io
+import json
+import tempfile
+from unittest import mock
 from pathlib import Path
 import sys
 import unittest
@@ -64,6 +69,54 @@ class UserScriptDiagnosticTests(unittest.TestCase):
         for action in ('click("Create")','startAudio','startScript','queueScriptGeneration','performTextReplacement'):
             self.assertNotIn(action,src)
         self.assertNotIn('throw error',src)
+    def test_existing_edit_probe_is_one_request_no_committed_recovery_or_new_job(self):
+        src=(Path(__file__).resolve().parents[2]/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ExistingEditDiagnosticTest.kt').read_text()
+        self.assertEqual(1,src.count('concrete.editScript(request)'))
+        self.assertIn('throw ProbeRollback(',src)
+        self.assertIn('app.database.withTransaction {',src)
+        self.assertIn('fileHash == revision.first.contentHash',src)
+        self.assertIn('instructionHash == args.getString("editInstructionSha256")',src)
+        self.assertIn('originalRequestWasNotCaptured',src)
+        for token in ('throw error','queueAgentEdit(', 'applyAgentRevision(', 'queueScriptGeneration(', 'lockAndQueueAudio(', 'Process.killProcess(', 'performTextReplacement('):
+            self.assertNotIn(token,src)
+        self.assertIn('"Return to saved draft").performScrollTo().assertIsDisplayed().assertIsEnabled()',src)
+        self.assertNotIn('"Return to saved draft").performClick()',src)
+    def test_optional_observer_preserves_raw_before_optional_counters_and_does_not_change_decode(self):
+        src=(Path(__file__).resolve().parents[2]/'app/src/main/java/dev/vibevoice/podcast/runtime/NativeEngines.kt').read_text()
+        self.assertIn('observer: GemmaRequestObserver? = null',src)
+        self.assertIn('val raw = RuntimeDiagnostics.send(conversation, request)',src)
+        self.assertLess(src.index('observer?.responseReturned(raw)'),src.index('observer?.conversationReturned(conversation)'))
+        self.assertIn('runCatching { observer?.conversationReturned(conversation) }',src)
+        self.assertIn('maxNumTokens = 8_192',src);self.assertIn('"chapter", "edit" -> 4_096',src)
+        self.assertIn('topK = 1, topP = 1.0, temperature = 1.0',src)
+        self.assertNotIn('enableResponseFormat',src)
+    def test_existing_edit_plan_only_never_uses_device_or_lock(self):
+        import run_user_script_diagnostic as controller
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);apk=root/'app.apk';apk.write_bytes(b'local test artifact')
+            candidate={'kind':'existing-edit-probe','controllerSha256':controller.digest(Path(controller.__file__)),
+                'hostGuardSha256':'guard','app':{'path':str(apk),'sha256':controller.digest(apk)},
+                'test':{'path':str(apk),'sha256':controller.digest(apk)}}
+            path=root/'candidate.json';path.write_text(json.dumps(candidate))
+            argv=['probe','--candidate',str(path),'--output',str(root/'not-created'),'--run-id','edit-probe-test',
+                '--original-episode','episode','--original-job','job','--revision-id','revision',
+                '--revision-sha256','hash','--edit-instruction-sha256','instruction']
+            with mock.patch.object(sys,'argv',argv),mock.patch.object(controller,'host_identity',return_value={'sha256':'guard'}),\
+                 mock.patch.object(controller,'Device',side_effect=AssertionError('No device in plan-only')),\
+                 mock.patch.object(controller.fcntl,'flock',side_effect=AssertionError('No lock in plan-only')),contextlib.redirect_stdout(io.StringIO()) as output:
+                controller.main()
+            result=json.loads(output.getvalue());self.assertFalse(result['adbUsed'])
+            self.assertEqual(300,result['instrumentSeconds']);self.assertIsNone(result['driverSeconds'])
+            self.assertFalse((root/'not-created').exists())
+    def test_no_new_episode_comparison_rejects_a_committed_recovery_or_added_edit_job(self):
+        before={t:[] for t in TABLES};before['episodes']=[{'id':'original','phase':'FAILED'}]
+        self.assertEqual(0,compare_script(before,copy.deepcopy(before),None)['newScriptJobs'])
+        changed=copy.deepcopy(before);changed['episodes'][0]['phase']='SCRIPT_DRAFT'
+        with self.assertRaises(GuardError):compare_script(before,changed,None)
+        changed=copy.deepcopy(before);changed['generation_jobs'].append({'id':'new','episodeId':'original','kind':'AGENT_EDIT','status':'FAILED'})
+        with self.assertRaises(GuardError):compare_script(before,changed,None)
+        with self.assertRaises(GuardError):require_safe_closure({'generation_jobs':[{'status':'RUNNING','episodeId':'original','kind':'AGENT_EDIT'}]},None)
+
     def test_driver_does_not_send_private_throwable_to_runner_and_no_audio_actions(self):
         src=(Path(__file__).resolve().parents[2]/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/UserScriptReproductionTest.kt').read_text()
         self.assertNotIn('throw error',src)

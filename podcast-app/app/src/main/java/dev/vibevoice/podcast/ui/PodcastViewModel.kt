@@ -125,6 +125,16 @@ class PodcastViewModel internal constructor(
         Unit
     }
 
+    fun returnToSavedDraft(episodeId: String, failedJobId: String, revisionId: String) = launchAction {
+        repository.returnToSavedDraft(episodeId, failedJobId, revisionId)
+        // A completed recovery for another selection must not redirect the current screen.
+        if (selectedEpisodeId.value == episodeId) {
+            agentSheetOpen.value = false
+            lockDialogOpen.value = false
+            explicitScreen.value = null
+        }
+    }
+
     fun lockAndCreate() = launchAction {
         val id = requireNotNull(selectedEpisodeId.value)
         repository.lockAndQueueAudio(id)

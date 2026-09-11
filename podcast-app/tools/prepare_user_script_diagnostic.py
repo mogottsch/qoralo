@@ -9,7 +9,9 @@ from duration_phone_guard import host_identity
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source-commit',required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--prior-candidate',type=Path,default=PROJECT/'.local/short-product-ready/export-only-03/candidate.json')
-    p.add_argument('--capacity-only',action='store_true')
+    mode=p.add_mutually_exclusive_group()
+    mode.add_argument('--capacity-only',action='store_true')
+    mode.add_argument('--existing-edit-probe',action='store_true')
     a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     source=subprocess.check_output(['git','rev-parse',a.source_commit],cwd=PROJECT.parent,text=True).strip()
     build=a.work.resolve()/'build-source/podcast-app'
@@ -34,12 +36,18 @@ def main():
         current={n:hashlib.sha256(apk.read(n)).hexdigest() for n in apk.namelist() if n.startswith('lib/') and n.endswith('.so')}
     assert len(current)==9 and current==previous
     save('native-byte-proof.json',{'native9':current,'allNineUnchanged':True})
-    junit=out/'junit';junit.mkdir();counts={'tests':0,'failures':0,'errors':0,'skipped':0}
+    junit=out/'junit';junit.mkdir();counts={'tests':0,'failures':0,'errors':0,'skipped':0};skipped=[]
     for f in (build/'app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'):
         root=ET.parse(f).getroot()
         for k in counts:counts[k]+=int(root.attrib[k])
+        skipped += [(t.attrib['classname'],t.attrib['name']) for t in root.findall('testcase') if t.find('skipped') is not None]
         shutil.copy2(f,junit/f.name)
-    assert counts['tests']>=28 and counts['failures']==counts['errors']==counts['skipped']==0
+    optional_long_pack=('dev.vibevoice.podcast.wiring.TtsLongContractTest','explicitLocalPackPassesProductionVerifierAndFullReconstruction')
+    allowed_skips={optional_long_pack} if a.existing_edit_probe else set()
+    assert counts['tests']>=28 and counts['failures']==counts['errors']==0
+    assert counts['skipped']==len(skipped) and set(skipped)<=allowed_skips,skipped
+    save('junit-scope.json',{'counts':counts,'passed':counts['tests']-counts['skipped'],'skipped':skipped,
+        'optionalSkipReason':'Only the unrelated opt-in long TTS pack reconstruction may skip when PODCAST_TTS_LONG_PACK is unset; no edit/recovery test may skip'})
     for log in a.work.glob('host-build-*.log'):shutil.copy2(log,out/log.name)
     def command(log,argv):
         with (out/log).open('w') as f:subprocess.run(argv,stdout=f,stderr=subprocess.STDOUT,check=True,timeout=120)
@@ -49,11 +57,14 @@ def main():
     for kind in ('app','test'):
         command(kind+'-signature.txt',[str(sdk/'apksigner'),'verify','--verbose','--print-certs',str(out/(kind+'.apk'))])
         command(kind+'-manifest.txt',[str(sdk/'aapt2'),'dump','xmltree','--file','AndroidManifest.xml',str(out/(kind+'.apk'))])
-    value={'schemaVersion':1,'kind':'user-capacity-guard' if a.capacity_only else 'user-script-diagnostic','sourceCommit':source,'controllerSha256':digest(PROJECT/'tools/run_user_script_diagnostic.py'),
+    value={'schemaVersion':1,'kind':'existing-edit-probe' if a.existing_edit_probe else ('user-capacity-guard' if a.capacity_only else 'user-script-diagnostic'),'sourceCommit':source,'controllerSha256':digest(PROJECT/'tools/run_user_script_diagnostic.py'),
         'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{'dev.vibevoice.podcast.internal':prior['app']['sha256'],'dev.vibevoice.podcast.internal.test':prior['test']['sha256']},
-        'scope':'Existing genuine full draft: capacity guard/UI only; ZERO model calls/jobs/committed episode writes' if a.capacity_only else 'One real-input fresh owned SCRIPT episode; original failed episode untouched; no edits/TTS/Play/retry; app-private diagnostic receipts only',
-        'driverSeconds':90 if a.capacity_only else 540,'scriptPollingSeconds':None if a.capacity_only else 480,'hostInstrumentationSeconds':120 if a.capacity_only else 600,
-        'focusedJvm':counts,'neuralSettingsUnchanged':True,'sourceNotesGuidanceAligned':a.capacity_only,'neuralCauseFixed':False,
+        'scope':('One reconstructed saved EDIT request with private raw/cause capture; recovery transaction always rolled back and recovery UI observed; ZERO jobs/revisions/committed episode writes/TTS/Play' if a.existing_edit_probe else ('Existing genuine full draft: capacity guard/UI only; ZERO model calls/jobs/committed episode writes' if a.capacity_only else 'One real-input fresh owned SCRIPT episode; original failed episode untouched; no edits/TTS/Play/retry; app-private diagnostic receipts only')),
+        'driverSeconds':None if a.existing_edit_probe else (90 if a.capacity_only else 540),
+        'driverDeadlineReason':'No in-app process killer; host bounds instrumentation and performs fresh safe closure' if a.existing_edit_probe else None,
+        'scriptPollingSeconds':None if a.capacity_only or a.existing_edit_probe else 480,
+        'hostInstrumentationSeconds':300 if a.existing_edit_probe else (120 if a.capacity_only else 600),
+        'focusedJvm':counts,'neuralSettingsUnchanged':True,'sourceNotesGuidanceAligned':a.capacity_only or a.existing_edit_probe,'neuralCauseFixed':False,
         'buildProperty':'-Ppodcast.shortProductE2e=true','modelPacks':prior['modelPacks']}
     for kind in ('app','test'):
         f=out/(kind+'.apk');value[kind]={'path':str(f),'sha256':digest(f),'bytes':f.stat().st_size}

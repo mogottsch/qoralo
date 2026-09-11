@@ -46,8 +46,9 @@ import dev.vibevoice.podcast.data.GenerationJobEntity
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose: () -> Unit) {
+fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose: () -> Unit, onReturnToDraft: (() -> Unit)? = null) {
     val failed = episode?.phase == EpisodePhase.FAILED
+    val restore = onReturnToDraft?.takeIf { dev.vibevoice.podcast.data.canReturnToSavedDraft(episode, job) }
     PhoneContent {
         Scaffold(topBar = {
             // Let wrapped large-font titles determine height instead of clipping inside the
@@ -69,7 +70,7 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
             ) {
                 item {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (failed) FailurePanel(episode, onClose) else GenerationPanel(episode, job)
+                        if (failed) FailurePanel(episode, onClose, restore) else GenerationPanel(episode, job)
                     }
                 }
             }
@@ -122,11 +123,11 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
 }
 
 @Composable
-private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit) {
+private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit, onReturnToDraft: (() -> Unit)?) {
     Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(28.dp), modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(Icons.Default.ErrorOutline, null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.error)
-            Text("Generation couldn’t finish", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 16.dp))
+            Text(if (onReturnToDraft != null) "The chat edit couldn’t finish" else "Generation couldn’t finish", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 16.dp))
             Text(
                 episode.failureMessage ?: "The selected on-device runtime stopped.",
                 style = MaterialTheme.typography.bodyMedium,
@@ -140,6 +141,11 @@ private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 12.dp),
             )
+            if (onReturnToDraft != null) {
+                Text("Your saved script is still intact. Return to it without retrying generation or deleting the failed chat request.",
+                    style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 16.dp))
+                PrimaryAction("Return to saved draft", onReturnToDraft, modifier = Modifier.padding(top = 16.dp))
+            }
             PrimaryAction("Return to library", onClose, modifier = Modifier.padding(top = 22.dp))
         }
     }

@@ -19,7 +19,7 @@ import org.json.JSONObject
 import java.io.File
 
 /** Official LiteRT-LM 0.16.1 Android API; only Backend.GPU is ever configured. */
-class GemmaLiteRtGpuEngine : LlmEngine {
+class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) : LlmEngine {
     private var engine: LiteRtEngine? = null
     override var provenance: RuntimeProvenance? = null
         private set
@@ -109,6 +109,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         })
         val instruction = specificInstruction ?: systemInstruction(mode)
         RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput)
+        runCatching { observer?.beforeRequest(mode, request, instruction, maxOutput) }
         executeGemmaRequest(
             mode = mode,
             create = {
@@ -120,9 +121,17 @@ class GemmaLiteRtGpuEngine : LlmEngine {
                     thinkingConfig = ThinkingConfig(enableThinking = false),
                 ))
             },
-            send = { RuntimeDiagnostics.send(it, request) },
-            returned = { RuntimeDiagnostics.responseReturned(it) },
-            failed = { RuntimeDiagnostics.requestFailed(it) },
+            send = { conversation ->
+                val raw = RuntimeDiagnostics.send(conversation, request)
+                runCatching { observer?.responseReturned(raw) }
+                runCatching { observer?.conversationReturned(conversation) }
+                raw
+            },
+            returned = { raw -> runCatching { RuntimeDiagnostics.responseReturned(raw) }; Unit },
+            failed = { error ->
+                runCatching { RuntimeDiagnostics.requestFailed(error) }
+                runCatching { observer?.requestFailed(error) }
+            },
         )
     }
 

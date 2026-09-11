@@ -101,7 +101,18 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                         viewModel::showLock, viewModel::dismissLock, viewModel::lockAndCreate,
                     )
                 } }
-                AppScreen.Generating -> GeneratingScreen(episode, job, viewModel::showLibrary)
+                AppScreen.Generating -> {
+                    val current = episode
+                    val failedJob = job
+                    val returnToDraft: (() -> Unit)? = if (dev.vibevoice.podcast.data.canReturnToSavedDraft(current, failedJob)) {
+                        val episodeId = requireNotNull(current).id
+                        val revisionId = requireNotNull(current.activeRevisionId)
+                        val jobId = requireNotNull(failedJob).id
+                        val action: () -> Unit = { viewModel.returnToSavedDraft(episodeId, jobId, revisionId) }
+                        action
+                    } else null
+                    GeneratingScreen(current, failedJob, viewModel::showLibrary, returnToDraft)
+                }
                 AppScreen.Player -> episode?.let { current ->
                     val path = current.finalAudioPath
                     if (path != null) key(current.id) {

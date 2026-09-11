@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.flow.first
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -155,6 +156,111 @@ class PodcastRepositoryTest {
         assertFalse(repository.failJob(episodeId, editJob, "late failure"))
         repository.lockAndQueueAudio(episodeId)
         assertEquals(EpisodePhase.LOCKED, repository.episode(episodeId).phase)
+    }
+
+    @Test fun failedRunningEditKeepsCompleteDraftAccessibleAndRetainsFailedRequest() = runTest {
+        val id = draftEpisode(); val before = repository.activeRevision(id)
+        val file = repository.resolveArtifact(before.first.relativePath); val bytes = file.readBytes()
+        val job = repository.queueAgentEdit(id, "Make this more engaging")
+        repository.claimJob(id, job, JobKind.AGENT_EDIT, "Editing")
+        val messages = repository.observeMessages(id).first()
+        assertTrue(repository.failJob(id, job, "JSON parsing failed"))
+        assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(id).phase)
+        assertEquals(before, repository.activeRevision(id)); assertTrue(bytes.contentEquals(file.readBytes()))
+        assertEquals(messages, repository.observeMessages(id).first())
+        assertEquals(JobStatus.FAILED, repository.latestJob(id)?.status)
+        assertEquals("JSON parsing failed", repository.latestJob(id)?.errorMessage)
+        assertEquals(0, database.podcastDao().activeJobCount())
+        assertFalse(repository.failJob(id, job, "Late duplicate failure"))
+        assertEquals("JSON parsing failed", repository.latestJob(id)?.errorMessage)
+        // Only a deliberate new chat request queues another job; failure itself never retries.
+        assertTrue(repository.queueAgentEdit(id, "A different request") != job)
+    }
+
+    @Test fun explicitReturnFromLegacyFailedEditChangesOnlyPhaseAndTimestamp() = runTest {
+        val (id, job, revision) = legacyFailedEdit()
+        val episode = repository.episode(id); val before = repository.activeRevision(id)
+        val failed = repository.latestJob(id); val messages = repository.observeMessages(id).first()
+        val file = repository.resolveArtifact(before.first.relativePath); val bytes = file.readBytes()
+        assertTrue(canReturnToSavedDraft(episode, failed))
+        repository.returnToSavedDraft(id, job, revision)
+        val after = repository.episode(id)
+        assertEquals(episode.copy(phase = EpisodePhase.SCRIPT_DRAFT, updatedAtEpochMs = after.updatedAtEpochMs), after)
+        assertEquals(before, repository.activeRevision(id)); assertEquals(failed, repository.latestJob(id))
+        assertEquals(messages, repository.observeMessages(id).first()); assertTrue(bytes.contentEquals(file.readBytes()))
+        assertEquals(0, database.podcastDao().activeJobCount())
+        expectIllegal { repository.returnToSavedDraft(id, job, revision) }
+    }
+
+    @Test fun legacyReturnRejectsStaleIdentifiersAndForeignActiveWork() = runTest {
+        val (id, job, revision) = legacyFailedEdit(); val before = repository.episode(id)
+        expectIllegal { repository.returnToSavedDraft(id, "stale-job", revision) }
+        expectIllegal { repository.returnToSavedDraft(id, job, "stale-revision") }
+        val other = episodeAtInstructions(); repository.queueScriptGeneration(other, "Other user work", true)
+        expectIllegal { repository.returnToSavedDraft(id, job, revision) }
+        assertEquals(before, repository.episode(id))
+    }
+
+    @Test fun legacyReturnRejectsCorruptSavedArtifactWithoutClearingFailure() = runTest {
+        val (id, job, revision) = legacyFailedEdit(); val before = repository.episode(id)
+        repository.resolveArtifact(repository.activeRevision(id).first.relativePath).appendText("corrupted fixture")
+        expectIllegal { repository.returnToSavedDraft(id, job, revision) }
+        assertEquals(before, repository.episode(id)); assertEquals(JobStatus.FAILED, repository.latestJob(id)?.status)
+    }
+
+    @Test fun recoveryEligibilityRejectsLockedWrongKindCrossOwnerOrIncompleteHistory() = runTest {
+        val (id, _, _) = legacyFailedEdit(); val episode = repository.episode(id); val job = repository.latestJob(id)!!
+        assertFalse(canReturnToSavedDraft(episode.copy(lockedRevisionId = episode.activeRevisionId), job))
+        assertFalse(canReturnToSavedDraft(episode.copy(lockedAtEpochMs = 1), job))
+        assertFalse(canReturnToSavedDraft(episode.copy(lockedContentHash = "locked"), job))
+        assertFalse(canReturnToSavedDraft(episode.copy(finalAudioSha256 = "audio"), job))
+        assertFalse(canReturnToSavedDraft(episode.copy(finalAudioByteCount = 100), job))
+        assertFalse(canReturnToSavedDraft(episode.copy(timelineSha256 = "timeline"), job))
+        assertFalse(canReturnToSavedDraft(episode.copy(durationMs = 100), job))
+        assertFalse(canReturnToSavedDraft(episode, job.copy(kind = JobKind.AUDIO)))
+        assertFalse(canReturnToSavedDraft(episode, job.copy(kind = JobKind.SCRIPT)))
+        assertFalse(canReturnToSavedDraft(episode, job.copy(episodeId = "other")))
+        assertFalse(canReturnToSavedDraft(episode, job.copy(requestMessageId = null)))
+        assertFalse(canReturnToSavedDraft(episode, job.copy(status = JobStatus.RUNNING)))
+        assertFalse(canReturnToSavedDraft(episode.copy(activeRevisionId = "other"), job))
+        assertFalse(canReturnToSavedDraft(null, job)); assertFalse(canReturnToSavedDraft(episode, null))
+    }
+
+    @Test fun failedRunningEditCannotReopenLockedOrSupersededRevision() = runTest {
+        for (locked in listOf(true, false)) {
+            val id = draftEpisode(); val base = repository.activeRevision(id).first.id
+            val job = repository.queueAgentEdit(id, "Edit the base")
+            repository.claimJob(id, job, JobKind.AGENT_EDIT, "Editing")
+            val current = repository.episode(id)
+            // Host fixtures model a stale callback after the state it owned ceased to be current.
+            val changed = if (locked) current.copy(phase = EpisodePhase.LOCKED, lockedRevisionId = base,
+                lockedContentHash = repository.activeRevision(id).first.contentHash, lockedAtEpochMs = 99)
+                else current.copy(activeRevisionId = "superseding-revision")
+            database.podcastDao().updateEpisode(changed)
+            assertTrue(repository.failJob(id, job, "Late edit failure"))
+            assertEquals(changed, repository.episode(id))
+            assertFalse(canReturnToSavedDraft(changed, repository.latestJob(id)))
+        }
+    }
+
+    @Test fun queuedEditingFailureAlsoKeepsDraftAndFailedChatHistory() = runTest {
+        val id = draftEpisode(); val revision = repository.activeRevision(id)
+        val job = repository.queueAgentEdit(id, "Change the tone")
+        val messages = repository.observeMessages(id).first()
+        assertTrue(repository.failQueuedJob(id, job, "Dispatch unavailable"))
+        assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(id).phase)
+        assertEquals(revision, repository.activeRevision(id)); assertEquals(messages, repository.observeMessages(id).first())
+        assertEquals(JobStatus.FAILED, repository.latestJob(id)?.status)
+    }
+
+    private suspend fun legacyFailedEdit(): Triple<String, String, String> {
+        val id = draftEpisode(); val revision = repository.activeRevision(id).first.id
+        val job = repository.queueAgentEdit(id, "Change the tone")
+        repository.claimJob(id, job, JobKind.AGENT_EDIT, "Editing")
+        repository.failJob(id, job, "Saved parse failure")
+        // Host-only fixture reproduces the older persisted phase; production never performs this mutation.
+        database.podcastDao().updateEpisode(repository.episode(id).copy(phase = EpisodePhase.FAILED))
+        return Triple(id, job, revision)
     }
 
     @Test fun audioCannotCompleteWithoutEveryLockedChapter() = runTest {
