@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:15:08+00:00",
+  "updated_at": "2026-09-11T10:15:48+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -70,12 +70,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "preparing",
+      "status": "waiting",
       "owner": "Jens",
-      "now": "LFM prepare-only AOT stopped: genuine12GiB cgroup OOM during finalization/serialization; no retry.",
-      "next": "Partial trace/logs retained; Graph Preparation Completion is not context success. Package/inspect; schedule ONE16GiB/Swap0/2CPU/900s attempt only when≥22GiB available, Janek priority.",
-      "reported_at": "2026-09-11T10:13:23+00:00",
-      "reported_by": "Jens — first AOT outcome and resource scheduling request",
+      "now": "First AOT stopped on12GiB cgroup OOM in finalization/serialization; Graph Preparation Completion logged but no context retained/compile success.",
+      "next": "ONE memory-only16GiB/Swap0/2CPU/900s continuation resource-queued after Janek app host capacity frees (≥22GiB; currently18GiB). Not started/approval wait.",
+      "reported_at": "2026-09-11T10:15:48+00:00",
+      "reported_by": "Pi — LFM resource blocker and shared-host schedule",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -143,12 +143,12 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "preparing",
+      "status": "waiting",
       "owner": "Jens",
-      "now": "Janek/Nik diagnostic review active; Qwen result packaging has x86-host provider refinement; Gemma/LFM work remains bounded.",
-      "next": "Qwen provider log is not physical Android HTP/v73 evidence; frozen files/hashes and uncaptured loaded-map caveat retained. No extra SDK calls.",
-      "reported_at": "2026-09-11T10:15:08+00:00",
-      "reported_by": "Ben — retained-log documentation refinement",
+      "now": "LFM16GiB continuation resource-queued behind Janek app host priority; current availability reported18GiB (<22GiB threshold).",
+      "next": "No unrelated JVM/swap changes. First OOM evidence retained; do not report LFM continuation RUNNING until Jens actual-start report.",
+      "reported_at": "2026-09-11T10:15:48+00:00",
+      "reported_by": "Pi — resource scheduling, not approval wait",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -203,9 +203,9 @@
     },
     {
       "name": "Jens",
-      "task": "Package OOM trace; schedule safe capacity window",
-      "reported_at": "2026-09-11T10:13:23+00:00",
-      "reported_by": "Direct owner milestone/outcome",
+      "task": "LFM continuation resource-queued behind Janek host priority",
+      "reported_at": "2026-09-11T10:15:48+00:00",
+      "reported_by": "Pi — not started",
       "stale_after_seconds": 900
     },
     {
