@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:17:15+00:00",
+  "updated_at": "2026-09-11T11:17:58+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -77,10 +77,10 @@
       "title": "Qwen range audit",
       "status": "preparing",
       "owner": "Ben",
-      "now": "PAUSE BY MORITZ: Ben stops/reaps owned work, preserves outcomes, makes scoped LOCAL commit +restart handoff.",
-      "next": "Await closure report, then mark PAUSED BY MORITZ. No future host/phone queue, execution, or approval-wait label.",
-      "reported_at": "2026-09-11T11:17:15+00:00",
-      "reported_by": "Pi — Moritz pause instruction",
+      "now": "PAUSE effective: no Ben job active; FP32 worker completed/reaped/released earlier; weight-ablation tests finished but no ablation request/model/build/compile/phone run prepared or started.",
+      "next": "Preserve/commit source+tests and restart handoff, then closure report marks PAUSED BY MORITZ. No heavy-slot request; Jere compile untouched.",
+      "reported_at": "2026-09-11T11:17:58+00:00",
+      "reported_by": "Ben — effective pause/no active job",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Janek capacity-only app guard/UI deployment active; Jere Gemma context compile active. Ben/Qwen and Jens/LFM pause closure work only.",
-      "next": "Use resources only after actual release. No future Ben/Jens heavy/phone queues; preserve outcomes and await their closure reports.",
-      "reported_at": "2026-09-11T11:17:15+00:00",
-      "reported_by": "Pi Moritz pause + Janek actual start",
+      "now": "Janek capacity guard/UI deployment active; Jere Gemma context compile active. Ben Qwen pause closure has no active job/heavy-slot request; Jens LFM closure only.",
+      "next": "Ben preserves source/tests/handoff only; no Qwen ablation request/model/build/compile/phone run. Use host only after actual release.",
+      "reported_at": "2026-09-11T11:17:58+00:00",
+      "reported_by": "Ben — effective Qwen pause; Pi pause state retained",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Stopping/reaping Qwen; LOCAL commit +restart handoff",
-      "reported_at": "2026-09-11T11:17:15+00:00",
-      "reported_by": "Pi Moritz pause / Janek actual start",
+      "task": "Preserve/commit Qwen source/tests +restart handoff",
+      "reported_at": "2026-09-11T11:17:58+00:00",
+      "reported_by": "Ben — pause effective/no active job",
       "stale_after_seconds": 900
     },
     {
