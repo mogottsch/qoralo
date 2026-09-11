@@ -52,6 +52,14 @@
     "asr_last30_matches": 29
   },
   "observed_generation_wall_ratio_cpu_over_htp": 1.2840157374250472,
+  "observed_generation_wall_ratio_note": "Retained historical diagnostic with unmatched setup boundaries: CPU excludes upfront setup while HTP includes interleaved setup; not the preferred wall comparison.",
+  "preferred_wall_comparison": {
+    "boundary": "device process entry through final chapter WAV close",
+    "cpu_seconds": 113.552973394,
+    "htp_seconds": 88.364558664,
+    "cpu_over_htp_ratio": 1.2850511009258494,
+    "scope": "First-run configuration-level wall comparison, including upfront and interleaved setup through the same output boundary; not pure-provider speedup or accepted-quality throughput. Offline preparation/staging and post-output teardown are outside this boundary."
+  },
   "noise_correspondence": [
     {
       "index": 0,

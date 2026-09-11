@@ -36,6 +36,7 @@ SHA256 0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209
 | First closed/playable chunk from process entry | 6.457313s |
 | First completed chunk available on host from launch | 6.949330s |
 | Generation wall including interleaved setup | 87.778723s |
+| Process entry through final WAV close | 88.364559s |
 | Generation excluding interleaved constructor/teardown | 87.185656s |
 | RTF including prescribed gaps/interleaved setup | 0.417628 |
 | RTF including gaps, excluding session lifecycle | 0.414806 |
@@ -74,9 +75,14 @@ and29/last30words. Model/runtime/settings match the retained canonical control
 - `results/comparison-01.json`: CPU/HTP first-route observations, setup/profile
   qualifications, exact noise correspondence and human-review-pending state.
 
-The observed CPU/HTP generation-wall ratio is1.284x, not a controlled pure-provider
-speedup: geometry, precision/lowering, profiling, lifecycle and later active noise
-differ. No warm median, app-ready pack or accepted-quality throughput is claimed.
+The preferred matched process-entry → final WAV-close comparison is CPU
+113.552973394s / HTP88.364558664s = **1.285x configuration-level wall ratio**.
+It includes upfront/interleaved setup through the same output boundary, excluding
+post-output teardown and offline preparation/staging. The earlier1.284x generation
+ratio is retained only as a historical diagnostic with unmatched setup boundaries.
+This is not a controlled pure-provider speedup: geometry, precision/lowering,
+profiling, lifecycle and later active noise differ. No warm median, app-ready pack
+or accepted-quality throughput is claimed.
 
 ## Frozen provider recipe
 
@@ -189,8 +195,8 @@ unsupported neural fallback is forbidden. See `results/context-export-01.json`.
 - Standalone ARM64 runner builds with warnings-as-errors and FMA contraction OFF.
   Nine pre-run tests passed, including the **actual C++ runner helpers** for FP32 own extent,
   all edge indices, channel-aware stream layout and provider-equivalent PCM16;
-  these tests neither link nor load ORT and perform no neural execution. Four
-  retained-result checks bring the completed-route test total to13.
+  these tests neither link nor load ORT and perform no neural execution. Five
+  retained-result/aggregate checks bring the test total to14.
 - Session lifecycle is bounded: vector/vocoder reused throughout; a current-T
   duration/text pair cache has capacity one T. All15 T values are unique, so older
   pairs have no reuse benefit.32 constructors, maximum four resident sessions;
@@ -228,5 +234,5 @@ private `.local/` directories.
 - `tools/check_controls.py --baseline ... --output ...`: native-Softplus geometry
   and native-shape stable-Softplus controls, with the original gate intact.
 - `python -m unittest discover -s htp/tests -v` from the experiment directory:
-  thirteen synthetic/retained-result tests, no source model/ORT execution or
+  fourteen synthetic/retained-result tests, no source model/ORT execution or
   device use. One compiles only nonneural C++ helpers without linking ORT.

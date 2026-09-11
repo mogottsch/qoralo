@@ -54,6 +54,16 @@ class ResultEvidence(unittest.TestCase):
         self.assertEqual(load('native-boundary-full-source-01.json')['status'],'padding_gate_failed')
         self.assertTrue(run['strict_source_numerical_gate'].startswith('failed'))
 
+    def test_preferred_configuration_wall_comparison_uses_matched_boundaries(self):
+        comparison=load('comparison-01.json'); preferred=comparison['preferred_wall_comparison']
+        self.assertEqual(preferred['boundary'],'device process entry through final chapter WAV close')
+        self.assertEqual(preferred['cpu_seconds'],comparison['CPU']['entry_to_complete_seconds'])
+        self.assertEqual(preferred['htp_seconds'],comparison['HTP']['entry_to_complete_seconds'])
+        self.assertAlmostEqual(preferred['cpu_over_htp_ratio'],preferred['cpu_seconds']/preferred['htp_seconds'])
+        self.assertAlmostEqual(preferred['cpu_over_htp_ratio'],1.2850511009258494)
+        self.assertEqual(comparison['observed_generation_wall_ratio_cpu_over_htp'],1.2840157374250472)
+        self.assertIn('unmatched setup boundaries',comparison['observed_generation_wall_ratio_note'])
+
     def test_timing_boundaries_and_session_lifecycle(self):
         run=load('first-chapter-01.json')
         generation=run['generation_wall_including_interleaved_setup_seconds']

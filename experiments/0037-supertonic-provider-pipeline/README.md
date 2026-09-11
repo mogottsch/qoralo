@@ -109,6 +109,7 @@ The one HTP run completed all 15 provider chunks, with **165 reported neural Run
 | First complete/playable chunk on device, from entry | 10.041025 s | **6.457313 s** |
 | First completed chunk on host, from launch | 10.855411 s | **6.949330 s** |
 | Generation wall, including any interleaved setup | 112.709261 s | **87.778723 s** |
+| Matched process-entry → final WAV-close wall | 113.552973 s | **88.364559 s** |
 | RTF with prescribed gaps and interleaved setup | 0.536596 | **0.417628** |
 | HTP RTF excluding interleaved constructor/teardown | — | 0.414806 |
 | Own-process `ru_maxrss` (not total DSP/device memory) | 780,264 KiB | 173,864 KiB |
@@ -117,7 +118,7 @@ The one HTP run completed all 15 provider chunks, with **165 reported neural Run
 | Last 30 reference words matched | 29 | 29 |
 | Exact-WAV human listening verdict | `not_reviewed` | `not_reviewed` |
 
-This is an observed **1.284× generation-wall ratio**, not a controlled pure-provider speedup: CPU profiling is ON, HTP profiling is OFF; tensor geometry, precision/lowering, session lifecycle and later active noise differ. These are first runs, not warm medians or accepted-quality throughput. HTP's 32-case specialization/export/support checks, build and staging are outside device timing; host QNN constructors alone totaled 40.30 seconds. The reported Linux RSS/PSS does not capture all DSP/DMA/global allocations and cannot establish a total-memory improvement.
+The preferred comparison is the matched **process-entry → final WAV-close** boundary: CPU **113.552973394 s** / HTP **88.364558664 s** = **1.285× configuration-level wall ratio**. It includes upfront and interleaved setup through the same output boundary, not post-output teardown. The earlier 1.284× generation ratio is retained only as a historical diagnostic: its CPU interval excludes upfront setup while its HTP interval includes interleaved setup. Neither is a controlled pure-provider speedup: CPU profiling is ON, HTP profiling is OFF; tensor geometry, precision/lowering, session lifecycle and later active noise differ. These are first runs, not warm medians or accepted-quality throughput. HTP's 32-case specialization/export/support checks, build and staging are outside device timing; host QNN constructors alone totaled 40.30 seconds. The reported Linux RSS/PSS does not capture all DSP/DMA/global allocations and cannot establish a total-memory improvement.
 
 HTP's complete native waveform for the first chunk was available at 6.441463 seconds from entry, followed by a closed playable chunk file at 6.457313 seconds. Fourteen chunk files were pulled before the final chapter file existed; all 15 delivered hashes match the final assembly. No playback is implied. The final PCM payload is byte-exactly the 15 full native chunk payloads plus the 14 prescribed zero gaps.
 

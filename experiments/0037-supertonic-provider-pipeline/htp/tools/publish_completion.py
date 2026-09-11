@@ -93,6 +93,11 @@ def main():
             max_resident_sessions=4,profiling=False,asr_wer=asr['word_error_rate'],
             asr_matches=asr['exactly_matched_reference_words'],asr_last30_matches=asr['last_30_reference_words_matched']),
         observed_generation_wall_ratio_cpu_over_htp=cpu['generation_wall_seconds']/htp['generation_wall_including_interleaved_setup_seconds'],
+        observed_generation_wall_ratio_note='Retained historical diagnostic with unmatched setup boundaries: CPU excludes upfront setup while HTP includes interleaved setup; not the preferred wall comparison.',
+        preferred_wall_comparison=dict(boundary='device process entry through final chapter WAV close',
+            cpu_seconds=cpu['entry_to_complete_seconds'],htp_seconds=htp['entry_to_complete_seconds'],
+            cpu_over_htp_ratio=cpu['entry_to_complete_seconds']/htp['entry_to_complete_seconds'],
+            scope='First-run configuration-level wall comparison, including upfront and interleaved setup through the same output boundary; not pure-provider speedup or accepted-quality throughput. Offline preparation/staging and post-output teardown are outside this boundary.'),
         noise_correspondence=noise,
         exact_noise_match_chunk_indices=[x['index'] for x in noise if x['exact_active_noise_match']],
         interpretation_limits=[
