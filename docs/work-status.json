@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:15:48+00:00",
+  "updated_at": "2026-09-11T10:18:51+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -72,10 +72,10 @@
       "title": "LFM integrated",
       "status": "waiting",
       "owner": "Jens",
-      "now": "First AOT stopped on12GiB cgroup OOM in finalization/serialization; Graph Preparation Completion logged but no context retained/compile success.",
-      "next": "ONE memory-only16GiB/Swap0/2CPU/900s continuation resource-queued after Janek app host capacity frees (≥22GiB; currently18GiB). Not started/approval wait.",
-      "reported_at": "2026-09-11T10:15:48+00:00",
-      "reported_by": "Pi — LFM resource blocker and shared-host schedule",
+      "now": "AOT-OOM package COMPLETE local70ca07f6;62/62 tests. Framework preparation maps1542 optimized nodes→2699 QNN ops,zero unsupported;8 scaled_query→ElementWiseMultiply.",
+      "next": "No retained context/compiled ABI/finalized schedule; failing allocation remains null. Memory-only16GiB continuation prepared, capacity-waiting—not started/approval wait.",
+      "reported_at": "2026-09-11T10:18:51+00:00",
+      "reported_by": "Jens — completed retained AOT-OOM package and prepared continuation",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -145,10 +145,10 @@
       "title": "On this computer",
       "status": "waiting",
       "owner": "Jens",
-      "now": "LFM16GiB continuation resource-queued behind Janek app host priority; current availability reported18GiB (<22GiB threshold).",
-      "next": "No unrelated JVM/swap changes. First OOM evidence retained; do not report LFM continuation RUNNING until Jens actual-start report.",
-      "reported_at": "2026-09-11T10:15:48+00:00",
-      "reported_by": "Pi — resource scheduling, not approval wait",
+      "now": "LFM16GiB continuation prepared and capacity-waiting; Jere confirms no large Gemma overlap; Janek awaits host-build release notification.",
+      "next": "No JVM/swap changes, phone or model execution while waiting. Framework QNN mapping is preparation evidence only, not retained-context/compiled result.",
+      "reported_at": "2026-09-11T10:18:51+00:00",
+      "reported_by": "Jens — current resource schedule and OOM evidence package",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -203,9 +203,9 @@
     },
     {
       "name": "Jens",
-      "task": "LFM continuation resource-queued behind Janek host priority",
-      "reported_at": "2026-09-11T10:15:48+00:00",
-      "reported_by": "Pi — not started",
+      "task": "Await host capacity for prepared LFM16GiB continuation",
+      "reported_at": "2026-09-11T10:18:51+00:00",
+      "reported_by": "Jens — prepared/not started",
       "stale_after_seconds": 900
     },
     {
