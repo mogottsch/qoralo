@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:24:47+00:00",
+  "updated_at": "2026-09-11T10:26:38+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -53,12 +53,12 @@
     {
       "id": "gemma",
       "title": "Gemma FP16",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Exact saved-ONNX AR1/AR128 source derivatives pass precision gates: trueCL4096/width512 value-head shapes, Float16 norm/export+Concat+coupled MatMul; probability UF16→FP16 boundary.",
-      "next": "56 selected value MatMuls;71 AR1/74 AR128 FLOAT16 encoding targets. Continue bounded implementation/fixture compile checks; full conversion resource-queued behind Jens/app.",
-      "reported_at": "2026-09-11T10:23:51+00:00",
-      "reported_by": "Jere — exact source-derived AR1/AR128 precision-gate milestone",
+      "now": "Small exact-source AR128 FP16 island SM8550/v73 HTP host compile accepted: context58,728B SHA08f34ae…59a8e;~2.93s/~536MiB.",
+      "next": "Compiler acceptance for tested source fragment only—not full-model compiled precision/inference/speed/collapse causality. Prepare durable evidence/full-run safeguards; no large start reported.",
+      "reported_at": "2026-09-11T10:26:38+00:00",
+      "reported_by": "Jere — small source-fragment compiler-acceptance milestone",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -70,12 +70,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jens",
-      "now": "Jens reports prepared ONE memory-only16GiB/Swap0/2CPU/900s AOT iteration STARTED after Janek released two verified owned idle JVMs;23,388MiB reported available.",
-      "next": "Fresh in-unit≥22GiB preflight; same derivative/provider/disk caps, first12GiB OOM preserved. Prepare-only metadata: no graph/phone execution or context-success claim.",
-      "reported_at": "2026-09-11T10:23:51+00:00",
-      "reported_by": "Jens — actual one-shot memory-only AOT start",
+      "now": "LFM16GiB prepare-only AOT COMPLETE: ordinary context1,602,644,544B SHA62ad1261…315243; ordered41/60 ABI identical;1542→2699 QNN ops/zero unsupported.",
+      "next": "Package artifact/tests; prepare next bounded physical numerical/performance check queued after Janek+Ben. No graph execution/emulator replay or speed/finalized-kernel claim.",
+      "reported_at": "2026-09-11T10:26:38+00:00",
+      "reported_by": "Jens — completed actual 16GiB prepare-only AOT result",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -143,12 +143,12 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jens",
-      "now": "Janek reports owned Gradle64626+Kotlin108360 released after final assembly/28 tests; MemAvailable23,388MiB exceeds LFM≥22GiB preflight.",
-      "next": "No unrelated JVM/swap changes. LFM running status remains tied to Jens’s actual-start report; Janek now lightweight Python fixture/freeze work before phone reproduction.",
-      "reported_at": "2026-09-11T10:24:47+00:00",
-      "reported_by": "Janek via Pi — released headroom; resource window available",
+      "now": "LFM16GiB AOT complete/heavy reservation released to Jere; Jere small AR128 fixture compile accepted.",
+      "next": "Jere large phase resource-scheduled, not started. LFM next physical check queues after Janek+Ben; no emulator/phone execution reported.",
+      "reported_at": "2026-09-11T10:26:38+00:00",
+      "reported_by": "Jens/Jere — completed AOT and fixture compiler result",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -196,16 +196,16 @@
     },
     {
       "name": "Jere",
-      "task": "Continue exact Gemma derivative fixture compile checks",
-      "reported_at": "2026-09-11T10:23:51+00:00",
-      "reported_by": "Direct owner milestone/start",
+      "task": "Prepare durable Gemma fixture evidence/full-run safeguards",
+      "reported_at": "2026-09-11T10:26:38+00:00",
+      "reported_by": "Direct owner result/milestone",
       "stale_after_seconds": 900
     },
     {
       "name": "Jens",
-      "task": "Run one memory-only16GiB prepare-only AOT iteration",
-      "reported_at": "2026-09-11T10:23:51+00:00",
-      "reported_by": "Direct owner milestone/start",
+      "task": "Package LFM16GiB AOT; prepare queued physical-check plan",
+      "reported_at": "2026-09-11T10:26:38+00:00",
+      "reported_by": "Direct owner result/milestone",
       "stale_after_seconds": 900
     },
     {
