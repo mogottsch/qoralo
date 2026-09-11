@@ -82,5 +82,32 @@ class LongLifecycleTests(unittest.TestCase):
             self.assertTrue(all('exact-long.script' in text and 'first-short.script' not in text for text in signals))
 
 
+class LongAnalysisScopeTests(unittest.TestCase):
+    def test_observation_inverse_and_isolated_stage(self):
+        import inspect
+        analysis = importlib.import_module('analyze_value_precision_long')
+        observe, _, source, _ = analysis.adapted_functions()
+        restored = source.replace('2048', '16').replace('1929', '170').replace('long', 'short')
+        self.assertEqual(restored, inspect.getsource(analysis.old_short.observations))
+        self.assertEqual(observe.__globals__['FROZEN'], analysis.STAGE)
+        self.assertNotEqual(analysis.old_short.FROZEN, analysis.STAGE)
+
+    def test_long_validation_accepts_missing_optional_profile_not_wrong_input(self):
+        analysis = importlib.import_module('analyze_value_precision_long')
+        _, validate, _, _ = analysis.adapted_functions()
+        fixtures = importlib.import_module('test_value_precision_short_analysis').ValueAnalysisTests()
+        fixtures.setUp()
+        fixtures.collection['reviewed_stage_digest'] = analysis.scope.STAGE_DIGEST
+        fixtures.obs['prompt']['profile_prompt_tokens'] = 1929
+        fixtures.obs['actual_generated_tokens'] = 2048
+        fixtures.obs['stop']['configured_ceiling_observed'] = 2048
+        self.assertEqual(validate(fixtures.collection, fixtures.obs, fixtures.commands, fixtures.manifest), [])
+        fixtures.obs['actual_generated_tokens'] = None
+        fixtures.obs['prompt']['profile_prompt_tokens'] = None
+        self.assertEqual(validate(fixtures.collection, fixtures.obs, fixtures.commands, fixtures.manifest), [])
+        fixtures.obs['prompt']['profile_prompt_tokens'] = 1928
+        self.assertTrue(validate(fixtures.collection, fixtures.obs, fixtures.commands, fixtures.manifest))
+
+
 if __name__ == '__main__':
     unittest.main()
