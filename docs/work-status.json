@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:12:03+00:00",
+  "updated_at": "2026-09-11T11:13:58+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -75,12 +75,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "preparing",
+      "status": "active",
       "owner": "Ben",
-      "now": "Qwen FP32 reference worker completed/released: both W4A16 refs far from FP32 (logit cosine QDQ.50597/QNN.49293; argmax198); own-QDQ agreement.888 is not FP32 fidelity.",
-      "next": "Current Linear/Conv W4 already per-channel. Prepare CPU weight-only per-channel vs group32/LPBQ W4 ablations with FP32 activations—diagnostic, not deployed fix; worker after Jere heavy slot.",
-      "reported_at": "2026-09-11T11:11:14+00:00",
-      "reported_by": "Ben — completed FP32 reference +next discriminating source preparation",
+      "now": "Qwen FP32 result package committed local06d8332 (25 evidence/24 hashes,full raw recoverability); Ben continues two-case CPU weight-only discriminator.",
+      "next": "LPBQ source hypothesis: block scales compressed to1–16× per-channel base while framework weight codes retained; not observed finalized SDK encoding. No ablation outcome/deployed correction claim.",
+      "reported_at": "2026-09-11T11:13:58+00:00",
+      "reported_by": "Ben — committed FP32 package and continued discriminator",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "LFM pair complete/raw verification; Janek app capacity candidate/guard UI may take released phone slot; Qwen/Jere work remains bounded.",
-      "next": "LFM one ordered pair is not warm/statistical speedup or attributable full-request gain. No new LFM model execution.",
-      "reported_at": "2026-09-11T11:12:03+00:00",
-      "reported_by": "Jens — completed pair and offline-verification next",
+      "now": "LFM offline verification; Janek app capacity candidate/guard UI may use phone; Ben Qwen two-case CPU discriminator active; Jere AR1 work bounded.",
+      "next": "Qwen LPBQ is source-derived expansion hypothesis only, not final SDK encoding. No worker outcome/correction claim.",
+      "reported_at": "2026-09-11T11:13:58+00:00",
+      "reported_by": "Ben — active source/discriminator scope",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Prepare Qwen CPU W4 per-channel vs group32/LPBQ ablations",
-      "reported_at": "2026-09-11T11:11:14+00:00",
-      "reported_by": "Ben — FP32 reference done; no ablation worker start",
+      "task": "Run Qwen two-case CPU W4 weight-only discriminator",
+      "reported_at": "2026-09-11T11:13:58+00:00",
+      "reported_by": "Ben — FP32 package committed/continuing",
       "stale_after_seconds": 900
     },
     {
