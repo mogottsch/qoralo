@@ -132,8 +132,10 @@ unsupported neural fallback is forbidden. See `results/context-export-01.json`.
   source ONNX, CPU duration/features or precomputed edge indices are staged.
 - Actual next phone run requires>=3.5GiB available, battery<42°C,5GiB native AS,
  3GiB own RSS limit,600MiB available floor,45°C thermal ceiling,1800s native alarm.
-  Read-only live APK and double DB/WAL snapshot checks protect existing rows;
-  app/test PIDs must be absent. A newly started app makes us stop only our runner.
+  Read-only live APK and double DB/WAL snapshot checks protect existing rows.
+  Dedicated generation/test PIDs must be absent; main/Room presence alone is not
+  generation. While main is present, live read-only job snapshots enforce no
+  queued/running jobs. Actual conflicting work makes us stop only our runner.
 - Phone only in Pi's scheduled slot, full `phone.lock` lifecycle and live app/job,
   thermal/memory preflight. No app/data modification, playback or global kills.
   Current app identity is discovered live, never restored to an older experiment.

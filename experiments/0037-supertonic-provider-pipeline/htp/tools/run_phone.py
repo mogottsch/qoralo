@@ -61,9 +61,16 @@ def main():
             raise RuntimeError('wrong phone')
         return observed
     def app_idle():
-        r=adb('shell',f'pidof {APP} {APP}:generation {TEST_APP}')
+        # Main/Room presence is not generation. Dedicated generation/test workers
+        # still conflict; main-process work is checked in read-only DB snapshots.
+        r=adb('shell',f'pidof {APP}:generation {TEST_APP}')
         if r.returncode!=1 or r.stdout.strip() or r.stderr.strip():
-            raise RuntimeError('app/test PID is live or idle state unproven; yield without stopping it')
+            raise RuntimeError('generation/test PID is live or worker-idle state unproven; yield without stopping it')
+    def main_present():
+        r=adb('shell',f'pidof {APP}')
+        if r.returncode not in (0,1) or r.stderr.strip():
+            raise RuntimeError('main process observation failed')
+        return bool(r.stdout.strip())
     def apks():
         observed={}
         for package in [APP,TEST_APP]:
@@ -141,6 +148,10 @@ def main():
             if re.search(r'llama-bench|qnn-net-run|/data/local/tmp/[^\n]*(?:runner|probe)',processes):
                 raise RuntimeError('another benchmark process is live; yield')
             first_apks=apks(); write('installed-apks-before.json',first_apks)
+            for package,key in [(APP,'EXPECTED_APP_SHA256'),(TEST_APP,'EXPECTED_TEST_SHA256')]:
+                expected_apk=os.environ.get(key)
+                if expected_apk and first_apks[package]['sha256']!=expected_apk:
+                    raise RuntimeError('fresh installed APK differs from scheduled identity; no restoration')
             first_db=snapshot('before-stage')
             write('preflight-bounds.json',bounds())
             (out/'thermal-before.txt').write_text(shell('dumpsys thermalservice')+'\n')
@@ -185,7 +196,13 @@ def main():
                     pulled.add(name); write('chunk-availability.json',transfers)
             while proc.poll() is None:
                 time.sleep(1)
-                app_idle() # If user starts the app, stop ONLY our owned runner.
+                app_idle()
+                if main_present():
+                    # Keep only the latest private live snapshot pair; no growing
+                    # raw-DB archive. Existing main/Room alone never causes a stop.
+                    live=snapshot('live')
+                    with (out/'app-live-samples.jsonl').open('a') as log:
+                        log.write(json.dumps(dict(elapsed_seconds=time.monotonic()-started,files=live,queued_or_running=0))+'\n')
                 if time.monotonic()-started>1840:
                     raise TimeoutError('native run wall bound')
                 pull_chunks()
