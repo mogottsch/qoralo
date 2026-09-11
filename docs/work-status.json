@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:16:31+00:00",
+  "updated_at": "2026-09-11T11:17:15+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -24,12 +24,12 @@
     {
       "id": "app",
       "title": "Short product E2E",
-      "status": "preparing",
+      "status": "active",
       "owner": "Janek / Nik",
-      "now": "Capacity build/tests PASS:44 JVM+7 Python. Shared Kotlin normalizer on private persisted text: case1 2199/2786/3070/2902/3158; case2 3409/2567/2961/2343 (+9 tags each).",
-      "next": "All exceed selected T239 max230 and experimental T2048 max2039; no words/bytes proxy. Freeze capacity-only candidate, then persisted-draft guard/UI check90/120s,0 LLM/TTS/jobs, after Jens pair release.",
-      "reported_at": "2026-09-11T11:11:32+00:00",
-      "reported_by": "Janek — capacity validation result and ordered guard/UI next step",
+      "now": "Capacity candidate FROZEN source59953d5/candidate SHAed9e02…839b; app50a367…7a47/test8ed6c5…9e04;44JVM+7Python/native9/runtime/signature/source gates pass.",
+      "next": "Capacity-only guard/UI deployment STARTED on genuine draft7dbc/rev8e303:0LLM/TTS/new jobs/edits/Play,90s driver/120s host,outer always-rollback; all state must stay unchanged.",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Janek — frozen candidate and actual capacity guard/UI deployment start",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -60,10 +60,10 @@
       "title": "LFM integrated",
       "status": "preparing",
       "owner": "Jens",
-      "now": "LFM paired PREFILL COMPLETE/released: exit0,raw pulled,one successful171-token call/phase with all60 finite outputs+41 before-call inputs; endpoint597 both.",
-      "next": "Descriptive one ordered pair only: API6.451538331s baseline vs5.581822238s candidate; context loads3.853762655s vs2.600975155s. Offline byte/input/output/profile verification, no new execution.",
-      "reported_at": "2026-09-11T11:12:03+00:00",
-      "reported_by": "Jens — actual paired phone outcome/release",
+      "now": "PAUSE BY MORITZ: Jens stops/reaps owned work, preserves outcomes, makes scoped LOCAL commit +restart handoff.",
+      "next": "Await closure report, then mark PAUSED BY MORITZ. No future host/phone queue, execution, or approval-wait label.",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Pi — Moritz pause instruction",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -75,12 +75,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "active",
+      "status": "preparing",
       "owner": "Ben",
-      "now": "Qwen FP32 result package committed local06d8332 (25 evidence/24 hashes,full raw recoverability); Ben continues two-case CPU weight-only discriminator.",
-      "next": "LPBQ source hypothesis: block scales compressed to1–16× per-channel base while framework weight codes retained; not observed finalized SDK encoding. No ablation outcome/deployed correction claim.",
-      "reported_at": "2026-09-11T11:13:58+00:00",
-      "reported_by": "Ben — committed FP32 package and continued discriminator",
+      "now": "PAUSE BY MORITZ: Ben stops/reaps owned work, preserves outcomes, makes scoped LOCAL commit +restart handoff.",
+      "next": "Await closure report, then mark PAUSED BY MORITZ. No future host/phone queue, execution, or approval-wait label.",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Pi — Moritz pause instruction",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -94,12 +94,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
+      "status": "active",
       "owner": "Janek",
-      "now": "LFM pair complete/released: native processes/owned remote root absent; no app/data/settings/audio change. Janek can take app slot.",
-      "next": "Janek capacity-only candidate then persisted-draft guard/UI validation; LFM no further phone call queued, offline verification only.",
-      "reported_at": "2026-09-11T11:12:03+00:00",
-      "reported_by": "Jens — actual LFM release and app-slot handoff",
+      "now": "Janek reports capacity-only guard/UI deployment active after Jens phone release; Jere Gemma context compile remains separate host work.",
+      "next": "0 LLM/TTS/new jobs/edits/Play; outer rollback/full-state preservation. Ben/Jens future phone queues removed; no guard outcome yet.",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Janek — actual app-priority phone deployment start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Jere paired Gemma SM8550/v73 context compile active after Ben slot release; Janek app guard/UI and Ben CPU discriminator/LFM offline verification remain bounded.",
-      "next": "Gemma fresh23.39GiB RAM/~29.92GiB swap,15/17/16GiB caps,2CPU/nice15/1800s/64GiB disk/STOP path. No inference/phone result.",
-      "reported_at": "2026-09-11T11:16:31+00:00",
-      "reported_by": "Jere — actual paired context-compile start",
+      "now": "Janek capacity-only app guard/UI deployment active; Jere Gemma context compile active. Ben/Qwen and Jens/LFM pause closure work only.",
+      "next": "Use resources only after actual release. No future Ben/Jens heavy/phone queues; preserve outcomes and await their closure reports.",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Pi Moritz pause + Janek actual start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Run Qwen two-case CPU W4 weight-only discriminator",
-      "reported_at": "2026-09-11T11:13:58+00:00",
-      "reported_by": "Ben — FP32 package committed/continuing",
+      "task": "Stopping/reaping Qwen; LOCAL commit +restart handoff",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Pi Moritz pause / Janek actual start",
       "stale_after_seconds": 900
     },
     {
@@ -152,9 +152,9 @@
     },
     {
       "name": "Janek",
-      "task": "Freeze capacity-only candidate; guard/UI validate persisted draft",
-      "reported_at": "2026-09-11T11:11:32+00:00",
-      "reported_by": "Janek — capacity tests pass/no new model work",
+      "task": "Run capacity-only guard/UI deployment on persisted draft",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Pi Moritz pause / Janek actual start",
       "stale_after_seconds": 900
     },
     {
@@ -166,9 +166,9 @@
     },
     {
       "name": "Jens",
-      "task": "Verify LFM raw bytes/inputs/outputs/profile offline",
-      "reported_at": "2026-09-11T11:12:03+00:00",
-      "reported_by": "Jens — phone pair complete/no further execution",
+      "task": "Stopping/reaping LFM; LOCAL commit +restart handoff",
+      "reported_at": "2026-09-11T11:17:15+00:00",
+      "reported_by": "Pi Moritz pause / Janek actual start",
       "stale_after_seconds": 900
     },
     {
