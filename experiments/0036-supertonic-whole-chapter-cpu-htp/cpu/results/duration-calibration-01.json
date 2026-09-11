@@ -1,0 +1,99 @@
+{
+  "result": "passed",
+  "action": "dp",
+  "runtime": "1.27.1",
+  "provider": "CPUExecutionProvider",
+  "profiling_enabled": true,
+  "threads": 4,
+  "text_extent": 3200,
+  "active_text_positions": 3167,
+  "latent_extent": 0,
+  "natural_active_latent": 425,
+  "predicted_duration_seconds": 29.56986237,
+  "natural_wave_frames": 1304030,
+  "emitted_frames": 0,
+  "vocoder_output_frames": 0,
+  "setup_seconds": 0.053334947,
+  "render_stage_seconds": 0.776496771,
+  "pipeline_wall_seconds": 0.83665,
+  "audio_seconds": null,
+  "rtf_stage_sum": null,
+  "maxrss_kib": 939748,
+  "stage_setup_seconds": [
+    0.053334947,
+    0,
+    0,
+    0
+  ],
+  "stage_run_seconds": [
+    0.776496771,
+    0,
+    0,
+    0
+  ],
+  "profiles": [
+    "output/duration_2026-09-11_13-24-32_375.json"
+  ],
+  "canonical": false,
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "attempt": {
+    "action": "dp",
+    "returncode": 0,
+    "abort_reason": null,
+    "phone_command_wall_seconds": 2.174680893000186,
+    "remote": "/data/local/tmp/exp0036-cpu-20260911T122431Z-dp",
+    "host_output": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/.local/cpu/20260911T122431Z-dp"
+  },
+  "cleanup": {
+    "removed": "/data/local/tmp/exp0036-cpu-20260911T122431Z-dp",
+    "app_touched": false
+  },
+  "device": {
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a"
+  },
+  "private_evidence_path": "experiments/0036-supertonic-whole-chapter-cpu-htp/.local/cpu/20260911T122431Z-dp",
+  "provider_evidence": {
+    "duration": {
+      "profile_sha256": "5a30ab3cbd55e700b95bd14cc72119e5dbba585ecdcbd4f829554158814842fa",
+      "kernel_events_by_provider": {
+        "CPUExecutionProvider": 186
+      },
+      "distinct_profile_kernel_names": 186
+    }
+  },
+  "input_and_binary_sha256": {
+    "runner": "fc29f54e90a0eaba7bf9985ff585bccfed10c74cd37d27e77df9bbddb2f3add0",
+    "bundle/total_step.f32": "fca31f1667a6aa1bba12fca4e4ea1becd503379d80da3213af07f6cc5702828d",
+    "bundle/style_ttl.f32": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+    "bundle/style_dp.f32": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+    "bundle/text_mask.f32": "02b376bfe8d96b470e6fbfede1b5ab71da2fa107bd4d18a403856b5da4afe4b7",
+    "bundle/current_step.f32": "8deb90668ea3a6845d5c04454798ccb63829a88ff827892f2dc11c808baac7af",
+    "bundle/text_ids.i64": "da2db62a0bfcedccec10b91a01bafac87165624f7d6b52133b22ff99f3b5ba22",
+    "bundle/manifest.json": "de63c3ed28e096f6b0fc96025d09cc6edfb6b6b4ab73d3403bc1d8e6b8dfda19",
+    "models/duration.onnx": "ebeb4ad28fb819157b7fa4dcbd346534581e7d75abbf1758cd92446d3379907a",
+    "lib/libc++_shared.so": "77a34d3f03b17709f3f6473f37cb7795314e51fa3e5e652b5c37d53cfd05c754",
+    "lib/libonnxruntime.so": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+  },
+  "predicted_duration_scalar_sha256": "d1d333f46dd8027f74d005b7b8ae7281a934ac35205d13e56c1f6500a6c078b8",
+  "thermal_context": {
+    "before": {
+      "mem_available_kib": 3647100,
+      "battery_temperature_tenths_c": 279
+    },
+    "after": {
+      "mem_available_kib": 3907200,
+      "battery_temperature_tenths_c": 279
+    }
+  },
+  "sampled_rss_peak_kib": null,
+  "memory_method": "Android runner getrusage(RUSAGE_SELF).ru_maxrss KiB; host samples /proc/PID/status every2s where process remains alive. Unsampled short run peak is null, never zero.",
+  "session_lifetime": "Sequential per-stage create/run/destroy; not four resident sessions",
+  "listening_acceptance": "not_reviewed",
+  "entire_chapter_spoken": null,
+  "coverage_status": "not yet assessed",
+  "warm_median_rtf": null,
+  "warm_median_reason": "duration-only calibration, no WAV or RTF claim",
+  "result_scope": "duration calibration only, not full CPU completion"
+}

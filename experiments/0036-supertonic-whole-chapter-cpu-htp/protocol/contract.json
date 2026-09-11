@@ -1,0 +1,251 @@
+{
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "reference_bytes": 3190,
+  "canonical": false,
+  "text_extent": 3200,
+  "active_text_positions": 3167,
+  "normalized_codepoints": 3158,
+  "normalized_sha256": "c6cb2d182751b7d09670903314c54731be1e74621f74a54dc627e2952057cead",
+  "processed_sha256": "bd954cf3ece96d33917aa9e95d162e5c1726b0523826bfcf5b596cb9e7ad88c1",
+  "voice": "M1/SID5",
+  "speed": 1.0,
+  "steps": 5,
+  "sample_rate": 44100,
+  "latent_channels": 144,
+  "latent_hop_samples": 3072,
+  "latent_extent": 512,
+  "tensors": {
+    "text_ids.i64": {
+      "sha256": "da2db62a0bfcedccec10b91a01bafac87165624f7d6b52133b22ff99f3b5ba22",
+      "bytes": 25600,
+      "dtype": "int64_le",
+      "shape": [
+        1,
+        3200
+      ]
+    },
+    "text_mask.f32": {
+      "sha256": "02b376bfe8d96b470e6fbfede1b5ab71da2fa107bd4d18a403856b5da4afe4b7",
+      "bytes": 12800,
+      "dtype": "float32_le",
+      "shape": [
+        1,
+        1,
+        3200
+      ]
+    },
+    "style_dp.f32": {
+      "sha256": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+      "bytes": 512,
+      "dtype": "float32_le",
+      "shape": [
+        1,
+        8,
+        16
+      ]
+    },
+    "style_ttl.f32": {
+      "sha256": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+      "bytes": 51200,
+      "dtype": "float32_le",
+      "shape": [
+        1,
+        50,
+        256
+      ]
+    },
+    "current_step.f32": {
+      "sha256": "8deb90668ea3a6845d5c04454798ccb63829a88ff827892f2dc11c808baac7af",
+      "bytes": 20,
+      "dtype": "float32_le",
+      "shape": [
+        5
+      ]
+    },
+    "total_step.f32": {
+      "sha256": "fca31f1667a6aa1bba12fca4e4ea1becd503379d80da3213af07f6cc5702828d",
+      "bytes": 4,
+      "dtype": "float32_le",
+      "shape": [
+        1
+      ]
+    },
+    "noise.f32": {
+      "sha256": "aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40",
+      "bytes": 294912,
+      "dtype": "float32_le",
+      "shape": [
+        1,
+        144,
+        512
+      ]
+    }
+  },
+  "noise_contract": "Raw unmasked C-layout [1,144,L], saved bytes binding; seed20260813 xorshift64* Box-Muller. Each route zeros positions >= its own ceil(floor(FP32(duration*44100))/3072), uses its own latent mask. Not app chapter-id seed; no CPU model outputs shared.",
+  "bundle_manifest_sha256": "8717ac44573d98e7dfbf32353e625acfe96a1032abd052e12cef2adda5ddd294",
+  "status": "frozen_T3200_L512",
+  "text_normalization_source": "podcast-app/app/src/main/java/dev/vibevoice/podcast/runtime/SupertonicTextNormalizer.kt",
+  "text_normalization_source_sha256": "fcfa42868b61a2ed5492f41ef108cbdbfa5fac6fd07d3a4bc513188537ce79f2",
+  "cpu_calibration": {
+    "duration_seconds": 29.56986237,
+    "natural_frames": 1304030,
+    "active_latent": 425,
+    "common_latent_capacity": 512,
+    "capacity_seconds": 35.66585034013605,
+    "inactive_latent_positions": 87,
+    "margin_relative_to_active_latent": 0.20470588235294118,
+    "predictions_not_shared_with_HTP": true
+  },
+  "initial_schedule": "read current_step.f32[step] at each step 0..4; pass a separate shape[1] view/value; never mutate the saved five-element schedule",
+  "graph_sources": {
+    "duration": {
+      "component": "duration",
+      "source": "duration_predictor.onnx",
+      "source_sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db",
+      "derivative_sha256": "ebeb4ad28fb819157b7fa4dcbd346534581e7d75abbf1758cd92446d3379907a",
+      "derivative_bytes": 3787044,
+      "inputs": {
+        "text_ids": [
+          1,
+          3200
+        ],
+        "style_dp": [
+          1,
+          8,
+          16
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "duration": [
+          1
+        ]
+      },
+      "learned_initializer_bytes_unchanged": true,
+      "position_prefix_and_theta_unchanged": null,
+      "position_extent": null,
+      "operator_changes": null,
+      "checker_passed": true,
+      "host_neural_forwards": 0
+    },
+    "text": {
+      "component": "text",
+      "source": "text_encoder.onnx",
+      "source_sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff",
+      "derivative_sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+      "derivative_bytes": 36566260,
+      "inputs": {
+        "text_ids": [
+          1,
+          3200
+        ],
+        "style_ttl": [
+          1,
+          50,
+          256
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "text_emb": [
+          1,
+          256,
+          3200
+        ]
+      },
+      "learned_initializer_bytes_unchanged": true,
+      "position_prefix_and_theta_unchanged": null,
+      "position_extent": null,
+      "operator_changes": null,
+      "checker_passed": true,
+      "host_neural_forwards": 0
+    },
+    "vector": {
+      "component": "vector",
+      "source": "vector_estimator.onnx",
+      "source_sha256": "883ac868ea0275ef0e991524dc64f16b3c0376efd7c320af6b53f5b780d7c61c",
+      "derivative_sha256": "140104d32cff234c0de7b0b02222a0b6af0b023bba2df2b1991a9ef30b717a82",
+      "derivative_bytes": 256548295,
+      "inputs": {
+        "noisy_latent": [
+          1,
+          144,
+          512
+        ],
+        "text_emb": [
+          1,
+          256,
+          3200
+        ],
+        "style_ttl": [
+          1,
+          50,
+          256
+        ],
+        "latent_mask": [
+          1,
+          1,
+          512
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ],
+        "current_step": [
+          1
+        ],
+        "total_step": [
+          1
+        ]
+      },
+      "outputs": {
+        "denoised_latent": [
+          1,
+          144,
+          512
+        ]
+      },
+      "learned_initializer_bytes_unchanged": true,
+      "position_prefix_and_theta_unchanged": true,
+      "position_extent": 3200,
+      "operator_changes": "Softplus->Relu(x)+Log(1+Exp(-Abs(x)))",
+      "checker_passed": true,
+      "host_neural_forwards": 0
+    },
+    "vocoder": {
+      "component": "vocoder",
+      "source": "vocoder.onnx",
+      "source_sha256": "085de76dd8e8d5836d6ca66826601f615939218f90e519f70ee8a36ed2a4c4ba",
+      "derivative_sha256": "c1b3a067426dffd74ca94536c0e2926dfeca6c8a4cb70078883543117a87d6bc",
+      "derivative_bytes": 101449890,
+      "inputs": {
+        "latent": [
+          1,
+          144,
+          512
+        ]
+      },
+      "outputs": {
+        "wav_tts": [
+          1,
+          1572864
+        ]
+      },
+      "learned_initializer_bytes_unchanged": true,
+      "position_prefix_and_theta_unchanged": null,
+      "position_extent": null,
+      "operator_changes": null,
+      "checker_passed": true,
+      "host_neural_forwards": 0
+    }
+  }
+}

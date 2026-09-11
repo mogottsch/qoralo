@@ -32,8 +32,19 @@ def main():
     identity={k:shell('getprop '+prop) for k,prop in [('model','ro.product.model'),('soc','ro.soc.model'),('abi','ro.product.cpu.abi')]}
     if identity!={'model':'SM-S918B','soc':'SM8550','abi':'arm64-v8a'}:raise RuntimeError('wrong phone')
     (out/'identity.json').write_text(json.dumps(identity,indent=2)+'\n')
-    (out/'processes-before.txt').write_text(shell('ps -A'))
-    (out/'thermal-before.txt').write_text(shell('dumpsys thermalservice; dumpsys battery; cat /proc/meminfo'))
+    processes=shell('ps -A -o PID,ARGS')
+    (out/'processes-before.txt').write_text(processes)
+    if re.search(r'qnn-net-run|ort-qnn|e2e-runner|/data/local/tmp/[^\n]*(?:runner|probe)',processes):
+        raise RuntimeError('live benchmark/process conflict; yield without stopping it')
+    preflight=shell('dumpsys thermalservice; dumpsys battery; cat /proc/meminfo')
+    (out/'thermal-before.txt').write_text(preflight)
+    available=re.search(r'^MemAvailable:\s*(\d+)',preflight,re.M)
+    temperature=re.search(r'^\s*temperature:\s*(\d+)',preflight,re.M)
+    required_kib=(2 if a.action=='dp' else 3)*1024*1024
+    if not available or int(available.group(1))<required_kib:
+        raise RuntimeError('insufficient initial memory headroom; yield without touching app')
+    if not temperature or int(temperature.group(1))>=420:
+        raise RuntimeError('missing/high initial battery temperature; yield')
     stage=EXP/'.local/cpu/stage'
     bundle=EXP/'.local/common/input-bundle'
     # Only required files, no raw reference text. Tensors are nonetheless PRIVATE.
