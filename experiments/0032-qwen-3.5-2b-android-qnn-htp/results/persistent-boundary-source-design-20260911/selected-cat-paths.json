@@ -1,0 +1,775 @@
+{
+  "compressed_source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-encoding-audit-20260910/raw/graph-model.json.zst",
+    "bytes": 758313,
+    "sha256": "4769c006b7c008c0173a40b7171e63c3d0b075ac41dd0d249b38df18498b1ac5"
+  },
+  "recovered_metadata_bytes": 32499235,
+  "recovered_metadata_sha256": "2d879235c4d4a47643378e3ec3739bd587d4b0a68b23097b8ba64092ce20ad86",
+  "selected_paths": [
+    {
+      "state_index": 3,
+      "cat_name": "cat_7",
+      "cat_encoding": {
+        "scale": 0.00034575574682094157,
+        "zero_point": 35376,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      },
+      "current_key_encoding": {
+        "scale": 0.00034575574682094157,
+        "zero_point": 35376,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      },
+      "source_nodes": [
+        {
+          "name": "cat_7",
+          "target": "torch.ops.aten.cat.default",
+          "inputs": [
+            {
+              "name": "tensors",
+              "arg": {
+                "as_tensors": [
+                  {
+                    "name": "dequantize_per_tensor_127"
+                  },
+                  {
+                    "name": "dequantize_per_tensor_743"
+                  }
+                ]
+              },
+              "kind": 1
+            },
+            {
+              "name": "dim",
+              "arg": {
+                "as_int": -1
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "cat_7"
+              }
+            }
+          ]
+        },
+        {
+          "name": "dequantize_per_tensor_127",
+          "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_4"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.00029122494743205607
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 42000
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "dequantize_per_tensor_127"
+              }
+            }
+          ]
+        },
+        {
+          "name": "dequantize_per_tensor_743",
+          "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_485"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.00034575574682094157
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35376
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "dequantize_per_tensor_743"
+              }
+            }
+          ]
+        },
+        {
+          "name": "quantize_per_tensor_485",
+          "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "transpose_9"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.00034575574682094157
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35376
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "quantize_per_tensor_485"
+              }
+            }
+          ]
+        },
+        {
+          "name": "quantize_per_tensor_486",
+          "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "cat_7"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.00034575574682094157
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35376
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "quantize_per_tensor_486"
+              }
+            }
+          ]
+        },
+        {
+          "name": "dequantize_per_tensor_744",
+          "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_486"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.00034575574682094157
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35376
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "dequantize_per_tensor_744"
+              }
+            }
+          ]
+        }
+      ],
+      "cat_tensor_metadata": {
+        "dtype": 7,
+        "sizes": [
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 2
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 4096
+          }
+        ],
+        "requires_grad": false,
+        "device": {
+          "type": "cpu",
+          "index": null
+        },
+        "strides": [
+          {
+            "as_int": 2097152
+          },
+          {
+            "as_int": 1048576
+          },
+          {
+            "as_int": 4096
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "storage_offset": {
+          "as_int": 0
+        },
+        "layout": 7
+      },
+      "native_corresponding_node_name": null,
+      "native_name_reason": "No selected-state postpass/native wrapper capture from the full model retained here."
+    },
+    {
+      "state_index": 15,
+      "cat_name": "cat_34",
+      "cat_encoding": {
+        "scale": 0.0003006155020557344,
+        "zero_point": 35268,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      },
+      "current_key_encoding": {
+        "scale": 0.0003006155020557344,
+        "zero_point": 35268,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      },
+      "source_nodes": [
+        {
+          "name": "cat_34",
+          "target": "torch.ops.aten.cat.default",
+          "inputs": [
+            {
+              "name": "tensors",
+              "arg": {
+                "as_tensors": [
+                  {
+                    "name": "dequantize_per_tensor_139"
+                  },
+                  {
+                    "name": "dequantize_per_tensor_2525"
+                  }
+                ]
+              },
+              "kind": 1
+            },
+            {
+              "name": "dim",
+              "arg": {
+                "as_int": -1
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "cat_34"
+              }
+            }
+          ]
+        },
+        {
+          "name": "dequantize_per_tensor_139",
+          "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_16"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.00027434100047685206
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 32369
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "dequantize_per_tensor_139"
+              }
+            }
+          ]
+        },
+        {
+          "name": "dequantize_per_tensor_2525",
+          "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_1904"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.0003006155020557344
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35268
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "dequantize_per_tensor_2525"
+              }
+            }
+          ]
+        },
+        {
+          "name": "quantize_per_tensor_1904",
+          "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "transpose_42"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.0003006155020557344
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35268
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "quantize_per_tensor_1904"
+              }
+            }
+          ]
+        },
+        {
+          "name": "quantize_per_tensor_1905",
+          "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "cat_34"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.0003006155020557344
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35268
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "quantize_per_tensor_1905"
+              }
+            }
+          ]
+        },
+        {
+          "name": "dequantize_per_tensor_2526",
+          "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+          "inputs": [
+            {
+              "name": "input",
+              "arg": {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_1905"
+                }
+              },
+              "kind": 1
+            },
+            {
+              "name": "scale",
+              "arg": {
+                "as_float": 0.0003006155020557344
+              },
+              "kind": 1
+            },
+            {
+              "name": "zero_point",
+              "arg": {
+                "as_int": 35268
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_min",
+              "arg": {
+                "as_int": 0
+              },
+              "kind": 1
+            },
+            {
+              "name": "quant_max",
+              "arg": {
+                "as_int": 65535
+              },
+              "kind": 1
+            },
+            {
+              "name": "dtype",
+              "arg": {
+                "as_scalar_type": 4
+              },
+              "kind": 1
+            }
+          ],
+          "outputs": [
+            {
+              "as_tensor": {
+                "name": "dequantize_per_tensor_2526"
+              }
+            }
+          ]
+        }
+      ],
+      "cat_tensor_metadata": {
+        "dtype": 7,
+        "sizes": [
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 2
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 4096
+          }
+        ],
+        "requires_grad": false,
+        "device": {
+          "type": "cpu",
+          "index": null
+        },
+        "strides": [
+          {
+            "as_int": 2097152
+          },
+          {
+            "as_int": 1048576
+          },
+          {
+            "as_int": 4096
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "storage_offset": {
+          "as_int": 0
+        },
+        "layout": 7
+      },
+      "native_corresponding_node_name": null,
+      "native_name_reason": "No selected-state postpass/native wrapper capture from the full model retained here."
+    }
+  ],
+  "model_archives_opened": 0,
+  "tensor_payloads_read": 0
+}

@@ -1,0 +1,1167 @@
+{
+  "source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/metadata/metadata.json",
+    "bytes": 603766,
+    "sha256": "89f6b20d7da0fc412ed6bebff66e20c3dc4d2f4f90a909d42b70d3efb4e10337"
+  },
+  "states": [
+    {
+      "state_index": 3,
+      "layer": 3,
+      "kind": "key_cache_update",
+      "input_index": 6,
+      "output_index": 4,
+      "input_name": "states_3",
+      "output_name": "dequantize_per_tensor_742",
+      "input_shape": [
+        1,
+        2,
+        256,
+        4095
+      ],
+      "output_shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "input_tensor_metadata": {
+        "dtype": 7,
+        "sizes": [
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 2
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 4095
+          }
+        ],
+        "requires_grad": false,
+        "device": {
+          "type": "cpu",
+          "index": null
+        },
+        "strides": [
+          {
+            "as_int": 2096640
+          },
+          {
+            "as_int": 1048320
+          },
+          {
+            "as_int": 4095
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "storage_offset": {
+          "as_int": 0
+        },
+        "layout": 7
+      },
+      "output_tensor_metadata": {
+        "dtype": 7,
+        "sizes": [
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 2
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "requires_grad": false,
+        "device": {
+          "type": "cpu",
+          "index": null
+        },
+        "strides": [
+          {
+            "as_int": 512
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "storage_offset": {
+          "as_int": 0
+        },
+        "layout": 7
+      },
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "input": {
+        "status": "unique",
+        "unique_domain": {
+          "dtype": 4,
+          "quant_max": 65535,
+          "quant_min": 0,
+          "scale": 0.00029122494743205607,
+          "zero_point": 42000,
+          "scale_f32le_hex": "8daf9839",
+          "decoded_min_fp32": -12.23144817352295,
+          "decoded_max_fp32": 6.853979110717773
+        },
+        "reason": null,
+        "quantizers": [
+          {
+            "q_node": "quantize_per_tensor_4",
+            "encoding": {
+              "status": "explicit_per_tensor",
+              "reason": null,
+              "domain": {
+                "dtype": 4,
+                "quant_max": 65535,
+                "quant_min": 0,
+                "scale": 0.00029122494743205607,
+                "zero_point": 42000,
+                "scale_f32le_hex": "8daf9839",
+                "decoded_min_fp32": -12.23144817352295,
+                "decoded_max_fp32": 6.853979110717773
+              }
+            },
+            "branches": [
+              {
+                "dq_node": "dequantize_per_tensor_127",
+                "encoding": {
+                  "status": "explicit_per_tensor",
+                  "reason": null,
+                  "domain": {
+                    "dtype": 4,
+                    "quant_max": 65535,
+                    "quant_min": 0,
+                    "scale": 0.00029122494743205607,
+                    "zero_point": 42000,
+                    "scale_f32le_hex": "8daf9839",
+                    "decoded_min_fp32": -12.23144817352295,
+                    "decoded_max_fp32": 6.853979110717773
+                  }
+                },
+                "q_dq_domains_equal": true,
+                "value_consumers": [
+                  {
+                    "node": "cat_7",
+                    "target": "torch.ops.aten.cat.default",
+                    "argument": "tensors"
+                  }
+                ],
+                "source": {
+                  "name": "dequantize_per_tensor_127",
+                  "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+                  "inputs": [
+                    {
+                      "name": "input",
+                      "arg": {
+                        "as_tensor": {
+                          "name": "quantize_per_tensor_4"
+                        }
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "scale",
+                      "arg": {
+                        "as_float": 0.00029122494743205607
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "zero_point",
+                      "arg": {
+                        "as_int": 42000
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "quant_min",
+                      "arg": {
+                        "as_int": 0
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "quant_max",
+                      "arg": {
+                        "as_int": 65535
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "dtype",
+                      "arg": {
+                        "as_scalar_type": 4
+                      },
+                      "kind": 1
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "as_tensor": {
+                        "name": "dequantize_per_tensor_127"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "source": {
+              "name": "quantize_per_tensor_4",
+              "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+              "inputs": [
+                {
+                  "name": "input",
+                  "arg": {
+                    "as_tensor": {
+                      "name": "states_3"
+                    }
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "scale",
+                  "arg": {
+                    "as_float": 0.00029122494743205607
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "zero_point",
+                  "arg": {
+                    "as_int": 42000
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "quant_min",
+                  "arg": {
+                    "as_int": 0
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "quant_max",
+                  "arg": {
+                    "as_int": 65535
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "dtype",
+                  "arg": {
+                    "as_scalar_type": 4
+                  },
+                  "kind": 1
+                }
+              ],
+              "outputs": [
+                {
+                  "as_tensor": {
+                    "name": "quantize_per_tensor_4"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "other_value_uses": [],
+        "shape_only_uses": []
+      },
+      "output": {
+        "status": "explicit_paired",
+        "domain": {
+          "dtype": 4,
+          "quant_max": 65535,
+          "quant_min": 0,
+          "scale": 0.00034575574682094157,
+          "zero_point": 35376,
+          "scale_f32le_hex": "8d46b539",
+          "decoded_min_fp32": -12.231454849243164,
+          "decoded_max_fp32": 10.427647590637207
+        },
+        "reason": null,
+        "q_node": "quantize_per_tensor_485",
+        "dq_node": "dequantize_per_tensor_742",
+        "producer_tensor": "transpose_9",
+        "producer_consumer_domains": [
+          {
+            "node": "quantize_per_tensor_485",
+            "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+            "argument": "input",
+            "encoding": {
+              "status": "explicit_per_tensor",
+              "reason": null,
+              "domain": {
+                "dtype": 4,
+                "quant_max": 65535,
+                "quant_min": 0,
+                "scale": 0.00034575574682094157,
+                "zero_point": 35376,
+                "scale_f32le_hex": "8d46b539",
+                "decoded_min_fp32": -12.231454849243164,
+                "decoded_max_fp32": 10.427647590637207
+              }
+            },
+            "is_selected_output_quantizer": true
+          }
+        ],
+        "producer_has_multiple_explicit_domains": false,
+        "source": {
+          "q": {
+            "name": "quantize_per_tensor_485",
+            "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+            "inputs": [
+              {
+                "name": "input",
+                "arg": {
+                  "as_tensor": {
+                    "name": "transpose_9"
+                  }
+                },
+                "kind": 1
+              },
+              {
+                "name": "scale",
+                "arg": {
+                  "as_float": 0.00034575574682094157
+                },
+                "kind": 1
+              },
+              {
+                "name": "zero_point",
+                "arg": {
+                  "as_int": 35376
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_min",
+                "arg": {
+                  "as_int": 0
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_max",
+                "arg": {
+                  "as_int": 65535
+                },
+                "kind": 1
+              },
+              {
+                "name": "dtype",
+                "arg": {
+                  "as_scalar_type": 4
+                },
+                "kind": 1
+              }
+            ],
+            "outputs": [
+              {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_485"
+                }
+              }
+            ]
+          },
+          "dq": {
+            "name": "dequantize_per_tensor_742",
+            "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+            "inputs": [
+              {
+                "name": "input",
+                "arg": {
+                  "as_tensor": {
+                    "name": "quantize_per_tensor_485"
+                  }
+                },
+                "kind": 1
+              },
+              {
+                "name": "scale",
+                "arg": {
+                  "as_float": 0.00034575574682094157
+                },
+                "kind": 1
+              },
+              {
+                "name": "zero_point",
+                "arg": {
+                  "as_int": 35376
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_min",
+                "arg": {
+                  "as_int": 0
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_max",
+                "arg": {
+                  "as_int": 65535
+                },
+                "kind": 1
+              },
+              {
+                "name": "dtype",
+                "arg": {
+                  "as_scalar_type": 4
+                },
+                "kind": 1
+              }
+            ],
+            "outputs": [
+              {
+                "as_tensor": {
+                  "name": "dequantize_per_tensor_742"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "theoretical_compatibility_per_quantizer": [
+        {
+          "q_node": "quantize_per_tensor_4",
+          "status": "known_saved_qdq_domains",
+          "decoded_output_interval_contained_in_input": false,
+          "lower_decoded_overhang": 6.67572021484375e-06,
+          "upper_decoded_overhang": 3.5736684799194336,
+          "same_encoding": false,
+          "code_clipping_note": "Decoded endpoints are not clipping onsets; exact code-grid simulation is separate."
+        }
+      ],
+      "native_finalized_encodings": null,
+      "native_encoding_reason": "Saved QDQ metadata only, not native finalized/fused tensors or all48 native wrappers."
+    },
+    {
+      "state_index": 15,
+      "layer": 15,
+      "kind": "key_cache_update",
+      "input_index": 18,
+      "output_index": 16,
+      "input_name": "states_15",
+      "output_name": "dequantize_per_tensor_2524",
+      "input_shape": [
+        1,
+        2,
+        256,
+        4095
+      ],
+      "output_shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "input_tensor_metadata": {
+        "dtype": 7,
+        "sizes": [
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 2
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 4095
+          }
+        ],
+        "requires_grad": false,
+        "device": {
+          "type": "cpu",
+          "index": null
+        },
+        "strides": [
+          {
+            "as_int": 2096640
+          },
+          {
+            "as_int": 1048320
+          },
+          {
+            "as_int": 4095
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "storage_offset": {
+          "as_int": 0
+        },
+        "layout": 7
+      },
+      "output_tensor_metadata": {
+        "dtype": 7,
+        "sizes": [
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 2
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "requires_grad": false,
+        "device": {
+          "type": "cpu",
+          "index": null
+        },
+        "strides": [
+          {
+            "as_int": 512
+          },
+          {
+            "as_int": 256
+          },
+          {
+            "as_int": 1
+          },
+          {
+            "as_int": 1
+          }
+        ],
+        "storage_offset": {
+          "as_int": 0
+        },
+        "layout": 7
+      },
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "input": {
+        "status": "unique",
+        "unique_domain": {
+          "dtype": 4,
+          "quant_max": 65535,
+          "quant_min": 0,
+          "scale": 0.00027434100047685206,
+          "zero_point": 32369,
+          "scale_f32le_hex": "6dd58f39",
+          "decoded_min_fp32": -8.880144119262695,
+          "decoded_max_fp32": 9.098793983459473
+        },
+        "reason": null,
+        "quantizers": [
+          {
+            "q_node": "quantize_per_tensor_16",
+            "encoding": {
+              "status": "explicit_per_tensor",
+              "reason": null,
+              "domain": {
+                "dtype": 4,
+                "quant_max": 65535,
+                "quant_min": 0,
+                "scale": 0.00027434100047685206,
+                "zero_point": 32369,
+                "scale_f32le_hex": "6dd58f39",
+                "decoded_min_fp32": -8.880144119262695,
+                "decoded_max_fp32": 9.098793983459473
+              }
+            },
+            "branches": [
+              {
+                "dq_node": "dequantize_per_tensor_139",
+                "encoding": {
+                  "status": "explicit_per_tensor",
+                  "reason": null,
+                  "domain": {
+                    "dtype": 4,
+                    "quant_max": 65535,
+                    "quant_min": 0,
+                    "scale": 0.00027434100047685206,
+                    "zero_point": 32369,
+                    "scale_f32le_hex": "6dd58f39",
+                    "decoded_min_fp32": -8.880144119262695,
+                    "decoded_max_fp32": 9.098793983459473
+                  }
+                },
+                "q_dq_domains_equal": true,
+                "value_consumers": [
+                  {
+                    "node": "cat_34",
+                    "target": "torch.ops.aten.cat.default",
+                    "argument": "tensors"
+                  }
+                ],
+                "source": {
+                  "name": "dequantize_per_tensor_139",
+                  "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+                  "inputs": [
+                    {
+                      "name": "input",
+                      "arg": {
+                        "as_tensor": {
+                          "name": "quantize_per_tensor_16"
+                        }
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "scale",
+                      "arg": {
+                        "as_float": 0.00027434100047685206
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "zero_point",
+                      "arg": {
+                        "as_int": 32369
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "quant_min",
+                      "arg": {
+                        "as_int": 0
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "quant_max",
+                      "arg": {
+                        "as_int": 65535
+                      },
+                      "kind": 1
+                    },
+                    {
+                      "name": "dtype",
+                      "arg": {
+                        "as_scalar_type": 4
+                      },
+                      "kind": 1
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "as_tensor": {
+                        "name": "dequantize_per_tensor_139"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "source": {
+              "name": "quantize_per_tensor_16",
+              "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+              "inputs": [
+                {
+                  "name": "input",
+                  "arg": {
+                    "as_tensor": {
+                      "name": "states_15"
+                    }
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "scale",
+                  "arg": {
+                    "as_float": 0.00027434100047685206
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "zero_point",
+                  "arg": {
+                    "as_int": 32369
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "quant_min",
+                  "arg": {
+                    "as_int": 0
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "quant_max",
+                  "arg": {
+                    "as_int": 65535
+                  },
+                  "kind": 1
+                },
+                {
+                  "name": "dtype",
+                  "arg": {
+                    "as_scalar_type": 4
+                  },
+                  "kind": 1
+                }
+              ],
+              "outputs": [
+                {
+                  "as_tensor": {
+                    "name": "quantize_per_tensor_16"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "other_value_uses": [],
+        "shape_only_uses": []
+      },
+      "output": {
+        "status": "explicit_paired",
+        "domain": {
+          "dtype": 4,
+          "quant_max": 65535,
+          "quant_min": 0,
+          "scale": 0.0003006155020557344,
+          "zero_point": 35268,
+          "scale_f32le_hex": "ee9b9d39",
+          "decoded_min_fp32": -10.602108001708984,
+          "decoded_max_fp32": 9.098729133605957
+        },
+        "reason": null,
+        "q_node": "quantize_per_tensor_1904",
+        "dq_node": "dequantize_per_tensor_2524",
+        "producer_tensor": "transpose_42",
+        "producer_consumer_domains": [
+          {
+            "node": "quantize_per_tensor_1904",
+            "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+            "argument": "input",
+            "encoding": {
+              "status": "explicit_per_tensor",
+              "reason": null,
+              "domain": {
+                "dtype": 4,
+                "quant_max": 65535,
+                "quant_min": 0,
+                "scale": 0.0003006155020557344,
+                "zero_point": 35268,
+                "scale_f32le_hex": "ee9b9d39",
+                "decoded_min_fp32": -10.602108001708984,
+                "decoded_max_fp32": 9.098729133605957
+              }
+            },
+            "is_selected_output_quantizer": true
+          }
+        ],
+        "producer_has_multiple_explicit_domains": false,
+        "source": {
+          "q": {
+            "name": "quantize_per_tensor_1904",
+            "target": "torch.ops.quantized_decomposed.quantize_per_tensor.default",
+            "inputs": [
+              {
+                "name": "input",
+                "arg": {
+                  "as_tensor": {
+                    "name": "transpose_42"
+                  }
+                },
+                "kind": 1
+              },
+              {
+                "name": "scale",
+                "arg": {
+                  "as_float": 0.0003006155020557344
+                },
+                "kind": 1
+              },
+              {
+                "name": "zero_point",
+                "arg": {
+                  "as_int": 35268
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_min",
+                "arg": {
+                  "as_int": 0
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_max",
+                "arg": {
+                  "as_int": 65535
+                },
+                "kind": 1
+              },
+              {
+                "name": "dtype",
+                "arg": {
+                  "as_scalar_type": 4
+                },
+                "kind": 1
+              }
+            ],
+            "outputs": [
+              {
+                "as_tensor": {
+                  "name": "quantize_per_tensor_1904"
+                }
+              }
+            ]
+          },
+          "dq": {
+            "name": "dequantize_per_tensor_2524",
+            "target": "torch.ops.quantized_decomposed.dequantize_per_tensor.default",
+            "inputs": [
+              {
+                "name": "input",
+                "arg": {
+                  "as_tensor": {
+                    "name": "quantize_per_tensor_1904"
+                  }
+                },
+                "kind": 1
+              },
+              {
+                "name": "scale",
+                "arg": {
+                  "as_float": 0.0003006155020557344
+                },
+                "kind": 1
+              },
+              {
+                "name": "zero_point",
+                "arg": {
+                  "as_int": 35268
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_min",
+                "arg": {
+                  "as_int": 0
+                },
+                "kind": 1
+              },
+              {
+                "name": "quant_max",
+                "arg": {
+                  "as_int": 65535
+                },
+                "kind": 1
+              },
+              {
+                "name": "dtype",
+                "arg": {
+                  "as_scalar_type": 4
+                },
+                "kind": 1
+              }
+            ],
+            "outputs": [
+              {
+                "as_tensor": {
+                  "name": "dequantize_per_tensor_2524"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "theoretical_compatibility_per_quantizer": [
+        {
+          "q_node": "quantize_per_tensor_16",
+          "status": "known_saved_qdq_domains",
+          "decoded_output_interval_contained_in_input": false,
+          "lower_decoded_overhang": 1.721963882446289,
+          "upper_decoded_overhang": 0.0,
+          "same_encoding": false,
+          "code_clipping_note": "Decoded endpoints are not clipping onsets; exact code-grid simulation is separate."
+        }
+      ],
+      "native_finalized_encodings": null,
+      "native_encoding_reason": "Saved QDQ metadata only, not native finalized/fused tensors or all48 native wrappers."
+    }
+  ],
+  "preexisting_observations": {
+    "qdq_p0": {
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/observations/qdq_p0.json",
+        "bytes": 89596,
+        "sha256": "c7ee6f368e2e4e64f4ebeca818ec7f3f8b8d0551d1d520de7d4adee568301958"
+      },
+      "selected_preexisting_rows": [
+        {
+          "state_index": 3,
+          "kind": "key_cache_update",
+          "layer": 3,
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "values": 512,
+          "finite_values": 512,
+          "tensor_f32le_sha256": "91cb79e0ff608853ab1cbe5143f3c59af1d144636d3b4eecccb94a05e692df0c",
+          "min_fp32": -10.368523597717285,
+          "max_fp32": 10.028990745544434,
+          "positive_zero_count": 0,
+          "negative_zero_count": 0,
+          "own_output_domain": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 0,
+            "max_abs_roundtrip_change_fp64": 0.0,
+            "first_clipped_examples": []
+          },
+          "next_input_quantizers": [
+            {
+              "q_node": "quantize_per_tensor_4",
+              "coverage": {
+                "status": "simulated_fp32_qdq_on_saved_values",
+                "finite_values": 512,
+                "below_decoded_minimum": 0,
+                "above_decoded_maximum": 1,
+                "lower_code_clipped": 0,
+                "upper_code_clipped": 1,
+                "code_clipped_total": 1,
+                "decoded_bit_changes": 512,
+                "max_abs_roundtrip_change_fp64": 3.17501163482666,
+                "first_clipped_examples": [
+                  {
+                    "flat_index": 280,
+                    "input_fp32": 10.028990745544434,
+                    "unclamped_code": 76437.0,
+                    "scalar_decoded_fp32": 6.853979110717773,
+                    "output_coordinate": [
+                      0,
+                      1,
+                      24,
+                      0
+                    ],
+                    "next_input_coordinate": [
+                      0,
+                      1,
+                      24,
+                      0
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+          "carry_transport": "write_new_token_at_position_axis_3",
+          "insert_position": 0,
+          "hypothetical_next_call_position": 1
+        },
+        {
+          "state_index": 15,
+          "kind": "key_cache_update",
+          "layer": 15,
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "values": 512,
+          "finite_values": 512,
+          "tensor_f32le_sha256": "b21138cc8db0421e0d2b35b7f2c202146abd7d9976259b1c737617298f19fc67",
+          "min_fp32": -3.6173062324523926,
+          "max_fp32": 4.012916564941406,
+          "positive_zero_count": 0,
+          "negative_zero_count": 0,
+          "own_output_domain": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 0,
+            "max_abs_roundtrip_change_fp64": 0.0,
+            "first_clipped_examples": []
+          },
+          "next_input_quantizers": [
+            {
+              "q_node": "quantize_per_tensor_16",
+              "coverage": {
+                "status": "simulated_fp32_qdq_on_saved_values",
+                "finite_values": 512,
+                "below_decoded_minimum": 0,
+                "above_decoded_maximum": 0,
+                "lower_code_clipped": 0,
+                "upper_code_clipped": 0,
+                "code_clipped_total": 0,
+                "decoded_bit_changes": 512,
+                "max_abs_roundtrip_change_fp64": 0.00013709068298339844,
+                "first_clipped_examples": []
+              }
+            }
+          ],
+          "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+          "carry_transport": "write_new_token_at_position_axis_3",
+          "insert_position": 0,
+          "hypothetical_next_call_position": 1
+        }
+      ]
+    },
+    "qnn_p0": {
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/observations/qnn_p0.json",
+        "bytes": 91039,
+        "sha256": "4f13250c934a041135d2c7ff627005f5e4d1b1df68edfae51243ab35f59b0014"
+      },
+      "selected_preexisting_rows": [
+        {
+          "state_index": 3,
+          "kind": "key_cache_update",
+          "layer": 3,
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "values": 512,
+          "finite_values": 512,
+          "tensor_f32le_sha256": "fd9681e1414905881c1328b330ed588a03822136749c76bc856fbce6a92dcb0a",
+          "min_fp32": -10.255806922912598,
+          "max_fp32": 10.194262504577637,
+          "positive_zero_count": 1,
+          "negative_zero_count": 0,
+          "own_output_domain": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 414,
+            "max_abs_roundtrip_change_fp64": 9.5367431640625e-07,
+            "first_clipped_examples": []
+          },
+          "next_input_quantizers": [
+            {
+              "q_node": "quantize_per_tensor_4",
+              "coverage": {
+                "status": "simulated_fp32_qdq_on_saved_values",
+                "finite_values": 512,
+                "below_decoded_minimum": 0,
+                "above_decoded_maximum": 1,
+                "lower_code_clipped": 0,
+                "upper_code_clipped": 1,
+                "code_clipped_total": 1,
+                "decoded_bit_changes": 511,
+                "max_abs_roundtrip_change_fp64": 3.3402833938598633,
+                "first_clipped_examples": [
+                  {
+                    "flat_index": 280,
+                    "input_fp32": 10.194262504577637,
+                    "unclamped_code": 77005.0,
+                    "scalar_decoded_fp32": 6.853979110717773,
+                    "output_coordinate": [
+                      0,
+                      1,
+                      24,
+                      0
+                    ],
+                    "next_input_coordinate": [
+                      0,
+                      1,
+                      24,
+                      0
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+          "carry_transport": "write_new_token_at_position_axis_3",
+          "insert_position": 0,
+          "hypothetical_next_call_position": 1
+        },
+        {
+          "state_index": 15,
+          "kind": "key_cache_update",
+          "layer": 15,
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "values": 512,
+          "finite_values": 512,
+          "tensor_f32le_sha256": "4ab3a49837c6a14b2b01a859b72fa99c144961e3147321f3b1b04453c5102d8a",
+          "min_fp32": -3.429722309112549,
+          "max_fp32": 3.55117130279541,
+          "positive_zero_count": 1,
+          "negative_zero_count": 0,
+          "own_output_domain": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 384,
+            "max_abs_roundtrip_change_fp64": 7.152557373046875e-07,
+            "first_clipped_examples": []
+          },
+          "next_input_quantizers": [
+            {
+              "q_node": "quantize_per_tensor_16",
+              "coverage": {
+                "status": "simulated_fp32_qdq_on_saved_values",
+                "finite_values": 512,
+                "below_decoded_minimum": 0,
+                "above_decoded_maximum": 0,
+                "lower_code_clipped": 0,
+                "upper_code_clipped": 0,
+                "code_clipped_total": 0,
+                "decoded_bit_changes": 511,
+                "max_abs_roundtrip_change_fp64": 0.00013709068298339844,
+                "first_clipped_examples": []
+              }
+            }
+          ],
+          "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+          "carry_transport": "write_new_token_at_position_axis_3",
+          "insert_position": 0,
+          "hypothetical_next_call_position": 1
+        }
+      ]
+    }
+  },
+  "new_tensor_deserializations": 0,
+  "control_limit": "state15 matches K geometry/transport but has unequal read/write domains; clean retained samples are not a no-clipping guarantee"
+}

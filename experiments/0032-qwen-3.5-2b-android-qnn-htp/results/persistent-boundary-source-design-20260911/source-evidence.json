@@ -1,0 +1,476 @@
+{
+  "sources": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/reproduction/compile.sh",
+      "bytes": 1240,
+      "sha256": "a9795ceeda547ae28bcc90bfa6d7d4bc67a15831f7e40d812721954ca3a611fc",
+      "role": "historical full-model route",
+      "passages": [
+        {
+          "start_line": 5,
+          "end_line": 19,
+          "text": "D=\"$EXP/.local/diagnosis/restart-20260910T083327Z\"\nexport PATH=\"$ROOT/artifacts/tools/flatbuffers-25.12.19:$PATH\"\nexport QNN_SDK_ROOT=/home/moritz/opt/qairt/2.49.0.260730\nexport PYTHONPATH=\"$QNN_SDK_ROOT/lib/python:$EXP/.local/executorch:$ROOT\"\nexport LD_LIBRARY_PATH=\"$QNN_SDK_ROOT/lib/x86_64-linux-clang:$ROOT/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/sdk/libcxx-14.0.0\"\nexport OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 PYTHONUNBUFFERED=1\npython \"$D/guard.py\" \"$D/01-hidden-compile\" \\\n nice -n 15 ionice -c 2 -n 7 \"$ROOT/artifacts/venv-executorch-1.2/bin/python\" \"$EXP/tools/compile_exact_qnn.py\" \\\n --checkpoint \"$EXP/.local/qwen35-2b-meta.pt\" \\\n --params \"$EXP/.local/executorch/examples/models/qwen3_5/config/2b_config.json\" \\\n --token-ids \"$EXP/protocol/token-ids/short.int32le\" \\\n --context 4096 --shards 4 --diagnostic-hidden-states --histogram-activations \\\n --qdq-output \"$D/01-hidden-compile/diagnostic-w4a16-qdq.pt2\" \\\n --output \"$D/01-hidden-compile/diagnostic-w4a16-qnn.pte\" \\\n --result \"$D/01-hidden-compile/compile-result.json\""
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/compile_exact_qnn.py",
+      "bytes": 28062,
+      "sha256": "469113e43c3077a894f7e54318fe6faf2e0257054dd076d870a4d44c750fba90",
+      "role": "TagQuantIO disabled, sharding and lowering",
+      "passages": [
+        {
+          "start_line": 528,
+          "end_line": 563,
+          "text": "\n    passes_job = get_capture_program_passes()\n    dep_table = get_passes_dependency_for_capture_program()\n    if args.float_recurrence or args.fp16_recurrence_island:\n        for pass_type, setting in passes_job.items():\n            if pass_type.__name__ == \"RecomposeRmsNorm\":\n                setting[\"activate\"] = False\n    if args.shards > 1:\n        SplitGraph, setting = model_sharding.get_split_graph_pass(\n            model.n_layers, shares=args.shards\n        )\n        passes_job[SplitGraph] = setting\n        dep_table[SplitGraph] = [FoldQDQ]\n        dep_table[TagQuantIO] = [SplitGraph]\n    passes_job[TagQuantIO][QCOM_PASS_ACTIVATE_KEY] = False\n\n    compile_spec = generate_qnn_executorch_compiler_spec(\n        soc_model=get_soc_to_chipset_map()[\"SM8550\"],\n        backend_options=generate_htp_compiler_spec(\n            use_fp16=(args.float_recurrence or args.fp16_recurrence_island),\n            use_multi_contexts=args.shards > 1,\n        ),\n        debug=True,\n        saver=False,\n    )\n    phase[\"qnn_compile_start_unix_ns\"] = time.time_ns()\n    edge = to_edge_transform_and_lower_to_qnn(\n        qdq,\n        export_inputs,\n        compile_spec,\n        constant_methods=model.get_metadata(),\n        dep_table=dep_table,\n        passes_job=passes_job,\n        skip_node_id_set=set(),\n        skip_node_op_set={\"llama.fallback.default\"},\n        convert_linear_to_conv2d=True,"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/source/replay_saved_qdq.py.txt",
+      "bytes": 1135,
+      "sha256": "901b8cabb015512d2184a5134bab95c41bb20bcd0bea15f7a85b476f09300726",
+      "role": "float cache insertion; not replacement or shifting",
+      "passages": [
+        {
+          "start_line": 1,
+          "end_line": 19,
+          "text": "def advance_state(config, states, outputs, position: int) -> None:\n    n = config.n_layers\n    if len(outputs) < 1 + 2 * n:\n        raise ValueError(\"Missing required state outputs\")\n    for layer, kind in enumerate(config.layer_types):\n        a, b = states[layer], states[n + layer]\n        next_a, next_b = outputs[1 + layer], outputs[1 + n + layer]\n        if kind == \"linear_attention\":\n            if next_a.shape != a.shape or next_b.shape != b.shape:\n                raise ValueError(f\"Recurrent/convolution state geometry mismatch: layer {layer}\")\n            # Clone even if outputs alias inputs or reusable runtime buffers.\n            states[layer] = next_a.detach().clone()\n            states[n + layer] = next_b.detach().clone()\n        elif kind == \"full_attention\":\n            if next_a.shape != a[..., :1].shape or next_b.shape != b[:, :, :1, :].shape:\n                raise ValueError(f\"KV update geometry mismatch: layer {layer}\")\n            a[..., position].copy_(next_a[..., 0])\n            b[:, :, position, :].copy_(next_b[:, :, 0, :])\n        else:"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/source/qwen35_qnn_model.py.txt",
+      "bytes": 3828,
+      "sha256": "581640f1ff860f5286bfbea6473f13345e12bd4b51a46dfa7d0d14df20dca5ba",
+      "role": "K update versus full attention cache consumer",
+      "passages": [
+        {
+          "start_line": 10,
+          "end_line": 35,
+          "text": "        batch, seq, _ = hidden.shape\n        q_and_gate = self.wq(hidden).view(batch, seq, self.n_heads, 2 * self.head_dim)\n        query, gate = torch.chunk(q_and_gate, 2, dim=-1)\n        key = self.wk(hidden).view(batch, seq, self.n_kv_heads, self.head_dim)\n        value = self.wv(hidden).view(batch, seq, self.n_kv_heads, self.head_dim)\n        query = self.q_norm_fn(query).transpose(1, 2)\n        key = self.k_norm_fn(key).transpose(1, 2)\n        value = value.transpose(1, 2)\n        query = _apply_rope(query, cos, sin, self.rotary_dim)\n        key = _apply_rope(key, cos, sin, self.rotary_dim)\n        key_t = key.transpose(2, 3)\n        all_key = torch.cat((key_cache, key_t), dim=-1)\n        all_value = torch.cat((value_cache, value), dim=2)\n        repeated_key = _repeat_kv(all_key, self.n_heads // self.n_kv_heads)\n        repeated_value = _repeat_kv(all_value, self.n_heads // self.n_kv_heads)\n        scores = torch.matmul(query, repeated_key) / math.sqrt(self.head_dim)\n        scores = scores + attention_mask\n        probs = F.softmax(scores.float(), dim=-1).to(query.dtype)\n        output = torch.matmul(probs, repeated_value)\n        output = output.transpose(1, 2).reshape(batch, seq, -1)\n        output = output * torch.sigmoid(gate.reshape(batch, seq, -1))\n        output = self.wo(output)\n        if self.output_new_cache_only:\n            return output, key_t, value\n        return output, all_key, all_value\n"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/annotate_quant_attrs.py",
+      "bytes": 5773,
+      "sha256": "44dccc4e4a391b5a683aa58e9091a02b8d5bcd5a5a92e85863e45ded057d30a3",
+      "role": "annotation and per-consumer requantization",
+      "passages": [
+        {
+          "start_line": 48,
+          "end_line": 60,
+          "text": "    ):\n\n        if quant_node.args[0].target == operator.getitem:\n            getitem_node = quant_node.args[0]\n            getitem_node.meta[QCOM_QUANT_ATTRS] = quant_attrs\n            source_n = getitem_node.args[0]\n        else:\n            source_n = quant_node.args[0]\n        source_n.meta[QCOM_QUANT_ATTRS] = quant_attrs\n\n    def _expand(self, tensor, dim, axis) -> torch.Tensor:\n        tensor = tensor[(...,) + (None,) * (dim - 1)]\n        order = torch.arange(dim).tolist()"
+        },
+        {
+          "start_line": 84,
+          "end_line": 129,
+          "text": "        # node1 -> q_ui8 (n) -> dq_ui8 -> q_int32 -> dq_int32 -> node2 -> ....\n        # We store {node2: quant_attr in dq_int32} in node1.meta\n        if n.target in q_ops and n.args[0].target not in dq_ops:\n            # for some fixed scale op, there is no need to requantize it\n            if n.args[0].target in self.skip_requant_allowlist:\n                return\n\n            dq_nodes = self._find_last_dq_nodes(n)\n            q_attrs = get_quant_attrs(self.edge_program, n)\n            for dq_node in dq_nodes:\n                dq_attrs = get_quant_attrs(self.edge_program, dq_node)\n                # TODO: Store multiple pairs of requantize attributes when we have an op builder\n                # that has multiple outputs that requires quant attributes.\n\n                # Determine if requantization is needed based on configuration and attribute mismatch.\n                is_requant_needed = False\n                if self.skip_advanced_requant:\n                    # In skip_advanced_requant mode, only consider requant if dtypes differ.\n                    if q_attrs[QCOM_DTYPE] != dq_attrs[QCOM_DTYPE]:\n                        is_requant_needed = True\n                else:\n                    # In full requant mode, consider requant if any key attribute differs.\n                    # This aims to improve accuracy by adjusting scale, zero_point, etc.\n                    # Users can disable this if it causes regressions.\n                    if any(\n                        q_attrs[attr] != dq_attrs[attr]\n                        for attr in [\n                            QCOM_SCALE,\n                            QCOM_ZERO_POINT,\n                            QCOM_QUANT_MIN,\n                            QCOM_QUANT_MAX,\n                            QCOM_DTYPE,\n                        ]\n                    ):\n                        is_requant_needed = True\n\n                if is_requant_needed:\n                    dq_attrs[QCOM_ENCODING] = q_attrs[QCOM_ENCODING]\n                    user_node = list(dq_node.users)[0]\n                    n.args[0].meta.setdefault(QCOM_REQUANTIZE, {})\n                    n.args[0].meta[QCOM_REQUANTIZE][user_node.name] = dq_attrs\n\n    def _annotate_quant_attrs(\n        self, graph_module: torch.fx.GraphModule\n    ) -> torch.fx.GraphModule:\n        for n in graph_module.graph.nodes:"
+        }
+      ],
+      "matches_prior_selected_python_pin": true
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/qnn_pass_manager.py",
+      "bytes": 10023,
+      "sha256": "10828a8683c2dc1da573e9d635d36c832977a4ded9688a2153c27a65fd1321c4",
+      "role": "preprocess ordering",
+      "passages": [
+        {
+          "start_line": 253,
+          "end_line": 273,
+          "text": "    def transform_for_preprocess_pipeline(\n        self, exported_program: ExportedProgram, use_mha2sha=False\n    ):\n        self.add_pass(FoldQDQ(exported_program, force_fold=True))\n        if use_mha2sha:\n            self.add_pass(ConvertMhaToSha(exported_program))\n        self.add_pass(InsertRequantize())\n        self.add_pass(InsertIOQDQ(exported_program))\n        self.add_pass(LayoutTransform(exported_program, insert_permute=True))\n        self.add_pass(FuseConsecutiveCast())\n        self.add_pass(FuseConsecutiveTranspose())\n        self._transform(exported_program.graph_module)\n        # Update inputs_to_buffers and buffers_to_mutate in graph signature for mutable buffer\n        # Since I/O will be inserted Q/DQ, it results in failed to mapping output node names and buffer\n        exported_program._graph_signature = _get_updated_graph_signature(\n            exported_program.graph_signature,\n            exported_program.graph_module,\n        )\n        return exported_program.graph_module"
+        }
+      ],
+      "matches_prior_selected_python_pin": true
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/insert_io_qdq.py",
+      "bytes": 5912,
+      "sha256": "df8fb812950e7d588aed156acfec759dfab15cafec041f0dacf4e2b750022be4",
+      "role": "move input attrs onto inserted Q, insert output DQ",
+      "passages": [
+        {
+          "start_line": 78,
+          "end_line": 90,
+          "text": "            \"call_function\",\n            target,\n            (node, *self._ceate_args(target, quant_attrs)),\n        )\n        meta_val = node.meta[\"val\"]\n        if target in self.q_dq_map:\n            inserted_node.meta[QCOM_QUANT_ATTRS] = node.meta.pop(QCOM_QUANT_ATTRS)\n            meta_val = meta_val.to(quant_attrs[\"dtype\"])\n\n        inserted_node.meta[\"val\"] = meta_val\n        return inserted_node\n\n    def _insert_quant_node("
+        },
+        {
+          "start_line": 124,
+          "end_line": 151,
+          "text": "                continue\n\n            # insert q after input or fold mix_quantization dq if applicable\n            if (\n                n.op == \"placeholder\"\n                and n.meta.get(QCOM_QUANT_ATTRS)\n                and (\n                    not is_parameter(n, self.edge_program)\n                    or is_mutable_buffer_input(n, self.edge_program)\n                )\n            ):\n                self._insert_quant_node(\n                    graph_module, n, n.meta[QCOM_QUANT_ATTRS][QCOM_ENCODING]\n                )\n\n            # insert dq before output or fold mix_quantization q if applicable\n            users = list(n.users.keys())\n            if n.meta.get(QCOM_QUANT_ATTRS) and any(\n                user.op == \"output\" for user in users\n            ):\n                self._insert_dequant_node(\n                    graph_module,\n                    n,\n                    self.q_dq_map[n.meta[QCOM_QUANT_ATTRS][QCOM_ENCODING]],\n                )\n\n    def call(self, graph_module: torch.fx.GraphModule):\n        self._insert(graph_module)"
+        }
+      ],
+      "matches_prior_selected_python_pin": true
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/insert_requantize.py",
+      "bytes": 4116,
+      "sha256": "e4e7dd2fce0385da68c7247768f9f40e2f83f2fb17cbab8efebc19bf5c29d489",
+      "role": "per-consumer Convert insertion",
+      "passages": [
+        {
+          "start_line": 56,
+          "end_line": 82,
+          "text": "        graph_module: torch.fx.GraphModule,\n        node: torch.fx.node,\n        quant_attr: Dict,\n        user_nodes: List[str],\n    ):\n        with graph_module.graph.inserting_after(node):\n            users = list(node.users.keys())\n            inserted_n = graph_module.graph.create_node(\n                \"call_function\",\n                exir_ops.edge.aten._to_copy.default,\n                (node,),\n            )\n            inserted_n.meta[\"val\"] = node.meta[\"val\"]\n            inserted_n.meta[QCOM_QUANT_ATTRS] = quant_attr\n\n            # create node and replace input\n            if node.meta.get(QCOM_QUANTIZED_IO):\n                inserted_n.meta[QCOM_QUANTIZED_IO] = node.meta[QCOM_QUANTIZED_IO]\n\n            for user in filter(lambda u: u.name in user_nodes, users):\n                user.replace_input_with(node, inserted_n)\n\n    # TODO: Implement this function when we have an op with\n    # multiple outputs that requires quant attributes.\n    def _multi_output_annotation(self) -> None:\n        raise NotImplementedError(\"requant is not implemented for multi output yet\")\n"
+        },
+        {
+          "start_line": 90,
+          "end_line": 102,
+          "text": "\n        for hashable_quant_attr, user_nodes in group_quant_attr_dict.items():\n            user_nodes_copy = user_nodes.copy()\n            self._insert_to_copy(gm, n, dict(hashable_quant_attr), user_nodes_copy)\n\n    def _insert(self, graph_module: torch.fx.GraphModule) -> torch.fx.GraphModule:\n        for n in graph_module.graph.nodes:\n            if QCOM_REQUANTIZE in n.meta:\n                (\n                    self._single_output_annotation(graph_module, n)\n                    if isinstance(\n                        n.meta[\"val\"], torch._subclasses.fake_tensor.FakeTensor\n                    )"
+        }
+      ],
+      "matches_prior_selected_python_pin": true
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/utils.py",
+      "bytes": 5084,
+      "sha256": "856fa40d00a8311f8e3170e766bbbaced1550408e44d97b9f8b5b955dc61aba0",
+      "role": "UINT16 carrier deduction",
+      "passages": [
+        {
+          "start_line": 146,
+          "end_line": 161,
+          "text": "def deduce_dtype(\n    tensor: torch.Tensor, quant_infos: Optional[Dict] = None\n) -> torch.dtype:\n    if quant_infos:\n        quant_range = quant_infos[\"quant_max\"] - quant_infos[\"quant_min\"]\n        unsigned = quant_infos[\"quant_min\"] >= 0\n        if quant_range <= torch.iinfo(torch.int8).max - torch.iinfo(torch.int8).min:\n            return torch.uint8 if unsigned else torch.int8\n\n        elif quant_range <= torch.iinfo(torch.int16).max - torch.iinfo(torch.int16).min:\n            return torch.uint16 if unsigned else torch.int16\n\n        return quant_infos[\"dtype\"]\n\n    return tensor.dtype"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/node_visitor.py",
+      "bytes": 20620,
+      "sha256": "121f62e0ed598d63f5e4919593759a017df872547e1b2004f6281290b31f5459",
+      "role": "encoding sign, tensor type/name/dtype and fake-input wrappers",
+      "passages": [
+        {
+          "start_line": 51,
+          "end_line": 60,
+          "text": "QNN_QUANT_TYPE_MAP = {\n    torch.int8: PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_SFIXED_POINT_8,\n    torch.int16: PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_SFIXED_POINT_16,\n    torch.int32: PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_SFIXED_POINT_32,\n    # Note that there is no int64 tensor data type in Qnn.\n    torch.int64: PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_UNDEFINED,\n    torch.uint8: PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_8,\n    torch.uint16: PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16,\n}\nQNN_TENSOR_TYPE_MAP = {"
+        },
+        {
+          "start_line": 250,
+          "end_line": 296,
+          "text": "    def make_qnn_per_tensor_config(self, quant_attrs: Dict):\n        quant_config = copy.deepcopy(quant_attrs)\n        # check Qnn_ScaleOffset_t in QNN/include/QnnTypes.h\n        quant_config[QCOM_OFFSET] = -quant_attrs[QCOM_ZERO_POINT]\n        # special case for 4 bits\n        if (\n            quant_config[QCOM_DTYPE] == torch.int8\n            and quant_config[QCOM_QUANT_MAX] - quant_config[QCOM_QUANT_MIN] <= 15\n        ):\n            quant_config[QCOM_BITWIDTH] = 4\n            return (\n                PyQnnManager.Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_BW_SCALE_OFFSET,\n                quant_config,\n            )\n        return (\n            PyQnnManager.Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET,\n            quant_config,\n        )\n\n    def get_quant_encoding_conf(\n        self, node: torch.fx.Node, target_node: torch.fx.Node\n    ) -> Tuple[Any, Dict]:\n        if not node.meta.get(QCOM_QUANT_ATTRS, None):\n            return (\n                PyQnnManager.Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_UNDEFINED,\n                {},\n            )\n        is_input_tensor = node != target_node\n        quant_attrs = (\n            node.meta[QCOM_REQUANTIZE][target_node.name]\n            if QCOM_REQUANTIZE in node.meta\n            and is_input_tensor\n            and target_node.name in node.meta[QCOM_REQUANTIZE]\n            else node.meta[QCOM_QUANT_ATTRS]\n        )\n        # TODO: refactor this when target could be correctly detected\n        per_block_encoding = {\n            exir_ops.edge.torchao.quantize_affine.default,\n            exir_ops.edge.torchao.dequantize_affine.default,\n        }\n        if quant_attrs[QCOM_ENCODING] in per_block_encoding:\n            return self.make_qnn_per_block_config(node, quant_attrs)\n\n        if quant_attrs[QCOM_ENCODING] in PER_CHANNEL_ENCODING:\n            return self.make_qnn_per_channel_config(node, quant_attrs)\n\n        return self.make_qnn_per_tensor_config(quant_attrs)"
+        },
+        {
+          "start_line": 318,
+          "end_line": 344,
+          "text": "            mask = torch.full(tensor.size(), 0x0F, dtype=torch.int8)\n            tensor = torch.bitwise_and(mask, tensor)\n        return tensor\n\n    def get_tensor_type(\n        self,\n        node: torch.fx.Node,\n        tensor_type: PyQnnManager.Qnn_TensorType_t,\n    ) -> PyQnnManager.Qnn_TensorType_t:\n        is_input = is_graph_input(node, self.edge_program) or is_mutable_buffer_input(\n            node, self.edge_program\n        )\n        is_output = is_graph_output(node)\n        # handle logic for input/output tensors\n        if is_input or is_output:\n            assert (\n                node in self.external_ids\n            ), f\"Node {node}, is_input: {is_input}, is_output: {is_output}, ext_ids: {self.external_ids.keys()}\"\n            if is_input:\n                return PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_APP_WRITE\n            if is_output:\n                return PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_APP_READ\n\n        if is_parameter(node, self.edge_program):\n            return PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_STATIC\n        # dump all tensor, set to app read, and we only dump native tensors\n        if ("
+        },
+        {
+          "start_line": 353,
+          "end_line": 360,
+          "text": "        tensor: torch.Tensor,\n        quant_config: Dict,\n    ) -> PyQnnManager.Qnn_TensorType_t:\n        if quant_config:\n            quant_config[QCOM_DTYPE] = deduce_dtype(tensor, quant_config)\n            return QNN_QUANT_TYPE_MAP[quant_config[QCOM_DTYPE]]\n\n        return QNN_TENSOR_TYPE_MAP[tensor.dtype]"
+        },
+        {
+          "start_line": 379,
+          "end_line": 405,
+          "text": "        tensor_name = f\"{node.name}@{wrapper_idx}\"\n        # The `input_{id}` is utilized for sorting at runtime. Due to multiple passes in qnn_preprocess,\n        # the input order between QNN and the original graph\u2019s forward function may differ.\n        # The `mutbuf_{id}` is utilized for mapping I/O of mutable buffer at runtime.\n        # The `output_` is identified as the graph\u2019s output at runtime to prevent confusion with per_tensor_dump.\n        if is_mutable_buffer_input(node, self.edge_program):\n            fqn = self.edge_program.graph_signature.inputs_to_buffers[node.target]\n            position_index = list(\n                self.edge_program.graph_signature.buffers_to_mutate.values()\n            ).index(fqn)\n            tensor_name = f\"input_{str(self.external_ids[node])}_mutbuf_{str(position_index)}_{tensor_name}\"\n        elif is_graph_input(node, self.edge_program):\n            tensor_name = f\"input_{str(self.external_ids[node])}_{tensor_name}\"\n        elif is_mutable_buffer_output(node, self.edge_program):\n            position_index = list(\n                self.edge_program.graph_signature.buffers_to_mutate.keys()\n            ).index(node.name)\n            tensor_name = f\"output_mutbuf_{position_index}_{tensor_name}\"\n        elif is_graph_output(node):\n            tensor_name = f\"output_{tensor_name}\"\n\n        # Save this for intermediate debugger\n        # Needs idx since node like topk has 2 outputs\n        if QCOM_TENSOR_NAME in node.meta:\n            node.meta[QCOM_TENSOR_NAME][wrapper_idx] = tensor_name\n        else:\n            node.meta[QCOM_TENSOR_NAME] = {wrapper_idx: tensor_name}"
+        },
+        {
+          "start_line": 443,
+          "end_line": 490,
+          "text": "    def define_tensor(\n        self,\n        tensor_source_node: torch.fx.Node,\n        target_build_node: torch.fx.Node,\n        tensor: torch.Tensor,\n        tensor_type: PyQnnManager.Qnn_TensorType_t,\n        nodes_to_wrappers: Dict[str, Dict[int, PyQnnManager.TensorWrapper]],\n        node_name: str = None,\n        wrapper_idx: int = 0,\n    ) -> PyQnnManager.TensorWrapper:\n        \"\"\"\n        Covert torch.Tensor to TensorWrapper\n\n        Args:\n            tensor_source_node: EdgeIR Node\n            target_build_node: Current node to build\n            tensor: EdgeIR Tensor\n            tensor_type: QNN tensor type\n            nodes_to_wrappers: Set contains edge_graph values(node targets)\n        \"\"\"\n        if node_name is None:\n            node_name = tensor_source_node.name\n\n        if cached := nodes_to_wrappers[node_name].get(wrapper_idx, None):\n            return cached\n\n        tensor_name = self.get_tensor_name(tensor_source_node, wrapper_idx)\n        dims = torch.Size([1]) if len(tensor.size()) == 0 else tensor.size()\n        dynamic_dims, nominal_dims = self.get_dynamic_dimension(dims)\n        tensor_type = self.get_tensor_type(tensor_source_node, tensor_type)\n        quant_encoding, quant_configs = self.get_quant_encoding_conf(\n            tensor_source_node, target_build_node\n        )\n        dtype = self.get_data_type(tensor, quant_configs)\n        if isinstance(tensor, torch._subclasses.fake_tensor.FakeTensor):\n            tensor_wrapper = PyQnnManager.TensorWrapper(\n                tensor_name,\n                tensor_type,\n                dtype,\n                quant_encoding,\n                quant_configs,\n                len(nominal_dims),\n                nominal_dims,\n                dynamic_dims,\n                np.array([]),\n                False,\n            )\n        else:"
+        }
+      ],
+      "matches_prior_selected_python_pin": true
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/op_quantize.py",
+      "bytes": 2433,
+      "sha256": "29ed2de4c32f15d40011bd55e4c30f8f02f3f679819574074d84ffbb458e728b",
+      "role": "submitted Quantize operator",
+      "passages": [
+        {
+          "start_line": 28,
+          "end_line": 65,
+          "text": "        input_node = node.args[0]\n        input_tensor = self.get_tensor(input_node, node)\n        inp_tensor_wrapper = self.define_tensor(\n            input_node,\n            node,\n            input_tensor,\n            PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_NATIVE,\n            nodes_to_wrappers,\n        )\n        quant_input_tensors.append(inp_tensor_wrapper)\n\n        node.meta[QCOM_QUANT_ATTRS] = {QCOM_ENCODING: node.target}\n        arg_schemas = list(node.target._schema.arguments)[1:]\n        for i, arg_schema in enumerate(arg_schemas):\n            name = arg_schema.name\n            node.meta[QCOM_QUANT_ATTRS][name] = node.args[i + 1]\n\n        output_tensor = self.get_tensor(node, node)\n        output_tensor_wrapper = self.define_tensor(\n            node,\n            node,\n            output_tensor,\n            PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_NATIVE,\n            nodes_to_wrappers,\n        )\n        quant_output_tensors = [output_tensor_wrapper]\n\n        quant_op = PyQnnManager.PyQnnOpWrapper(\n            node.name,\n            QNN_OP_PACKAGE_NAME_QTI_AISW,\n            OpQuantize.op_name,\n        )\n        quant_op.AddInputTensors(quant_input_tensors)\n        quant_op.AddOutputTensors(quant_output_tensors)\n\n        return quant_op\n\n"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/op_dequantize.py",
+      "bytes": 2250,
+      "sha256": "4cbf560390f575cad442fcf8668668a0e0373798d9478bf6d6a03954880d3bf0",
+      "role": "submitted Dequantize operator",
+      "passages": [
+        {
+          "start_line": 26,
+          "end_line": 54,
+          "text": "        dequant_input_tensors = []\n        input_node = node.args[0]\n        input_tensor = self.get_tensor(input_node, node)\n        inp_tensor_wrapper = self.define_tensor(\n            input_node,\n            node,\n            input_tensor,\n            PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_NATIVE,\n            nodes_to_wrappers,\n        )\n        dequant_input_tensors.append(inp_tensor_wrapper)\n\n        output_tensor = self.get_tensor(node, node)\n        output_tensor_wrapper = self.define_tensor(\n            node,\n            node,\n            output_tensor,\n            PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_NATIVE,\n            nodes_to_wrappers,\n        )\n        dequant_output_tensors = [output_tensor_wrapper]\n\n        dequant_op = PyQnnManager.PyQnnOpWrapper(\n            node.name,\n            QNN_OP_PACKAGE_NAME_QTI_AISW,\n            OpDequantize.op_name,\n        )\n        dequant_op.AddInputTensors(dequant_input_tensors)\n        dequant_op.AddOutputTensors(dequant_output_tensors)"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/op_to.py",
+      "bytes": 5535,
+      "sha256": "ecc9196c049818a72bded7349e8fbeacde472d06d873a01e283b39272685ee30",
+      "role": "Cast versus Convert decision, not host math",
+      "passages": [
+        {
+          "start_line": 35,
+          "end_line": 77,
+          "text": "\n    def is_cast_node(self, node):\n        input_node = node.args[0]\n\n        # Not a case which has two quant node, no need to consider the convert op\n        if not all(\n            [\n                input_node.meta.get(QCOM_QUANT_ATTRS),\n                node.meta.get(QCOM_QUANT_ATTRS),\n            ]\n        ):\n            return True\n\n        input_tensor = self.get_tensor(input_node, node)\n        # Get real quant conf of input node\n        _, inp_qconfs = self.get_quant_encoding_conf(input_node, input_node)\n        inp_dtype = self.get_data_type(input_tensor, inp_qconfs)\n\n        output_tensor = self.get_tensor(node, node)\n        _, out_qconfs = self.get_quant_encoding_conf(node, node)\n        out_dtype = self.get_data_type(output_tensor, out_qconfs)\n        is_qparam_castable = (\n            lambda o1, o2, s1, s2, diff: abs(s1 - s2) < self.epsilon\n            and abs(o1 - o2) == diff\n        )\n\n        if {inp_dtype, out_dtype} == self.sufixed_8:\n            return is_qparam_castable(\n                inp_qconfs[\"offset\"],\n                out_qconfs[\"offset\"],\n                inp_qconfs[\"scale\"],\n                out_qconfs[\"scale\"],\n                self.sufixed_8_offset_diff,\n            )\n        elif {inp_dtype, out_dtype} == self.sufixed_16:\n            return is_qparam_castable(\n                inp_qconfs[\"offset\"],\n                out_qconfs[\"offset\"],\n                inp_qconfs[\"scale\"],\n                out_qconfs[\"scale\"],\n                self.sufixed_16_offset_diff,\n            )\n        return False"
+        },
+        {
+          "start_line": 145,
+          "end_line": 152,
+          "text": "        op.AddInputTensors(node_input_tensors)\n        op.AddOutputTensors([output_tensor_wrapper])\n        ops.append(op)\n\n        return ops"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/qnn_preprocess.py",
+      "bytes": 9210,
+      "sha256": "e2ac8e4ab501b73b82bb422494a463ad95aaa814cd1ec8b8c314dccf2091b98d",
+      "role": "build then Compile, no finalized internal-tensor query",
+      "passages": [
+        {
+          "start_line": 48,
+          "end_line": 73,
+          "text": "    ):\n        for node in edge_program.graph_module.graph.nodes:\n            if hasattr(node, \"meta\"):\n                # pop certain keys in meta for not affecting the passes in compilation\n                node.meta.pop(QCOM_AXIS_ORDER, \"\")\n        # QNN Delegate Specific Passes\n        graph_module = QnnPassManager().transform_for_preprocess_pipeline(\n            edge_program, use_mha2sha=use_mha2sha\n        )\n        assert graph_module is not None\n\n        nodes_to_wrappers = defaultdict(dict)\n        node_visitors = get_node_visitors(\n            edge_program,\n            enable_tensor_dump=enable_tensor_dump,\n            op_package_infos=op_package_infos,\n        )\n        py_op_wrapper_list = []\n        for node in graph_module.graph.nodes:\n            if node.op == \"call_function\":\n                logger.info(f\"Visiting: {node}, {node.target.__name__}\")\n                if node.target.__name__ in node_visitors:\n                    py_op_wrapper = node_visitors[node.target.__name__].define_node(\n                        node, nodes_to_wrappers\n                    )\n                    if py_op_wrapper is not None:"
+        },
+        {
+          "start_line": 117,
+          "end_line": 145,
+          "text": "            edge_program,\n            qnn_manager.IsTensorDump(),\n            obj_options.op_package_options.op_package_infos,\n            obj_options.use_mha2sha,\n        )\n\n        qnn_context_binary = qnn_manager.Compile(\n            qnn_manager.GetGraphNames(),\n            [[py_op_wrapper.GetOpWrapper() for py_op_wrapper in py_op_wrapper_list]],\n        )\n\n        if obj_options.saver:\n            exit(\n                f\"Record all QNN API calls from saver backend at: {obj_options.saver_output_dir}\"\n            )\n        assert len(qnn_context_binary) != 0, \"Failed to generate Qnn context binary.\"\n        qnn_manager.DestroyContext()\n        # For now, debug_handle_map is not used by QNN ExecuTorch\n        return PreprocessResult(\n            processed_bytes=bytes(qnn_context_binary),\n            debug_handle_map={},\n        )\n\n    @staticmethod\n    def preprocess_multimethod(\n        edge_programs: Dict[str, List[ExportedProgram]],\n        compile_specs: Dict[str, List[List[CompileSpec]]],\n    ) -> PreprocessResult:\n        # TODO: refactor QnnManager to consume multiple compile_spec"
+        }
+      ],
+      "matches_prior_selected_python_pin": true
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/aot/python/PyQnnManagerAdaptor.cpp",
+      "bytes": 25071,
+      "sha256": "a03828c0002105a931bf401e203e94c67aed27279c46be57bff8e24cb00f7ed3",
+      "role": "float32 scale, int32 negative zero point",
+      "passages": [
+        {
+          "start_line": 58,
+          "end_line": 63,
+          "text": "  } else if (encoding == QNN_QUANTIZATION_ENCODING_SCALE_OFFSET) {\n    float scale = quant_info[\"scale\"].cast<float>();\n    int32_t offset = quant_info[\"offset\"].cast<int32_t>();\n    quantize_param_wrapper =\n        std::make_unique<ScaleOffsetQuantizeParamsWrapper>(scale, offset);\n  } else if (encoding == QNN_QUANTIZATION_ENCODING_BLOCKWISE_EXPANSION) {"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/aot/wrappers/TensorWrapper.cpp",
+      "bytes": 7536,
+      "sha256": "9eb3f7924227887042b91ad2e3a06ff2f52a3d34a31426d81a0615a054864485",
+      "role": "buffer binding, id-only update, restore constructor",
+      "passages": [
+        {
+          "start_line": 119,
+          "end_line": 134,
+          "text": "  if (data != nullptr) {\n    QNN_TENSOR_VER_PTR(tensor_)->memType = QNN_TENSORMEMTYPE_RAW;\n    QNN_TENSOR_VER_PTR(tensor_)->clientBuf.dataSize = bytes_;\n    if (copy_data) {\n      owned_data_ = std::make_unique<char[]>(bytes_);\n      const char* src_data = static_cast<const char*>(data);\n      std::memcpy(owned_data_.get(), src_data, bytes_);\n      QNN_TENSOR_VER_PTR(tensor_)->clientBuf.data = owned_data_.get();\n    } else {\n      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)\n      QNN_TENSOR_VER_PTR(tensor_)->clientBuf.data = const_cast<void*>(data);\n    }\n  } else {\n    QNN_EXECUTORCH_LOG_WARN(\"Data pointer is nullptr\");\n  }\n  return Error::Ok;"
+        },
+        {
+          "start_line": 150,
+          "end_line": 152,
+          "text": "void TensorWrapper::UpdateQnnTensorMeta(const Qnn_Tensor_t& tensor_src) {\n  QNN_TENSOR_VER_PTR(tensor_)->id = QNN_TENSOR_VER_PTR(tensor_src)->id;\n}"
+        },
+        {
+          "start_line": 225,
+          "end_line": 239,
+          "text": "      QNN_TENSOR_VER_PTR(tensor)->rank,\n      QNN_TENSOR_VER_PTR(tensor)->dimensions,\n      tensor.version == QNN_TENSOR_VERSION_2\n          ? QNN_TENSOR_VER_PTR(tensor)->isDynamicDimensions\n          : nullptr,\n      QNN_TENSOR_VER_PTR(tensor)->clientBuf.dataSize,\n      QNN_TENSOR_VER_PTR(tensor)->clientBuf.data);\n}\n} // namespace qnn\n} // namespace backends\n} // namespace executorch"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/backends/QnnGraphCommon.cpp",
+      "bytes": 4476,
+      "sha256": "82a3292f06a87db4abc4cbc0f1e041b5161bf02aebc5c69a3c0689d49ff05a34",
+      "role": "tensor creation then id metadata update",
+      "passages": [
+        {
+          "start_line": 95,
+          "end_line": 105,
+          "text": "    const std::string& graph_name,\n    const std::shared_ptr<TensorWrapper>& tensor_wrapper) {\n  const QnnInterface& qnn_interface = implementation_->GetQnnInterface();\n  Qnn_ErrorHandle_t error = QNN_SUCCESS;\n\n  if (!tensor_wrapper->IsTensorCreated()) {\n    Qnn_Tensor_t tensor = tensor_wrapper->CloneTensorStruct();\n\n    error = qnn_interface.qnn_tensor_create_graph_tensor(\n        handle_[graph_name], &tensor);\n"
+        },
+        {
+          "start_line": 122,
+          "end_line": 128,
+          "text": "      error = qnn_interface.qnn_tensor_create_graph_tensor(\n          handle_[graph_name], &tensor);\n    }\n    tensor_wrapper->UpdateQnnTensorMeta(tensor);\n    tensor_wrapper->SetTensorCreated();\n  }\n  return Error::Ok;"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/QnnManager.cpp",
+      "bytes": 24462,
+      "sha256": "2cfd266578f44bf3fc7f73ae126b18b9d6e4ea54d3437bfdebab7d905370f5d6",
+      "role": "allocate/map buffers, finalize without encoding refresh",
+      "passages": [
+        {
+          "start_line": 329,
+          "end_line": 356,
+          "text": "Error QnnManager::AllocateTensor(const std::string& graph_name) {\n  std::vector<Qnn_Tensor_t> input_tensors =\n      backend_params_ptr_->qnn_context_ptr_->GetGraphInputs(graph_name);\n  std::vector<Qnn_Tensor_t> output_tensors =\n      backend_params_ptr_->qnn_context_ptr_->GetGraphOutputs(graph_name);\n\n  // Mapping memory address for the input and output of mutable buffer\n  std::unordered_map<int, const void*> mutable_buffer_id_to_memory_map;\n\n  for (auto& tensor : input_tensors) {\n    std::shared_ptr<TensorWrapper> tensor_wrapper = CreateTensorWrapper(tensor);\n    tensor_wrapper->UpdateQnnTensorMeta(tensor);\n\n    int mutable_buffer_id =\n        ExtractMutableBufferNumber(tensor_wrapper->GetName());\n    if (mutable_buffer_id != -1) {\n      // Delegate maintains the memory for mutable buffer\n      tensor_wrapper->AllocateDataBuffer();\n      mutable_buffer_id_to_memory_map[mutable_buffer_id] =\n          tensor_wrapper->GetStaticTensorData();\n    }\n    input_tensors_[graph_name].emplace_back(std::move(tensor_wrapper));\n  }\n  if (!options_->is_from_context_binary()) {\n    std::sort(\n        input_tensors_[graph_name].begin(),\n        input_tensors_[graph_name].end(),\n        CompareExportedInput);"
+        },
+        {
+          "start_line": 387,
+          "end_line": 402,
+          "text": "Error QnnManager::AllocateTensor(\n    const std::string& graph_name,\n    std::vector<std::shared_ptr<TensorWrapper>>& inputs,\n    std::vector<std::shared_ptr<TensorWrapper>>& outputs) {\n  input_tensors_[graph_name] = std::move(inputs);\n  // TODO: suuport per-tensor dump in online prepare mode\n  //       should be achievable with some pre-process\n  if (!options_->is_from_context_binary()) {\n    std::sort(\n        input_tensors_[graph_name].begin(),\n        input_tensors_[graph_name].end(),\n        CompareExportedInput);\n  }\n  output_tensors_[graph_name] = std::move(outputs);\n  return Error::Ok;\n}"
+        },
+        {
+          "start_line": 589,
+          "end_line": 611,
+          "text": "Error QnnManager::Compile(\n    const std::string& graph_name,\n    std::vector<std::shared_ptr<OpWrapper>>& op_wrappers) {\n  Qnn_ErrorHandle_t error = QNN_SUCCESS;\n  QnnGraph* qnn_graph_ptr = backend_params_ptr_->qnn_graph_ptr_.get();\n\n  if (IsOnlinePrepare() &&\n      qnn_dlc_manager_->backend_params_ptr_->qnn_graph_ptr_.get() != nullptr) {\n    qnn_graph_ptr = qnn_dlc_manager_->backend_params_ptr_->qnn_graph_ptr_.get();\n  }\n  for (std::shared_ptr<OpWrapper>& op_wrapper : op_wrappers) {\n    for (const auto& tensor_wrapper : op_wrapper->GetInputTensors()) {\n      ET_CHECK_OR_RETURN_ERROR(\n          qnn_graph_ptr->EnsureTensorInQnnGraph(graph_name, tensor_wrapper) ==\n              Error::Ok,\n          Internal,\n          \"Tensor name %s isn't added to Qnn Graph\",\n          tensor_wrapper->GetName().c_str());\n    }\n    for (const auto& tensor_wrapper : op_wrapper->GetOutputTensors()) {\n      ET_CHECK_OR_RETURN_ERROR(\n          qnn_graph_ptr->EnsureTensorInQnnGraph(graph_name, tensor_wrapper) ==\n              Error::Ok,"
+        },
+        {
+          "start_line": 632,
+          "end_line": 648,
+          "text": "    error = qnn_graph_ptr->GraphAddNode(graph_name, op_wrapper->GetOpConfig());\n    if (error != QNN_SUCCESS) {\n      QNN_EXECUTORCH_LOG_ERROR(\n          \"Failed to add node to Qnn Graph with error: %d\",\n          QNN_GET_ERROR_CODE(error));\n      return Error::Internal;\n    }\n  }\n  error = qnn_graph_ptr->GraphFinalize(graph_name);\n  if (error != QNN_SUCCESS) {\n    QNN_EXECUTORCH_LOG_ERROR(\n        \"Failed to finalize Qnn Graph with error: %d\",\n        QNN_GET_ERROR_CODE(error));\n    return Error::Internal;\n  }\n  return Error::Ok;\n}"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/QnnManager.h",
+      "bytes": 5906,
+      "sha256": "96d945d909b142a992ef4fed3c15e24d44902964b2d06302c811d94f14e15378",
+      "role": "getters return stored vectors",
+      "passages": [
+        {
+          "start_line": 102,
+          "end_line": 115,
+          "text": "  std::vector<std::shared_ptr<TensorWrapper>> GetGraphInputs(\n      const std::string& graph_name) {\n    return !input_tensors_.count(graph_name)\n        ? std::vector<std::shared_ptr<TensorWrapper>>()\n        : input_tensors_[graph_name];\n  }\n\n  std::vector<std::shared_ptr<TensorWrapper>> GetGraphOutputs(\n      const std::string& graph_name) {\n    return !output_tensors_.count(graph_name)\n        ? std::vector<std::shared_ptr<TensorWrapper>>()\n        : output_tensors_[graph_name];\n  }\n"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/aot/python/PyQnnManagerAdaptor.h",
+      "bytes": 11824,
+      "sha256": "c4bb1ad39127be6384acde2e97a6ff8114e6ab44ba5e7be58e73b6ce1e17fffb",
+      "role": "Compile returns binary; graph getters wrap manager vectors",
+      "passages": [
+        {
+          "start_line": 244,
+          "end_line": 272,
+          "text": "      std::vector<std::shared_ptr<OpWrapper>>& op_wrappers) {\n    return qnn_manager_->IsNodeSupportedByBackend(op_wrappers);\n  }\n\n  py::array_t<char> Compile(\n      const std::vector<std::string>& graph_names,\n      std::vector<std::vector<std::shared_ptr<OpWrapper>>>& op_wrappers) {\n    QnnExecuTorchContextBinary binary_info;\n\n    for (int i = 0; i < graph_names.size(); ++i) {\n      if (qnn_manager_->Compile(graph_names[i], op_wrappers[i]) !=\n          executorch::runtime::Error::Ok) {\n        QNN_EXECUTORCH_LOG_ERROR(\"Fail to compile QNN graph\");\n        return py::array_t<char>(0);\n      }\n    }\n    auto qnn_executorch_options = GetQnnExecuTorchOptions(\n        qnn_executorch_option_ptr_.cast<std::string_view>().data());\n    if (qnn_executorch_options->saver() ||\n        qnn_manager_->GetContextBinary(binary_info) !=\n            executorch::runtime::Error::Ok) {\n      return py::array_t<char>(0);\n    }\n\n    // allocate py::array (to pass the result of the C++ function to Python)\n    auto result = py::array_t<char>(binary_info.nbytes);\n    auto result_buffer = result.request();\n    char* result_ptr = (char*)result_buffer.ptr;\n    std::memcpy(result_ptr, binary_info.buffer, binary_info.nbytes);"
+        },
+        {
+          "start_line": 302,
+          "end_line": 326,
+          "text": "    return ret;\n  }\n\n  py::list GetGraphOutputs(const std::string& graph_name) {\n    py::list ret;\n    for (const std::shared_ptr<TensorWrapper>& output :\n         qnn_manager_->GetGraphOutputs(graph_name)) {\n      ret.append(PyQnnTensorWrapper(output));\n    }\n    return ret;\n  }\n\n  py::list GetGraphNames() {\n    py::list ret;\n    for (const std::string& graph_name : qnn_manager_->GetGraphNames()) {\n      ret.append(graph_name);\n    }\n    return ret;\n  }\n\n  uint64_t GetSpillFillBufferSize() {\n    return qnn_manager_->GetSpillFillBufferSize();\n  }\n\n  py::array_t<char> MakeBinaryInfo(const py::bytes& ctx_bin) {"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/backends/QnnBackendCache.cpp",
+      "bytes": 6372,
+      "sha256": "08ce95d9662f806139ec704bca7fb8718ba53fb1bc52fd34c9ff265fbcbd4bfa",
+      "role": "binary-info public graph I/O only",
+      "passages": [
+        {
+          "start_line": 18,
+          "end_line": 31,
+          "text": "    void* buffer,\n    uint32_t nbytes) {\n  const QnnSystemInterface& qnn_sys_interface =\n      qnn_sys_impl_.GetQnnSystemInterface();\n  std::uint32_t num_graphs;\n  QnnSystemContext_GraphInfo_t* graphs = nullptr;\n  const QnnSystemContext_BinaryInfo_t* binaryinfo{nullptr};\n  Qnn_ContextBinarySize_t binaryinfo_size = 0;\n  Qnn_ErrorHandle_t error = QNN_SUCCESS;\n\n  error = qnn_sys_interface.qnn_system_context_get_binary_info(\n      sys_context_handle_, buffer, nbytes, &binaryinfo, &binaryinfo_size);\n\n  if (error != QNN_SUCCESS) {"
+        },
+        {
+          "start_line": 150,
+          "end_line": 184,
+          "text": "std::vector<Qnn_Tensor_t> QnnBackendCache::GetGraphInputs(\n    const std::string& graph_name) {\n  if (state_ != DESERIALIZE)\n    return {};\n\n  return input_tensor_structs_[graph_name];\n}\n\nstd::vector<Qnn_Tensor_t> QnnBackendCache::GetGraphOutputs(\n    const std::string& graph_name) {\n  if (state_ != DESERIALIZE)\n    return {};\n\n  return output_tensor_structs_[graph_name];\n}\n\ntemplate <typename INFO>\nvoid QnnBackendCache::RetrieveGraphInfo(const INFO& info) {\n  // get graph name from metadata\n  graph_names_.push_back(info.graphName);\n  // get graph inputs from metadata\n  uint32_t numGraphInputs = info.numGraphInputs;\n  input_tensor_structs_[graph_names_.back()].reserve(numGraphInputs);\n  for (std::uint32_t i = 0; i < numGraphInputs; ++i) {\n    input_tensor_structs_[graph_names_.back()].emplace_back(\n        info.graphInputs[i]);\n  }\n  // get graph outputs from metadata\n  uint32_t numGraphOutputs = info.numGraphOutputs;\n  output_tensor_structs_[graph_names_.back()].reserve(numGraphOutputs);\n  for (std::uint32_t i = 0; i < numGraphOutputs; ++i) {\n    output_tensor_structs_[graph_names_.back()].emplace_back(\n        info.graphOutputs[i]);\n  }\n}"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/QnnExecuTorchBackend.cpp",
+      "bytes": 11116,
+      "sha256": "436c2e7833537a13309032c2064feb87a688e50af48f642d742cc44410e5c7c9",
+      "role": "runtime maps client buffers then graphExecute",
+      "passages": [
+        {
+          "start_line": 139,
+          "end_line": 186,
+          "text": "  std::vector<Qnn_Tensor_t> input_tensor_structs;\n  std::vector<Qnn_Tensor_t> output_tensor_structs;\n\n  int args_index = 0;\n  input_tensor_structs.reserve(input_tensors.size());\n  for (const auto& input_tensor : input_tensors) {\n    if (input_tensor->GetName().find(\"mutbuf_\") == std::string::npos) {\n      if (qnn_manager->RegisterMem(\n              args[args_index]->toTensor().mutable_data_ptr(), input_tensor) !=\n          Error::Ok) {\n        // update data ptr only should be fine\n        input_tensor->FillDataBuffer(\n            args[args_index]->toTensor().const_data_ptr(),\n            false /* copy_data */);\n        // use the real input shape instead of nominal one to make sure\n        // dynamic shape is functional\n        auto dims = args[args_index]->toTensor().sizes();\n        input_tensor->SetDims(dims.data(), dims.size());\n      }\n      args_index++;\n    }\n    input_tensor_structs.emplace_back(input_tensor->CloneTensorStruct());\n  }\n\n  for (const auto& output_tensor : output_tensors) {\n    // pos=0 limits the search to the prefix\n    if (output_tensor->GetName().rfind(\"output_\", 0) == 0 &&\n        output_tensor->GetName().find(\"mutbuf_\") == std::string::npos) {\n      void* mutable_data_ptr = args[args_index]->toTensor().mutable_data_ptr();\n      if (qnn_manager->RegisterMem(mutable_data_ptr, output_tensor) !=\n          Error::Ok) {\n        output_tensor->FillDataBuffer(mutable_data_ptr, false /* copy_data */);\n      }\n      args_index++;\n    }\n    output_tensor_structs.push_back(output_tensor->CloneTensorStruct());\n  }\n\n  ET_CHECK_OR_RETURN_ERROR(\n      qnn_manager->Execute(\n          method_name,\n          input_tensor_structs,\n          output_tensor_structs,\n          context.event_tracer()) == Error::Ok,\n      Internal,\n      \"Fail to execute graph\");\n  ET_CHECK_OR_RETURN_ERROR(\n      qnn_manager->ProfileExecuteData(method_name, context.event_tracer()) =="
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnTypes.h",
+      "bytes": 76201,
+      "sha256": "4a0ba53b63b5ae8026f12cb2e9f8e4c276f3a772c09654049b01eb5f22e1b1cc",
+      "role": "SDK public scale-offset definition, not an execution observation",
+      "passages": [
+        {
+          "start_line": 510,
+          "end_line": 518,
+          "text": " * @brief A struct to express scale-offset quantization encoding.\n *\n * float_value = (quantized_value + offset) * scale\n */\ntypedef struct {\n  /// scale must be strictly positive\n  float scale;\n  int32_t offset;\n} Qnn_ScaleOffset_t;"
+        }
+      ],
+      "matches_prior_selected_python_pin": null
+    }
+  ],
+  "prior_python_pin_source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/raw/request.json",
+    "bytes": 8170,
+    "sha256": "f9ef7075427df9a4cf8c4e565f9c261c4065380384ec35a7a1dbba9865b8548e"
+  },
+  "matching_cpp_checkouts": [
+    {
+      "inspected": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/QnnManager.cpp",
+        "bytes": 24462,
+        "sha256": "2cfd266578f44bf3fc7f73ae126b18b9d6e4ea54d3437bfdebab7d905370f5d6"
+      },
+      "other_checkout": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-src/backends/qualcomm/runtime/QnnManager.cpp",
+        "bytes": 24462,
+        "sha256": "2cfd266578f44bf3fc7f73ae126b18b9d6e4ea54d3437bfdebab7d905370f5d6"
+      },
+      "equal": true
+    },
+    {
+      "inspected": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/runtime/QnnExecuTorchBackend.cpp",
+        "bytes": 11116,
+        "sha256": "436c2e7833537a13309032c2064feb87a688e50af48f642d742cc44410e5c7c9"
+      },
+      "other_checkout": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-src/backends/qualcomm/runtime/QnnExecuTorchBackend.cpp",
+        "bytes": 11116,
+        "sha256": "436c2e7833537a13309032c2064feb87a688e50af48f642d742cc44410e5c7c9"
+      },
+      "equal": true
+    },
+    {
+      "inspected": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/aot/wrappers/TensorWrapper.cpp",
+        "bytes": 7536,
+        "sha256": "9eb3f7924227887042b91ad2e3a06ff2f52a3d34a31426d81a0615a054864485"
+      },
+      "other_checkout": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-src/backends/qualcomm/aot/wrappers/TensorWrapper.cpp",
+        "bytes": 7536,
+        "sha256": "9eb3f7924227887042b91ad2e3a06ff2f52a3d34a31426d81a0615a054864485"
+      },
+      "equal": true
+    },
+    {
+      "inspected": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/backends/qualcomm/aot/python/PyQnnManagerAdaptor.h",
+        "bytes": 11824,
+        "sha256": "c4bb1ad39127be6384acde2e97a6ff8114e6ab44ba5e7be58e73b6ce1e17fffb"
+      },
+      "other_checkout": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-src/backends/qualcomm/aot/python/PyQnnManagerAdaptor.h",
+        "bytes": 11824,
+        "sha256": "c4bb1ad39127be6384acde2e97a6ff8114e6ab44ba5e7be58e73b6ce1e17fffb"
+      },
+      "equal": true
+    }
+  ],
+  "limit": "Source binding only; selected Python pins agree with historical request. C++ checkout equality is not proof of exact loaded-binary provenance or internal finalized graph metadata."
+}

@@ -111,10 +111,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/persistent-state-range-audit-20260910/`](results/persistent-state-range-audit-20260910/) maps all48 Histogram QDQ state interfaces and five saved p0/p1 output bundles, with no model/weight/native calls. It distinguishes18 recurrence/18conv replacements from6K/6V new-token insertions, and18 shape-only references from numerical consumers. Fifteen domains are identical;29 decoded intervals overhang the next-input range, but only27 output-code grids would clip. Each p0 bundle has11 would-clip transported values across8conv/K/V states; controlled QDQp1 has1 and each QNNp1 set has3. No sampled recurrent value predicts code clipping. These are offline scalar compatibility calculations, not observed SDK clipping or logit causality. Alignment candidates are hypotheses only.
 
+## Persistent K-cache boundary source investigation
+
+[`results/persistent-boundary-source-design-20260911/`](results/persistent-boundary-source-design-20260911/) traces affected K state3 and same-layout control state15 without model/SDK calls. Their incoming cache domains differ from the wider returned-key/Cat domains. Float host insertion/buffer binding is separate from submitted graph Quantize/Dequantize/Convert declarations. Crucially, `UpdateQnnTensorMeta` copies only an id and post-Compile getters do not expose internal finalized encodings; restored context metadata describes public I/O. Actual selected-state native conversions remain unobserved. A single paired, weight-free K-cache consumer probe is designed but not prepared or released; it is not a repeat of the Conv sweep or a full-model causal test.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the offline48-state interface table, five saved-value comparisons and alignment hypotheses. No model/encoding changes, calibration, compile, native retry/follow-on or physical work is authorized. The frozen-PTE sweep release remains consumed; APP has first physical priority.
+2. The offline48-state audit and new source investigation are complete. Pi decides whether to prepare the bounded paired K-cache probe; exact preparation and execution bindings remain absent. No model/encoding change, calibration, compile, native retry/follow-on or physical work is authorized. The frozen-PTE sweep release remains consumed.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

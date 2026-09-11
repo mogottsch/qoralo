@@ -1,0 +1,25 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "15",
+    "ionice",
+    "-c",
+    "2",
+    "-n",
+    "7",
+    "prlimit",
+    "--as=1073741824",
+    "--",
+    "taskset",
+    "--cpu-list",
+    "0,1,2,3",
+    "/usr/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-boundary-source-design-20260911/collect_source.py"
+  ],
+  "temporary_directory": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/persistent-boundary-source-design-20260911/metadata-01/scratch",
+  "source_only": true,
+  "AS_limit_bytes": 1073741824,
+  "timeout_seconds": 30,
+  "termination_grace_seconds": 20
+}
