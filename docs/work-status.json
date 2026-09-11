@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:43:53+00:00",
+  "updated_at": "2026-09-11T10:44:17+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -53,12 +53,12 @@
     {
       "id": "gemma",
       "title": "Gemma FP16",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Durable fixture package committed localc967345+5ee9497: result SHAae8107…dd82e;12 focused tests/95 committed blob hashes pass; ignored metadata retained.",
-      "next": "Full AR128 still running, no outcome. Latest safety sample~13.39GiB current/~15.00GiB peak+2.65GiB swap; zero OOM/PSI0. Watcher→DLC-edge inspection, then sequential AR1 only if supported.",
-      "reported_at": "2026-09-11T10:41:53+00:00",
-      "reported_by": "Jere — durable fixture package and active AR128 safety sample",
+      "now": "Full AR128 conversion COMPLETE: guard exit0/no stop/no OOM;645.22s wall (converter638.73s); DLC2,356,879,332B SHAd9eec658…33052.",
+      "next": "Heavy reservation released; bounded4GiB DLC-info inspection is next gate. No full internal-edge acceptance/inference/phone/app result; AR1 sequential after inspection.",
+      "reported_at": "2026-09-11T10:44:17+00:00",
+      "reported_by": "Jere — completed full AR128 conversion",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -145,10 +145,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Janek both available original failure inputs passed unchanged normal SCRIPT UI; prepares results/handoff. Gemma AR128 remains active; Qwen/Jens work bounded.",
-      "next": "App provenance-only diagnostic fix does not recover historical neural cause or prove general reliability/long readiness. No more blind repeats/prompt tuning.",
-      "reported_at": "2026-09-11T10:43:53+00:00",
-      "reported_by": "Janek — completed distinct-case diagnosis",
+      "now": "Janek app cases complete/handoff prep; Gemma AR128 full conversion complete/heavy reservation released; Qwen/Jens work bounded.",
+      "next": "Gemma DLC-info inspection uses bounded4GiB; AR1 waits sequentially. No inference/phone/app change. Host recovered~23.09GiB available.",
+      "reported_at": "2026-09-11T10:44:17+00:00",
+      "reported_by": "Jere — completed conversion and resource release",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -196,9 +196,9 @@
     },
     {
       "name": "Jere",
-      "task": "Monitor full AR128; inspect DLC edges on completion",
-      "reported_at": "2026-09-11T10:41:53+00:00",
-      "reported_by": "Jere — run active/no outcome",
+      "task": "Run bounded4GiB AR128 DLC-info inspection",
+      "reported_at": "2026-09-11T10:44:17+00:00",
+      "reported_by": "Jere — conversion complete/heavy slot released",
       "stale_after_seconds": 900
     },
     {
