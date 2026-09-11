@@ -1,0 +1,164 @@
+{
+  "experiment": "0036",
+  "evidence_class": "host_constructor_only_no_execution",
+  "components": [
+    {
+      "status": "constructor_export_passed_not_execution_proof",
+      "component": "duration",
+      "session_Run_calls": 0,
+      "constructor_calls": 1,
+      "profiling_enabled": false,
+      "runtime_version": "1.27.1",
+      "provider_options": {
+        "offload_graph_io_quantization": "0",
+        "htp_performance_mode": "burst",
+        "soc_model": "43",
+        "backend_path": "libQnnHtp.so"
+      },
+      "constructor_seconds": 56.88589790200058,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            3200
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "providers": [
+        "QNNExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 812,
+          "sha256": "1cb7deeee50a60a8f14be9e0501d18ee7df90f6e0c1bf603d3615af5ed0b05f5"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 12938104,
+          "sha256": "e9df9226f7265abae8f3e10cd4132f1233398e5d8633038ddf07434740610ddf"
+        }
+      },
+      "all_pins_reverified": true,
+      "elapsed_seconds": 57.525714711000546,
+      "process_ru_maxrss_kib": 1498228,
+      "memory.peak": "1975795712\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory.max": "8589934592\n",
+      "source": {
+        "bytes": 3787044,
+        "sha256": "ebeb4ad28fb819157b7fa4dcbd346534581e7d75abbf1758cd92446d3379907a"
+      },
+      "container_absent_verified": true,
+      "cleanup_note": "Initial generic inspect false-negative; explicit container inspect proved exact immutable CID absent. No constructor retry."
+    },
+    {
+      "status": "constructor_export_passed_not_execution_proof",
+      "component": "text",
+      "session_Run_calls": 0,
+      "constructor_calls": 1,
+      "profiling_enabled": false,
+      "runtime_version": "1.27.1",
+      "provider_options": {
+        "offload_graph_io_quantization": "0",
+        "htp_performance_mode": "burst",
+        "soc_model": "43",
+        "backend_path": "libQnnHtp.so"
+      },
+      "constructor_seconds": 31.287179454999205,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            3200
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        }
+      ],
+      "providers": [
+        "QNNExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "d7db9e607c1c58fc4a5622bae3a0d18b15975b459c0ebc6e4dd91cdae720bd2e"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 34424448,
+          "sha256": "e140471e3557bc5c7317a58c2b1b9394780b7bb4c931156fb6a5ed4b2ed489e0"
+        }
+      },
+      "all_pins_reverified": true,
+      "elapsed_seconds": 32.41794810099964,
+      "process_ru_maxrss_kib": 2096300,
+      "memory.peak": "2065244160\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory.max": "8589934592\n",
+      "source": {
+        "bytes": 36566260,
+        "sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7"
+      },
+      "container_absent_verified": true,
+      "cleanup_note": "Normal exact CID cleanup passed."
+    }
+  ]
+}
