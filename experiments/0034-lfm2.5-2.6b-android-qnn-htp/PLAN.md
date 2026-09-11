@@ -1,8 +1,10 @@
 # Plan: LFM2.5-2.6B QNN/HTP
 
-## Current host build: memory-bound iteration
+## Current step: prepare the paired physical prefill check
 
-The first prepare-only query-prescale AOT attempt reached graph preparation but was killed at the 12 GiB cgroup limit before any serialized context/metadata. The saved trace maps all 1,542 optimized nodes and eight query-side multiplies; that is not a successful context or finalized schedule. Evidence is immutable and processes are absent. Continue with a memory-only 16 GiB iteration when Pi's shared-host scheduling and at least 22 GiB available memory allow it; do not pressure Janek's app work. Other bounds/settings remain unchanged. This is a real resource blocker, not a routine approval wait.
+The 12 GiB AOT OOM is preserved. The one memory-only 16 GiB iteration completed after Janek's host release, producing ordinary context `62ad1261…15243` with matching ordered41/60 ABI, 1,542/1,542 supported optimized nodes and eight query-side multiply mappings. Heavy host reservation is released; do not rerun this completed build from stale start messages.
+
+Prepare one fresh direct-QNN process/canonical171 prefill call for each baseline/candidate context, with all41 actual native input buffers and60 outputs saved, finite scans, and graph API/profile timings separate from persistence/setup. Compare the pair offline; no AR1/integrated max16 replay yet and no statistical speed claim from one ordered pair. Phone scheduling follows Janek's app work then Ben's queued short probe, under the full lock without app stop/install/user-data/settings changes.
 
 ## Completed host numerical check
 
@@ -140,7 +142,7 @@ The AR171-only query-prescale CPU check is complete and Pi accepted its saved so
 
 1. Corrected integrated operability and offline profile review are complete; preserve their single-diagnostic boundaries.
 2. Pi's saved query-prescale assessment is complete. Do not rerun the baseline, derivative or proxies for packaging.
-3. Continue the query-prescale AOT resource iteration, then justified bounded numerical/performance validation with Pi's phone scheduling/full lock after Janek. This is not a mandate for unrelated lower-precision/device-state/logit/hybrid experiments.
+3. AOT is complete; prepare justified bounded paired numerical/performance validation with Pi's phone scheduling/full lock after Janek and Ben. This is not a mandate for unrelated lower-precision/device-state/logit/hybrid experiments.
 4. Do not campaign until the selected complete route and reset-isolation contract have separate approval.
 
 ## Phone and campaign sequence

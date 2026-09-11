@@ -31,6 +31,31 @@ def fixture():
 
 
 class QueryPrescaleTest(unittest.TestCase):
+    def test_completed_aot_has_context_ordered_abi_and_no_execution_claim(self):
+        from prescale_ar171_queries import sha
+        exp = Path(__file__).resolve().parents[1]
+        path = exp / 'results/query-prescale-aot-attempt-2-context-ready'
+        report = json.loads((path / 'result.json').read_text())
+        summary = json.loads((path / 'summary.json').read_text())
+        self.assertEqual(sha(path / 'result.json'), summary['result_sha256'])
+        self.assertTrue(report['compiled']['success'])
+        self.assertTrue(report['compiled']['prepare_only'])
+        self.assertTrue(report['compiled']['session_disable_cpu_ep_fallback'])
+        self.assertEqual(report['compiled']['context_binary']['sha256'], '62ad1261fd3181d5e4a3d8832d3bfd553d9d9e44aa4597face98b5268f315243')
+        self.assertEqual(report['num_graphs'], 1)
+        self.assertEqual((report['input_count'], report['output_count']), (41, 60))
+        self.assertTrue(report['ordered_abi_identical_to_baseline'])
+        self.assertEqual(report['trace_summary']['supported_nodes'], 1542)
+        self.assertEqual(report['trace_summary']['unsupported_nodes'], 0)
+        for site in report['scale_sites']:
+            self.assertEqual([m['dst_qnn_op_type'] for m in site['scaled_query_mappings']], ['ElementWiseMultiply'])
+            self.assertEqual(site['scaled_scores_mappings'], [])
+        self.assertEqual(report['resource_final']['memory_peak_bytes'], 14436642816)
+        self.assertGreater(report['resource_final']['memory_peak_bytes'], 12 << 30)
+        self.assertLessEqual(report['resource_final']['memory_peak_bytes'], 16 << 30)
+        for field in ('graph_execution_requested', 'phone_access', 'speedup_claim', 'htp_numerical_safety_claim'):
+            self.assertFalse(report[field])
+
     def test_memory_iteration_changes_only_resource_boundary(self):
         exp = Path(__file__).resolve().parents[1]
         amendment = json.loads((exp / 'protocol/query-prescale-aot-memory-amendment.json').read_text())

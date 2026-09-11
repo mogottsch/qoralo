@@ -1,0 +1,77 @@
+ # LIBNATIVE: No alternate configuration present in libnative_tls.conf or from LIBNATIVE_CONFIG environment variable - using default thread-local behavior.
+Starting stage: Graph Preparation Initializing
+Completed stage: Graph Preparation Initializing (352 us)
+Starting stage: Graph Optimizations
+Completed stage: Graph Optimizations (12764449 us)
+Starting stage: Post Graph Optimization
+Completed stage: Post Graph Optimization (233399 us)
+Starting stage: Graph Sequencing for Target
+ [                                                  ]   0% [#                                                 ]   2% [##                                                ]   4% [###                                               ]   6% [####                                              ]   8% [#####                                             ]  10% [######                                            ]  12% [#######                                           ]  14% [########                                          ]  16% [#########                                         ]  18% [##########                                        ]  20% [###########                                       ]  22% [############                                      ]  24% [#############                                     ]  26% [##############                                    ]  28% [###############                                   ]  30% [################                                  ]  32% [#################                                 ]  34% [##################                                ]  36% [###################                               ]  38% [####################                              ]  40% [#####################                             ]  42% [######################                            ]  44% [#######################                           ]  46% [########################                          ]  48% [#########################                         ]  50% [##########################                        ]  52% [###########################                       ]  54% [############################                      ]  56% [#############################                     ]  58% [##############################                    ]  60% [###############################                   ]  62% [################################                  ]  64% [#################################                 ]  66% [##################################                ]  68% [###################################               ]  70% [####################################              ]  72% [#####################################             ]  74% [######################################            ]  76% [#######################################           ]  78% [########################################          ]  80% [#########################################         ]  82% [##########################################        ]  84% [###########################################       ]  86% [############################################      ]  88% [#############################################     ]  90% [##############################################    ]  92% [###############################################   ]  94% [################################################  ]  96% [##################################################] 100%
+Completed stage: Graph Sequencing for Target (6032869 us)
+Starting stage: VTCM Allocation
+Completed stage: VTCM Allocation (4795120 us)
+Starting stage: Parallelization Optimization
+Completed stage: Parallelization Optimization (338170 us)
+Starting stage: Finalizing Graph Sequence
+
+====== DDR bandwidth summary ======
+spill_bytes=18344132608
+fill_bytes=19733266432
+write_total_bytes=18436580096
+read_total_bytes=21542247424
+
+Completed stage: Finalizing Graph Sequence (522730 us)
+Starting stage: Completion
+Completed stage: Completion (7878 us)
+{
+  "context_binary": {
+    "bytes": 1602644544,
+    "path": "context_qnn.bin",
+    "sha256": "62ad1261fd3181d5e4a3d8832d3bfd553d9d9e44aa4597face98b5268f315243"
+  },
+  "context_model": {
+    "bytes": 7171,
+    "path": "context.onnx",
+    "sha256": "b9d0057951048987cba1fafa9071924219b1c5e82ef8381dac22156de021c69f"
+  },
+  "framework_op_trace": {
+    "bytes": 1711404,
+    "path": "trace/qnn_op_trace.json",
+    "sha256": "d9bbea303220b7dc8fb6b82824cd412c9660d3505979dbb0f3aed551440a14bd"
+  },
+  "graph_execution_requested": false,
+  "model": "query-prescale.onnx",
+  "model_bytes": 1644738,
+  "model_sha256": "b93c65c9c419f915bad81046f34c91c632ce6dd1bed4137751f36204d64492a0",
+  "onnxruntime": "1.26.0",
+  "onnxruntime_qnn": "2.5.0",
+  "ort_inter_op_threads": 1,
+  "ort_intra_op_threads": 2,
+  "prepare_only": true,
+  "provider_options": {
+    "backend_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/venv/lib/python3.14/site-packages/onnxruntime_qnn/libQnnHtp.so",
+    "enable_block_quant_weight_optimization": "1",
+    "enable_framework_op_trace": "1",
+    "enable_htp_fp16_precision": "1",
+    "enable_htp_prepare_only": "1",
+    "framework_op_trace_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-aot-20260911T102346Z-120375/compiled/trace",
+    "htp_arch": "73",
+    "htp_graph_finalization_optimization_mode": "1",
+    "soc_model": "43"
+  },
+  "providers_reported": [
+    "QNNExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "schema_version": 1,
+  "session_create_seconds": 62.007428702,
+  "session_disable_cpu_ep_fallback": true,
+  "started_ns": 1789122230162735314,
+  "stopped_ns": 1789122293206725613,
+  "success": true,
+  "target": {
+    "chipset": "SM8550",
+    "htp_arch": "73",
+    "soc_model": "43"
+  }
+}
