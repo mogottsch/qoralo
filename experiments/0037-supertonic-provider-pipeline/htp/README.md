@@ -1,9 +1,10 @@
 # HTP provider-pipeline route
 
-**Offline source validation completed; no0037 HTP execution or listening result.**
+**All32 QNN contexts exported; guarded Android runner/stage ready, no HTP run yet.**
 Naive latent padding is wrong. The explicit native-boundary lowering removes that
 large error, but remains numerically nonidentical. The original strict numerical
-gate **failed and is preserved as failed**. QNN support/export is the next check.
+gate **failed and is preserved as failed**. Export is not physical execution or
+listening acceptance.
 
 This is a noncanonical, single-chapter experiment, not a warm-median benchmark,
 registry-quality claim or generic app-ready model pack. Jens's native/dynamic
@@ -103,16 +104,36 @@ A first native-shape Softplus control preparation also rejected symbolic batch
 metadata; the corrected control binds actual batch1, leaving T/L dynamic. No
 failed execution or gate was discarded and no audio was repaired.
 
-## Next stage / resource boundary
+## Export, standalone runner and resource boundary
 
-- Bounded QNN constructor/export, zero `Session.run`, CPU fallback disabled,
-  profile OFF; export alone is not physical execution evidence.
+All32 external single-QNN-EPContext exports passed with zero `Session.run`, CPU
+fallback disabled and profile OFF. This includes the four INT32 native-edge input
+arrays. ORT registers a CPU provider, but registration does not mean execution;
+unsupported neural fallback is forbidden. See `results/context-export-01.json`.
+
 - Host constructors: serial `heavy-ram.lock`,4CPU/8GiB/no extra swap, no network,
- 520s per constructor, immutable container-ID cleanup.
-- Inspect allocation metadata and signed-size margin before staging.
-- Build standalone provider-pipeline runner with reused heavy sessions; disclose
-  exactT session lifecycle/setup and all interleaved setup costs separately from
-  CPU's four resident dynamic sessions.
+ 520s per constructor, immutable container-ID cleanup. All32 constructors total
+ 40.30s; maximum observed cgroup peak1771.1MiB. All owned containers removed.
+- All32 allocation plans pass: maximum conservative per-context estimate320MiB,
+  minimum signed-size margin1,811,939,327 bytes. This includes128MiB allowance and
+ 64MiB rounding, not a guaranteed native allocator formula. See
+  `results/context-footprints-01.json`.
+- Standalone ARM64 runner builds with warnings-as-errors and FMA contraction OFF.
+  Nine tests pass, including the **actual C++ runner helpers** for FP32 own extent,
+  all edge indices, channel-aware stream layout and provider-equivalent PCM16;
+  these tests neither link nor load ORT and perform no neural execution.
+- Session lifecycle is bounded: vector/vocoder reused throughout; a current-T
+  duration/text pair cache has capacity one T. All15 T values are unique, so older
+  pairs have no reuse benefit.32 constructors, maximum four resident sessions;
+  interleaved constructor/teardown time is measured separately from CPU's four
+  resident dynamic sessions. No old whole-chapter text-depth partitions.
+- Private stage payload567,061,554 bytes:32 contexts, six pinned libraries,
+  runner, common style/step/noise arrays and exact chunk tokens/masks. No raw text,
+  source ONNX, CPU duration/features or precomputed edge indices are staged.
+- Actual next phone run requires>=3.5GiB available, battery<42°C,5GiB native AS,
+ 3GiB own RSS limit,600MiB available floor,45°C thermal ceiling,1800s native alarm.
+  Read-only live APK and double DB/WAL snapshot checks protect existing rows;
+  app/test PIDs must be absent. A newly started app makes us stop only our runner.
 - Phone only in Pi's scheduled slot, full `phone.lock` lifecycle and live app/job,
   thermal/memory preflight. No app/data modification, playback or global kills.
   Current app identity is discovered live, never restored to an older experiment.
@@ -136,4 +157,5 @@ private `.local/` directories.
 - `tools/check_controls.py --baseline ... --output ...`: native-Softplus geometry
   and native-shape stable-Softplus controls, with the original gate intact.
 - `python -m unittest discover -s htp/tests -v` from the experiment directory:
-  seven synthetic tests, no source models/runtime/device/compilation.
+  nine synthetic tests, no source model/ORT execution or device use. One test
+  compiles only the runner's nonneural C++ helpers without linking ORT.

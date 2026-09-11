@@ -1,0 +1,2105 @@
+{
+  "status": "32_QNN_external_contexts_exported_no_Run_no_physical_proof",
+  "strict_source_numerical_gate": "failed_preserved",
+  "runtime": "ORT1.27.1/QAIRT2.49.0.260730",
+  "binary_bytes_total": 513418992,
+  "generic_app_ready_pack": false,
+  "all_neural_graphs_exported_as_single_QNN_EPContext": true,
+  "registered_CPU_provider_note": "ORT registers CPU but session.disable_cpu_ep_fallback=1 prevents unsupported neural fallback; registration is not execution evidence",
+  "session_lifecycle": "two_shared_heavy_sessions_plus_current_exactT_pair_cache_capacity1;32constructors,max4resident",
+  "contexts": [
+    {
+      "context": "vector",
+      "component": "vector",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/native-boundary-source-02/vector/vector.onnx",
+        "bytes": 256530536,
+        "sha256": "f6bdbaeed14c17c14dbadd5f7321c60a167e1e66a0e17a5b841e3e7e81e26be8"
+      },
+      "constructor_seconds": 15.762847154001065,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "noisy_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            512
+          ]
+        },
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            320
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "latent_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            512
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            320
+          ]
+        },
+        {
+          "name": "current_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        },
+        {
+          "name": "total_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        },
+        {
+          "name": "native_edge_indices_r2",
+          "type": "tensor(int32)",
+          "shape": [
+            516
+          ]
+        },
+        {
+          "name": "native_edge_indices_r4",
+          "type": "tensor(int32)",
+          "shape": [
+            520
+          ]
+        },
+        {
+          "name": "native_edge_indices_r8",
+          "type": "tensor(int32)",
+          "shape": [
+            528
+          ]
+        },
+        {
+          "name": "native_edge_indices_r16",
+          "type": "tensor(int32)",
+          "shape": [
+            544
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "denoised_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            512
+          ]
+        }
+      ],
+      "artifacts": {
+        "vector-context.onnx": {
+          "bytes": 1280,
+          "sha256": "d1560c57776569c51edfb4d047817b681a4e7a2c4364521dcf5164f3cfcee060"
+        },
+        "vector-context_qnn.bin": {
+          "bytes": 136490968,
+          "sha256": "49b8647a53a1bcef866966323bd3478dccde76ac55b2cb14b3b14feb2f142d8a"
+        }
+      },
+      "process_ru_maxrss_kib": 1480780,
+      "cgroup_memory_peak_bytes": 1857085440,
+      "owned_container_absent": true
+    },
+    {
+      "context": "vocoder",
+      "component": "vocoder",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/native-boundary-source-02/vocoder/vocoder.onnx",
+        "bytes": 101449890,
+        "sha256": "c1b3a067426dffd74ca94536c0e2926dfeca6c8a4cb70078883543117a87d6bc"
+      },
+      "constructor_seconds": 3.12954947000253,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            512
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "wav_tts",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1572864
+          ]
+        }
+      ],
+      "artifacts": {
+        "vocoder-context.onnx": {
+          "bytes": 732,
+          "sha256": "b7316a8ca864ce37cad74932069dce9f97c97b4ecfbca76d8529e511258f81ea"
+        },
+        "vocoder-context_qnn.bin": {
+          "bytes": 54282656,
+          "sha256": "e5472023c5f3b086be45049421fc777e81584294649b5b8f697157c511e09d0c"
+        }
+      },
+      "process_ru_maxrss_kib": 661760,
+      "cgroup_memory_peak_bytes": 595787776,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t309",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t309/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "220111440394d70ca3516562ac376796383a476fc05b4de48307a40b785c0b0a"
+      },
+      "constructor_seconds": 0.48640546800015727,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            309
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            309
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 809,
+          "sha256": "6c0eedd1750b515b763a1e83087c4fcbf8000472fd22ad4bc3aa103f4a8ff58e"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2239344,
+          "sha256": "2f4871d2b3cd36decdec2cfa5112f5395fe4f6f8fe7bf88e5c2fcdf6c6491217"
+        }
+      },
+      "process_ru_maxrss_kib": 228320,
+      "cgroup_memory_peak_bytes": 150986752,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t309",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t309/text.onnx",
+        "bytes": 36566260,
+        "sha256": "26cedfb2b4bbd190e27ada41b134c0d5b37f0d04e35ebf786f15049e3bf0533f"
+      },
+      "constructor_seconds": 2.0981115930007945,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            309
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            309
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            309
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "a4fd269d4e8a895bf306aee57e70e839f44e587d6fb20ea97e7de1b9c4f228a6"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19674752,
+          "sha256": "184771de3a213f585b3e16359b64c1dfda5ebd464091412af3a471a4d1dd5be3"
+        }
+      },
+      "process_ru_maxrss_kib": 382612,
+      "cgroup_memory_peak_bytes": 307810304,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t213",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t213/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "70705896b2d72104aabe0308e74c4615c2d4dad82e68a81dbbbf2c1f331e442c"
+      },
+      "constructor_seconds": 0.32795837800222216,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            213
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            213
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 812,
+          "sha256": "50d11949e51c26263409020a2bc2df9d724324e1986ff0520b028cb3b0869947"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2136952,
+          "sha256": "3639c851edf1f0aea3c5794cf51d3d02ffd91fac12870c2498c53bdb627c6af0"
+        }
+      },
+      "process_ru_maxrss_kib": 222896,
+      "cgroup_memory_peak_bytes": 144728064,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t213",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t213/text.onnx",
+        "bytes": 36566260,
+        "sha256": "aa42da4d1e249baac386a5f8fb5d0632254f701ada675e80338a5a81e911bbc9"
+      },
+      "constructor_seconds": 0.9400505710000289,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            213
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            213
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            213
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 824,
+          "sha256": "b1cb9f928275ed307216e26c54e80c28f4176d93373264434b2911a49a216fb2"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19326592,
+          "sha256": "1da1f199ed60d8393c07642e625d749d142a42b9312eea27ac8a6ce15e45e437"
+        }
+      },
+      "process_ru_maxrss_kib": 357556,
+      "cgroup_memory_peak_bytes": 281747456,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t243",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t243/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "18fc8c69c5b28b624cd0c7c0ce53bdd9a5115222ed4b74601cbd2bebe8255a27"
+      },
+      "constructor_seconds": 0.3222899470019911,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            243
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            243
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 809,
+          "sha256": "e960218ea5aad6dd8a9ee104ce32d8bd8c1ba34fd89ed4371d815f892e8d0e05"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2161520,
+          "sha256": "0a263bd8d4ea507af84f35ac8e7ad4b13464dd8f5efabe133e8ad4ac0cbafb11"
+        }
+      },
+      "process_ru_maxrss_kib": 222208,
+      "cgroup_memory_peak_bytes": 144392192,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t243",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t243/text.onnx",
+        "bytes": 36566260,
+        "sha256": "f879b1e88c6fe10144984800c7be1e4aca0bcef9b86a0cfce1137f524ae60523"
+      },
+      "constructor_seconds": 1.0330474080001295,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            243
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            243
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            243
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "b843ce5faf599753e997156720afe8dfeab29cd4e1ae30ed2dd68bcfd47f0df1"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19449472,
+          "sha256": "6a9c8892d682411b61d095968577b407c8e9234dfe02d4542e617d384e0541f6"
+        }
+      },
+      "process_ru_maxrss_kib": 362468,
+      "cgroup_memory_peak_bytes": 286916608,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t153",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t153/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "f848730cd987e371305857dc63bc02ff1a4af74fc679f2d5960017d62a4744df"
+      },
+      "constructor_seconds": 0.2782123520009918,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            153
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            153
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "20d0bc7fd0de7fce072622d494d439fd4fd94abc82bdedf14d32a9ad30420f9e"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2083704,
+          "sha256": "c2f49e6b9efea7335ec1f4ac77ff00837d351b63e04e3a886dd026ef9b8385db"
+        }
+      },
+      "process_ru_maxrss_kib": 218544,
+      "cgroup_memory_peak_bytes": 140685312,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t153",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t153/text.onnx",
+        "bytes": 36566260,
+        "sha256": "8933cc12f6680dbf11908d8da6953f1388246bf3cb3376843b2e8b7c5af19f49"
+      },
+      "constructor_seconds": 0.8550415729987435,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            153
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            153
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            153
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "2465777db69f671b4599ddd17df953af3d5c8f76dd7d828628f9fb3599a830d7"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19175040,
+          "sha256": "bdb6b0f698b9f6d7c96039e7b987f90190c6f8b981bf55195651a921e3e7b6a6"
+        }
+      },
+      "process_ru_maxrss_kib": 353008,
+      "cgroup_memory_peak_bytes": 276963328,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t188",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t188/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "946172d3471c97af1c0c291c5beff0fdcbce764c81b90a63415fa16269eb0c9e"
+      },
+      "constructor_seconds": 0.2930336450008326,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            188
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            188
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 812,
+          "sha256": "a9680d59bf06f0a90b32580e92369a5540931e2be8fddb57098c40e05b6f089c"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2112376,
+          "sha256": "5ddfa9d461568d3354d7a801f4ef9121efe94fb174b757eb583de5f95414d594"
+        }
+      },
+      "process_ru_maxrss_kib": 221032,
+      "cgroup_memory_peak_bytes": 143888384,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t188",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t188/text.onnx",
+        "bytes": 36566260,
+        "sha256": "a12523697bb4c723e40d213e38fb25d700669429caacacc25f9b4a0f62a06e9a"
+      },
+      "constructor_seconds": 0.8438311919999251,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            188
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            188
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            188
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "1f60c36ba8f164c9dbaf236a53f5cd729f525f6f82717a744e7da5a92e691b15"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19261056,
+          "sha256": "59bac0acc42d6c4f18b3f5626f3aeecd00adfd8ff5b28571f61e3f2a2abce550"
+        }
+      },
+      "process_ru_maxrss_kib": 353588,
+      "cgroup_memory_peak_bytes": 277479424,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t298",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t298/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "f7f20d42666cd1fe3b39cad66d056a54742613f454a5c591e1349d3e4965dd33"
+      },
+      "constructor_seconds": 0.3911058949997823,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            298
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            298
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "ca2da47884906ad16166de4141d601f2b1448d27bd9f4200add2136604a1be62"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2247544,
+          "sha256": "01819f84ce6aa66f7397335273620111600d8b89496cdd2e78dbdbb164937e37"
+        }
+      },
+      "process_ru_maxrss_kib": 231552,
+      "cgroup_memory_peak_bytes": 153653248,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t298",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t298/text.onnx",
+        "bytes": 36566260,
+        "sha256": "07375543246323bf530a47fd0464fb72342e705e0889536919829312498342ac"
+      },
+      "constructor_seconds": 2.063157004999084,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            298
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            298
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            298
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "ebf9db459f445dd5fca1b33f8a9165e57eecb444eedf438482c8938cc1c0a558"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19633792,
+          "sha256": "2e5a67372f7c540cf7c3d76d948d8c5525ab1c2a10fc389e7cefd649cb805070"
+        }
+      },
+      "process_ru_maxrss_kib": 382540,
+      "cgroup_memory_peak_bytes": 307036160,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t106",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t106/duration.onnx",
+        "bytes": 3787039,
+        "sha256": "e058df2da4d7484e2229bfea1f8ed2482383542df9d6443dc21e2a81f0d0ff0a"
+      },
+      "constructor_seconds": 0.2784824939990358,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            106
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            106
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 810,
+          "sha256": "84ec832cf3a896a161a4683f2fcc88bac2ec9f2100216b683ada15cbf503dbe1"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2059128,
+          "sha256": "4ba8f191e704501b66fbd14cf6c2e0931ed9501e7a79baa287e8e3b935520c9b"
+        }
+      },
+      "process_ru_maxrss_kib": 218680,
+      "cgroup_memory_peak_bytes": 141135872,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t106",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t106/text.onnx",
+        "bytes": 36566002,
+        "sha256": "fada99ed776bfdd1895d33846ccd777eab9b772b2b4f41f07b15d4307aee76a6"
+      },
+      "constructor_seconds": 0.7307503980009642,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            106
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            106
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            106
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "5014d2b3170598f3ddc76a0981922fee7ac9cadb8ddb5a5315ba2f0511fe4a2f"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19027584,
+          "sha256": "a9a64db14eb28045c6c3cc46cf07152b3d18ddac4920e3839c5ddfa53f360bd3"
+        }
+      },
+      "process_ru_maxrss_kib": 348820,
+      "cgroup_memory_peak_bytes": 272887808,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t212",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t212/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "ecabd25826d73e9de34470e0e9bd2599db5f65c60de009e3e8cfb09f6a1a49fe"
+      },
+      "constructor_seconds": 0.3253854999966279,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            212
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            212
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "d03d7c8477ff188e08619ad6a4cb6bb33aef2f41c52d3324e51a98dd415f52e3"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2136952,
+          "sha256": "a51dbe9fca511051ebb4dfa231c59edfb06d09102f5c271d6052d1d1811cee7f"
+        }
+      },
+      "process_ru_maxrss_kib": 222536,
+      "cgroup_memory_peak_bytes": 144904192,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t212",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t212/text.onnx",
+        "bytes": 36566260,
+        "sha256": "4f59dc112c0f8f32ba641f527b5e3eaca809731306b6ce478efd90aa124f0b6b"
+      },
+      "constructor_seconds": 0.8980456290009897,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            212
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            212
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            212
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 824,
+          "sha256": "59dde220e16f6aebaa09a66f5713040c144b475629dcbdc2e0cddf1cb03ad126"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19330688,
+          "sha256": "a1ac5e38d7fb26e8cab7132c4eef5ef53e5cd449f32c7b63780b61c8d9c87659"
+        }
+      },
+      "process_ru_maxrss_kib": 357352,
+      "cgroup_memory_peak_bytes": 282062848,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t97",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t97/duration.onnx",
+        "bytes": 3787039,
+        "sha256": "abe52705c575ab2fddf84c881274632e7de4c7b2320bd6f63dbf1675309b2eff"
+      },
+      "constructor_seconds": 0.2677136479978799,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            97
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            97
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 810,
+          "sha256": "292136f538930affda1e6367607ca20251e8914f566e1b7de5eca0bae4eb7c99"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2055032,
+          "sha256": "d1b2806be629cc1d285d3c7de6be290918c9bdc19d135b5e519b94cbd6897a66"
+        }
+      },
+      "process_ru_maxrss_kib": 219184,
+      "cgroup_memory_peak_bytes": 141492224,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t97",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t97/text.onnx",
+        "bytes": 36566002,
+        "sha256": "8371dddf9b888bd83698fc5dd7fd095fa5cd10550fbdf419dea9cd280c2d1bee"
+      },
+      "constructor_seconds": 0.7512482189995353,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            97
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            97
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            97
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 818,
+          "sha256": "b575147c243443c1c13300e951df98198a332238d27ccd0bd7a545c25888b3e6"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19015296,
+          "sha256": "e8f30b28e95312e77abc8314f82c7419dc990fb9a18c1289e35250987d5215f5"
+        }
+      },
+      "process_ru_maxrss_kib": 348776,
+      "cgroup_memory_peak_bytes": 272809984,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t239",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t239/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016"
+      },
+      "constructor_seconds": 0.2963142090011388,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            239
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            239
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "a2c0bd17a253bf3a4799fa44632be1102ae75eec7f8b17f90c7a677782de15b0"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2141048,
+          "sha256": "0efc3cf96f112adfadb2902d5ccca5bafd4f61e817d69a4026970b9459598a8d"
+        }
+      },
+      "process_ru_maxrss_kib": 222800,
+      "cgroup_memory_peak_bytes": 145182720,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t239",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t239/text.onnx",
+        "bytes": 36566260,
+        "sha256": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3"
+      },
+      "constructor_seconds": 0.9821363449991622,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            239
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            239
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            239
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "864d58d23879b9647093e0d20edaedbab21216490f80ace658837c0905586b27"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19437184,
+          "sha256": "b8db171d7947ec8b43a41413753347481307599b0968268c07e93967c8482fc9"
+        }
+      },
+      "process_ru_maxrss_kib": 361800,
+      "cgroup_memory_peak_bytes": 288178176,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t224",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t224/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "50d50076ab41038402d96652d8bdd25a39c756e54a70dd85bf40e3630a6fc9cb"
+      },
+      "constructor_seconds": 0.3081941509990429,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            224
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            224
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "a37cb9c604e7cc9547f1490c0039f3ef9ec4980f26b6096596cdb70bd07af8fe"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2149240,
+          "sha256": "0724bbe52c8173751d7cb7f66984cf9d21e913e94fdb81864e048ebea752c37e"
+        }
+      },
+      "process_ru_maxrss_kib": 222900,
+      "cgroup_memory_peak_bytes": 145739776,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t224",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t224/text.onnx",
+        "bytes": 36566260,
+        "sha256": "60d614528abad98bf73580fa3960553c09106b3e64818b25a9feb10419feb56a"
+      },
+      "constructor_seconds": 1.0470685069994943,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            224
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            224
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            224
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "7eeee5b9f8dc7620a6957f91908377cd5ef195e4f805f83f428a20f20e915f2f"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19302016,
+          "sha256": "d52dd49d3be52a5675763e495c4485a1e82c620ace79afb40757f2c822619216"
+        }
+      },
+      "process_ru_maxrss_kib": 354644,
+      "cgroup_memory_peak_bytes": 278568960,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t236",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t236/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "e71b0e50aa6ebdd1719a3ce9b1e8fa7a902d0e3db0e45b549a10f2289e142946"
+      },
+      "constructor_seconds": 0.31704893300047843,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            236
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            236
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "8c89b6ed81a4a3d708079830442c2296088783903d52a298b1162b766eda734b"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2157432,
+          "sha256": "a2e27140453651b552421bfd17c8803ed0d7503a143f2c293b38e5de70683416"
+        }
+      },
+      "process_ru_maxrss_kib": 224084,
+      "cgroup_memory_peak_bytes": 146448384,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t236",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t236/text.onnx",
+        "bytes": 36566260,
+        "sha256": "77956df67c24a96b8be1b4ef27b4166bd024c73e7aeb552679fb285a0321f3e2"
+      },
+      "constructor_seconds": 0.981695293001394,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            236
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            236
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            236
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 824,
+          "sha256": "3a5a24ba095173b7981bd7cfcff5d9c6404e1b80705980a17c834db4d1027a09"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19433088,
+          "sha256": "b40ef63e68dbe740346dfed63305b26a62b11d72869e539db5656176eb597388"
+        }
+      },
+      "process_ru_maxrss_kib": 364312,
+      "cgroup_memory_peak_bytes": 288874496,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t252",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t252/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "fb90e995e69eb261c059ca506d4fb19d373162c039d1f51670e5505f9ce02bab"
+      },
+      "constructor_seconds": 0.32359924399861484,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            252
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            252
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "540ace68c232aa3002e50585cd28e0dd6292635e1d905aacdcf805fa8a4a8cfd"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2165624,
+          "sha256": "2dfc81d3eeb12fae1a7c141ff1955531e5a588578645bfbd9580538defdb6e12"
+        }
+      },
+      "process_ru_maxrss_kib": 223988,
+      "cgroup_memory_peak_bytes": 146575360,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t252",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t252/text.onnx",
+        "bytes": 36566260,
+        "sha256": "99a7730c5acb8c66bc247f6ffb8214d0caea42873e70cd7cecc0b5e2c78ca44b"
+      },
+      "constructor_seconds": 1.02858446800019,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            252
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            252
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            252
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "f4c12f67f3e2937646f96c1977eb6ffe7ab85f98350e574108c9f659a67d89ee"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19449472,
+          "sha256": "fcb8f5e5b84af669b659d3e4d9ad1cc55d1f4f994d6bacdb384446eedf62672d"
+        }
+      },
+      "process_ru_maxrss_kib": 365612,
+      "cgroup_memory_peak_bytes": 289890304,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t229",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t229/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "887c314c7d667c729470cc14304441fd8f5f12dde045b319d30ea1319987e4d9"
+      },
+      "constructor_seconds": 0.32729222100169864,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            229
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            229
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 812,
+          "sha256": "bcf58a3f013e829be1090164c5957df572a16797bd9c7a62b8164939061724d9"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2153336,
+          "sha256": "17a2cd4de71d5d19fe57cfebacedb959c32693e084c352950f803ca60003af66"
+        }
+      },
+      "process_ru_maxrss_kib": 223704,
+      "cgroup_memory_peak_bytes": 146186240,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t229",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t229/text.onnx",
+        "bytes": 36566260,
+        "sha256": "08bb5626d6c5f5b08c682fa6e7a10741ce1610c8e71e71911380f88ad3cae14b"
+      },
+      "constructor_seconds": 1.0740741010013153,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            229
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            229
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            229
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 824,
+          "sha256": "6375e1964b9731a334716eff7471f090c919612a1ae3d19a85f771bc17e3289a"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19420800,
+          "sha256": "0a6d96aaa19d408565d584e2ba7ef871e899211365b0cbbf6c6d53d8e408a6dc"
+        }
+      },
+      "process_ru_maxrss_kib": 363512,
+      "cgroup_memory_peak_bytes": 287879168,
+      "owned_container_absent": true
+    },
+    {
+      "context": "duration-t280",
+      "component": "duration",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/duration-t280/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "e495e98b2b59cea73a0e1c5f1440ce082a6ce325e924769cbb6712fe01ae5023"
+      },
+      "constructor_seconds": 0.39061916200080304,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            280
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            280
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifacts": {
+        "duration-context.onnx": {
+          "bytes": 815,
+          "sha256": "5179bb72c01e6e486ee39c1d3ea93090d4a573d8889445fe30a763ab639ddb55"
+        },
+        "duration-context_qnn.bin": {
+          "bytes": 2227064,
+          "sha256": "81fc6f7704aba203546c32859e666b706518900203eeaabd05ba2ca3e9cd3e38"
+        }
+      },
+      "process_ru_maxrss_kib": 227264,
+      "cgroup_memory_peak_bytes": 149635072,
+      "owned_container_absent": true
+    },
+    {
+      "context": "text-t280",
+      "component": "text",
+      "source": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0037-supertonic-provider-pipeline/htp/.local/contexts-01/derivatives/text-t280/text.onnx",
+        "bytes": 36566260,
+        "sha256": "da38cf66821c1590828876647c13552e48e30ad6df15614cc740ac68b4c87270"
+      },
+      "constructor_seconds": 1.1470659749975312,
+      "session_Run_calls": 0,
+      "profiling_enabled": false,
+      "cpu_fallback_disabled": true,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            280
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            280
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            280
+          ]
+        }
+      ],
+      "artifacts": {
+        "text-context.onnx": {
+          "bytes": 821,
+          "sha256": "70e823820d57362bc240ca306c3b6b5d66758d5488b2f1cc6ee14122bde5e5fa"
+        },
+        "text-context_qnn.bin": {
+          "bytes": 19482240,
+          "sha256": "156dfb21df49c8eeea7862bcd901918b510344e0f12483db37ff5f1e94af5cdd"
+        }
+      },
+      "process_ru_maxrss_kib": 362664,
+      "cgroup_memory_peak_bytes": 287059968,
+      "owned_container_absent": true
+    }
+  ]
+}
