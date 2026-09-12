@@ -33,8 +33,14 @@ def main():
     changed=[n for n in after if before.get(n)!=after[n]]
     if set(before)!=set(after) or len(after)!=9 or changed!=['lib/arm64-v8a/libpodcast_runtime.so']:raise ValueError('unexpected native change '+str(changed))
     native=a.native_build.resolve()/'libpodcast_runtime.so'
-    if digest(native)!=after[changed[0]]:raise ValueError('APK did not use nominated source-built bridge')
+    strip=Path('/home/moritz/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip')
+    stripped=out/'bridge-stripped-verification.so'
+    strip_command=[str(strip),'--strip-unneeded','-o',str(stripped),str(native)]
+    subprocess.run(strip_command,check=True,timeout=30,env={'HOME':str(Path.home()),'PATH':'/usr/bin:/bin','LANG':'C.UTF-8'})
+    if digest(stripped)!=after[changed[0]]:raise ValueError('APK bridge differs from exact AGP-style stripping of nominated build')
+    stripped_hash=digest(stripped);stripped.unlink()
     save('native-source-proof.json',{'nativeFiles':after,'changed':changed,'otherEightUnchanged':True,'bridgePath':str(native),
+        'unstrippedBridgeSha256':digest(native),'packagedBridgeSha256':stripped_hash,'stripToolSha256':digest(strip),'stripCommand':strip_command,
         'nativeSources':{str(f.relative_to(APP)):digest(f) for f in (APP/'app/src/main/cpp').iterdir() if f.is_file()},
         'fmaContraction':'off','sourceBuilt':True})
     for f in a.native_build.glob('*.log'):shutil.copy2(f,out/('native-'+f.name))
