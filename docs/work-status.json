@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-12T12:08:02+00:00",
+  "updated_at": "2026-09-12T12:13:54+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -69,10 +69,10 @@
       "title": "Gemma aligned-GPU reference build",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Native-QAT CPU cost diagnostic COMPLETE/released at580s:959 starts/954 completions,stopped layer21 MLP; AV393s dominates vs linear146/QK21/dequant~3/SRQ2.25; no OOM/swap/logits.",
-      "next": "ONE same native-QAT/full1929 CPU forward authorized/preparing with evidence-based1800s total,otherwise12GiB/2CPU/2GiB swap/headroom unchanged. Not started/result; old timeouts/GPU control distinct.",
-      "reported_at": "2026-09-12T11:49:03+00:00",
-      "reported_by": "Pi — completed cost diagnostic and next bounded forward",
+      "now": "Native-QAT full CPU checkpoint COMPLETE naturally: total958.471s/forward948.119s, child0/guard0, no OOM/swap/stop; all278 quantized text-head modules once/552 SRQ calls, private BF16[1,1,262144] logits retained.",
+      "next": "Reported argmax8291 independently verifying. Package/compare export/runtime semantics; no replay. Not full-generation quality, QNN matched quantization or root cause; long QNN collapse unresolved, old timeouts/GPU control retained.",
+      "reported_at": "2026-09-12T12:13:54+00:00",
+      "reported_by": "Pi — completed native-QAT CPU reference",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -100,10 +100,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "App provider integration handoff complete; Jere prepares bounded native-QAT CPU forward.",
-      "next": "No Janek implementation work active. App Ready chapter remains pending exact-file human review.",
-      "reported_at": "2026-09-12T12:08:02+00:00",
-      "reported_by": "Pi — app closure/current Gemma preparation",
+      "now": "Jere native-QAT full CPU reference completed/released; package/export/runtime semantic comparison next.",
+      "next": "No replay. Full CPU logits are not full-generation quality/QNN match/root-cause proof; long QNN collapse remains unresolved.",
+      "reported_at": "2026-09-12T12:13:54+00:00",
+      "reported_by": "Pi — Jere completed CPU checkpoint",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -130,9 +130,9 @@
     },
     {
       "name": "Jere",
-      "task": "Prepare one 1800s native-QAT full1929 CPU forward",
-      "reported_at": "2026-09-12T11:49:03+00:00",
-      "reported_by": "Pi — no forward start",
+      "task": "Package native-QAT CPU checkpoint; compare semantics",
+      "reported_at": "2026-09-12T12:13:54+00:00",
+      "reported_by": "Pi — forward complete/no replay",
       "stale_after_seconds": 900
     },
     {
