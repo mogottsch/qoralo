@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--unit=gemma-same-source-head-audit-01",
+    "--property=MemoryMax=1G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=Nice=15",
+    "--property=IOSchedulingClass=idle",
+    "--property=RuntimeMaxSec=180",
+    "--property=TimeoutStopSec=20",
+    "--property=KillMode=control-group",
+    "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/same-source-reference-readiness/head-audit-01-launch/stdout",
+    "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/same-source-reference-readiness/head-audit-01-launch/stderr",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/qairt-2.49.40-venv/bin/python",
+    "-B",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/audit_same_source_head.py",
+    "--output-dir",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/same-source-reference-readiness/head-audit-01"
+  ],
+  "source_sha256": "6903355258610937f66bd3bf15f3b532c033a13d0da684e984ee2e1e2f5fb0ae",
+  "mem_available_before": 22627643392,
+  "model_forward": false,
+  "adb_calls": 0
+}

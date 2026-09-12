@@ -1,0 +1,53 @@
+{
+  "classification": "static_same_source_head_fidelity_audit",
+  "model_forward_or_inference": false,
+  "adb_calls": 0,
+  "rows": 262144,
+  "values": 402653184,
+  "source_checkpoint_sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+  "checkpoint_bytes": 2458111846,
+  "checkpoint_header_bytes": 375392,
+  "checkpoint_tensor_count": 2780,
+  "source_config_sha256": "cf6d7dc22738b5e6beb364bac833d78b869f5a6ffd57dfc96c6be3f2abc80424",
+  "source_quant_code_sha256": "9bf6d109dfc3540a46953f5b183af766edcf6a044529c12d7751db47ee71cc17",
+  "export_graph_sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0",
+  "export_head_region": {
+    "location": "model.data",
+    "offset": "7453343744",
+    "length": "1610612736"
+  },
+  "export_head_region_sha256": "eb7ac2b168bd4446daba2aabf0df0d3a0f7b25dfea5afbcffad375e61e4146fc",
+  "export_config_tie_word_embeddings": true,
+  "source_config_tie_word_embeddings": false,
+  "source_lm_head_bits": 2,
+  "comparisons": {
+    "head_f32": {
+      "mismatching_values": 0,
+      "max_abs_error": 0.0,
+      "dequantized_f32_bytes_sha256": "eb7ac2b168bd4446daba2aabf0df0d3a0f7b25dfea5afbcffad375e61e4146fc",
+      "exact_equal": true
+    },
+    "head_bf16_forward": {
+      "mismatching_values": 247659600,
+      "max_abs_error": 0.00039309263229370117,
+      "dequantized_f32_bytes_sha256": "9dd2052c667e316c9b76fc1f267d8312a38cbe822b52da1273d82c47f9b99008",
+      "exact_equal": false
+    },
+    "embedding_f32": {
+      "mismatching_values": 0,
+      "max_abs_error": 0.0,
+      "dequantized_f32_bytes_sha256": "eb7ac2b168bd4446daba2aabf0df0d3a0f7b25dfea5afbcffad375e61e4146fc",
+      "exact_equal": true
+    },
+    "embedding_bf16_forward": {
+      "mismatching_values": 247659600,
+      "max_abs_error": 0.00039309263229370117,
+      "dequantized_f32_bytes_sha256": "9dd2052c667e316c9b76fc1f267d8312a38cbe822b52da1273d82c47f9b99008",
+      "exact_equal": false
+    }
+  },
+  "text_and_head_SRQ_scale_count": 632,
+  "nonzero_SRQ_scales": 630,
+  "seconds": 23.581273073000375,
+  "limits": "Original float ONNX head only, not DLC quantized arithmetic/HTP kernels, whole-model fidelity or a causal explanation of repetition. BF16-forward candidate rounds scale first, then product as the pinned source does."
+}
