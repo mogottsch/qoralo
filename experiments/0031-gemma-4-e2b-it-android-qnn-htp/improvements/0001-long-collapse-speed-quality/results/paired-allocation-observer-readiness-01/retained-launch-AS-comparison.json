@@ -1,0 +1,22 @@
+{
+  "same_context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+  "successful_source_runtime_commit": "2bcb58f0f25bc642ae731081dcab4149a77f01c7",
+  "successful_libGenie_sha256": "43b9bf47d82aaf375582c0b5631f8b032f65aeeebc5a7758cb8ea7cae5af022a",
+  "failed_capture_derivative_lib_sha256": "3a61a7ea888e39b54999c25b0644ff068733c343cb693e5eafee9be4538dccc2",
+  "successful_entry": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-phone-long-runs/trace-long-20260911T150027Z-01/control/model-entry.sh",
+    "sha256": "1cd88316cfbac4447b97b9088a7b92d74a3cde238f958878b58eb4b0667c113b",
+    "AS_setting_lines": [],
+    "actual_kernel_limit_readback": null
+  },
+  "failed_entry": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-phone-runs/paired-prefill-20260912T140747Z-02/control/model-entry.sh",
+    "sha256": "67d18a1c3c4222c3d0bfc42de874ecc1b9144a103c9865a648ac995aac8814ac",
+    "AS_setting_lines": [
+      "ulimit -v 8388608 || exit 72"
+    ],
+    "actual_kernel_limit_readback": null
+  },
+  "same_runtime_binary_claimed": false,
+  "interpretation": "A real launch-setting difference: successful same-variant base source-runtime entry had no explicit AS setting; failed observer derivative explicitly set8GiB. Absence of a setting is not proof the inherited old limit was unlimited. This is a clue, not sole-cause attribution or permission to raiseAS."
+}
