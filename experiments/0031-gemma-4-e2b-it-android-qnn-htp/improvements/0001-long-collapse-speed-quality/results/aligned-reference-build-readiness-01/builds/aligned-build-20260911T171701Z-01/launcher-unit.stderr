@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/build_aligned_litert_reference.py", line 147, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/build_aligned_litert_reference.py", line 113, in main
+    bound_copy(CACHE/s,work/s)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/build_aligned_litert_reference.py", line 67, in bound_copy
+    if sum(r['bytes'] for r in bindings)+Path(source).stat().st_size>16*GiB:raise RuntimeError('owned copy allocation cap')
+                                         ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 654, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/moritz/.cache/bazel/_bazel_moritz/ab44f4d89db1f18b2686fa7c4849d44d/execroot/litert_lm/external/androidndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_static.a'

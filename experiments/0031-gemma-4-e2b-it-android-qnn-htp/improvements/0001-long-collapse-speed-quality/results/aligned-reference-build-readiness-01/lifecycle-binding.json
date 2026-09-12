@@ -1,0 +1,109 @@
+{
+  "scope": "one aligned GPU reference only; actual Pi slot required",
+  "stage_digest": "247493005323235fac12203085f5d07599f179249bbbde908d4c17c288678e92",
+  "controller_sha256": "e2aa70da639ebd14fd34d298e3e1119ba762345edd5409959e63eaf13d32afdf",
+  "shell_sha256": "eb1d357e6d733ba8fba46a3d29da8af2b8189ad49c02215f8aed821e7e28ca36",
+  "adapter_sha256": "09843f7faecba5c2d1a67ff25fd59823519accfc3bd9fb92000bc8a33b6b264d",
+  "stage_verifier_sha256": "40c8eabf8d63821e9112c2a84f45f3871a3a189d2590ed9399b97fba1e4a7524",
+  "appguard_sha256": "8602ab27affb039464aad00210d484196b2b32d499466a922251a2469d7b6933",
+  "native_flags": [
+    "--backend=gpu",
+    "--model_path=models/gemma-4-E2B-it.litertlm",
+    "--workload_dir=workloads",
+    "--output_dir=evidence",
+    "--arm_id=0031-single-bos-aligned-gpu",
+    "--cache_dir=cache",
+    "--max_num_tokens=8192",
+    "--max_output_tokens=2048",
+    "--num_cpu_threads=4",
+    "--request_timeout_seconds=1800",
+    "--reset_mode=fresh_session"
+  ],
+  "inverse_reconstruction_exact": true,
+  "controller_changes": [
+    {
+      "before": "from prepare_frozen_genie_stage import verify as verify_stage",
+      "after": "from prepare_aligned_litert_stage import verify as verify_stage",
+      "count": 1
+    },
+    {
+      "before": "stage-freeze-20260910T105830Z-01",
+      "after": "aligned-gpu-20260912T094856Z-01",
+      "count": 1
+    },
+    {
+      "before": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25",
+      "after": "247493005323235fac12203085f5d07599f179249bbbde908d4c17c288678e92",
+      "count": 1
+    },
+    {
+      "before": "'.local/phone-return-runs'",
+      "after": "'.local/aligned-reference-phone-runs'",
+      "count": 1
+    },
+    {
+      "before": "'/data/local/tmp/vibevoice-0031-fp16-'",
+      "after": "'/data/local/tmp/vibevoice-0031-aligned-'",
+      "count": 1
+    },
+    {
+      "before": "single engineering short/max16 process",
+      "after": "single input-aligned GPU long/max2048 process",
+      "count": 1
+    },
+    {
+      "before": "one fresh-dialog first-short engineering/noncanonical max16 only",
+      "after": "one fresh-session aligned GPU long1929/max2048 diagnostic only",
+      "count": 1
+    },
+    {
+      "before": "first-short engineering max16 only",
+      "after": "aligned GPU long1929/max2048 engineering only",
+      "count": 1
+    },
+    {
+      "before": "bin/genie-app",
+      "after": "bin/litert_lm_aligned_reference",
+      "count": 2
+    },
+    {
+      "before": "expected_native_cmd = b'\\0'.join([expected_native_exe, b'-s', b'first-short.script']) + b'\\0'",
+      "after": "expected_native_cmd = b'\\0'.join(x.encode() for x in _ALIGNED_ARGV(self.remote)) + b'\\0'",
+      "count": 1
+    },
+    {
+      "before": "        prefix = shlex.quote(self.remote)\n        command = (f'cd {prefix} && nohup /system/bin/sh {shlex.quote(self.remote + \"/launch.sh\")} '\n                   f'</dev/null >evidence/launcher.stdout 2>evidence/launcher.stderr &')",
+      "after": "        command = _ALIGNED_DETACHED_LAUNCH(self.remote)",
+      "count": 1
+    },
+    {
+      "before": "'classification': 'collection_not_inference_validation', 'run_id': run_id,",
+      "after": "'classification': 'collection_not_inference_validation', 'run_id': run_id,\n                       'aligned_scope_adapter': _ALIGNED_RECEIPT,",
+      "count": 1
+    }
+  ],
+  "shell_changes": [
+    {
+      "before": "bin/genie-app",
+      "after": "bin/litert_lm_aligned_reference",
+      "count": 3
+    },
+    {
+      "before": "        expected=$(printf '%s\\n-s\\nfirst-short.script' \"$REMOTE/bin/litert_lm_aligned_reference\")\n        expected_fields=3",
+      "after": "        expected=$(printf '%s\\n--backend=gpu\\n--model_path=models/gemma-4-E2B-it.litertlm\\n--workload_dir=workloads\\n--output_dir=evidence\\n--arm_id=0031-single-bos-aligned-gpu\\n--cache_dir=cache\\n--max_num_tokens=8192\\n--max_output_tokens=2048\\n--num_cpu_threads=4\\n--request_timeout_seconds=1800\\n--reset_mode=fresh_session' \"$REMOTE/bin/litert_lm_aligned_reference\")\n        expected_fields=12",
+      "count": 1
+    },
+    {
+      "before": "export LD_LIBRARY_PATH=\"$REMOTE/lib\" ADSP_LIBRARY_PATH=\"$REMOTE/lib\" QNN_LOG_LEVEL=verbose",
+      "after": "export LD_LIBRARY_PATH=\"$REMOTE/lib\"",
+      "count": 1
+    },
+    {
+      "before": "exec \"$REMOTE/bin/litert_lm_aligned_reference\" -s first-short.script",
+      "after": "exec \"$REMOTE/bin/litert_lm_aligned_reference\" --backend=gpu --model_path=models/gemma-4-E2B-it.litertlm --workload_dir=workloads --output_dir=evidence --arm_id=0031-single-bos-aligned-gpu --cache_dir=cache --max_num_tokens=8192 --max_output_tokens=2048 --num_cpu_threads=4 --request_timeout_seconds=1800 --reset_mode=fresh_session",
+      "count": 1
+    }
+  ],
+  "signal_guard_atomic": false,
+  "historical_gpu_binary_equivalence_proven": false
+}

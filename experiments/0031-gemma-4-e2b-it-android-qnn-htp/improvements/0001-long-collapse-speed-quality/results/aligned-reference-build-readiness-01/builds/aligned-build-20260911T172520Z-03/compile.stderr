@@ -1,0 +1,87 @@
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:36:
+In file included from ./runtime/executor/llm_executor_io_types.h:29:
+In file included from external/litert/litert/cc/litert_tensor_buffer.h:34:
+In file included from external/litert/litert/cc/litert_environment.h:32:
+In file included from external/litert/litert/cc/litert_any.h:31:
+external/litert/litert/cc/litert_macros.h:538:10: warning: 'Error' is deprecated: Use the constructor that takes ::litert::Status instead. [-Wdeprecated-declarations]
+  538 |   return litert::Error(internal::macros_detail::ToLiteRtStatus(value.code()),
+      |          ^
+external/litert/litert/cc/litert_expected.h:58:5: note: 'Error' has been explicitly marked deprecated here
+   58 |   [[deprecated("Use the constructor that takes ::litert::Status instead.")]]
+      |     ^
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:36:
+In file included from ./runtime/executor/llm_executor_io_types.h:29:
+In file included from external/litert/litert/cc/litert_tensor_buffer.h:34:
+In file included from external/litert/litert/cc/litert_environment.h:32:
+In file included from external/litert/litert/cc/litert_any.h:31:
+external/litert/litert/cc/litert_macros.h:538:10: warning: 'Error' is deprecated: Use the constructor that takes ::litert::Status instead. [-Wdeprecated-declarations]
+  538 |   return litert::Error(internal::macros_detail::ToLiteRtStatus(value.code()),
+      |          ^
+external/litert/litert/cc/litert_expected.h:58:5: note: 'Error' has been explicitly marked deprecated here
+   58 |   [[deprecated("Use the constructor that takes ::litert::Status instead.")]]
+      |     ^
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:36:
+In file included from ./runtime/executor/llm_executor_io_types.h:29:
+In file included from external/litert/litert/cc/litert_tensor_buffer.h:34:
+external/litert/litert/cc/litert_environment.h:113:50: warning: 'Option' is deprecated: Use EnvironmentOptions::Option instead. [-Wdeprecated-declarations]
+  113 |   static Expected<Environment> Create(Span<const Option> options) {
+      |                                                  ^
+external/litert/litert/cc/litert_environment.h:101:12: note: 'Option' has been explicitly marked deprecated here
+  101 |   struct [[deprecated("Use EnvironmentOptions::Option instead.")]] Option {
+      |            ^
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:44:
+In file included from ./support/tokenizer/tokenizer.h:28:
+./support/util/convert_tensor_buffer.h:92:34: warning: 'CreateManagedHostMemory' is deprecated: Use API with explicit Environment instead. [-Wdeprecated-declarations]
+   92 |   return ::litert::TensorBuffer::CreateManagedHostMemory(
+      |                                  ^
+external/litert/litert/cc/litert_tensor_buffer.h:137:5: note: 'CreateManagedHostMemory' has been explicitly marked deprecated here
+  137 |   [[deprecated("Use API with explicit Environment instead.")]]
+      |     ^
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:44:
+In file included from ./support/tokenizer/tokenizer.h:28:
+./support/util/convert_tensor_buffer.h:195:52: warning: 'CreateManagedHostMemory' is deprecated: Use API with explicit Environment instead. [-Wdeprecated-declarations]
+  195 |     output_tensor_buffer = ::litert::TensorBuffer::CreateManagedHostMemory(
+      |                                                    ^
+external/litert/litert/cc/litert_tensor_buffer.h:137:5: note: 'CreateManagedHostMemory' has been explicitly marked deprecated here
+  137 |   [[deprecated("Use API with explicit Environment instead.")]]
+      |     ^
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:44:
+In file included from ./support/tokenizer/tokenizer.h:28:
+./support/util/convert_tensor_buffer.h:228:45: warning: 'CreateManagedHostMemory' is deprecated: Use API with explicit Environment instead. [-Wdeprecated-declarations]
+  228 |     tensor_buffer = ::litert::TensorBuffer::CreateManagedHostMemory(
+      |                                             ^
+external/litert/litert/cc/litert_tensor_buffer.h:137:5: note: 'CreateManagedHostMemory' has been explicitly marked deprecated here
+  137 |   [[deprecated("Use API with explicit Environment instead.")]]
+      |     ^
+In file included from aligned-reference.cc:34:
+In file included from ./runtime/core/session_utils.h:24:
+In file included from ./runtime/engine/engine_settings.h:36:
+In file included from ./runtime/executor/llm_executor_io_types.h:29:
+In file included from external/litert/litert/cc/litert_tensor_buffer.h:34:
+In file included from external/litert/litert/cc/litert_environment.h:32:
+In file included from external/litert/litert/cc/litert_any.h:30:
+external/litert/litert/cc/litert_expected.h:217:27: warning: 'TensorBuffer' is deprecated: Do NOT use the default constructor. [-Wdeprecated-declarations]
+  217 |       : has_value_(true), value_(std::forward<Args>(args)...) {}
+      |                           ^
+./support/util/convert_tensor_buffer.h:193:46: note: in instantiation of function template specialization 'litert::Expected<litert::TensorBuffer>::Expected<>' requested here
+  193 |   ::litert::Expected<::litert::TensorBuffer> output_tensor_buffer;
+      |                                              ^
+./support/tokenizer/tokenizer.h:63:9: note: in instantiation of function template specialization 'litert::support::CopyToTensorBuffer<int>' requested here
+   63 |         CopyToTensorBuffer<int>(absl::MakeConstSpan(token_ids),
+      |         ^
+external/litert/litert/cc/litert_tensor_buffer.h:82:5: note: 'TensorBuffer' has been explicitly marked deprecated here
+   82 |   [[deprecated("Do NOT use the default constructor.")]]
+      |     ^
+7 warnings generated.

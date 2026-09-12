@@ -1,0 +1,123 @@
+{
+  "machine": "AArch64",
+  "api": 31,
+  "needed": {
+    "litert_lm_aligned_reference": [
+      "libLiteRt.so",
+      "libEGL.so",
+      "libGLESv3.so",
+      "libdl.so",
+      "libm.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "libGemmaModelConstraintProvider.so": [
+      "liblog.so",
+      "libdl.so",
+      "libc.so",
+      "libm.so"
+    ],
+    "libLiteRt.so": [
+      "libdl.so",
+      "libGLESv3.so",
+      "libEGL.so",
+      "libm.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "libLiteRtGpuAccelerator.so": [
+      "libwebgpu_dawn.so",
+      "libdl.so",
+      "libm.so",
+      "libEGL.so",
+      "libGLESv2.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "libLiteRtOpenClAccelerator.so": [
+      "libGLESv3.so",
+      "libEGL.so",
+      "libm.so",
+      "liblog.so",
+      "libdl.so",
+      "libc.so"
+    ],
+    "libLiteRtTopKOpenClSampler.so": [
+      "libandroid.so",
+      "libm.so",
+      "libdl.so",
+      "liblog.so",
+      "libGLESv3.so",
+      "libEGL.so",
+      "libc.so"
+    ],
+    "libLiteRtTopKWebGpuSampler.so": [
+      "libwebgpu_dawn.so",
+      "libandroid.so",
+      "libm.so",
+      "liblog.so",
+      "libGLESv3.so",
+      "libEGL.so",
+      "libc.so",
+      "libdl.so"
+    ],
+    "libLiteRtWebGpuAccelerator.so": [
+      "libwebgpu_dawn.so",
+      "libm.so",
+      "liblog.so",
+      "libdl.so",
+      "libc.so"
+    ],
+    "libwebgpu_dawn.so": [
+      "liblog.so",
+      "libc.so",
+      "libm.so",
+      "libdl.so"
+    ]
+  },
+  "unbound_dependencies": [],
+  "runner_LiteRt_imports": [
+    "LiteRtCreateManagedTensorBuffer",
+    "LiteRtCreateModelFromBuffer",
+    "LiteRtCreateModelFromFd",
+    "LiteRtDestroyModel",
+    "LiteRtDestroyProfiler",
+    "LiteRtDestroyTensorBuffer",
+    "LiteRtDestroyTensorBufferRequirements",
+    "LiteRtGetBlockWiseQuantization",
+    "LiteRtGetMainModelSubgraphIndex",
+    "LiteRtGetModelSignature",
+    "LiteRtGetModelSubgraph",
+    "LiteRtGetNumModelSignatures",
+    "LiteRtGetNumOpInputs",
+    "LiteRtGetNumSignatureInputs",
+    "LiteRtGetNumSignatureOutputs",
+    "LiteRtGetNumSubgraphOps",
+    "LiteRtGetNumSubgraphOutputs",
+    "LiteRtGetOpCode",
+    "LiteRtGetOpInput",
+    "LiteRtGetPerChannelQuantization",
+    "LiteRtGetPerTensorQuantization",
+    "LiteRtGetProfileSummary",
+    "LiteRtGetQuantizationTypeId",
+    "LiteRtGetRankedTensorType",
+    "LiteRtGetSignatureInputName",
+    "LiteRtGetSignatureInputTensorByIndex",
+    "LiteRtGetSignatureKey",
+    "LiteRtGetSignatureOutputName",
+    "LiteRtGetSignatureOutputTensorByIndex",
+    "LiteRtGetSubgraphOp",
+    "LiteRtGetSubgraphOutput",
+    "LiteRtGetTensorIndex",
+    "LiteRtGetTensorName",
+    "LiteRtGetTensorTypeId",
+    "LiteRtGetTensorWeights",
+    "LiteRtGetUnrankedTensorType",
+    "LiteRtGetWeightsBytes",
+    "LiteRtJoinTensorBufferRequirements",
+    "LiteRtStartProfiler",
+    "LiteRtStopProfiler"
+  ],
+  "missing_LiteRt_exports": [],
+  "android_execution_proven": false
+}

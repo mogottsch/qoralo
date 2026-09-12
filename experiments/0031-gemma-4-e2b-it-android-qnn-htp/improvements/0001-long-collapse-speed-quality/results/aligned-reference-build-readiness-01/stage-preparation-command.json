@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--unit=gemma-aligned-reference-stage-01",
+    "--property=MemoryMax=1G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=Nice=15",
+    "--property=IOSchedulingClass=idle",
+    "--property=RuntimeMaxSec=240",
+    "--property=TimeoutStopSec=30",
+    "--property=KillMode=control-group",
+    "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/aligned-reference-stage-preparation/aligned-gpu-20260912T094856Z-01/result.json",
+    "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/aligned-reference-stage-preparation/aligned-gpu-20260912T094856Z-01/stderr",
+    "/usr/bin/python3",
+    "-B",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/prepare_aligned_litert_stage.py",
+    "--stage-name",
+    "aligned-gpu-20260912T094856Z-01"
+  ],
+  "source_sha256": "40c8eabf8d63821e9112c2a84f45f3871a3a189d2590ed9399b97fba1e4a7524"
+}

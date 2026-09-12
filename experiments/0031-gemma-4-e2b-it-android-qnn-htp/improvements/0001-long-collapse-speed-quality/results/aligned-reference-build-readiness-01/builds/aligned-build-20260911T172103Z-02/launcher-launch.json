@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "systemd-run",
+    "--user",
+    "--unit=gemma-aligned-reference-build-02",
+    "--collect",
+    "--property=MemoryHigh=3G",
+    "--property=MemoryMax=4G",
+    "--property=MemorySwapMax=1G",
+    "--property=CPUQuota=200%",
+    "--property=TasksMax=128",
+    "--property=Nice=15",
+    "--property=IOSchedulingClass=idle",
+    "--property=RuntimeMaxSec=1800",
+    "--property=TimeoutStopSec=30",
+    "--property=KillMode=control-group",
+    "--property=OOMPolicy=stop",
+    "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/aligned-reference-launches/aligned-build-20260911T172103Z-02/unit.stdout",
+    "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/aligned-reference-launches/aligned-build-20260911T172103Z-02/unit.stderr",
+    "/usr/bin/python3",
+    "-B",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/build_aligned_litert_reference.py",
+    "--run-id",
+    "aligned-build-20260911T172103Z-02"
+  ],
+  "source_sha256": "4e1041843c1cb9ac3ecc4b1f4fa1bca0df3ea9541ea70dc26dc68906745660b6",
+  "launch_minimum_mem_available_GiB": 12,
+  "runtime_mem_floor_GiB": 4,
+  "runtime_disk_floor_GiB": 64,
+  "copy_allocation_cap_GiB": 16,
+  "actual_model_or_adb_execution": false,
+  "correction": "Preserved attempt01 failed before native compile: cached androidndk reference absent. Bind the same installed NDK28.1.13356709 static C++ archives explicitly; all core objects remain copied unchanged."
+}
