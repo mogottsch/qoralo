@@ -49,6 +49,9 @@ class ProviderPipelineTests(unittest.TestCase):
     def test_model_stage_stops_on_failed_preconditions_and_cleanup_is_independent(self):
         src=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
         self.assertIn('set -eu; mkdir -p no_backup/model-packs/',src)
+        self.assertLess(src.index('before=stable(\'before\')'),src.index("health('health-after-idle-close',True)"))
+        self.assertLess(src.index("health('health-after-idle-close',True)"),src.index("device.run(['install'"))
+        self.assertIn("health('health-before-inference',True)",src)
         self.assertIn('independent_cleanup(actions',src)
         self.assertIn('foreign active work; never stop it',src)
         self.assertIn('os.set_inheritable(lock.fileno(),False)',src)

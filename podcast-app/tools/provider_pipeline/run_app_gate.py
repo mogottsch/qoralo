@@ -156,7 +156,7 @@ def main():
     with (PROJECT.parent/'artifacts/locks/phone.lock').open('a+') as lock:
         os.set_inheritable(lock.fileno(),False);fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         try:
-            guard.identity();save('installed-before.json',installed(c['priorInstalled']));health('health-before',True)
+            guard.identity();save('installed-before.json',installed(c['priorInstalled']));health('health-before')
             before=stable('before');state=rows(before);safe_close(state,None)
             ref=next(r for r in state['script_revisions'] if r['id']==REFERENCE['revision'])
             chapter=next(r for r in state['chapters'] if r['revisionId']==ref['id'] and r['stableChapterId']==REFERENCE['chapter'])
@@ -166,6 +166,7 @@ def main():
             require(device.shell(f'run-as {APP} sh -c '+shlex.quote('if '+controls+'; then echo ARMED; else echo CLEAR; fi'),timeout=10).strip()=='CLEAR','foreign diagnostics armed')
             device.shell(f'run-as {APP} sh -c '+shlex.quote(f'test ! -e files/provider-integration/{a.run_id} && test ! -e files/provider-integration/{a.run_id}-driver'),timeout=10)
             stop(state,None);setup=True
+            health('health-after-idle-close',True)  # Same limits, after authorized closure of proven-idle app caches and before staging/model work.
             for kind,package in [('app',APP),('test',TEST_APP)]:
                 if c['priorInstalled'][package]!=c[kind]['sha256']:device.run(['install','-r','-t',c[kind]['path']],timeout=180)
             save('installed-candidate.json',installed({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}))
@@ -179,6 +180,7 @@ def main():
             for item in [{'path':'manifest.json','sha256':c['providerPack']['manifestSha256']},*manifest['files']]:
                 got=device.shell(f'run-as {APP} sha256sum '+shlex.quote(destination+'/'+item['path']),timeout=30).split()[0];require(got==item['sha256'],'device provider pack mismatch')
             pre=stable('before-instrument');require(pre==before,'database changed during update');guard.idle()
+            health('health-before-inference',True)
             command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
                 '-e','providerIntegration','copied-real-chapter-v1','-e','diagnosticRun',a.run_id,
                 '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
