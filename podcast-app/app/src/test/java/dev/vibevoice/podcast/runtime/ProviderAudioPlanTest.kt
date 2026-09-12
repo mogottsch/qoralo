@@ -117,6 +117,42 @@ class ProviderAudioPlanTest {
         assertThrows(IllegalArgumentException::class.java) { ProviderAudioPlan.verify(artifacts, id, job, revision.id, revision.contentHash, ProviderAudioPlan.PACK_SHA256, chapters) }
         assertEquals(job, repository.latestJob(id)?.id)
     }
+    @Test fun completedPublicationRecoveryUsesNewJobAndNeverConstructsAnInferenceEngine() = runTest {
+        val text="A sentence.";val id=draft(text);val revision=repository.activeRevision(id).first
+        val oldJob=repository.lockAndQueueAudio(id);repository.claimJob(id,oldJob,JobKind.AUDIO,"Rendering")
+        repository.failJob(id,oldJob,"Synthetic publication failure")
+        val failed=repository.latestJob(id)!!;val locked=repository.episode(id)
+        val base=JSONObject(artifacts.resolveEpisodeFile("$id/audio-plans/$oldJob.json").readText()).getJSONArray("chapters").getJSONObject(0)
+        val segment=base.getJSONArray("segments").getJSONObject(0)
+        val folder=File(artifacts.episodesRoot,"$id/chapters/.provider-test").apply { mkdirs() }
+        val wave=File(folder,"complete-chapter.wav")
+        RandomAccessFile(wave,"rw").use { out ->
+            fun u16(v:Int) {out.write(v and 255);out.write((v ushr 8) and 255)}
+            fun u32(v:Int) {u16(v and 65535);u16((v ushr 16) and 65535)}
+            out.writeBytes("RIFF");u32(36+3072*2);out.writeBytes("WAVEfmt ");u32(16);u16(1);u16(1);u32(44100);u32(88200);u16(2);u16(16);out.writeBytes("data");u32(3072*2);repeat(3072){u16(1200)}
+        }
+        wave.copyTo(File(folder,"segment-0.wav"));val metadata=WavInspector.inspectSupertonicOutput(wave)
+        val entry=JSONObject().put("index",0).put("nativeLatentLength",1).put("frameCount",3072)
+            .put("idsSha256",segment.getString("idsSha256")).put("processedSha256",segment.getString("processedSha256"))
+            .put("rawSegmentSha256",segment.getString("rawSha256")).put("neuralCalls",11)
+            .put("nativeTextLength",segment.getInt("nativeTextLength")).put("noiseOffset",0).put("noiseConsumed",144).put("waveSha256",metadata.sha256)
+        File(folder,"provider-receipt.json").writeText(JSONObject().put("status","complete_chapter").put("packSha256",ProviderAudioPlan.PACK_SHA256)
+            .put("frontendVersion",ProviderTextFrontend.VERSION).put("chapterId","c1").put("rawChapterSha256",base.getString("textSha256"))
+            .put("waveSha256",metadata.sha256).put("frameCount",3072).put("steps",8).put("speedHundredths",105).put("gapFrames",13230)
+            .put("randomSeed",20260911).put("cpuFallback",false).put("provider","QNN_HTP").put("segments",org.json.JSONArray().put(entry)).toString())
+        val newJob=repository.queueProviderPublicationRecovery(id,oldJob,revision.id,listOf(artifacts.relativeToEpisodes(wave) to metadata.sha256))
+        assertNotEquals(oldJob,newJob)
+        val pack=ModelPackVerifier().verify(File(requireNotNull(System.getenv("PODCAST_PROVIDER_PACK"))),
+            ModelPackRequirement(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP,ProviderAudioPlan.PACK_ID,ProviderAudioPlan.PACK_SHA256))
+        val coordinator=dev.vibevoice.podcast.generation.GenerationCoordinator(repository,artifacts,
+            llmFactory={error("LLM factory forbidden in publication")},ttsFactory={error("TTS factory forbidden in publication")},testPackProvider={pack})
+        coordinator.generateAudio(id,newJob) {}
+        val ready=repository.episode(id)
+        assertEquals(EpisodePhase.FROZEN_READY,ready.phase);assertEquals(metadata.sha256,ready.finalAudioSha256)
+        assertEquals(failed,database.podcastDao().job(oldJob));assertEquals(locked.lockedAtEpochMs,ready.lockedAtEpochMs)
+        assertEquals(metadata.sha256,ProviderPublication.hash(wave));assertEquals(JobStatus.COMPLETE,repository.latestJob(id)?.status)
+    }
+
     @Test fun actualLocalPackPassesFullDataIntegrityAndDeclaresProviderRecipe() {
         val pack = ModelPackVerifier().verify(File(requireNotNull(System.getenv("PODCAST_PROVIDER_PACK"))),
             ModelPackRequirement(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP, ProviderAudioPlan.PACK_ID, ProviderAudioPlan.PACK_SHA256))

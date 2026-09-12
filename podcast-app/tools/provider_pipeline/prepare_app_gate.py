@@ -10,7 +10,7 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser();p.add_argument('--source-commit',required=True);p.add_argument('--work',type=Path,required=True)
     p.add_argument('--native-build',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');a=p.parse_args()
+    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');a=p.parse_args()
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);build=a.work.resolve()/'build-source/podcast-app'
     commit=subprocess.check_output(['git','rev-parse',a.source_commit],cwd=ROOT,text=True).strip()
     names=subprocess.check_output(['git','ls-tree','-r','--name-only',commit,'--','podcast-app/app/src','podcast-app/app/schemas','podcast-app/config','podcast-app/app/build.gradle.kts','podcast-app/build.gradle.kts','podcast-app/settings.gradle.kts','podcast-app/gradle.properties'],cwd=ROOT,text=True).splitlines()
@@ -31,13 +31,13 @@ def main():
         with zipfile.ZipFile(path) as z:return {n:hashlib.sha256(z.read(n)).hexdigest() for n in z.namelist() if n.startswith('lib/') and n.endswith('.so')}
     before=natives(prior['app']['path']);after=natives(out/'app.apk')
     changed=[n for n in after if before.get(n)!=after[n]]
-    if set(before)!=set(after) or len(after)!=9 or changed!=['lib/arm64-v8a/libpodcast_runtime.so']:raise ValueError('unexpected native change '+str(changed))
+    if set(before)!=set(after) or len(after)!=9 or any(n!='lib/arm64-v8a/libpodcast_runtime.so' for n in changed):raise ValueError('unexpected native change '+str(changed))
     native=a.native_build.resolve()/'libpodcast_runtime.so'
     strip=Path('/home/moritz/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip')
     stripped=out/'bridge-stripped-verification.so'
     strip_command=[str(strip),'--strip-unneeded','-o',str(stripped),str(native)]
     subprocess.run(strip_command,check=True,timeout=30,env={'HOME':str(Path.home()),'PATH':'/usr/bin:/bin','LANG':'C.UTF-8'})
-    if digest(stripped)!=after[changed[0]]:raise ValueError('APK bridge differs from exact AGP-style stripping of nominated build')
+    if digest(stripped)!=after['lib/arm64-v8a/libpodcast_runtime.so']:raise ValueError('APK bridge differs from exact AGP-style stripping of nominated build')
     stripped_hash=digest(stripped);stripped.unlink()
     save('native-source-proof.json',{'nativeFiles':after,'changed':changed,'otherEightUnchanged':True,'bridgePath':str(native),
         'unstrippedBridgeSha256':digest(native),'packagedBridgeSha256':stripped_hash,'stripToolSha256':digest(strip),'stripCommand':strip_command,
@@ -74,11 +74,11 @@ def main():
         file=pack/item['path']
         if file.stat().st_size!=item['bytes'] or digest(file)!=item['sha256']:raise ValueError('provider asset drift')
     shutil.copy2(pack/'manifest.json',out/'provider-manifest.json')
-    value={'kind':'provider-app-integration','sourceCommit':commit,'controllerSha256':digest(Path(__file__).with_name('run_app_gate.py')),
+    value={'kind':'provider-publication-recovery' if a.publication_recovery else 'provider-app-integration','sourceCommit':commit,'controllerSha256':digest(Path(__file__).with_name('run_publication_recovery.py' if a.publication_recovery else 'run_app_gate.py')),
         'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{ 'dev.vibevoice.podcast.internal':prior['app']['sha256'],'dev.vibevoice.podcast.internal.test':prior['test']['sha256']},
         'providerPack':{'root':str(pack),'manifestSha256':binding['manifestSha256'],'bytes':sum(x['bytes'] for x in manifest['files'])},
-        'scope':'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
-        'instrumentationSeconds':660,'driverAudioPollingSeconds':600,'genericTextRange':[1,320],'genericLatentRange':[1,512],
+        'scope':'new non-neural publication attempt for exact already-completed owned chapter; original failed job/plan/WAV and all other user data preserved' if a.publication_recovery else 'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
+        'instrumentationSeconds':120 if a.publication_recovery else 660,'driverAudioPollingSeconds':90 if a.publication_recovery else 600,'genericTextRange':[1,320],'genericLatentRange':[1,512],
         'steps':8,'speedHundredths':105,'gapFrames':13230,'frontend':'supertonic-py1.3.1 raw sentence grouping then globalUnicode14NFKD',
         'noCpuFallback':True,'noStreamingPlaybackClaim':True,'legacyVectorStrictNumericalGate':'failed; preserved',
         'newAppWaveListening':'not_reviewed','independentReviewer':None,'hostTests':counts}

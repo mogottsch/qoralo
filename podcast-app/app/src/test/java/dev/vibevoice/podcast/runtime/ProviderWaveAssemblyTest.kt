@@ -26,6 +26,17 @@ class ProviderWaveAssemblyTest {
         assertArrayEquals(expected,output.readBytes().drop(44).toByteArray())
         assertEquals(3072L+6144+13230,WavInspector.inspectSupertonicOutput(output).frameCount)
     }
+    @Test fun publicationStagesInDestinationDirectoryAndPreservesCompletedSource() {
+        val scratch=temporary.newFolder("scratch");val destination=temporary.newFolder("published")
+        val source=File(scratch,"complete.wav").apply { writeBytes(ByteArray(1200) { (it % 251).toByte() }) }
+        val bytes=source.readBytes();val hash=ProviderPublication.hash(source)
+        val target=File(destination,"chapter.wav")
+        ProviderPublication.publish(source,target,hash)
+        assertArrayEquals(bytes,source.readBytes());assertArrayEquals(bytes,target.readBytes())
+        assertEquals(listOf("chapter.wav"),destination.listFiles()!!.map { it.name })
+        assertThrows(IllegalArgumentException::class.java) { ProviderPublication.publish(source,File(destination,"bad.wav"),"wrong-hash") }
+        assertFalse(File(destination,"bad.wav").exists())
+    }
     @Test fun oneSegmentHasNoAddedGapAndChangedSourceIsRejected() {
         val a=wave("one.wav",3072,800);val metadata=WavInspector.inspectSupertonicOutput(a)
         val output=File(temporary.root,"one-chapter.wav")

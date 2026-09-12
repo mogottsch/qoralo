@@ -1,4 +1,5 @@
 import importlib.util
+import copy
 from pathlib import Path
 import sys
 import unittest
@@ -8,12 +9,28 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(ROOT/'podcast-app/tools'))
 from run_app_gate import safe_close,parse_health
 from duration_phone_guard import GuardError
+from run_publication_recovery import compare_recovery,SCOPE
+from short_product_preservation import TABLES
 
 class ProviderPipelineTests(unittest.TestCase):
     def test_real_format_health_fields_parse_without_weakening_resource_limits(self):
         self.assertEqual({'availableMemoryKiB':4321000,'batteryTemperatureC':28.3},
             parse_health('MemTotal:       10240000 kB\nMemAvailable:    4321000 kB\n','Current Battery Service state:\n  temperature: 283\n'))
         with self.assertRaises(GuardError):parse_health('MemAvailable: unknown','temperature: unknown')
+    def test_publication_recovery_preserves_failed_attempt_and_uses_no_engine(self):
+        before={t:[] for t in TABLES}
+        before['episodes']=[{'id':SCOPE['episodeId'],'phase':'FAILED','lockedRevisionId':SCOPE['revisionId']}]
+        before['generation_jobs']=[{'id':SCOPE['sourceJobId'],'episodeId':SCOPE['episodeId'],'kind':'AUDIO','status':'FAILED','requestedRevisionId':SCOPE['revisionId']}]
+        after=copy.deepcopy(before)
+        self.assertEqual(0,compare_recovery(before,after)['newNeuralCalls'])
+        after['generation_jobs'][0]['status']='COMPLETE'
+        with self.assertRaises(GuardError):compare_recovery(before,after)
+        source=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/generation/GenerationCoordinator.kt').read_text()
+        self.assertLess(source.index('if (recovery != null)'),source.index('val engine = ttsFactory()'))
+        self.assertIn('return // Crucially before constructing/loading any TtsEngine.',source)
+        driver=(ROOT/'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/e2e/ProviderPublicationRecoveryTest.kt').read_text()
+        for forbidden in ('ProviderNative','GemmaLiteRtGpuEngine','renderChapter','throw error','performClick'):
+            self.assertNotIn(forbidden,driver)
     def test_only_authenticated_owned_audio_work_can_be_closed(self):
         safe_close({'generation_jobs':[]},None)
         safe_close({'generation_jobs':[{'status':'RUNNING','episodeId':'owned','kind':'AUDIO'}]},'owned')

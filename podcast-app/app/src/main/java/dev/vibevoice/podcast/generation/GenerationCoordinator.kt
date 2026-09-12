@@ -79,8 +79,26 @@ class GenerationCoordinator(
         val (episode, chapters) = repository.lockedChapterData(episodeId)
         repository.claimJob(episodeId, jobId, JobKind.AUDIO, "Verifying Supertonic", chapters.size)
         val pack = loadPack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
-        repository.verifyAudioPlan(episodeId, jobId, pack)
+        val recovery = repository.verifyAudioPlan(episodeId, jobId, pack)
         repository.resetChapterAudio(episodeId)
+        if (recovery != null) {
+            require(recovery.size == chapters.size)
+            val rendered = mutableListOf<WavAssembler.Input>()
+            var cursor = 0L
+            chapters.forEachIndexed { index, chapter ->
+                val saved = recovery[index]
+                repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, "Publishing saved chapter ${index + 1}; no inference")
+                progress("Publishing completed audio without running the voice model")
+                val output = artifacts.chapterWav(episodeId, chapter.position)
+                dev.vibevoice.podcast.runtime.ProviderPublication.publish(saved.source, output, saved.metadata.sha256)
+                repository.commitChapterAudio(episodeId, jobId, chapter, saved.metadata, output, cursor)
+                rendered += WavAssembler.Input(chapter.stableChapterId, chapter.title, output)
+                cursor += saved.metadata.frameCount + if (index < chapters.lastIndex) 44_100L * 700L / 1_000L else 0
+            }
+            val final = WavAssembler(artifacts).assemble(episodeId, jobId, rendered)
+            repository.completeAudio(episodeId, jobId, final)
+            return // Crucially before constructing/loading any TtsEngine.
+        }
         val engine = ttsFactory()
         val rendered = mutableListOf<WavAssembler.Input>()
         var cursorFrame = 0L

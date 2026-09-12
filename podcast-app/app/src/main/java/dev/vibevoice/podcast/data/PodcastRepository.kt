@@ -247,15 +247,47 @@ class PodcastRepository(
         } catch (error: Throwable) { plan?.file?.delete(); throw error }
     }
 
-    suspend fun verifyAudioPlan(episodeId: String, jobId: String, pack: VerifiedModelPack) {
+    internal suspend fun verifyAudioPlan(episodeId: String, jobId: String, pack: VerifiedModelPack): List<dev.vibevoice.podcast.runtime.ProviderPublicationRecovery.Chapter>? {
         val contract = pack.contract as? dev.vibevoice.podcast.model.SupertonicModelContract ?: error("Missing audio contract")
-        if (contract.providerPipeline == null) return
+        if (contract.providerPipeline == null) return null
         val job = requireJob(jobId); val (episode, chapters) = lockedChapterData(episodeId)
         require(job.kind == JobKind.AUDIO && job.episodeId == episodeId && job.requestedRevisionId == episode.lockedRevisionId && job.status == JobStatus.RUNNING)
         val revision = requireNotNull(dao.revision(requireNotNull(episode.lockedRevisionId)))
         require(revision.episodeId == episodeId && artifacts.sha256(artifacts.resolveEpisodeFile(revision.relativePath)) == revision.contentHash)
-        dev.vibevoice.podcast.runtime.ProviderAudioPlan.verify(artifacts, episodeId, jobId, revision.id, revision.contentHash,
-            pack.manifestSha256, chapters.map { ChapterDraft(it.stableChapterId, it.title, it.text) })
+        val inputs = chapters.map { ChapterDraft(it.stableChapterId, it.title, it.text) }
+        if (dev.vibevoice.podcast.runtime.ProviderPublicationRecovery.isRecovery(artifacts, episodeId, jobId)) {
+            require(pack.manifestSha256 == dev.vibevoice.podcast.runtime.ProviderAudioPlan.PACK_SHA256)
+            val (sourceJob, completed) = dev.vibevoice.podcast.runtime.ProviderPublicationRecovery.verify(artifacts, episodeId, jobId, revision.id, revision.contentHash, inputs)
+            val previous = requireJob(sourceJob)
+            require(previous.episodeId == episodeId && previous.kind == JobKind.AUDIO && previous.status == JobStatus.FAILED && previous.requestedRevisionId == revision.id)
+            return completed
+        }
+        dev.vibevoice.podcast.runtime.ProviderAudioPlan.verify(artifacts, episodeId, jobId, revision.id, revision.contentHash, pack.manifestSha256, inputs)
+        return null
+    }
+
+    /** Explicit new, non-neural publication attempt. Original failed job/plan/waves are immutable. */
+    internal suspend fun queueProviderPublicationRecovery(episodeId: String, failedJobId: String, revisionId: String,
+        completed: List<Pair<String, String>>): String {
+        var saved: dev.vibevoice.podcast.runtime.ProviderAudioPlan.Saved? = null
+        try {
+            return database.withTransaction {
+                val episode = requireEpisode(episodeId);val failed = requireJob(failedJobId)
+                require(episode.phase == EpisodePhase.FAILED && episode.lockedRevisionId == revisionId && episode.activeRevisionId == revisionId)
+                require(failed.episodeId == episodeId && failed.kind == JobKind.AUDIO && failed.status == JobStatus.FAILED && failed.requestedRevisionId == revisionId)
+                require(dao.latestJob(episodeId)?.id == failedJobId && dao.activeJobCount() == 0)
+                require(dao.chapterAudio(episodeId).isEmpty()) { "Recovery cannot overwrite published chapter audio" }
+                val revision = requireNotNull(dao.revision(revisionId))
+                require(revision.episodeId == episodeId && revision.contentHash == episode.lockedContentHash && artifacts.sha256(artifacts.resolveEpisodeFile(revision.relativePath)) == revision.contentHash)
+                val chapters = dao.chapters(revisionId).map { ChapterDraft(it.stableChapterId, it.title, it.text) }
+                val attempt = newJob(episodeId, JobKind.AUDIO, revisionId, "Publishing completed audio without inference")
+                saved = dev.vibevoice.podcast.runtime.ProviderPublicationRecovery.save(artifacts, episodeId, revisionId, revision.contentHash, failedJobId, attempt.id, chapters, completed)
+                val job = attempt.copy(id = requireNotNull(saved).jobId)
+                dao.insertJob(job)
+                dao.updateEpisode(episode.copy(phase = EpisodePhase.LOCKED, failurePhase = null, failureMessage = null, updatedAtEpochMs = clock()))
+                job.id
+            }
+        } catch (error: Throwable) { saved?.file?.delete();throw error }
     }
 
     suspend fun claimJob(episodeId: String, jobId: String, expectedKind: String, status: String, totalChapters: Int = 0): JobClaim = database.withTransaction {

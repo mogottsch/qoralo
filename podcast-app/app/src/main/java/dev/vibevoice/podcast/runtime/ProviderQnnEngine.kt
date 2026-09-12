@@ -89,8 +89,8 @@ class ProviderQnnEngine(private val retainIntermediates: Boolean = false) : TtsE
             require(result.frameCount == completedFrames)
             val summary = File(scratch, "provider-receipt.json")
             summary.writeText(receipt("complete_chapter").put("frameCount", result.frameCount).put("waveSha256", result.sha256).toString(2))
-            AtomicArtifactCommit.commit(summary, File(output.parentFile, output.name + ".provider.json"))
-            AtomicArtifactCommit.commit(temp, output)
+            ProviderPublication.publish(summary, File(output.parentFile, output.name + ".provider.json"), ProviderPublication.hash(summary))
+            ProviderPublication.publish(temp, output, result.sha256)
             published = true
             result
         } catch (error: Throwable) {
