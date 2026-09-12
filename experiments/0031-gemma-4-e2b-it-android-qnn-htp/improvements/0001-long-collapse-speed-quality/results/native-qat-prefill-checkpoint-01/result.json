@@ -1,0 +1,100 @@
+{
+  "classification": "native_qat_cpu_prefill_timed_out_without_logits",
+  "strict_loaded_text_head_validation_passed": true,
+  "validated_text_head_tensor_count": 1371,
+  "source_meta_schema": {
+    "expected_keys": 1371,
+    "checkpoint_keys": 1601,
+    "native_unused_keys": 230,
+    "variable_PLE_scale_shape": {
+      "key": "model.language_model.embed_tokens_per_layer.embedding_scale",
+      "constructor_shape": [
+        262144,
+        1
+      ],
+      "checkpoint_loaded_shape": [
+        262144,
+        35
+      ],
+      "block_width": 256,
+      "model_modified": false,
+      "basis": "Pinned core_model_loading.set_param_for_module retains checkpoint shape for quantizers; native QuantizedEmbedding._dequantize_weights computes block_size=embedding_dim/scale_columns."
+    }
+  },
+  "runtime": {
+    "torch": "2.10.0+cpu",
+    "transformers": "5.16.0.dev0",
+    "source_revision": "323f24345ed92f88e68a14aeef7db78ee2b52475",
+    "dtype": "bfloat16",
+    "device": "cpu",
+    "attention": "eager",
+    "use_kernels": false,
+    "threads": 2,
+    "interop_threads": 1,
+    "packages": {
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.1",
+      "accelerate": "1.12.0",
+      "huggingface-hub": "1.28.0",
+      "numpy": "1.26.4"
+    },
+    "quant_implementation_sha256": "9bf6d109dfc3540a46953f5b183af766edcf6a044529c12d7751db47ee71cc17",
+    "checkpoint_sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+    "config_sha256": "cf6d7dc22738b5e6beb364bac833d78b869f5a6ffd57dfc96c6be3f2abc80424",
+    "input_int32le_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+    "source_sha256": "8f43e0f1b78ad57c8b71de35148e0a2a11f9c3ba3b887d80f3b54214df1bb38d",
+    "generation_config_sha256": "fb53f4c64e58896a63472e8eb304397db4a39453e1da0f5d57625ec5a8c1050e",
+    "generation_config_used_only_for_loader_initialization": true
+  },
+  "scope": {
+    "input_tokens": 1929,
+    "forward_attempts": 1,
+    "completed_forwards": 0,
+    "generate_calls": 0,
+    "phone_calls": 0,
+    "logits_to_keep": 1,
+    "use_cache": false
+  },
+  "guard": {
+    "model_forward_limit": 1,
+    "generation_calls": 0,
+    "adb_calls": 0,
+    "heavy_lock_requested_by_pi": true,
+    "heavy_lock_acquired": true,
+    "actual_child_exit": -15,
+    "heavy_lock_released": true,
+    "child_reaped": true,
+    "stop_reason": "wall_budget_with_cleanup_margin",
+    "seconds": 580.402160826
+  },
+  "limits": {
+    "memory_high_GiB": 10,
+    "memory_max_GiB": 12,
+    "swap_max_GiB": 2,
+    "cpu_quota_percent": 200,
+    "process_envelope_seconds": 600,
+    "work_stop_seconds": 580,
+    "nice": 15,
+    "minimum_launch_mem_available_GiB": 16,
+    "runtime_mem_available_floor_GiB": 4
+  },
+  "logits": {
+    "native": null,
+    "float32": null,
+    "reason": "Owned guard terminated child at work limit before the model returned and before raw logits could be captured."
+  },
+  "native_module_SRQ_execution_counts": null,
+  "execution_coverage_reason": "Observers were installed, but completed coverage records were not reached before SIGTERM; do not claim complete observed SRQ/module coverage.",
+  "QNN_w4a16_equivalence": false,
+  "full_generation_quality_result": false,
+  "automatic_replay": false,
+  "host_lock_policy": {
+    "used_for_this_historical_launch": true,
+    "descriptor_released": true,
+    "future_admission_requirement": false,
+    "reason": "Moritz removed the memory-lock requirement while this run was active; no running task was interrupted to change locking. Phone.lock remains required for device work."
+  },
+  "completed_weight_loader_failure_before_forward": "prefill-01 failed during generation-config initialization after weight reads; exact native generation metadata then supplied without changing forward computation",
+  "transient_lock_conflict_without_child": "forward-02-launch",
+  "model_forward_result_available": false
+}

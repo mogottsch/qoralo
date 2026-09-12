@@ -1,0 +1,30 @@
+Loading weights:   0%|          | 0/2550 [00:00<?, ?it/s]Loading weights:  31%|███       | 778/2550 [00:00<00:00, 7736.40it/s]Loading weights:  63%|██████▎   | 1602/2550 [00:00<00:00, 8030.45it/s]Loading weights:  94%|█████████▍| 2406/2550 [00:00<00:00, 7984.93it/s]Loading weights: 100%|██████████| 2550/2550 [00:00<00:00, 7967.48it/s]
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/generation/utils.py", line 422, in adjust_generation_fn
+    self.generation_config = GenerationConfig.from_pretrained(
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/generation/configuration_utils.py", line 1047, in from_pretrained
+    resolved_config_file = cached_file(
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/utils/hub.py", line 294, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/utils/hub.py", line 396, in cached_files
+    raise OSError(
+OSError: /home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/hf-checkpoint does not appear to have a file named generation_config.json. Checkout 'https://huggingface.co//home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/hf-checkpoint/tree/main' for available files.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/native_qat_checkpoint.py", line 221, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/native_qat_checkpoint.py", line 211, in main
+    if args.execute:result=execute(out)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/native_qat_checkpoint.py", line 130, in execute
+    began=time.monotonic();model,info=Gemma4ForConditionalGeneration.from_pretrained(str(CHECKPOINT.parent),config=cfg,dtype=torch.bfloat16,device_map={'':'cpu'},attn_implementation='eager',use_kernels=False,local_files_only=True,output_loading_info=True)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/modeling_utils.py", line 4401, in from_pretrained
+    model.adjust_generation_fn(
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/generation/utils.py", line 435, in adjust_generation_fn
+    self.generation_config = GenerationConfig.from_pretrained(
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/generation/configuration_utils.py", line 1076, in from_pretrained
+    config_dict = cls._dict_from_json_file(resolved_config_file)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/generation/configuration_utils.py", line 1099, in _dict_from_json_file
+    with open(json_file, "r", encoding="utf-8") as reader:
+TypeError: expected str, bytes or os.PathLike object, not NoneType

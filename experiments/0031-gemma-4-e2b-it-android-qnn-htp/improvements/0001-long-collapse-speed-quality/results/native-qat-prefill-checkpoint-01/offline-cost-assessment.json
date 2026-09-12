@@ -1,0 +1,40 @@
+{
+  "basis": "Saved validated shapes and pinned eager implementation, not a new execution or measured primitive throughput",
+  "sequence_length": 1929,
+  "quantized_linear_count": 276,
+  "quantized_linear_nominal_flops": 7188480786432,
+  "unquantized_PLE_projection_nominal_flops": 53095956480,
+  "eager_QK_and_AV_nominal_flops": 1280276250624,
+  "combined_nominal_flops": 8521852993536,
+  "not_counted": "SRQ elementwise operations, unpacking/conversion, GELU/norm/softmax, allocation, memory traffic and observer overhead",
+  "native_linear_weight_values_dequantized": 2265710592,
+  "native_SRA_input_output_values": 3154811392,
+  "pad_embedding_property": {
+    "source": "modeling_gemma4.py:2317 accesses embed_tokens.weight[pad_token_id,:]",
+    "native_property_materializes_complete_table": true,
+    "full_table_values": 402653184,
+    "BF16_return_bytes": 805306368,
+    "source_scale_repeat_F32_bytes": 1610612736,
+    "ordinary_input_lookup_values": 2962944,
+    "partial_observation_can_locate_this_cost": false
+  },
+  "host_cpu": {
+    "model": "AMD Ryzen7 5800H",
+    "avx2": true,
+    "avx512f": false,
+    "avx512_bf16": false,
+    "selected_BF16_gemm_kernel": null,
+    "reason": "Hardware flags known; no primitive/backend profiler captured. Lack of BF16 ISA does not identify the executed kernel or prove sole bottleneck."
+  },
+  "saved_runtime": {
+    "wall_seconds": 580.464,
+    "service_cpu_seconds": 754.181,
+    "guard_stop_seconds": 580.402160826,
+    "observed_memory_peak_bytes": 6247862272,
+    "minimum_host_mem_available_bytes": 19420823552,
+    "minimum_host_swap_free_bytes": 34353180672,
+    "process_IO_counters": null,
+    "IO_reason": "Guard captured free capacity, not process read/write counters; cannot retrospectively claim zero IO waiting."
+  },
+  "limitations": "No per-module timings or completed output; static FLOP counts are cost descriptors, not achieved throughput or exact completion-time estimates. No numerical/quality verdict."
+}
