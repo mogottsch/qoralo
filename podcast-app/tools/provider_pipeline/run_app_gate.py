@@ -111,7 +111,7 @@ def main():
         if owned:paths.append(f'files/episodes/{owned}')
         script='set --; '+''.join(f'if test -d {shlex.quote(x)}; then set -- "$@" {shlex.quote(x)}; fi; ' for x in paths)+'if test "$#" -gt 0; then tar -cf - "$@"; else printf NO_RECEIPTS; fi'
         result=device.run(['exec-out',f'run-as {APP} sh -c '+shlex.quote(script)],timeout=90,binary=True)
-        raw=result.read_bytes();(out/f'private-receipts-{pull:02d}.tar').write_bytes(raw)
+        raw=result.read_bytes();result.rename(out/f'private-receipts-{pull:02d}.tar') # Preserve original bytes once, not twice against the host quota.
         if raw==b'NO_RECEIPTS':return
         require(len(raw)<192*1024**2,'bounded private episode archive')
         target=out/f'private-extracted-{pull:02d}';target.mkdir(mode=0o700)
