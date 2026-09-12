@@ -1,0 +1,37 @@
+{
+  "policy_preflight": {
+    "passed": true,
+    "issues": [],
+    "operators_checked": 6893,
+    "arithmetic": "F32 logical ops, actual stored effective-width static codes, declared per-tensor/per-axis grids, explicit binary16 boundaries. Integer output rounding nearest-even; DSP fidelity unresolved.",
+    "full_model_executed": false
+  },
+  "private_static_blobs_verified": 1386,
+  "prepared_input_cache_files_verified": 158,
+  "float16_MatMuls": 56,
+  "memory_plan": {
+    "static_code_bytes": 2284909786,
+    "dequantized_static_cache_policy": "NONE; mmap actual codes on demand, release dequantized operands after each op",
+    "largest_F32_static_name": "model.lm_head.weight",
+    "largest_F32_static_bytes": 1610612736,
+    "dequant_tile_elements": 1048576,
+    "dequant_temporary_estimate_bytes": 67108864,
+    "conservative_encoded_liveness_bytes": 171343872,
+    "largest_F32_argument_sum_bytes": 1612447744,
+    "largest_F32_output_bytes": 134217728,
+    "all_static_F32_bytes_NOT_retained": 9123904808,
+    "host_cap_bytes": 12884901888,
+    "host_swap_cap_bytes": 2147483648,
+    "full_model_memory_measured": false,
+    "boundary": "Shape-based accounting excludes allocator/BLAS packing/library overhead;12GiB cgroup remains the hard limit. Views counted conservatively, no all-F32 retained graph."
+  },
+  "numpy_version": "1.26.4",
+  "scipy_version": "1.15.3",
+  "synthetic_test_exit": 0,
+  "header_compile_exit": 0,
+  "header_test_exit": 0,
+  "full_model_forwards": 0,
+  "ADB_calls": 0,
+  "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+  "ledger_sha256": "db3e696fecec12ab35b8fda9b020a15537a59620cc624d3875dd87d6f25fd3cf"
+}

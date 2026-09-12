@@ -1,0 +1,163 @@
+{
+  "classification": "frozen_declared_policy_paired_prefill_readiness",
+  "readiness": {
+    "phone_observer_built_and_stage_frozen": true,
+    "host_policy_shape_and_arithmetic_contracts_checked": true,
+    "actual_input_capture_binding_implemented": true,
+    "host_uses_own30_caches": true,
+    "full_execution_authorized": false,
+    "actual_external_input_equality_observed": false,
+    "DSP_kernel_bit_equivalence_claimed": false,
+    "full_model_or_phone_executed_in_preparation": false
+  },
+  "static_weight_mapping": {
+    "classification": "active_export_weight_static_mapping",
+    "neural_forward_calls": 0,
+    "adb_calls": 0,
+    "checkpoint_sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+    "export_graph_sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0",
+    "export_data_sha256": "e156c33d176273555003039959ecb0ae0ddc8a328eceeec1e8f4a6255840e072",
+    "passed": true,
+    "issues": [],
+    "active_initializer_count": 764,
+    "mapped_count": 758,
+    "structural_constant_count": 6,
+    "mapped_values": 2279751714,
+    "seconds": 76.48023823299991,
+    "boundary": "F32 dequant/cast and structural mapping, not BF16/SRQ8 execution equivalence, quantized-DLC weights, producer provenance, or DSP-kernel proof."
+  },
+  "final_policy": {
+    "dlc_sha256": "d9eec6585153928e2f9f2351854849abc458de42d5426788bd22b760d2633052",
+    "compiled_context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+    "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+    "operators": {
+      "Reshape": 700,
+      "FullyConnected": 1,
+      "Eltwise_Binary": 3150,
+      "Reduce": 177,
+      "Gather": 35,
+      "Conv2d": 521,
+      "RmsNorm": 310,
+      "Transpose": 45,
+      "Convert": 90,
+      "StridedSlice": 590,
+      "Concat": 360,
+      "MatMul": 560,
+      "Softmax": 280,
+      "ElementWiseNeuron": 71,
+      "Cast": 3
+    },
+    "op_count": 6893,
+    "tensor_count": 8317,
+    "static_bytes": 2284909786,
+    "static_count": 1386,
+    "input_count": 38,
+    "output_count": 31,
+    "dtype_counts": {
+      "uFxp_16": 7011,
+      "sFxp_8": 522,
+      "Int_32": 35,
+      "sFxp_32": 558,
+      "Float_16": 191
+    },
+    "seconds": 28.749136541000553,
+    "neural_forward_calls": 0
+  },
+  "verification": {
+    "policy_preflight": {
+      "passed": true,
+      "issues": [],
+      "operators_checked": 6893,
+      "arithmetic": "F32 logical ops, actual stored effective-width static codes, declared per-tensor/per-axis grids, explicit binary16 boundaries. Integer output rounding nearest-even; DSP fidelity unresolved.",
+      "full_model_executed": false
+    },
+    "private_static_blobs_verified": 1386,
+    "prepared_input_cache_files_verified": 158,
+    "float16_MatMuls": 56,
+    "memory_plan": {
+      "static_code_bytes": 2284909786,
+      "dequantized_static_cache_policy": "NONE; mmap actual codes on demand, release dequantized operands after each op",
+      "largest_F32_static_name": "model.lm_head.weight",
+      "largest_F32_static_bytes": 1610612736,
+      "dequant_tile_elements": 1048576,
+      "dequant_temporary_estimate_bytes": 67108864,
+      "conservative_encoded_liveness_bytes": 171343872,
+      "largest_F32_argument_sum_bytes": 1612447744,
+      "largest_F32_output_bytes": 134217728,
+      "all_static_F32_bytes_NOT_retained": 9123904808,
+      "host_cap_bytes": 12884901888,
+      "host_swap_cap_bytes": 2147483648,
+      "full_model_memory_measured": false,
+      "boundary": "Shape-based accounting excludes allocator/BLAS packing/library overhead;12GiB cgroup remains the hard limit. Views counted conservatively, no all-F32 retained graph."
+    },
+    "numpy_version": "1.26.4",
+    "scipy_version": "1.15.3",
+    "synthetic_test_exit": 0,
+    "header_compile_exit": 0,
+    "header_test_exit": 0,
+    "full_model_forwards": 0,
+    "ADB_calls": 0,
+    "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+    "ledger_sha256": "db3e696fecec12ab35b8fda9b020a15537a59620cc624d3875dd87d6f25fd3cf"
+  },
+  "phone_stage": {
+    "stage": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/paired-prefill-capture-stage-01",
+    "manifest_sha256": "b99056c1faa1e25823fd9bcda2a0968a0445cb93458dc1069e7d269eb9c54953",
+    "files": 19,
+    "bytes": 4013526340,
+    "model_or_phone_executed": false
+  },
+  "observer_library": {
+    "actual_native_exit": 0,
+    "seconds": 24.412945309999486,
+    "model_or_phone_executed": false,
+    "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-capture/build-01/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+    "binary_sha256": "3a61a7ea888e39b54999c25b0644ff068733c343cb693e5eafee9be4538dccc2",
+    "binary_bytes": 11636104
+  },
+  "phone_process_caps": {
+    "seconds": 300,
+    "address_space_GiB": 8,
+    "capture_payload_MiB": 80,
+    "capture_payloads": 129,
+    "journal_KiB": 512,
+    "hard_RSS_or_HTP_private_memory_cap": null,
+    "requires_new_phone_lock_slot": true,
+    "current_full_APK_hashes_required": true
+  },
+  "host_caps": {
+    "memory_GiB": 12,
+    "swap_GiB": 2,
+    "CPU_cores": 2,
+    "total_seconds": 1800,
+    "work_seconds": 1770,
+    "new_output_GiB": 1,
+    "trace_MiB": 64,
+    "memory_lock_admission": false
+  },
+  "next_execution_order": [
+    "new Pi slot/current APK hashes/actual job-quiescence attestation",
+    "one phone prefill capture with exactly16 successful AR128 and zero AR1",
+    "verified raw pull and owned cleanup; release phone lease",
+    "bind all actual non-cache input bytes and raw final-row8 UINT16 logits",
+    "new granted host reference: own initial caches and own returned cache evolution through16chunks",
+    "retain raw final262144 logits before comparison; no automatic replay"
+  ],
+  "remaining_limits": [
+    "No full-model performance/memory measurement for the reference yet; hard cgroup bound applies.",
+    "Host-libm generated arrays cannot establish identical-input claims. Execution path requires actual captures.",
+    "Declared grids/precision/fused-op formulas match the extracted DLC, not proprietary DSP rounding/fusion/accumulation.",
+    "First-position matching or differences do not establish long-generation reliability or quality."
+  ],
+  "private_artifact_count": 1549,
+  "source_delta_count": 2,
+  "validation": {
+    "tests_passed": 287,
+    "pinned_synthetic_arithmetic_tests": 13,
+    "private_static_blobs_verified": 1386,
+    "input_cache_files_verified": 158,
+    "runner_Genie_imports_resolved": 103,
+    "observer_source_changes": 2
+  },
+  "implementation_bindings_sha256": "1cfdbf569e6f755c78199768f796ddad8e166e9a4bd663ce2b0ccc5b21d6e2d9"
+}

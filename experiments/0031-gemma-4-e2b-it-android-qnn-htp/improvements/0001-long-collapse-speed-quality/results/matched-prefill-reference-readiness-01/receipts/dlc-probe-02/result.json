@@ -1,0 +1,819 @@
+{
+  "graphs": [
+    "ar128_cl4096_1_of_1"
+  ],
+  "op_types": {
+    "Reshape": {
+      "name": "node_linear_pre_reshape",
+      "attrs": {
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        },
+        "shape": {
+          "shape": [
+            2
+          ],
+          "dtype": "int32",
+          "values": [
+            128,
+            1536
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "name": "inputs_embeds",
+          "dims": [
+            1,
+            128,
+            1536
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "node_linear_pre_reshape",
+          "dims": [
+            128,
+            1536
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "FullyConnected": {
+      "name": "node_linear",
+      "attrs": {
+        "bias_op_name": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "bias"
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "node_linear_pre_reshape",
+          "dims": [
+            128,
+            1536
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "val_42",
+          "dims": [
+            8960,
+            1536
+          ],
+          "type": "sFxp_8"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "linear_fc",
+          "dims": [
+            128,
+            8960
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Eltwise_Binary": {
+      "name": "node_mul_3",
+      "attrs": {
+        "operation": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 13
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "linear",
+          "dims": [
+            1,
+            128,
+            8960
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "val_43",
+          "dims": [
+            1
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mul_3",
+          "dims": [
+            1,
+            128,
+            8960
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Reduce": {
+      "name": "node_mean",
+      "attrs": {
+        "axes": {
+          "shape": [
+            1
+          ],
+          "dtype": "uint32",
+          "values": [
+            3
+          ]
+        },
+        "keep_dims": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_BOOL_8",
+          "value": true
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        },
+        "reduce_type": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "ReduceMean"
+        }
+      },
+      "inputs": [
+        {
+          "name": "pow_1",
+          "dims": [
+            1,
+            128,
+            35,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mean",
+          "dims": [
+            1,
+            128,
+            35,
+            1
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Gather": {
+      "name": "node_select",
+      "attrs": {
+        "axis": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_INT_32",
+          "value": 2
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "mul_39",
+          "dims": [
+            1,
+            128,
+            35,
+            256
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "val_57",
+          "dims": [
+            1
+          ],
+          "type": "Int_32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "select_pre_reshape",
+          "dims": [
+            1,
+            128,
+            1,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Conv2d": {
+      "name": "node_Conv_4318",
+      "attrs": {
+        "bias_op_name": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": ""
+        },
+        "dilation": {
+          "shape": [
+            2
+          ],
+          "dtype": "uint32",
+          "values": [
+            1,
+            1
+          ]
+        },
+        "group": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 1
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        },
+        "pad_amount": {
+          "shape": [
+            2,
+            2
+          ],
+          "dtype": "uint32",
+          "values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "padding_size_strategy": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_8",
+          "value": 5
+        },
+        "reuse_sparse_indices": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_BOOL_8",
+          "value": false
+        },
+        "stride": {
+          "shape": [
+            2
+          ],
+          "dtype": "uint32",
+          "values": [
+            1,
+            1
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "name": "opt/type_as_1/simplify//Reshape_out/axis_unprotect_0231",
+          "dims": [
+            1,
+            1,
+            128,
+            1536
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "model.model.layers.0.self_attn.q_proj_sha.0.weight",
+          "dims": [
+            1,
+            1,
+            1536,
+            256
+          ],
+          "type": "sFxp_8"
+        },
+        {
+          "name": "node_Conv_4318_bias",
+          "dims": [
+            256
+          ],
+          "type": "sFxp_32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "opt/conv2d/axis_unprotect",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "RmsNorm": {
+      "name": "rms_norm_node_",
+      "attrs": {
+        "axes": {
+          "shape": [
+            1
+          ],
+          "dtype": "uint32",
+          "values": [
+            3
+          ]
+        },
+        "epsilon": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+          "value": 9.999999974752427e-07
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "opt/conv2d/axis_unprotect",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "model.model.layers.0.self_attn.q_norm_sha.0.weight_squeezedConstantForNormPattern",
+          "dims": [
+            256
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "model.model.layers.0.self_attn.q_norm_sha.0.weight_bias",
+          "dims": [
+            256
+          ],
+          "type": "sFxp_32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mul_98",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Transpose": {
+      "name": "opt/conv2d_9/axis_unprotect.transpose.merged",
+      "attrs": {
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        },
+        "perm": {
+          "shape": [
+            4
+          ],
+          "dtype": "uint32",
+          "values": [
+            0,
+            2,
+            1,
+            3
+          ]
+        }
+      },
+      "inputs": [
+        {
+          "name": "conv2d_9",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "opt/conv2d_9/simplify//Transpose_out.merged",
+          "dims": [
+            1,
+            128,
+            1,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Convert": {
+      "name": "opt/conv2d_9/simplify//Transpose_out.merged_converted_QNN_DATATYPE_FLOAT_16",
+      "attrs": {
+        "dynamic_input_data": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_BOOL_8",
+          "value": false
+        },
+        "dynamic_output_data": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_BOOL_8",
+          "value": false
+        }
+      },
+      "inputs": [
+        {
+          "name": "opt/conv2d_9/simplify//Transpose_out.merged",
+          "dims": [
+            1,
+            128,
+            1,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "opt/conv2d_9/simplify//Transpose_out.merged_converted_QNN_DATATYPE_FLOAT_16",
+          "dims": [
+            1,
+            128,
+            1,
+            256
+          ],
+          "type": "Float_16"
+        }
+      ]
+    },
+    "StridedSlice": {
+      "name": "node_slice_1",
+      "attrs": {
+        "begin_mask": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 0
+        },
+        "end_mask": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 0
+        },
+        "new_axes_mask": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 0
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        },
+        "ranges": {
+          "shape": [
+            4,
+            3
+          ],
+          "dtype": "int32",
+          "values": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              128,
+              1
+            ],
+            [
+              0,
+              128,
+              1
+            ]
+          ]
+        },
+        "shrink_axes": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 0
+        }
+      },
+      "inputs": [
+        {
+          "name": "mul_98",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "slice_1",
+          "dims": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Concat": {
+      "name": "node_cat",
+      "attrs": {
+        "axis": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 3
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "sub_106",
+          "dims": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "add_383",
+          "dims": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "cat",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "MatMul": {
+      "name": "node_matmul",
+      "attrs": {
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        },
+        "transpose_in0": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_BOOL_8",
+          "value": false
+        },
+        "transpose_in1": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_BOOL_8",
+          "value": false
+        }
+      },
+      "inputs": [
+        {
+          "name": "cat",
+          "dims": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "type": "uFxp_16"
+        },
+        {
+          "name": "cat_9",
+          "dims": [
+            1,
+            1,
+            256,
+            640
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "matmul",
+          "dims": [
+            1,
+            1,
+            128,
+            640
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Softmax": {
+      "name": "node_Softmax_391",
+      "attrs": {
+        "axis": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 3
+        },
+        "beta": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+          "value": 1.0
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "add_673",
+          "dims": [
+            1,
+            1,
+            128,
+            640
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "val_391",
+          "dims": [
+            1,
+            1,
+            128,
+            640
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "ElementWiseNeuron": {
+      "name": "_elementwiseneuron_69",
+      "attrs": {
+        "operation": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_UINT_32",
+          "value": 1
+        },
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "opt/conv2d_11/simplify//Reshape_out",
+          "dims": [
+            1,
+            128,
+            6144
+          ],
+          "type": "uFxp_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "gelu",
+          "dims": [
+            1,
+            128,
+            6144
+          ],
+          "type": "uFxp_16"
+        }
+      ]
+    },
+    "Cast": {
+      "name": "past_value_4_h0_out__float_to_fp16",
+      "attrs": {
+        "packageName": {
+          "type": "Qnn_DataType_t.QNN_DATATYPE_STRING",
+          "value": "qti.aisw"
+        }
+      },
+      "inputs": [
+        {
+          "name": "past_value_4_h0_out__float_before_fp16",
+          "dims": [
+            1,
+            1,
+            128,
+            512
+          ],
+          "type": "Float_16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "past_value_4_h0_out",
+          "dims": [
+            1,
+            1,
+            128,
+            512
+          ],
+          "type": "Float_16"
+        }
+      ]
+    }
+  },
+  "encoding_types": {
+    "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET": 18511,
+    "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_BW_AXIS_SCALE_OFFSET": 522,
+    "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_UNDEFINED": 207,
+    "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_AXIS_SCALE_OFFSET": 521
+  },
+  "one_static_data_metadata": {
+    "name": "model.model.per_layer_projection_norm.weight",
+    "dims": [
+      256
+    ],
+    "declared": "uFxp_16",
+    "numpy_dtype": "uint16",
+    "shape": [
+      256
+    ],
+    "bytes": 512,
+    "min_code": 0,
+    "max_code": 65535,
+    "encoding_type": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+    "encoding_dir": [
+      "arrayOfEncInfo",
+      "axisEncInfo",
+      "bqEncInfo",
+      "encInfo",
+      "lpbqEncInfo",
+      "microScalingEncInfo",
+      "overridden",
+      "qnnDefinition",
+      "type",
+      "vectorEncInfo"
+    ]
+  },
+  "ir_constants": {
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_ADD": 0,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_AND": 1,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_DIVIDE": 2,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_EQUAL": 3,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_FLOOR_DIV": 4,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_FMOD": 5,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_GREATER": 6,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_GREATER_EQUAL": 7,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_LESS": 8,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_LESS_EQUAL": 9,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_MAXIMUM": 10,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_MINIMUM": 11,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_MOD": 12,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_MULTIPLY": 13,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_NOT_EQUAL": 14,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_OR": 15,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_POWER": 16,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_SQUARED_DIFFERENCE": 17,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_SUBTRACT": 18,
+    "QNN_OP_ELEMENT_WISE_BINARY_OPERATION_XOR": 19,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_ELU": 0,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_GELU": 1,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_HARD_SIGMOID": 2,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_HARD_SWISH": 3,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_RELU": 4,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_RELU_MIN_MAX": 5,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_SIGMOID": 6,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_SOFTPLUS": 7,
+    "QNN_OP_ELEMENT_WISE_NEURON_OPERATION_TANH": 8
+  },
+  "neural_forward_calls": 0
+}

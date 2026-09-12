@@ -1,0 +1,21 @@
+{
+  "mode": "plan_only",
+  "model_executed": false,
+  "phone_access": false,
+  "requires": [
+    "new Pi paired-checkpoint grant",
+    "successful released actual phone capture",
+    "fresh run ID"
+  ],
+  "limits": {
+    "memory_max_GiB": 12,
+    "swap_max_GiB": 2,
+    "CPU_cores": 2,
+    "total_seconds": 1800,
+    "work_seconds": 1770,
+    "new_output_disk_GiB": 1,
+    "trace_cap_MiB": 64
+  },
+  "static_dequant_cache": "none; memory-map codes lazily, one F32 operand with1M-element dequant tiles; last-consumer activation release",
+  "HTP_caches_imported": false
+}
