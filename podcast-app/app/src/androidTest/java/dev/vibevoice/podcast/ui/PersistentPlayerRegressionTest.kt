@@ -97,11 +97,11 @@ class PersistentPlayerRegressionTest {
             TranscriptInterval(i * 44_100L, (i + 1) * 44_100L, 44_100), TranscriptPrecision.SEGMENT) }
         rule.setContent { VibeVoiceTheme { TranscriptSheet("synthetic", TranscriptTimeline(rows), position, true, false, {}) } }
         rule.onNodeWithText("Following · stop").assertIsDisplayed()
-        rule.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp() }
+        rule.onNodeWithTag("Transcript passages").performTouchInput { swipeUp() }
         rule.onNodeWithText("Follow playback").assertIsDisplayed()
-        val before = rule.onNode(hasScrollToIndexAction()).fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
+        val before = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
         rule.runOnIdle { position = 15_000 }
-        val after = rule.onNode(hasScrollToIndexAction()).fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
+        val after = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
         assertEquals("Chapter advancement must not scroll against the reader", before, after, 0.01f)
         rule.onNodeWithText("Follow playback").performClick()
         rule.onNodeWithText(rows.last().text).assertIsDisplayed()

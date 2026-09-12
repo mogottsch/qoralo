@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -88,7 +89,7 @@ fun TranscriptSheet(
                 }
             }
             if (timeline.passages.isEmpty()) Text("Transcript is not available for this audio revision.", Modifier.padding(20.dp))
-            LazyColumn(Modifier.fillMaxWidth().weight(1f).nestedScroll(scrollObserver).semantics {
+            LazyColumn(Modifier.fillMaxWidth().weight(1f).testTag("Transcript passages").nestedScroll(scrollObserver).semantics {
                 // TalkBack/keyboard accessibility scrolling may not dispatch a touch drag.
                 scrollBy { _, y ->
                     following = false
