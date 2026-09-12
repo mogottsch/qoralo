@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--unit=gemma-native-qat-cost-01",
+    "--property=MemoryHigh=10G",
+    "--property=MemoryMax=12G",
+    "--property=MemorySwapMax=2G",
+    "--property=OOMPolicy=kill",
+    "--property=CPUQuota=200%",
+    "--property=TasksMax=128",
+    "--property=Nice=15",
+    "--property=IOSchedulingClass=idle",
+    "--property=RuntimeMaxSec=600",
+    "--property=TimeoutStopSec=20",
+    "--property=KillMode=control-group",
+    "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/cost-01-launch/guard.stdout",
+    "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/cost-01-launch/guard.stderr",
+    "/usr/bin/env",
+    "-i",
+    "PATH=/usr/bin:/bin",
+    "HOME=/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/cost-01-launch/home",
+    "TMPDIR=/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/cost-01-launch/tmp",
+    "/usr/bin/python3",
+    "-B",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/cost-01-launch/guard.py"
+  ],
+  "separate_pi_authorization": "ONE observation-only cost checkpoint, exactnativeQAT1929/BF16/12GiB/2GiBswap/2CPU/600s, bounded logs, no memory-lock admission",
+  "prior_grant_consumed_commit": "b376a3189764d0c6671cc55fa0b397f3a454b2f2",
+  "sources": {
+    "guard.py": "7c40c7b49d6b05be166409b67a45175351322309904cfdcd81fb0619703622e3",
+    "native_qat_checkpoint.py": "7b7c5b8da59a3e18d5aa9cb978992d7bb0b42b6417e4069725bbf5d9ffa3f0f5",
+    "native_qat_cost_trace.py": "a2f7d6e1f538d8874509ff9cc738384244adee2673406594ae96d7eb24e235dd"
+  }
+}

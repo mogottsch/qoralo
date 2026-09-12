@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 
 TRACK=Path(__file__).resolve().parents[1]/'improvements/0001-long-collapse-speed-quality'
@@ -82,6 +83,50 @@ class ObservationOnlyTraceTests(unittest.TestCase):
                 return value
             self.assertIs(t.wrap('original',original)(),value)
             t.close();self.assertEqual([json.loads(s)['event'] for s in p.read_text().splitlines()],['begin','end'])
+
+    def test_nested_timings_have_parent_and_non_double_counted_fields(self):
+        from native_qat_cost_trace import CostTrace
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'trace.jsonl';t=CostTrace(p,tensor_type=bytes)
+            inner=t.wrap('inner',lambda:object());outer=t.wrap('outer',lambda:inner())
+            outer();t.close();rows=[json.loads(s) for s in p.read_text().splitlines()]
+            begins={x['operation']:x for x in rows if x['event']=='begin'}
+            ends={x['operation']:x for x in rows if x['event']=='end'}
+            self.assertEqual(begins['inner']['parent'],begins['outer']['call'])
+            self.assertEqual(ends['outer']['wall_ns'],ends['outer']['exclusive_wall_ns']+ends['inner']['wall_ns'])
+
+    def test_property_dequant_and_forward_each_run_once_and_restore(self):
+        from native_qat_cost_trace import CostTrace
+        calls={};value=object()
+        class Embedding:
+            @property
+            def weight(self):
+                calls['property']=calls.get('property',0)+1
+                return self._dequantize_weights('packed','scales')
+            def _dequantize_weights(self,*args):
+                calls['embedding_dequant']=calls.get('embedding_dequant',0)+1;return value
+            def forward(self):
+                calls['embedding_forward']=calls.get('embedding_forward',0)+1;return self.weight
+        class Linear:
+            def _dequantize_weights(self,*args):
+                calls['linear_dequant']=calls.get('linear_dequant',0)+1;return value
+            def forward(self):
+                calls['linear_forward']=calls.get('linear_forward',0)+1;return self._dequantize_weights()
+        class Model:
+            def __init__(self):self.emb=Embedding();self.head=Linear()
+            def named_modules(self):return [('',self),('emb',self.emb),('lm_head',self.head)]
+            def forward(self):self.emb.forward();return self.head.forward()
+        quant=SimpleNamespace(QuantizedEmbedding=Embedding,QuantizedLinear=Linear,apply_srq=lambda x:x)
+        torch=SimpleNamespace(nn=SimpleNamespace(Linear=Linear,functional=SimpleNamespace(linear=lambda x:x)),matmul=lambda x:x)
+        model=Model();prop=Embedding.weight;original_srq=quant.apply_srq
+        with tempfile.TemporaryDirectory() as d:
+            trace=CostTrace(Path(d)/'trace.jsonl',tensor_type=bytes)
+            with trace.instrument(model,quant,torch):
+                self.assertEqual(calls,{})  # installation did not evaluate .weight
+                self.assertIs(model.forward(),value)
+            self.assertEqual(set(calls.values()),{1})
+            self.assertIs(Embedding.weight,prop);self.assertIs(quant.apply_srq,original_srq)
+            self.assertNotIn('forward',model.__dict__);trace.close()
 
     def test_original_exception_and_trace_failure_do_not_change_function(self):
         from native_qat_cost_trace import CostTrace

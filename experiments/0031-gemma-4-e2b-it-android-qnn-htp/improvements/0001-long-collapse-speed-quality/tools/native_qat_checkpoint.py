@@ -106,8 +106,9 @@ def setup():
     return validation
 
 
-def execute(out):
+def execute(out,observe_cost=False):
     """Called once, only by the bounded host guard after metadata validation."""
+    from contextlib import nullcontext
     import gc
     import os
     validation=json.loads((ROOT/'meta-validation-02/validation.json').read_text())
@@ -129,6 +130,8 @@ def execute(out):
     if sha(generation_path)!='fb53f4c64e58896a63472e8eb304397db4a39453e1da0f5d57625ec5a8c1050e':raise ValueError('native generation metadata changed')
     runtime['generation_config_sha256']=sha(generation_path)
     runtime['generation_config_used_only_for_loader_initialization']=True
+    runtime['observation_only_cost_trace']=observe_cost
+    runtime['cost_trace_source_sha256']=sha(Path(__file__).with_name('native_qat_cost_trace.py')) if observe_cost else None
     (out/'runtime-before-load.json').write_text(json.dumps(runtime,indent=2)+'\n')
     cfg=Gemma4Config.from_dict(json.loads(CONFIG.read_text()))
     generation=GenerationConfig.from_dict(json.loads(generation_path.read_text()))
@@ -175,9 +178,14 @@ def execute(out):
         # The exact pinned native function computes and returns the result.
         return original_srq(x,scale,bits)
     gemma_quant.apply_srq=observed_srq
+    cost_trace=None
+    if observe_cost:
+        from native_qat_cost_trace import CostTrace
+        cost_trace=CostTrace(out/'native-operations.jsonl',tensor_type=torch.Tensor)
+    cost_context=cost_trace.instrument(model,gemma_quant,torch) if cost_trace else nullcontext()
     model.eval();start=time.monotonic();(out/'forward-started.json').write_text(json.dumps({'monotonic':start,'forward_calls':1})+'\n')
     try:
-        with torch.inference_mode():
+        with cost_context,torch.inference_mode():
             output=model(input_ids=input_ids,attention_mask=attention_mask,position_ids=position_ids,use_cache=False,logits_to_keep=1,return_dict=True)
         elapsed=time.monotonic()-start;logits=output.logits.detach().contiguous()
         # Persist original bits and an explicitly labeled F32 view BEFORE analysis.
@@ -202,6 +210,9 @@ def execute(out):
         return {'passed':True,'classification':'one_native_qat_cpu_prefill_captured','model_forward_calls':1,'generation_calls':0,'adb_calls':0,'load_seconds':loaded['seconds'],'forward_seconds':elapsed,'argmax_id':analysis['argmax_id'],'capture':capture,'QNN_w4a16_equivalence':False,'full_generation_quality_result':False}
     finally:
         gemma_quant.apply_srq=original_srq
+        if cost_trace:
+            try:(out/'cost-trace-status.json').write_text(json.dumps(cost_trace.close(),indent=2)+'\n')
+            except Exception:pass  # optional trace failure never substitutes model output
         for h in handles:h.remove()
         (out/'native-execution-observations.json').write_text(json.dumps({'module_calls':dict(counts),'SRQ_calls':dict(srq)},indent=2)+'\n')
         del model,modules
@@ -209,11 +220,11 @@ def execute(out):
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--execute',action='store_true');args=p.parse_args();out=args.output_dir.resolve()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--execute',action='store_true');p.add_argument('--observe-cost',action='store_true');args=p.parse_args();out=args.output_dir.resolve()
     if not out.is_relative_to(ROOT):p.error('fresh owned private output required')
     out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
     try:
-        if args.execute:result=execute(out)
+        if args.execute:result=execute(out,observe_cost=args.observe_cost)
         else:
             validation=setup();(out/'validation.json').write_text(json.dumps(validation,indent=2)+'\n')
             result={'classification':'native_qat_meta_schema_validated' if validation['passed'] else 'native_qat_meta_schema_blocked','passed':validation['passed'],'seconds':time.monotonic()-start,'model_weights_loaded':False,'model_forward_calls':0,'adb_calls':0,'source_sha256':sha(Path(__file__))}

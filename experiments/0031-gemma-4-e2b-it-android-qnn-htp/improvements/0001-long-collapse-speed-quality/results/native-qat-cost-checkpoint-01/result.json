@@ -1,0 +1,290 @@
+{
+  "classification": "one_native_QAT_observation_cost_checkpoint",
+  "guard": {
+    "authorization": "Pi separately authorized ONE native-QAT observation-only cost checkpoint",
+    "model_forward_limit": 1,
+    "generation_calls": 0,
+    "adb_calls": 0,
+    "host_memory_lock_admission": false,
+    "stop_monotonic_ns": 8491438166193,
+    "last_child_usage": {
+      "starttime": "791115",
+      "state": "R",
+      "utime_ticks": 74910,
+      "stime_ticks": 775,
+      "clock_ticks_per_second": 100,
+      "io": {
+        "rchar": 2586920299,
+        "wchar": 1285376,
+        "syscr": 14141,
+        "syscw": 1930,
+        "read_bytes": 544522240,
+        "write_bytes": 1445888,
+        "cancelled_write_bytes": 4096
+      },
+      "memory_bytes": {
+        "VmHWM": 7127773184,
+        "VmRSS": 3858386944,
+        "VmSwap": 0
+      }
+    },
+    "actual_child_exit": -15,
+    "child_reaped": true,
+    "stop_reason": "wall_budget_with_cleanup_margin",
+    "seconds": 580.4539787419999,
+    "streams": {
+      "stdout": {
+        "total_bytes": 473,
+        "retained_prefix_bytes": 473,
+        "discarded_bytes": 0,
+        "full_stream_sha256": "98be8c7206d2cd2f2b81707eba596d9dc96bffcbd1dcc97e2b7feaf35660d1c4",
+        "error": null,
+        "cap_bytes": 16777216
+      },
+      "stderr": {
+        "total_bytes": 324,
+        "retained_prefix_bytes": 324,
+        "discarded_bytes": 0,
+        "full_stream_sha256": "1c43000c3618e0f03be799e3b60960ac77ae9f35b1c5371294273b28d0a7bc0a",
+        "error": null,
+        "cap_bytes": 16777216
+      }
+    },
+    "final_cgroup": {
+      "memory.current": "555749376",
+      "memory.peak": "5381378048",
+      "memory.swap.current": "0",
+      "memory.swap.peak": "0",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "cpu.stat": "usage_usec 757331767\nuser_usec 749286002\nsystem_usec 8045764\nnice_usec 749366591\ncore_sched.force_idle_usec 0\nnr_periods 5805\nnr_throttled 49\nthrottled_usec 65843\nnr_bursts 0\nburst_usec 0",
+      "io.stat": null
+    },
+    "end_monotonic_ns": 8491602716826
+  },
+  "native_result": null,
+  "forward_attempts": 1,
+  "completed_forward": false,
+  "exact_input_ids_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+  "strict_loaded_validation_passed": true,
+  "trace": {
+    "correlation_issues": [],
+    "begin_count": 959,
+    "completed_count": 954,
+    "thread_ids": [
+      140119066732352
+    ],
+    "groups": {
+      "selected_embedding_dequant": {
+        "completed_calls": 2,
+        "inclusive_wall_median_seconds": 0.0255884325,
+        "inclusive_wall_min_seconds": 0.007317306,
+        "inclusive_wall_max_seconds": 0.043859559,
+        "exclusive_wall_total_seconds": 0.051176865,
+        "exclusive_CPU_total_seconds": 0.101555365
+      },
+      "wrapper_or_other_exclusive": {
+        "completed_calls": 184,
+        "inclusive_wall_median_seconds": 0.466187139,
+        "inclusive_wall_min_seconds": 0.008488818,
+        "inclusive_wall_max_seconds": 2.967921359,
+        "exclusive_wall_total_seconds": 0.1253923,
+        "exclusive_CPU_total_seconds": 0.25819500999999995
+      },
+      "full_token_embedding_dequant": {
+        "completed_calls": 1,
+        "inclusive_wall_median_seconds": 1.805547278,
+        "inclusive_wall_min_seconds": 1.805547278,
+        "inclusive_wall_max_seconds": 1.805547278,
+        "exclusive_wall_total_seconds": 1.805547278,
+        "exclusive_CPU_total_seconds": 3.395280357
+      },
+      "linear": {
+        "completed_calls": 181,
+        "inclusive_wall_median_seconds": 0.45479398,
+        "inclusive_wall_min_seconds": 0.056271656,
+        "inclusive_wall_max_seconds": 2.907022273,
+        "exclusive_wall_total_seconds": 145.81632787499998,
+        "exclusive_CPU_total_seconds": 291.26557154999995
+      },
+      "SRQ": {
+        "completed_calls": 361,
+        "inclusive_wall_median_seconds": 0.003007281,
+        "inclusive_wall_min_seconds": 0.000400401,
+        "inclusive_wall_max_seconds": 0.038783948,
+        "exclusive_wall_total_seconds": 2.2544137250000005,
+        "exclusive_CPU_total_seconds": 4.451595748999997
+      },
+      "linear_dequant": {
+        "completed_calls": 181,
+        "inclusive_wall_median_seconds": 0.003176926,
+        "inclusive_wall_min_seconds": 0.000134864,
+        "inclusive_wall_max_seconds": 0.030935163,
+        "exclusive_wall_total_seconds": 1.170189215,
+        "exclusive_CPU_total_seconds": 2.245215907000001
+      },
+      "QK_D256": {
+        "completed_calls": 18,
+        "inclusive_wall_median_seconds": 0.8489745695,
+        "inclusive_wall_min_seconds": 0.825182167,
+        "inclusive_wall_max_seconds": 0.877693747,
+        "exclusive_wall_total_seconds": 15.285353718,
+        "exclusive_CPU_total_seconds": 30.51058379
+      },
+      "AV_D256": {
+        "completed_calls": 18,
+        "inclusive_wall_median_seconds": 15.1921257865,
+        "inclusive_wall_min_seconds": 15.084219935,
+        "inclusive_wall_max_seconds": 15.284717201,
+        "exclusive_wall_total_seconds": 273.44591845199994,
+        "exclusive_CPU_total_seconds": 273.5021148270001
+      },
+      "QK_D512": {
+        "completed_calls": 4,
+        "inclusive_wall_median_seconds": 1.4425464424999999,
+        "inclusive_wall_min_seconds": 1.396722855,
+        "inclusive_wall_max_seconds": 1.488428812,
+        "exclusive_wall_total_seconds": 5.770244551999999,
+        "exclusive_CPU_total_seconds": 11.52435302
+      },
+      "AV_D512": {
+        "completed_calls": 4,
+        "inclusive_wall_median_seconds": 29.909520485999998,
+        "inclusive_wall_min_seconds": 29.217138125,
+        "inclusive_wall_max_seconds": 30.64757631,
+        "exclusive_wall_total_seconds": 119.683755407,
+        "exclusive_CPU_total_seconds": 119.68487653
+      }
+    },
+    "completed_exclusive_wall_seconds": {
+      "selected_embedding_dequant": 0.051176865,
+      "wrapper_or_other_exclusive": 0.1253923,
+      "full_token_embedding_dequant": 1.805547278,
+      "linear": 145.81632787499998,
+      "SRQ": 2.2544137250000005,
+      "linear_dequant": 1.170189215,
+      "QK_D256": 15.285353718,
+      "AV_D256": 273.44591845199994,
+      "QK_D512": 5.770244551999999,
+      "AV_D512": 119.683755407
+    },
+    "open_at_trace_end": [
+      {
+        "call": 1,
+        "operation": "<root>.forward",
+        "parent": null,
+        "depth": 0,
+        "category": "wrapper_or_other_exclusive",
+        "args": [],
+        "open_interval_at_stop_seconds": 570.85328867
+      },
+      {
+        "call": 2,
+        "operation": "model.forward",
+        "parent": 1,
+        "depth": 1,
+        "category": "wrapper_or_other_exclusive",
+        "args": [],
+        "open_interval_at_stop_seconds": 570.853120633
+      },
+      {
+        "call": 9,
+        "operation": "model.language_model.forward",
+        "parent": 2,
+        "depth": 2,
+        "category": "wrapper_or_other_exclusive",
+        "args": [],
+        "open_interval_at_stop_seconds": 568.962563298
+      },
+      {
+        "call": 956,
+        "operation": "model.language_model.layers.21.mlp.up_proj.forward",
+        "parent": 9,
+        "depth": 3,
+        "category": "wrapper_or_other_exclusive",
+        "args": [
+          {
+            "device": "cpu",
+            "dtype": "torch.bfloat16",
+            "kind": "tensor",
+            "shape": [
+              1,
+              1929,
+              1536
+            ]
+          }
+        ],
+        "open_interval_at_stop_seconds": 1.992291971
+      },
+      {
+        "call": 959,
+        "operation": "torch.functional.linear",
+        "parent": 956,
+        "depth": 4,
+        "category": "linear",
+        "args": [
+          {
+            "device": "cpu",
+            "dtype": "torch.bfloat16",
+            "kind": "tensor",
+            "shape": [
+              1,
+              1929,
+              1536
+            ]
+          },
+          {
+            "device": "cpu",
+            "dtype": "torch.bfloat16",
+            "kind": "tensor",
+            "shape": [
+              12288,
+              1536
+            ]
+          },
+          null
+        ],
+        "open_interval_at_stop_seconds": 1.965420404
+      }
+    ],
+    "AV_only_full35_layer_projection_seconds": 634.746165424,
+    "projection_boundary": "28 sliding D256 plus7 global D512 calls at observed per-shape medians; not a guaranteed bound or full model completion prediction.",
+    "timing_boundary": "Only exclusive intervals are totaled. Inclusive durations contain nested work and must not be summed with children. Open ancestor intervals overlap; do not sum them. Process CPU includes native workers; cross-thread overlaps are not independent CPU cost.",
+    "malformed_line_numbers": [],
+    "trace_may_be_capped": false
+  },
+  "forward_sampled_IO_delta": {
+    "rchar": 1024,
+    "wchar": 695155,
+    "syscr": 1,
+    "syscw": 1908,
+    "read_bytes": 4988928,
+    "write_bytes": 835584,
+    "cancelled_write_bytes": 0
+  },
+  "IO_boundary": "Owned-process kernel counters between first/last samples after forward marker, not all memory traffic or exact whole-forward counters.",
+  "kernel_verbose": {
+    "stdout": {
+      "MKL_verbose_lines": 3,
+      "oneDNN_verbose_lines": 0,
+      "matched_metadata_lines": [
+        "MKL_VERBOSE oneMKL 2024.0 Update 2 Product build 20240605 for Intel(R) 64 architecture Intel(R) Architecture processors, Lnx 4.12GHz lp64 gnu_thread",
+        "MKL_VERBOSE SGEMM(N,N,1929,256,1,0x7fffabf683e0,0x55c422950700,1929,0x55c422a7bb40,1,0x7fffabf68400,0x55c423f01e80,1929) 0ns CNR:OFF Dyn:0 FastMM:1 TID:0  NThr:2",
+        "MKL_VERBOSE SGEMM(N,N,1929,128,1,0x7fffabf683e0,0x55c422950700,1929,0x55c4228f4a80,1,0x7fffabf68400,0x55c423f01e80,1929) 0ns CNR:OFF Dyn:0 FastMM:1 TID:0  NThr:2"
+      ]
+    },
+    "stderr": {
+      "MKL_verbose_lines": 0,
+      "oneDNN_verbose_lines": 0,
+      "matched_metadata_lines": []
+    }
+  },
+  "kernel_identity_boundary": "Verbose metadata only. Missing records do not identify or rule out a kernel. Tensor-level QK/AV timings do not prove the lower-level kernel.",
+  "instrumentation_gap": "Per-decoder-layer wrapper selector used Gemma4DecoderLayer, but pinned class is Gemma4TextDecoderLayer. Operator and quant-forward nesting remains captured; no per-layer-forward duration is claimed.",
+  "private_outputs": [],
+  "same_computation": true,
+  "changed_dtype_weights_scales_input_or_deadline": false,
+  "memory_lock_admission": false,
+  "phone_calls": 0,
+  "automatic_replay": false,
+  "QNN_root_cause_or_quality_result": false
+}
