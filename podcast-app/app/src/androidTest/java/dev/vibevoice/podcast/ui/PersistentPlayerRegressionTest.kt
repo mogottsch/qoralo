@@ -133,12 +133,14 @@ class PersistentPlayerRegressionTest {
         val before = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
         rule.runOnIdle { position = 15_000 }
         val after = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
-        assertEquals("Chapter advancement must not scroll against the reader", before, after, 0.01f)
         rule.onNodeWithText("Follow playback").assertIsDisplayed()
+        // Preserve the failed visual state too; never lose the evidence by asserting first.
         captureSynthetic("transcript-manual") {
             JSONObject().put("episodeId", "synthetic").put("episodePhase", "SYNTHETIC_TRANSCRIPT")
-                .put("uiState", "manual").put("positionMs", position).put("scrollAxis", after).put("activePassage", 15)
+                .put("uiState", "manual").put("positionMs", position).put("scrollAxisBefore", before)
+                .put("scrollAxis", after).put("manualPositionPreserved", kotlin.math.abs(before - after) <= 0.01f).put("activePassage", 15)
         }
+        assertEquals("Chapter advancement must not scroll against the reader", before, after, 0.01f)
         rule.onNodeWithText("Follow playback").performClick()
         rule.onNodeWithText(rows.last().text).assertIsDisplayed()
         rule.onNodeWithText("Following · stop").assertIsDisplayed()

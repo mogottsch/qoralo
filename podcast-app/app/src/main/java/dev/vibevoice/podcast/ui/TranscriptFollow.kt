@@ -16,10 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.scrollBy
 import kotlinx.coroutines.launch
 import androidx.compose.ui.semantics.semantics
@@ -112,7 +114,12 @@ fun TranscriptSheet(
                                 if (active) stateDescription = if (passage.precision == TranscriptPrecision.CHAPTER) "Current chapter, chapter timing only" else "Current passage, segment timing"
                             }) {
                             Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                if (active) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                // Keep the marker's measured space even when inactive. Inserting a
+                                // header (or changing text weight) reflows long font2 passages and
+                                // moves the reader although follow scrolling is disabled.
+                                Row(modifier = Modifier.alpha(if (active) 1f else 0f)
+                                    .then(if (active) Modifier else Modifier.clearAndSetSemantics {}),
+                                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Icon(Icons.Default.PlayArrow, null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
                                     Text(if (passage.precision == TranscriptPrecision.CHAPTER) "Current chapter" else "Current passage",
                                         style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
@@ -123,7 +130,7 @@ fun TranscriptSheet(
                                     passage.text.split(Regex("(?<=[.!?])\\s+(?=[A-Z])")).filter(String::isNotBlank) else listOf(passage.text)
                                 paragraphs.forEach { paragraph ->
                                     Text(paragraph, style = MaterialTheme.typography.headlineSmall,
-                                        fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
+                                        fontWeight = FontWeight.Medium,
                                         color = if (active) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimaryContainer)
                                 }
                                 if (passage.precision == TranscriptPrecision.UNAVAILABLE) Text("Audio timing unavailable", style = MaterialTheme.typography.labelSmall)
