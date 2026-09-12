@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-12T11:22:09+00:00",
+  "updated_at": "2026-09-12T11:24:52+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -19,12 +19,12 @@
     {
       "id": "app-htp-integration",
       "title": "App HTP provider-pipeline integration",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Janek",
-      "now": "Actual device preflight stopped before install/data writes/model calls on host health-regex escaping bug; preserved/corrected in controller-only candidate03, same ea7eafab/b65bcd5d APKs,6 tests.",
-      "next": "Retry valid preflight with3.5GiB/<42°C thresholds after authorized idle-app closure and before inference. Preclosure~2.77GiB/32.6°C is not postclosure blocker. No install/WAV/neural result.",
-      "reported_at": "2026-09-12T11:22:09+00:00",
-      "reported_by": "Pi — app device preflight/controller correction",
+      "now": "Post-idle-closure app device preflight blocker:2.76GiB available vs configured3.5GiB floor,32.4°C. No install/staging/neural calls; data unchanged/lock released.",
+      "next": "Offline review whether floor is justified for HTP-only212.9MB pack. Not OOM; no arbitrary lowering/reboot/unrelated kills.",
+      "reported_at": "2026-09-12T11:24:52+00:00",
+      "reported_by": "Pi — actual postclosure headroom blocker",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -69,10 +69,10 @@
       "title": "Gemma aligned-GPU reference build",
       "status": "preparing",
       "owner": "Jere",
-      "now": "ONE native-QAT CPU forward attempted, then stopped at580s work budget/600s incl cleanup; child reaped/resources released. Keys/shapes/packed values/scales/dtypes validated.",
-      "next": "No completed logits/full execution coverage, numerical or quality conclusion; observed peak~6.25GB is not OOM/memory floor. Package timeout then offline cost/bottleneck assessment; no replay queued.",
-      "reported_at": "2026-09-12T11:11:50+00:00",
-      "reported_by": "Pi — Jere bounded CPU checkpoint timeout",
+      "now": "Jere timeout package finalized b376a318; next ONE600s same-input/native-QAT CPU cost diagnostic is authorized/preparing with flushed stage/dequant/SRQ/linear timing observation.",
+      "next": "Nominal8.522T FLOPs is cost estimate, not measured throughput; selected kernels/bottleneck unknown. No dtype/model/input/deadline/memory-lock/phone change; no forward result yet.",
+      "reported_at": "2026-09-12T11:24:52+00:00",
+      "reported_by": "Pi — Jere timeout package and next cost diagnostic",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -86,12 +86,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
-      "owner": "Janek",
-      "now": "Janek device validation is controller preflight correction/retry only; stopped before install/data writes/model calls.",
-      "next": "No candidate installed/AUDIO job/WAV/neural result. Fresh thresholds rechecked after app closure and before inference.",
-      "reported_at": "2026-09-12T11:22:09+00:00",
-      "reported_by": "Pi — pre-install controller fix",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Janek provider app preflight blocked before install at2.76GiB vs3.5GiB floor; lock released/data unchanged.",
+      "next": "Review floor justification offline; no OOM or arbitrary lowering/reboot/unrelated kill. No phone run active.",
+      "reported_at": "2026-09-12T11:24:52+00:00",
+      "reported_by": "Pi — actual app headroom block/release",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -100,10 +100,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jere",
-      "now": "Janek corrects/retries host health preflight before app provider install; Jere offline timeout assessment continues.",
-      "next": "No app audio/model work running. Preclosure memory/temperature does not establish postclosure readiness.",
-      "reported_at": "2026-09-12T11:22:09+00:00",
-      "reported_by": "Pi — controller-only preflight state",
+      "now": "Jere prepares one bounded native-QAT CPU cost diagnostic; Janek reviews HTP-only pack headroom floor offline.",
+      "next": "8.522T FLOPs estimate only; no throughput/result. No app install/staging/neural call/phone use.",
+      "reported_at": "2026-09-12T11:24:52+00:00",
+      "reported_by": "Pi — current CPU/offline scopes",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -130,16 +130,16 @@
     },
     {
       "name": "Janek",
-      "task": "Correct/retry app provider health preflight",
-      "reported_at": "2026-09-12T11:22:09+00:00",
-      "reported_by": "Pi — no install/job start",
+      "task": "Review HTP-only app pack headroom floor offline",
+      "reported_at": "2026-09-12T11:24:52+00:00",
+      "reported_by": "Pi — no device run",
       "stale_after_seconds": 900
     },
     {
       "name": "Jere",
-      "task": "Package native-QAT timeout; assess offline bottleneck",
-      "reported_at": "2026-09-12T11:11:50+00:00",
-      "reported_by": "Pi — no replay queued",
+      "task": "Run one bounded native-QAT CPU cost diagnostic",
+      "reported_at": "2026-09-12T11:24:52+00:00",
+      "reported_by": "Pi — preparing/no forward result",
       "stale_after_seconds": 900
     },
     {
