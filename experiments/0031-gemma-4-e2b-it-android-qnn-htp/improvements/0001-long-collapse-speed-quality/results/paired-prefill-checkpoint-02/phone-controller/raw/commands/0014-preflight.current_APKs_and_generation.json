@@ -1,0 +1,17 @@
+{
+  "operation": "preflight.current_APKs_and_generation",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "\nfor package in dev.vibevoice.podcast.internal dev.vibevoice.podcast.internal.test; do\n  location=$(pm path \"$package\") || exit 41\n  case \"$location\" in package:/data/app/*/base.apk) ;; *) exit 42 ;; esac\n  case \"$location\" in *'\n'*) exit 43 ;; esac\n  path=${location#package:}\n  value=$(sha256sum \"$path\") || exit 44\n  hash=${value%% *}\n  printf 'APK\\t%s\\t%s\\n' \"$package\" \"$hash\"\ndone\n\ncommand -v pidof >/dev/null || exit 45\nfor process in dev.vibevoice.podcast.internal:generation dev.vibevoice.podcast.internal.test; do\n  value=$(pidof \"$process\" 2>/dev/null)\n  code=$?\n  [ \"$code\" = 0 ] || [ \"$code\" = 1 ] || exit 46\n  printf 'PID\\t%s\\t%s\\n' \"$process\" \"$value\"\ndone\n"
+  ],
+  "timeout_seconds": 45,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0014-preflight.current_APKs_and_generation.stdout",
+  "stderr": "raw/commands/0014-preflight.current_APKs_and_generation.stderr",
+  "code": 0,
+  "timed_out": false
+}

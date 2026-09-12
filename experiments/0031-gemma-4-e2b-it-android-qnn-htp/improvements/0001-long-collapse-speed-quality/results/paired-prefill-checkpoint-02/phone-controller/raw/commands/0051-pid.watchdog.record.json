@@ -1,0 +1,17 @@
+{
+  "operation": "pid.watchdog.record",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "if [ -s /data/local/tmp/vibevoice-0031-paired-paired-prefill-20260912T140747Z-02/evidence/watchdog.pid ] && [ -s /data/local/tmp/vibevoice-0031-paired-paired-prefill-20260912T140747Z-02/evidence/watchdog.start ]; then cat /data/local/tmp/vibevoice-0031-paired-paired-prefill-20260912T140747Z-02/evidence/watchdog.pid /data/local/tmp/vibevoice-0031-paired-paired-prefill-20260912T140747Z-02/evidence/watchdog.start; else printf \"MISSING\\n\"; fi"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0051-pid.watchdog.record.stdout",
+  "stderr": "raw/commands/0051-pid.watchdog.record.stderr",
+  "code": 0,
+  "timed_out": false
+}

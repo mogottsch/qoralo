@@ -1,0 +1,62 @@
+{
+  "classification": "paired_checkpoint_native_query_allocation_failure_before_first_graph",
+  "run_id": "paired-prefill-20260912T140747Z-02",
+  "phone_slot": "pi-gemma-paired-20260912T140747Z-02",
+  "controller_commit": "38ab443ebde73d13568019e2a1a36e12d83a2438",
+  "observer_readiness_commit": "41662f529491e343beb6a0210cec4df7a4607f2c",
+  "stage_digest": "b99056c1faa1e25823fd9bcda2a0968a0445cb93458dc1069e7d269eb9c54953",
+  "actual_native_exit": 1,
+  "actual_controller_exit": 1,
+  "native_query_attempts": 1,
+  "graph_executions": 0,
+  "captured_payloads": 0,
+  "host_reference_started": false,
+  "numerical_comparison": null,
+  "error": "std::bad_alloc; Failed to query (-1)",
+  "current_full_APK_hashes": {
+    "dev.vibevoice.podcast.internal": "04d9293b9a128730bac7a4a12a469b74ba367a4936b251cfa6ca4e253c3aef7f",
+    "dev.vibevoice.podcast.internal.test": "2dd4e0d89a38ec763dfd50ef101496c4f56e4f7db2cfaf1fa935fed6616d3184"
+  },
+  "preflight_playback": {
+    "boundary": "Current UID-scoped AudioPlaybackConfiguration observation plus separate generation/test checks and Pi job-quiescence attestation; no unrelated audio records retained.",
+    "main_absent": false,
+    "owned_active_players": 0,
+    "owned_inactive_players": 1,
+    "parse_status": "ok",
+    "playback_quiescence_observed": true,
+    "upstream_exit": 0
+  },
+  "prelaunch_playback": {
+    "boundary": "Current UID-scoped AudioPlaybackConfiguration observation plus separate generation/test checks and Pi job-quiescence attestation; no unrelated audio records retained.",
+    "main_absent": false,
+    "owned_active_players": 0,
+    "owned_inactive_players": 1,
+    "parse_status": "ok",
+    "playback_quiescence_observed": true,
+    "upstream_exit": 0
+  },
+  "postflight_app_identity": null,
+  "adb_calls_under_phone_lock": 57,
+  "raw_pull_completed": true,
+  "process_cleanup": {
+    "all_absent": true,
+    "basis": "fresh scoped PID/starttime probes; no name-wide kill"
+  },
+  "cleanup": "verified_absent",
+  "phone_lock_released": true,
+  "signal_operations": 0,
+  "postquery_IDs": {
+    "count": 1929,
+    "sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"
+  },
+  "allocation_diagnosis": {
+    "exact_allocation_unknown": true,
+    "device_VmPeak_RSS_headroom_unrecorded": true,
+    "AS_sole_cause_established": false,
+    "cap_underflow_demonstrated": false,
+    "observer_payload_hook_reached": false,
+    "fault_markers_in_saved_provider": []
+  },
+  "automatic_retry": false,
+  "Janek_phone_priority": "Phone released promptly; Janek combinedappE2E/deploy now owns next window. No further device probes."
+}

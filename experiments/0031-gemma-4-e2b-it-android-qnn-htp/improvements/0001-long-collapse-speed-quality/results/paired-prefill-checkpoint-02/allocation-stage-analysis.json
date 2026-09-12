@@ -1,0 +1,124 @@
+{
+  "classification": "saved_only_pre_graph_allocation_failure_diagnosis",
+  "new_ADB_calls": 0,
+  "new_model_runs": 0,
+  "query_attempted": true,
+  "graphs_executing_count": 0,
+  "completed_AR128": 0,
+  "completed_AR1": 0,
+  "inference_step_markers": 0,
+  "captured_payloads": 0,
+  "reported_runtime_IO_buffer_bytes": 104235008,
+  "dialog_create_profile_us": 2300470,
+  "post_query_tokenizer_IDs": {
+    "count": 1929,
+    "sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"
+  },
+  "embedding_debug_markers": [
+    {
+      "line": 3828,
+      "contains_ellipsis": false,
+      "full_ID_vector_in_log_claimed": false
+    },
+    {
+      "line": 3845,
+      "contains_ellipsis": false,
+      "full_ID_vector_in_log_claimed": false
+    }
+  ],
+  "device_process_memory": {
+    "VmPeak": null,
+    "VmSize": null,
+    "RSS": null,
+    "device_MemAvailable": null,
+    "reason": "Not recorded before this short-lived allocation failure; cannot reconstruct from buffer-allocation report or host stats."
+  },
+  "AS_policy": {
+    "shell_configured_bytes": 8589934592,
+    "native_getrlimit_readback": null,
+    "sole_cause_established": false
+  },
+  "cap_path": {
+    "cap": 1,
+    "type": "uint32_t m_tokenLimit",
+    "config_read_lines": "src/Dialog.cpp:2909-2916,3101",
+    "setter_line": "src/Dialog.cpp:3912",
+    "uses": "generation callback counters (++genTokenCount < m_tokenLimit), not the reviewed pre-first-token vector sizes",
+    "allocation_underflow_from_cap_demonstrated": false
+  },
+  "bounded_source_buffer_arithmetic": {
+    "tokens": 1929,
+    "main_LUT_U8_bytes": 2962944,
+    "main_decoder_U16_bytes": 5925888,
+    "PLE_LUT_U8_bytes": 17283840,
+    "PLE_decoder_U16_bytes": 34567680,
+    "four_vectors_combined_bytes": 60740352,
+    "depends_on_generation_cap": false,
+    "requested_size_at_throw_observed": null
+  },
+  "narrowed_stage": "Both LUT tokenizer debug markers occurred; failure is during/after PLE preparation and before first strategy/graph/capture-hook marker. Exact throwing allocation is unknown.",
+  "observer_delta": "Read-only hooks at end of setupInput and final getLogits; neither payload hook reached. No basis for blaming80MiB capture allocation; observer never allocates that amount up front.",
+  "saved_fault_marker_scan": {
+    "provider_sha256": "5dcfe7d0dd2ea94d70b1dc9222bbfe99b418e1bfcdc5778198bc4d19fbd0199e",
+    "matches": [],
+    "patterns": [
+      "\\bSSR\\b",
+      "\\bcDSP\\b",
+      "subsys(?:tem)?[- _]restart",
+      "remote.*reset",
+      "RPC.*(?:fatal|failed|failure)",
+      "FastRPC.*(?:fatal|failed|failure)"
+    ],
+    "scope": "Retained provider log only; absence is not a live modem/DSP health guarantee."
+  },
+  "rpc_preflight": {
+    "explicit_resource_blockers": [],
+    "functional_rpc_health_proven": false,
+    "limitation": "Read-only service/sysfs snapshot only; missing/unexposed fields remain unknown. Functional readiness is established only by this run's actual backend initialization/execution.",
+    "observations": [
+      {
+        "kind": "SERVICE",
+        "name": "init.svc.vendor.cdsprpcd",
+        "state": null
+      },
+      {
+        "kind": "SERVICE",
+        "name": "init.svc.vendor.adsprpcd",
+        "state": null
+      },
+      {
+        "kind": "SUBSYSTEM",
+        "name": "cdsp",
+        "state": "UNEXPOSED"
+      }
+    ]
+  },
+  "proposed_discriminator": {
+    "action": "Observation-only fixed-stack allocation-stage telemetry before each LUT/output and decoder/per-layer resize, then before BasicDialog/engine handoff; record requested bytes, current vector size/capacity, RLIMIT_AS and /proc/self/status VmSize/VmPeak/RSS, errno on original exception; preserve original allocation once and rethrow.",
+    "no_dynamic_allocation_in_failure_logger": true,
+    "change_AS_dtype_model_caps_or_replay_now": false,
+    "requires_future_separately_scheduled_phone_window": true
+  },
+  "source_bindings": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-capture/build-01/sdk-source/examples/Genie/Genie/src/Dialog.cpp",
+      "sha256": "5365cff503c93f27462831016da8bdc7dd983986b20677153d57f1d5cd886dd4"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-capture/build-01/sdk-source/examples/Genie/Genie/src/qualla/dialog.cpp",
+      "sha256": "baa2ff5b37431160b3d6526e009846f80272b75922f8a2ee3de24b476e5f0746"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-capture/build-01/sdk-source/examples/Genie/Genie/src/qualla/encoders/text-encoders/LUT.cpp",
+      "sha256": "ff7a399f9c14fb20ba21495a2dc51f025d6f88a86148f85b7682ee38ae43bc0f"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-capture/build-01/sdk-source/examples/Genie/Genie/src/qualla/dialogs/basic.cpp",
+      "sha256": "186ef7ca56a72c1a711cebce0118e4a54985da00e2acf862b6a43d6dddc4a5d9"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-prefill-capture/build-01/sdk-source/examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-model.cpp",
+      "sha256": "ebe9e4ef26efce16b0de64c9f021e60de9dc9366ca8e6c02cc5011c474277a6f"
+    }
+  ]
+}
