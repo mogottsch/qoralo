@@ -10,6 +10,7 @@ import types
 import phone_selected_id_long as base
 import phone_selected_id_appguard as old_app
 import phone_value_precision_long_health as health
+import app_playback_quiescence as playback
 from phone_return_long import replace_exact
 
 TOOLS=Path(__file__).resolve().parent
@@ -65,14 +66,21 @@ def load_lifecycle(expected_apks,job_quiet):
     receipt={'scope':'one actual frozen-Genie prefilling capture; no current execution grant','stage_digest':STAGE_DIGEST,'libGenie_sha256':LIB_SHA,'source_changes':changes,'controller_sha256':digest(source.encode()),'shell_sha256':digest(shell_source.encode()),'prior_lifecycle_binding':prior,'phone_process_seconds':300,'address_space_limit_bytes':8*1024**3,'address_space_not_RSS_or_HTP_private_memory':True,'capture_payload_cap_bytes':80*1024**2,'actual_user_job_quiescence_attested':job_quiet,'current_expected_APK_hashes':expected_apks,'host_memory_lock_admission':False,'phone_lock_required':True}
     shell=types.ModuleType('paired_prefill_shell');shell.__file__=str(TOOLS/'phone_return_shell.py');sys.modules[shell.__name__]=shell;exec(compile(shell_source,shell.__file__,'exec'),shell.__dict__)
     module=types.ModuleType('paired_prefill_controller');module.__file__=str(TOOLS/'phone_return_controller.py');sys.modules[module.__name__]=module;module._VALUE_DETACHED_LAUNCH=launch;module._VALUE_SCOPE_RECEIPT=receipt;exec(compile(source,module.__file__,'exec'),module.__dict__);module.common,module.scripts=shell.common,shell.scripts
+    receipt['actual_job_probe_sha256']=digest(playback.probe_script().encode())
+    receipt['playback_guard_version']=2
     parent=module.Controller
     class CaptureController(parent):
+        def _actual_playback(self,label):
+            reply=self._shell(label,playback.probe_script(),30)
+            self.result[label]=playback.validate(reply.stdout)
         def _identity(self):
             if not job_quiet or len(expected_apks)!=2 or any(not re.fullmatch('[0-9a-f]{64}',v) for v in expected_apks.values()):raise module.GuardError('fresh full APK identities and Pi actual-job-quiescence grant required')
             super()._identity()
             reply=self._shell('preflight.current_APKs_and_generation',old_app.IDENTITY+QUIET,45);self.result['current_app_preflight']=validate_app(reply.stdout,expected_apks)
+            self._actual_playback('preflight.actual_user_job_playback_v2')
         def _launch_and_wait(self):
             reply=self._shell('preflight.current_job_quiescence',QUIET,10);validate_app(reply.stdout,expected_apks,False)
+            self._actual_playback('prelaunch.actual_user_job_playback_v2')
             reply=self._shell('preflight.rpc_readiness',health.PROBE,10);observed=health.classify(reply.stdout);self.result['rpc_preflight']=observed
             if observed['explicit_resource_blockers']:raise module.GuardError('RPC_RESOURCE_NOT_READY')
             return super()._launch_and_wait()
@@ -84,7 +92,7 @@ def load_lifecycle(expected_apks,job_quiet):
     prior_plan=module.plan
     def capture_plan():
         value=prior_plan();value['requires']+=['--expected-app-sha256 (fresh full hash)','--expected-test-sha256 (fresh full hash)','--pi-user-job-quiescent (actual job/playback idle, not inferred from idle main)']
-        value.update(capture_noncache_inputs_only=True,host_reference_uses_own_caches=True,capture_payload_cap_bytes=80*1024**2,phone_address_space_limit_bytes=8*1024**3,phone_RSS_and_HTP_private_hard_cap_available=False)
+        value.update(playback_guard='streaming UID-only v2; upstream exit and parse status required',capture_noncache_inputs_only=True,host_reference_uses_own_caches=True,capture_payload_cap_bytes=80*1024**2,phone_address_space_limit_bytes=8*1024**3,phone_RSS_and_HTP_private_hard_cap_available=False)
         return value
     module.plan=capture_plan
     return module,receipt
