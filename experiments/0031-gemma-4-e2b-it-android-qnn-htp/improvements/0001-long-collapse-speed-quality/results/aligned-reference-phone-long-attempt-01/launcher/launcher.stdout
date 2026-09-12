@@ -1,0 +1,190 @@
+{
+  "adb_command_count": 149,
+  "aligned_scope_adapter": {
+    "adapter_sha256": "09843f7faecba5c2d1a67ff25fd59823519accfc3bd9fb92000bc8a33b6b264d",
+    "appguard_sha256": "8602ab27affb039464aad00210d484196b2b32d499466a922251a2469d7b6933",
+    "controller_changes": [
+      {
+        "after": "from prepare_aligned_litert_stage import verify as verify_stage",
+        "before": "from prepare_frozen_genie_stage import verify as verify_stage",
+        "count": 1
+      },
+      {
+        "after": "aligned-gpu-20260912T094856Z-01",
+        "before": "stage-freeze-20260910T105830Z-01",
+        "count": 1
+      },
+      {
+        "after": "247493005323235fac12203085f5d07599f179249bbbde908d4c17c288678e92",
+        "before": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25",
+        "count": 1
+      },
+      {
+        "after": "'.local/aligned-reference-phone-runs'",
+        "before": "'.local/phone-return-runs'",
+        "count": 1
+      },
+      {
+        "after": "'/data/local/tmp/vibevoice-0031-aligned-'",
+        "before": "'/data/local/tmp/vibevoice-0031-fp16-'",
+        "count": 1
+      },
+      {
+        "after": "single input-aligned GPU long/max2048 process",
+        "before": "single engineering short/max16 process",
+        "count": 1
+      },
+      {
+        "after": "one fresh-session aligned GPU long1929/max2048 diagnostic only",
+        "before": "one fresh-dialog first-short engineering/noncanonical max16 only",
+        "count": 1
+      },
+      {
+        "after": "aligned GPU long1929/max2048 engineering only",
+        "before": "first-short engineering max16 only",
+        "count": 1
+      },
+      {
+        "after": "bin/litert_lm_aligned_reference",
+        "before": "bin/genie-app",
+        "count": 2
+      },
+      {
+        "after": "expected_native_cmd = b'\\0'.join(x.encode() for x in _ALIGNED_ARGV(self.remote)) + b'\\0'",
+        "before": "expected_native_cmd = b'\\0'.join([expected_native_exe, b'-s', b'first-short.script']) + b'\\0'",
+        "count": 1
+      },
+      {
+        "after": "        command = _ALIGNED_DETACHED_LAUNCH(self.remote)",
+        "before": "        prefix = shlex.quote(self.remote)\n        command = (f'cd {prefix} && nohup /system/bin/sh {shlex.quote(self.remote + \"/launch.sh\")} '\n                   f'</dev/null >evidence/launcher.stdout 2>evidence/launcher.stderr &')",
+        "count": 1
+      },
+      {
+        "after": "'classification': 'collection_not_inference_validation', 'run_id': run_id,\n                       'aligned_scope_adapter': _ALIGNED_RECEIPT,",
+        "before": "'classification': 'collection_not_inference_validation', 'run_id': run_id,",
+        "count": 1
+      }
+    ],
+    "controller_sha256": "e2aa70da639ebd14fd34d298e3e1119ba762345edd5409959e63eaf13d32afdf",
+    "historical_gpu_binary_equivalence_proven": false,
+    "inverse_reconstruction_exact": true,
+    "native_flags": [
+      "--backend=gpu",
+      "--model_path=models/gemma-4-E2B-it.litertlm",
+      "--workload_dir=workloads",
+      "--output_dir=evidence",
+      "--arm_id=0031-single-bos-aligned-gpu",
+      "--cache_dir=cache",
+      "--max_num_tokens=8192",
+      "--max_output_tokens=2048",
+      "--num_cpu_threads=4",
+      "--request_timeout_seconds=1800",
+      "--reset_mode=fresh_session"
+    ],
+    "scope": "one aligned GPU reference only; actual Pi slot required",
+    "shell_changes": [
+      {
+        "after": "bin/litert_lm_aligned_reference",
+        "before": "bin/genie-app",
+        "count": 3
+      },
+      {
+        "after": "        expected=$(printf '%s\\n--backend=gpu\\n--model_path=models/gemma-4-E2B-it.litertlm\\n--workload_dir=workloads\\n--output_dir=evidence\\n--arm_id=0031-single-bos-aligned-gpu\\n--cache_dir=cache\\n--max_num_tokens=8192\\n--max_output_tokens=2048\\n--num_cpu_threads=4\\n--request_timeout_seconds=1800\\n--reset_mode=fresh_session' \"$REMOTE/bin/litert_lm_aligned_reference\")\n        expected_fields=12",
+        "before": "        expected=$(printf '%s\\n-s\\nfirst-short.script' \"$REMOTE/bin/litert_lm_aligned_reference\")\n        expected_fields=3",
+        "count": 1
+      },
+      {
+        "after": "export LD_LIBRARY_PATH=\"$REMOTE/lib\"",
+        "before": "export LD_LIBRARY_PATH=\"$REMOTE/lib\" ADSP_LIBRARY_PATH=\"$REMOTE/lib\" QNN_LOG_LEVEL=verbose",
+        "count": 1
+      },
+      {
+        "after": "exec \"$REMOTE/bin/litert_lm_aligned_reference\" --backend=gpu --model_path=models/gemma-4-E2B-it.litertlm --workload_dir=workloads --output_dir=evidence --arm_id=0031-single-bos-aligned-gpu --cache_dir=cache --max_num_tokens=8192 --max_output_tokens=2048 --num_cpu_threads=4 --request_timeout_seconds=1800 --reset_mode=fresh_session",
+        "before": "exec \"$REMOTE/bin/litert_lm_aligned_reference\" -s first-short.script",
+        "count": 1
+      }
+    ],
+    "shell_sha256": "eb1d357e6d733ba8fba46a3d29da8af2b8189ad49c02215f8aed821e7e28ca36",
+    "signal_guard_atomic": false,
+    "stage_digest": "247493005323235fac12203085f5d07599f179249bbbde908d4c17c288678e92",
+    "stage_verifier_sha256": "40c8eabf8d63821e9112c2a84f45f3871a3a189d2590ed9399b97fba1e4a7524"
+  },
+  "app_quiescence_before_launch": {
+    "boundary": "Conservative target-process absence, not a claim about all phone activity; no app/DB or process modifications.",
+    "installed_sha256": null,
+    "target_processes_absent": true
+  },
+  "automatic_retry": false,
+  "classification": "collection_not_inference_validation",
+  "cleanup": "verified_absent",
+  "controller_script_hashes": {
+    "control.sh": "0f0816027fa0ce708033ee17a830bd6a778c2b3f83cd354de427fb7129d1c38c",
+    "launch.sh": "e48e560e4661565405be47a2e7c017d605b569cd0263b26347350ed1675f6498",
+    "model-entry.sh": "7a407e6c36c3ff49f3a4fe1ebb9da28a865a9b3603f465f7bae00aace3378388",
+    "watchdog.sh": "505a1849920480a5276245eb6a834ac5e5ca012bf9182405636139fc55d2363d"
+  },
+  "controller_sources": {
+    "phone_return_controller.py": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+    "phone_return_shell.py": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb",
+    "prepare_frozen_genie_stage.py": "34c56e7a2ec92c68a7a781ca7c7230a3ad8ce60d249dbd93e6c4cd359b403ccf"
+  },
+  "current_app_preflight": {
+    "boundary": "Conservative target-process absence, not a claim about all phone activity; no app/DB or process modifications.",
+    "installed_sha256": {
+      "dev.vibevoice.podcast.internal": "e1b33f276aa7f267c778a1c3fe6c113700aa401d61472956a4769a098fcc89ba",
+      "dev.vibevoice.podcast.internal.test": "060edd5f0679b79ec928319a5b1e93c1bbcbd42d775b2df05c78307ad849d0f9"
+    },
+    "target_processes_absent": true
+  },
+  "fidelity": null,
+  "fresh_owned_real_cache_created": true,
+  "identity": {
+    "ro.boot.flash.locked": "1",
+    "ro.boot.verifiedbootstate": "green",
+    "ro.build.fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "ro.build.version.release": "16",
+    "ro.build.version.sdk": "36",
+    "ro.product.cpu.abi": "arm64-v8a",
+    "ro.product.device": "dm3q",
+    "ro.product.manufacturer": "samsung",
+    "ro.product.model": "SM-S918B",
+    "ro.soc.model": "SM8550",
+    "serial": "R5CW81PR8SY",
+    "sys.boot_completed": "1"
+  },
+  "identity_verified": true,
+  "input_hashes_verified": true,
+  "launch_command_attempted": true,
+  "long_script": false,
+  "native_process_observed": true,
+  "optional_metrics": {
+    "reason": "Offline profile/provider/query review is separate; controller does not infer metrics.",
+    "values": null
+  },
+  "phone_lock_released": true,
+  "pi_slot": "pi-gemma-aligned-gpu-long-20260912-a",
+  "postflight_installed_app_identity": {
+    "observed": {
+      "dev.vibevoice.podcast.internal": "e1b33f276aa7f267c778a1c3fe6c113700aa401d61472956a4769a098fcc89ba",
+      "dev.vibevoice.podcast.internal.test": "060edd5f0679b79ec928319a5b1e93c1bbcbd42d775b2df05c78307ad849d0f9"
+    },
+    "unchanged": true
+  },
+  "postflight_wrapper_sha256": "5c0758039afb3d3306f2fc9a03a48e79a6d1041373afa312ecf012eedfe771a4",
+  "process_cleanup": {
+    "all_absent": true,
+    "basis": "fresh scoped PID/starttime probes; no name-wide kill"
+  },
+  "process_exit_code": 0,
+  "provider_placement": null,
+  "raw_capture_attempted": true,
+  "raw_pull_completed": true,
+  "remote_creation_confirmed": true,
+  "remote_root": "/data/local/tmp/vibevoice-0031-aligned-aligned-long-20260912T100120Z-01",
+  "reviewed_stage_digest": "247493005323235fac12203085f5d07599f179249bbbde908d4c17c288678e92",
+  "run_id": "aligned-long-20260912T100120Z-01",
+  "runtime_success": null,
+  "scope": "aligned GPU long1929/max2048 engineering only",
+  "signal_guard_atomic": false,
+  "signal_race_boundary": "Sequential /proc starttime/executable/argv checks then numeric-PID kill; no kernel pidfd binding."
+}

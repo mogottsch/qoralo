@@ -1,0 +1,17 @@
+{
+  "operation": "postflight.current_app_identity",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "\nfor package in dev.vibevoice.podcast.internal dev.vibevoice.podcast.internal.test; do\n  location=$(pm path \"$package\") || exit 41\n  case \"$location\" in package:/data/app/*/base.apk) ;; *) exit 42 ;; esac\n  case \"$location\" in *'\n'*) exit 43 ;; esac\n  path=${location#package:}\n  value=$(sha256sum \"$path\") || exit 44\n  hash=${value%% *}\n  printf 'APK\\t%s\\t%s\\n' \"$package\" \"$hash\"\ndone\n"
+  ],
+  "timeout_seconds": 45,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0149-postflight.current_app_identity.stdout",
+  "stderr": "raw/commands/0149-postflight.current_app_identity.stderr",
+  "code": 0,
+  "timed_out": false
+}

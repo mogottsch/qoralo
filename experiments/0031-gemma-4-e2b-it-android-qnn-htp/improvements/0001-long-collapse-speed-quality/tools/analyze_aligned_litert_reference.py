@@ -84,7 +84,7 @@ def main():
           'native_process_observed':collection['native_process_observed'],'single_request':len(runner['runs'])==1,
           'gpu_only_provider':runner['backend']=='gpu' and runner['gpu_provider_binding']['binding_proven'],
           'reference_context_cap':runner['route']['max_num_tokens']==8192 and runner['route']['max_output_tokens']==2048,
-          'exact_rendered_body':(device/'rendered/long.txt').read_bytes()==(STAGE/'expected-rendered-long.txt').read_bytes()}
+          'exact_rendered_body':(device/'rendered-long.txt').read_bytes()==(STAGE/'expected-rendered-long.txt').read_bytes()}
         request=runner['runs'][0]
         checks['fresh_completed_request']=request['runtime_task_state']=='done' and request['runtime_error'] is None and request['session_step_before_reset']==0 and request['rewind_called'] is False
         checks['aligned_request_identity']=request['id']=='aligned-reference-long-01' and request['tier']=='long' and request['expected_input_tokens']==1929
