@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-12T10:00:15+00:00",
+  "updated_at": "2026-09-12T10:09:30+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -67,12 +67,12 @@
     {
       "id": "gemma",
       "title": "Gemma aligned-GPU reference build",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "Jere compiled/bound aligned-GPU stage4eedb257; one-long phone slot is current next after fresh free-lock check.",
-      "next": "Actual lock/start/result unreported. No quality/performance outcome.",
-      "reported_at": "2026-09-12T10:00:15+00:00",
-      "reported_by": "Pi — Jere compiled stage and next phone slot",
+      "now": "Aligned-GPU one-long request COMPLETE/released: all1929 actual pre-RunPrefill IDs match QNN frozen input; GPU-bound fresh request returned644 tokens/643 filtered callback IDs and sensible3717B summary SHA c64a18a7…0d55d.",
+      "next": "Below2048 cap; terminal ID unknown. Input does not itself force QNN collapse on GPU reference; package/analyzer-path correction only, no replay/QNN root-cause/frontend-equivalence claim.",
+      "reported_at": "2026-09-12T10:09:30+00:00",
+      "reported_by": "Pi — actual Jere aligned-GPU request result/release",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -86,12 +86,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
-      "owner": "Jere",
-      "now": "Jere one-long phone slot is next/current after fresh free-lock check; actual start unreported.",
-      "next": "No Gemma quality/performance result. Janek source pass is host-only; QNN app/device validation remains pending.",
-      "reported_at": "2026-09-12T10:00:15+00:00",
-      "reported_by": "Pi — current phone sequence",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Jere aligned-GPU request complete/released; raw captured/cleanup clean, app APK e1b33/060edd5 unchanged.",
+      "next": "No phone run active. Jere packages/analyzer correction only; no replay.",
+      "reported_at": "2026-09-12T10:09:30+00:00",
+      "reported_by": "Pi — actual Jere release",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -100,10 +100,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jere",
-      "now": "Janek reusable-shape source checks pass; Jere aligned-GPU stage compiled/bound and awaits phone start.",
-      "next": "No weights changed; no QNN export/app/device validation or quality/performance outcome. Old vector strict FAIL retained.",
-      "reported_at": "2026-09-12T10:00:15+00:00",
-      "reported_by": "Pi — current source/build milestones",
+      "now": "Jere packages aligned-GPU result/analyzer correction; Janek prepares reusable-context QNN export/app/device validation.",
+      "next": "No QNN root-cause/frontend-equivalence claim. No replay; app APK unchanged.",
+      "reported_at": "2026-09-12T10:09:30+00:00",
+      "reported_by": "Pi — current post-result work",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -137,9 +137,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run one-long aligned-GPU phone stage after free-lock check",
-      "reported_at": "2026-09-12T10:00:15+00:00",
-      "reported_by": "Pi — actual start unreported",
+      "task": "Package aligned-GPU result; correct offline analyzer path",
+      "reported_at": "2026-09-12T10:09:30+00:00",
+      "reported_by": "Pi — request complete/released",
       "stale_after_seconds": 900
     },
     {
