@@ -6,10 +6,14 @@ import unittest
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(ROOT/'podcast-app/tools'))
-from run_app_gate import safe_close
+from run_app_gate import safe_close,parse_health
 from duration_phone_guard import GuardError
 
 class ProviderPipelineTests(unittest.TestCase):
+    def test_real_format_health_fields_parse_without_weakening_resource_limits(self):
+        self.assertEqual({'availableMemoryKiB':4321000,'batteryTemperatureC':28.3},
+            parse_health('MemTotal:       10240000 kB\nMemAvailable:    4321000 kB\n','Current Battery Service state:\n  temperature: 283\n'))
+        with self.assertRaises(GuardError):parse_health('MemAvailable: unknown','temperature: unknown')
     def test_only_authenticated_owned_audio_work_can_be_closed(self):
         safe_close({'generation_jobs':[]},None)
         safe_close({'generation_jobs':[{'status':'RUNNING','episodeId':'owned','kind':'AUDIO'}]},'owned')

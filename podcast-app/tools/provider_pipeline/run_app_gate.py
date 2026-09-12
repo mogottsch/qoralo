@@ -20,6 +20,12 @@ def safe_close(data,owned):
         if job['status'] in ('QUEUED','RUNNING'):
             require(owned is not None and job['episodeId']==owned and job['kind']=='AUDIO','foreign active work; never stop it')
 
+def parse_health(memory,battery):
+    mem=re.search(r'^MemAvailable:\s+(\d+) kB',memory,re.M)
+    temp=re.search(r'^\s*temperature:\s*(-?\d+)',battery,re.M)
+    require(mem is not None and temp is not None,'health preflight unavailable')
+    return {'availableMemoryKiB':int(mem.group(1)),'batteryTemperatureC':int(temp.group(1))/10.0}
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--candidate',type=Path,required=True);p.add_argument('--run-id',required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--execute',action='store_true');a=p.parse_args()
@@ -48,10 +54,7 @@ def main():
     def health(label,enforce=False):
         memory=device.shell('cat /proc/meminfo',timeout=10)
         battery=device.shell('dumpsys battery',timeout=10)
-        mem=re.search(r'^MemAvailable:\\s+(\\d+) kB',memory,re.M)
-        temp=re.search(r'^\\s*temperature:\\s*(-?\\d+)',battery,re.M)
-        require(mem is not None and temp is not None,'health preflight unavailable')
-        value={'availableMemoryKiB':int(mem.group(1)),'batteryTemperatureC':int(temp.group(1))/10.0}
+        value=parse_health(memory,battery)
         save(label+'.json',value)
         if enforce:require(value['availableMemoryKiB']>=3584*1024 and value['batteryTemperatureC']<42,'phone headroom/thermal boundary')
     def stop(state,owned):
