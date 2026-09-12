@@ -1,5 +1,7 @@
 # Progressive playback — interim physical evidence
 
+**Later additive result:** [all8 synthetic UI cases passed and the tested APK was left installed](ui-only-20260912t143635z/README.md). That is UI-only, not genuine generation E2E. The interim state below records the earlier outcomes before this separate UI-only stage.
+
 This is **not an E2E/deployment pass**. No genuine AUDIO inference has run in this campaign yet. The latest combined fix remains frozen but uninstalled because the unchanged device memory admission floor was not met.
 
 ## Frozen candidate
