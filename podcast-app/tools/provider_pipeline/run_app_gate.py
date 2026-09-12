@@ -73,7 +73,7 @@ def main():
         safe_close(state,owned)
         for package in (APP,TEST_APP):device.shell('am force-stop '+package,timeout=10)
         guard.idle()
-    owned=None;before=None;files_before=None;setup=False;launched=False;remote_created=False;pull=0
+    owned=None;before=None;files_before=None;setup=False;launched=False;remote_created=False;pull=0;candidate_installed=False
     ui_settings={};ui_changed=False
     def restore_ui():
         nonlocal ui_changed
@@ -199,7 +199,7 @@ def main():
             health('health-after-idle-close',True)  # Same limits, after authorized closure of proven-idle app caches and before staging/model work.
             for kind,package in [('app',APP),('test',TEST_APP)]:
                 if c['priorInstalled'][package]!=c[kind]['sha256']:device.run(['install','-r','-t',c[kind]['path']],timeout=180)
-            save('installed-candidate.json',installed({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}))
+            save('installed-candidate.json',installed({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}));candidate_installed=True
             destination='no_backup/model-packs/'+manifest['id']+'/current'
             present=device.shell(f'run-as {APP} sh -c '+shlex.quote(f'if test -d {destination}; then echo PRESENT; else echo MISSING; fi'),timeout=10).strip()
             if present=='MISSING':
@@ -241,6 +241,12 @@ def main():
                 '-e','chapterSha256',REFERENCE['textSha256'],TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
             if progressive:command[-1:-1]=['-e','progressivePlayback','true']
             launched=True;device.run(command,timeout=660);ownership();receipts()
+            result_file=out/f'private-extracted-{pull:02d}/files/provider-integration/{a.run_id}-driver/driver-result.json'
+            require(result_file.is_file(),'owned E2E did not produce a success receipt; preserve its first result')
+            result=json.loads(result_file.read_text())
+            require(result.get('episodeId')==owned and result.get('newAudioJobs')==1 and result.get('status')=='copied_real_chapter_normal_audio_complete','owned E2E result mismatch')
+            if progressive:require(result.get('progressivePlaybackVerified') is True and result.get('mutedPlayer') is True,'progressive proof incomplete')
+            save('e2e-result.json',{'status':'passed','episodeId':owned,'driverReceiptSha256':digest(result_file),'progressivePlaybackVerified':progressive,'syntheticTests':8 if progressive else 0})
         except BaseException as error:save('private-controller-failure.json',{'error':repr(error),'launched':launched})
         finally:
             device.enforce_quota=False
@@ -250,7 +256,7 @@ def main():
                 elif progressive:actions += [('synthetic-receipts',receipts)]
                 actions += [('safe-closure',closure),('control-disarm',disarm),('ui-settings-restore',restore_ui)]
                 if launched:actions += [('receipts-after',receipts)]
-                actions += [('files-after',files_after),('db-after',db_after),('preservation',preservation),('health-after',lambda:health('health-after')),('remote-cleanup',remove_remote)]
+                actions += [('files-after',files_after),('db-after',db_after),('preservation',preservation),('health-after',lambda:health('health-after')),('installed-after',lambda:save('installed-after.json',installed({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']} if candidate_installed else c['priorInstalled']))),('remote-cleanup',remove_remote)]
                 independent_cleanup(actions,cleanup['errors'])
             cleanup['ownedEpisodeId']=owned;cleanup['launched']=launched;save('cleanup.json',cleanup)
             fcntl.flock(lock,fcntl.LOCK_UN)
