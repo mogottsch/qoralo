@@ -1,0 +1,10 @@
+{
+  "stage": "native-source-byte-comparison",
+  "status": "stopped",
+  "reason": "Compared unstripped source-built ELF to AGP-stripped APK ELF; retained original failure",
+  "unstrippedSha256": "6efbda6fdc2b0f602e555f93e5ae62cb06d9b0e055f9302ea1bf476a0b0e00e2",
+  "apkBridgeSha256": "01d2ba533cb053825e9d904c591dbd01c388e550e211a950127d1d521bf60557",
+  "correction": "Exact NDK27 llvm-strip --strip-unneeded reproduces APK bridge bytes; no code/model change",
+  "adbCalls": 0,
+  "modelCalls": 0
+}

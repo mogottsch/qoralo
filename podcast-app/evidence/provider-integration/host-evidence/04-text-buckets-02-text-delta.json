@@ -1,0 +1,41 @@
+{
+  "component": "text",
+  "bucket": 320,
+  "edge_sites": [
+    {
+      "source": "/text_encoder/convnext/convnext.0/dwconv/Pad",
+      "radius": 2,
+      "replacement": "/text_encoder/convnext/convnext.0/dwconv/Pad/native_text_boundary_Gather"
+    },
+    {
+      "source": "/text_encoder/convnext/convnext.1/dwconv/Pad",
+      "radius": 2,
+      "replacement": "/text_encoder/convnext/convnext.1/dwconv/Pad/native_text_boundary_Gather"
+    },
+    {
+      "source": "/text_encoder/convnext/convnext.2/dwconv/Pad",
+      "radius": 4,
+      "replacement": "/text_encoder/convnext/convnext.2/dwconv/Pad/native_text_boundary_Gather"
+    },
+    {
+      "source": "/text_encoder/convnext/convnext.3/dwconv/Pad",
+      "radius": 4,
+      "replacement": "/text_encoder/convnext/convnext.3/dwconv/Pad/native_text_boundary_Gather"
+    },
+    {
+      "source": "/text_encoder/convnext/convnext.4/dwconv/Pad",
+      "radius": 8,
+      "replacement": "/text_encoder/convnext/convnext.4/dwconv/Pad/native_text_boundary_Gather"
+    },
+    {
+      "source": "/text_encoder/convnext/convnext.5/dwconv/Pad",
+      "radius": 8,
+      "replacement": "/text_encoder/convnext/convnext.5/dwconv/Pad/native_text_boundary_Gather"
+    }
+  ],
+  "all_initializers_byte_identical": true,
+  "all_other_nodes_byte_identical": true,
+  "sequencePrefix": 0,
+  "runtime_indices": "clip(arange(-r,bucket+prefix+r),0,actual_native_T+prefix-1).astype(int32)",
+  "numeric_or_HTP_validation": false
+}

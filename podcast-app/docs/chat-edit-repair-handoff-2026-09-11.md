@@ -1,4 +1,6 @@
-# Installed chat-edit repair — 2026-09-11
+# Earlier chat-edit repair — 2026-09-11
+
+**Current installation:** provider HTP app `04d9293b…` supersedes this artifact while retaining its chat fixes. See [the current provider handoff](provider-app-handoff-2026-09-12.md). The e1b33f27… artifacts and results below remain historical evidence.
 
 ## Use the updated app
 

@@ -1,6 +1,6 @@
 # Final usable SHORT app handoff
 
-**Historical short-flow/audio handoff.** The current installed build is now `e1b33f27…`, with tested capacity protection, structured chat-edit replies and safe draft recovery: see [the current chat-edit handoff](chat-edit-repair-handoff-2026-09-11.md). The `95103…` artifact and all results below remain preserved unchanged as the earlier technical-chain nomination.
+**Historical short-flow/audio handoff.** The current installed build is now `04d9293b…`, retaining structured chat edits and adding the provider HTP sentence pipeline: see [the current provider handoff](provider-app-handoff-2026-09-12.md). The `95103…` artifact and all results below remain preserved unchanged as the earlier technical-chain nomination.
 
 **Phone/model work is stopped. The real multi-stage short workflow reaches local SAF export, with Nik's final saved audit accepted. Moritz has accepted the exact21.067s short master.** Long1–2minute chapter support remains unresolved; this feedback does not approve the long sample or other hashes.
 

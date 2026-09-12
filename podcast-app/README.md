@@ -4,7 +4,7 @@ Greenfield Android implementation of the binding UX in `../docs/app-ux-mvp.html`
 
 ## Current tested internal build
 
-See [the installed chat-edit repair handoff](docs/chat-edit-repair-handoff-2026-09-11.md) for the current `e1b33f27…` APK, tested structured edit replies and safe draft recovery. The [earlier capacity handoff](docs/app-repair-handoff-2026-09-11.md) retains real-input SCRIPT results and early audio-capacity evidence. Full drafts are preserved; full-length chapter narration remains unsupported/unverified by the selected voice. The frozen APK in that handoff is the tested nomination, not an arbitrary build output.
+See [the installed provider HTP handoff](docs/provider-app-handoff-2026-09-12.md) for the current `04d9293b…` APK and Ready210-second chapter. The app now uses the provider's sentence pipeline with four reusable HTP contexts and per-segment admission, retaining structured chat edits and saved-draft recovery. Proof is explicitly composed: actual HTP synthesis followed by exact-byte non-neural publication recovery; the new WAV is not yet listening-reviewed. Use the frozen APK in that handoff, not arbitrary build output. Earlier [chat-edit](docs/chat-edit-repair-handoff-2026-09-11.md) and [capacity](docs/app-repair-handoff-2026-09-11.md) evidence remains preserved.
 
 ## Identity
 
