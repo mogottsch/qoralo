@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-12T11:36:03+00:00",
+  "updated_at": "2026-09-12T11:37:21+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -19,12 +19,12 @@
     {
       "id": "app-htp-integration",
       "title": "App HTP provider-pipeline integration",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Janek",
-      "now": "App HTP synthesis PASS:15 segments/165 reported native calls→210.184218s44.1k mono PCM16/18,538,292B WAV SHA2194bce…e532a; exact audio retained/not_reviewed.",
-      "next": "Publication failed after synthesis: completed WAV/receipt staged in scratch child but AtomicArtifactCommit requires same parent. I/O recovery only under new attempt/no resynthesis; NOT Ready/full-product success.",
-      "reported_at": "2026-09-12T11:36:03+00:00",
-      "reported_by": "Pi — actual app HTP synthesis and post-audio publication block",
+      "now": "Exact private app HTP WAV recovered to stable path: SHA2194bce…e532a,18,538,292B/9,269,124 frames/44.1k mono PCM16; full synthesis completed, source job publication failed.",
+      "next": "Distinct paused local player prepared/not_reviewed; exact-byte publication recovery pending. No transferred0037 acceptance/ASR, no Ready/full-product claim or autoplay.",
+      "reported_at": "2026-09-12T11:37:21+00:00",
+      "reported_by": "Pi — stable private app WAV path for listening handoff",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -192,6 +192,11 @@
         "sha256": "59d544e6f5eb4227729b8c98b0819be8f176ce9c6ab1ddf2705c109a8de6eccb"
       }
     },
-    "current_label": "0037 paired CPU / HTP accepted exact WAVs"
+    "current_label": "0037 paired CPU / HTP accepted exact WAVs",
+    "app_provider_htp_pending_review": {
+      "wav_sha256": "2194bce66f8abd05bdf10fefc5cf4aaef49cac647992f637db319b7d14be532a",
+      "state": "not_reviewed",
+      "scope": "Exact private app HTP WAV only; 0037 review/ASR do not transfer"
+    }
   }
 }
