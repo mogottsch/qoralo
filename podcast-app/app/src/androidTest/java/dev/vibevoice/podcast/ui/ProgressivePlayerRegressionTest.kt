@@ -89,7 +89,7 @@ class ProgressivePlayerRegressionTest {
             Thread.sleep(150)
             rule.runOnIdle { assertFalse(session!!.wantsPlayback);assertFalse(session!!.isPlaying);assertEquals(1.5f,session!!.speed);assertTrue(session!!.transcript)
                 assertTrue(kotlin.math.abs(session!!.positionMs-persisted.positionMs)<=2) }
-        } finally { rule.runOnIdle { session?.close();session=null };root.deleteRecursively() }
+        } finally { rule.runOnIdle { session?.let { retainState(it);it.close() };session=null };root.deleteRecursively() }
     }
 
     @Test fun completedMasterEndsWithoutStuckPlaybackIntentAndReplaysOnlyOnExplicitPlay() {
@@ -107,6 +107,18 @@ class ProgressivePlayerRegressionTest {
             rule.runOnIdle { assertSame(same,session!!.player);assertFalse(session!!.wantsPlayback);session!!.togglePlay() }
             rule.waitUntil(10_000) { session!!.isPlaying && session!!.positionMs<990 }
         } finally { rule.runOnIdle { session?.close();session=null };root.deleteRecursively() }
+    }
+
+    private fun retainState(session:EpisodePlayerSession) {
+        val args=InstrumentationRegistry.getArguments()
+        val run=args.getString("diagnosticRun") ?: return
+        val profile=args.getString("profile") ?: return
+        require(listOf(run,profile).all { Regex("[a-zA-Z0-9_-]{1,96}").matches(it) })
+        val root=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"player-ui-captures/$run/$profile/core-${System.nanoTime()}").apply { mkdirs() }
+        File(root,"synthetic-final-state.json").writeText(org.json.JSONObject()
+            .put("positionMs",session.positionMs).put("availableMs",session.durationMs).put("wantsPlayback",session.wantsPlayback)
+            .put("waiting",session.waiting).put("playing",session.isPlaying).put("state",session.player.playbackState)
+            .put("itemIndex",session.player.currentMediaItemIndex).put("playWhenReady",session.player.playWhenReady).put("error",session.error).toString(2))
     }
 
     private fun wave(file:File,frames:Int) {

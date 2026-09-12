@@ -171,7 +171,10 @@ class EpisodePlayerSession(
         if(streamState==AudioAvailabilityState.STALE) return
         error=null;intent.play()
         if(player.playbackState==Player.STATE_ENDED) {
-            if(liveBinding!=null && streamState==AudioAvailabilityState.GENERATING) intent.ended(timeline.availableFrames,AudioAvailabilityState.GENERATING)
+            // A paused old tail may now be inside a longer playlist. Play that newly available
+            // interval from the saved absolute cursor; do not move the wait frontier past it.
+            if(liveBinding!=null && positionMs<timeline.availableMs) seekInternal(positionMs)
+            else if(liveBinding!=null && streamState==AudioAvailabilityState.GENERATING) intent.ended(timeline.availableFrames,AudioAvailabilityState.GENERATING)
             else seekInternal(0) // Replay is an explicit action only for a terminal/completed player.
         } else if(liveBinding!=null) seekInternal(positionMs.coerceIn(0,timeline.availableMs))
         player.play();syncIntent()
