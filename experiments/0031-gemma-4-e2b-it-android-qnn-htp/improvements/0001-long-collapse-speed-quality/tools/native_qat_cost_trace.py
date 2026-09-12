@@ -94,7 +94,7 @@ class CostTrace:
             patch(torch,'matmul',self.wrap('torch.matmul',torch.matmul))
             for name,module in named:
                 selected=(name in ('','model','model.language_model') or
-                          type(module).__name__=='Gemma4DecoderLayer' or
+                          type(module).__name__=='Gemma4TextDecoderLayer' or
                           isinstance(module,(linear,emb,torch.nn.Linear)))
                 if not selected:continue
                 had_instance='forward' in module.__dict__;previous=module.__dict__.get('forward')

@@ -112,10 +112,12 @@ class ObservationOnlyTraceTests(unittest.TestCase):
                 calls['linear_dequant']=calls.get('linear_dequant',0)+1;return value
             def forward(self):
                 calls['linear_forward']=calls.get('linear_forward',0)+1;return self._dequantize_weights()
+        class Gemma4TextDecoderLayer:
+            def forward(self):calls['decoder_forward']=calls.get('decoder_forward',0)+1;return value
         class Model:
-            def __init__(self):self.emb=Embedding();self.head=Linear()
-            def named_modules(self):return [('',self),('emb',self.emb),('lm_head',self.head)]
-            def forward(self):self.emb.forward();return self.head.forward()
+            def __init__(self):self.emb=Embedding();self.head=Linear();self.layer=Gemma4TextDecoderLayer()
+            def named_modules(self):return [('',self),('emb',self.emb),('lm_head',self.head),('model.language_model.layers.0',self.layer)]
+            def forward(self):self.layer.forward();self.emb.forward();return self.head.forward()
         quant=SimpleNamespace(QuantizedEmbedding=Embedding,QuantizedLinear=Linear,apply_srq=lambda x:x)
         torch=SimpleNamespace(nn=SimpleNamespace(Linear=Linear,functional=SimpleNamespace(linear=lambda x:x)),matmul=lambda x:x)
         model=Model();prop=Embedding.weight;original_srq=quant.apply_srq
@@ -127,6 +129,9 @@ class ObservationOnlyTraceTests(unittest.TestCase):
             self.assertEqual(set(calls.values()),{1})
             self.assertIs(Embedding.weight,prop);self.assertIs(quant.apply_srq,original_srq)
             self.assertNotIn('forward',model.__dict__);trace.close()
+            events=[json.loads(s) for s in trace.path.read_text().splitlines()]
+            self.assertEqual(sum(x['event']=='begin' and x['operation']=='model.language_model.layers.0.forward' for x in events),1)
+            self.assertNotIn('forward',model.layer.__dict__)
 
     def test_original_exception_and_trace_failure_do_not_change_function(self):
         from native_qat_cost_trace import CostTrace
