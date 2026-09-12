@@ -1,0 +1,33 @@
+{
+  "classification": "paired_checkpoint_blocked_in_read_only_phone_preflight",
+  "run_id": "paired-prefill-20260912T135612Z-01",
+  "phone_slot": "pi-gemma-paired-20260912T135612Z-01",
+  "actual_controller_exit": 1,
+  "readiness_commit": "41662f529491e343beb6a0210cec4df7a4607f2c",
+  "stage_digest": "b99056c1faa1e25823fd9bcda2a0968a0445cb93458dc1069e7d269eb9c54953",
+  "phase": "identity",
+  "error": {
+    "message": "preflight.actual_user_job_playback: exit54",
+    "phase": "identity",
+    "type": "AdbError"
+  },
+  "specific_cause": "Additional actual-playback gate stored the audio dump in a shell variable then passed it as one external printf argument; Android returned Argument list too long. Filtered monitor/schema zeros are unavailable evidence, not a busy/idle verdict.",
+  "current_full_APK_hashes": {
+    "dev.vibevoice.podcast.internal": "04d9293b9a128730bac7a4a12a469b74ba367a4936b251cfa6ca4e253c3aef7f",
+    "dev.vibevoice.podcast.internal.test": "2dd4e0d89a38ec763dfd50ef101496c4f56e4f7db2cfaf1fa935fed6616d3184"
+  },
+  "generation_and_test_absent": true,
+  "actual_playback_quiescence": null,
+  "adb_calls_under_phone_lock": 15,
+  "remote_created": false,
+  "native_launch_attempted": false,
+  "neural_forward_calls": 0,
+  "host_reference_started": false,
+  "signals_observed": 0,
+  "phone_lock_released": true,
+  "cleanup": "not_created",
+  "unrelated_audio_dump_retained": false,
+  "automatic_retry": false,
+  "comparison": null,
+  "next_requirement": "Correct streaming-only filtered quiescence observation offline; new phone slot/authorization before any further device action. No model/host replay under this attempt."
+}

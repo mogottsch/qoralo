@@ -1,0 +1,17 @@
+{
+  "operation": "preflight.actual_user_job_playback",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "main=$(pidof dev.vibevoice.podcast.internal 2>/dev/null); code=$?\n[ \"$code\" = 0 ] || [ \"$code\" = 1 ] || exit 51\nif [ -z \"$main\" ]; then printf 'APP_MAIN_ABSENT\\n'; exit 0; fi\nuid=$(cmd package list packages -U dev.vibevoice.podcast.internal | awk '$1 == \"package:dev.vibevoice.podcast.internal\" { sub(\"uid:\",\"\",$2); print $2 }')\ncase \"$uid\" in ''|*[!0-9]*) printf 'APP_AUDIO_UNKNOWN_UID\\n'; exit 52;; esac\naudio=$(dumpsys audio) || exit 53\nprintf '%s\\n' \"$audio\" | awk -v uid=\"$uid\" '\nBEGIN { monitor=0; schema=0; own=0; active=0; unknown=0 }\n{ line=tolower($0)\n if (line ~ /playbackactivitymonitor/) monitor=1\n if (line ~ /u\\/pid:|uid\\/pid:/) schema=1\n if (line ~ (\"u/id:\" uid \"/\")) unknown++\n if (line ~ (\"u/pid:[[:space:]]*\" uid \"/\") || line ~ (\"uid/pid:[[:space:]]*\" uid \"/\")) {\n   own++\n   if (line ~ /state:[[:space:]]*(started|starting)/) active++\n   else if (line !~ /state:[[:space:]]*(paused|stopped|released|idle)/) unknown++\n }\n}\nEND { printf \"APP_AUDIO_MONITOR %d SCHEMA %d OWN %d ACTIVE %d UNKNOWN %d\\n\",monitor,schema,own,active,unknown;\n if (!monitor || !schema || active || unknown) exit 54 }\n'\n"
+  ],
+  "timeout_seconds": 30,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0015-preflight.actual_user_job_playback.stdout",
+  "stderr": "raw/commands/0015-preflight.actual_user_job_playback.stderr",
+  "code": 54,
+  "timed_out": false
+}
