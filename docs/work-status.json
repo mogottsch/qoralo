@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-12T10:09:30+00:00",
+  "updated_at": "2026-09-12T10:28:23+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -67,12 +67,12 @@
     {
       "id": "gemma",
       "title": "Gemma aligned-GPU reference build",
-      "status": "reviewing",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Aligned-GPU one-long request COMPLETE/released: all1929 actual pre-RunPrefill IDs match QNN frozen input; GPU-bound fresh request returned644 tokens/643 filtered callback IDs and sensible3717B summary SHA c64a18a7…0d55d.",
-      "next": "Below2048 cap; terminal ID unknown. Input does not itself force QNN collapse on GPU reference; package/analyzer-path correction only, no replay/QNN root-cause/frontend-equivalence claim.",
-      "reported_at": "2026-09-12T10:09:30+00:00",
-      "reported_by": "Pi — actual Jere aligned-GPU request result/release",
+      "now": "Same-source static audit faba7059: all original float-ONNX head weights match source-QAT dequantization; tie_word_embeddings metadata mismatch does not justify head replacement.",
+      "next": "Build isolated native-QAT loader with strict632 scale/key/shape/dtype validation, then one bounded CPU prefill over exact1929 IDs. No forward outcome/generation/phone; upstream same-checkpoint control, not QNN equivalence.",
+      "reported_at": "2026-09-12T10:28:23+00:00",
+      "reported_by": "Pi — Jere same-source audit and next bounded host control",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -100,10 +100,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jere",
-      "now": "Jere packages aligned-GPU result/analyzer correction; Janek prepares reusable-context QNN export/app/device validation.",
-      "next": "No QNN root-cause/frontend-equivalence claim. No replay; app APK unchanged.",
-      "reported_at": "2026-09-12T10:09:30+00:00",
-      "reported_by": "Pi — current post-result work",
+      "now": "Jere native-QAT loader/CPU prefill preparation active; Janek reusable-context QNN export/app/device preparation continues.",
+      "next": "Gemma aligned-GPU sensible result retained separately. No native-QAT forward/generation/phone or QNN numerical-equivalence result.",
+      "reported_at": "2026-09-12T10:28:23+00:00",
+      "reported_by": "Pi — current NPU-collapse investigation boundary",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -137,9 +137,9 @@
     },
     {
       "name": "Jere",
-      "task": "Package aligned-GPU result; correct offline analyzer path",
-      "reported_at": "2026-09-12T10:09:30+00:00",
-      "reported_by": "Pi — request complete/released",
+      "task": "Validate native-QAT loader; bounded CPU prefill control",
+      "reported_at": "2026-09-12T10:28:23+00:00",
+      "reported_by": "Pi — no forward outcome yet",
       "stale_after_seconds": 900
     },
     {
