@@ -4,9 +4,12 @@ import argparse
 from collections import Counter,defaultdict
 import hashlib
 import json
+import math
 from pathlib import Path
+import re
 import shutil
 import statistics
+import struct
 
 TRACK=Path(__file__).resolve().parents[1]
 ROOT=TRACK/'.local/native-qat-reference'
@@ -78,10 +81,50 @@ def summarize(records,end_ns=None):
       'timing_boundary':'Only exclusive intervals are totaled. Inclusive durations contain nested work and must not be summed with children. Open ancestor intervals overlap; do not sum them. Process CPU includes native workers; cross-thread overlaps are not independent CPU cost.'},completed
 
 
+def inspect_bf16_pair(native_bytes,float32_bytes):
+    """Inspect saved output bytes only; return no tensor values."""
+    if not native_bytes or len(native_bytes)%2 or len(float32_bytes)!=2*len(native_bytes):
+        raise ValueError('invalid BF16/F32 byte lengths')
+    native=[x[0] for x in struct.iter_unpack('<H',native_bytes)]
+    fbits=[x[0] for x in struct.iter_unpack('<I',float32_bytes)]
+    values=[x[0] for x in struct.iter_unpack('<f',float32_bytes)]
+    finite=all(math.isfinite(x) for x in values)
+    argmax=max(range(len(values)),key=values.__getitem__) if finite else None
+    return {'elements':len(native),'all_finite':finite,'BF16_to_F32_bits_exact':all(a<<16==b for a,b in zip(native,fbits)),
+            'argmax_id':argmax,'argmax_tie_count':sum(x==values[argmax] for x in values) if finite else None}
+
+
+def verify_saved_capture(run,records):
+    """Independent output/coverage check after raw preservation, never inference."""
+    if not (run/'capture.json').exists():return {'available':False,'reason':'No complete logit capture returned'}
+    try:
+        capture=json.loads((run/'capture.json').read_text());native=(run/'last-logits.native.bin').read_bytes();f32=(run/'last-logits.float32.bin').read_bytes()
+        x=inspect_bf16_pair(native,f32)
+        x.update(available=True,native_sha256=hashlib.sha256(native).hexdigest(),float32_sha256=hashlib.sha256(f32).hexdigest())
+        x['capture_hashes_match']=x['native_sha256']==capture['native_sha256'] and x['float32_sha256']==capture['float32_sha256']
+        x['shape_dtype_contract']=capture['shape']==[1,1,262144] and capture['original_dtype']=='torch.bfloat16' and x['elements']==262144
+        loaded=json.loads((run/'load-validation.json').read_text())['native_quant_modules'];observed=json.loads((run/'native-execution-observations.json').read_text())
+        calls=observed['module_calls'];x['native_module_names_match_loaded']=set(calls)==set(loaded)
+        x['native_modules_called_once']=len(calls)==278 and all(n==1 for n in calls.values())
+        x['SRQ_calls']=observed['SRQ_calls']
+        x['all_native_SRQ_calls_observed']=x['SRQ_calls']=={'calls':552,'bits_8':552,'calibrated_calls':550}
+        quant_forwards=Counter(row['operation'] for row in records if row['event']=='end' and row['operation'] in {name+'.forward' for name in loaded})
+        x['quant_forward_trace_matches_loaded']=set(quant_forwards)=={name+'.forward' for name in loaded} and all(n==1 for n in quant_forwards.values())
+        decoder=Counter(row['operation'] for row in records if row['event']=='end' and re.fullmatch(r'model\.language_model\.layers\.\d+\.forward',row['operation']))
+        expected={f'model.language_model.layers.{i}.forward' for i in range(35)}
+        x['all_35_decoder_boundaries_once']=set(decoder)==expected and all(n==1 for n in decoder.values())
+        x['reported_argmax_matches']=x['argmax_id']==json.loads((run/'result.json').read_text())['argmax_id']
+        x['passed']=all(x[k] for k in ['all_finite','BF16_to_F32_bits_exact','capture_hashes_match','shape_dtype_contract','native_module_names_match_loaded','native_modules_called_once','all_native_SRQ_calls_observed','quant_forward_trace_matches_loaded','all_35_decoder_boundaries_once','reported_argmax_matches'])
+        return x
+    except (OSError,KeyError,ValueError,TypeError) as e:return {'available':False,'reason':repr(e),'raw_retained':True}
+
+
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output-dir',type=Path,required=True);a=p.parse_args();out=a.output_dir.resolve()
-    if out.parent!=TRACK/'results' or not out.name.startswith('native-qat-cost-checkpoint-'):p.error('fresh owning result directory required')
-    out.mkdir(parents=True,exist_ok=False);run=ROOT/'cost-prefill-01';guard_dir=ROOT/'cost-01-launch';private=[]
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--full-1800',action='store_true');a=p.parse_args();out=a.output_dir.resolve()
+    prefix='native-qat-prefill-1800-' if a.full_1800 else 'native-qat-cost-checkpoint-'
+    if out.parent!=TRACK/'results' or not out.name.startswith(prefix):p.error('fresh owning result directory required')
+    out.mkdir(parents=True,exist_ok=False)
+    run=ROOT/('full-prefill-1800-01' if a.full_1800 else 'cost-prefill-01');guard_dir=ROOT/('full-1800-01-launch' if a.full_1800 else 'cost-01-launch');private=[]
     for label,root in [('native',run),('guard',guard_dir)]:
         dest=out/'receipts'/label;dest.mkdir(parents=True)
         for f in root.iterdir():
@@ -107,10 +150,13 @@ def main():
         text=(guard_dir/(name+'.log')).read_text(errors='replace');lines=text.splitlines()
         kernel[name]={'MKL_verbose_lines':sum('MKL_VERBOSE' in x for x in lines),'oneDNN_verbose_lines':sum('onednn_verbose' in x or 'dnnl_verbose' in x for x in lines),'matched_metadata_lines':[x for x in lines if 'MKL_VERBOSE' in x or 'onednn_verbose' in x or 'dnnl_verbose' in x]}
     native=json.loads((run/'result.json').read_text()) if (run/'result.json').exists() else None
-    report={'classification':'one_native_QAT_observation_cost_checkpoint','guard':guard,'native_result':native,'forward_attempts':1,'completed_forward':bool(native and native.get('passed')),'exact_input_ids_sha256':sha(run/'input-ids.int32le'),'strict_loaded_validation_passed':json.loads((run/'load-validation.json').read_text())['passed'],
+    report={'classification':'one_native_QAT_full_1800_checkpoint' if a.full_1800 else 'one_native_QAT_observation_cost_checkpoint','guard':guard,'native_result':native,'forward_attempts':1,'completed_forward':bool(native and native.get('passed')),'exact_input_ids_sha256':sha(run/'input-ids.int32le'),'strict_loaded_validation_passed':json.loads((run/'load-validation.json').read_text())['passed'],
       'trace':summary,'forward_sampled_IO_delta':io,'IO_boundary':'Owned-process kernel counters between first/last samples after forward marker, not all memory traffic or exact whole-forward counters.','kernel_verbose':kernel,'kernel_identity_boundary':'Verbose metadata only. Missing records do not identify or rule out a kernel. Tensor-level QK/AV timings do not prove the lower-level kernel.',
-      'instrumentation_gap':'Per-decoder-layer wrapper selector used Gemma4DecoderLayer, but pinned class is Gemma4TextDecoderLayer. Operator and quant-forward nesting remains captured; no per-layer-forward duration is claimed.',
-      'private_outputs':private,'same_computation':True,'changed_dtype_weights_scales_input_or_deadline':False,'memory_lock_admission':False,'phone_calls':0,'automatic_replay':False,'QNN_root_cause_or_quality_result':False}
+      'instrumentation_gap':None if a.full_1800 else 'Per-decoder-layer wrapper selector used Gemma4DecoderLayer, but pinned class is Gemma4TextDecoderLayer. Operator and quant-forward nesting remains captured; no per-layer-forward duration is claimed.',
+      'private_outputs':private,'same_forward_computation_by_source_and_pass_through_tests':True,'numerical_equality_to_uninstrumented_execution_verified':False,
+      'changed_dtype_kernel_weights_scales_or_input':False,'deadline_revision':{'separately_authorized':a.full_1800,'previous_envelope_seconds':600,'this_envelope_seconds':1800 if a.full_1800 else 600},
+      'independent_logit_verification':verify_saved_capture(run,records) if a.full_1800 else None,
+      'memory_lock_admission':False,'phone_calls':0,'automatic_replay':False,'QNN_root_cause_or_quality_result':False}
     (out/'result.json').write_text(json.dumps(report,indent=2)+'\n');(out/'completed-operations.json').write_text(json.dumps(completed,indent=2)+'\n')
     sums=out/'SHA256SUMS';sums.write_text(''.join(f'{sha(f)}  {f.relative_to(out)}\n' for f in sorted(out.rglob('*')) if f.is_file() and f!=sums))
     print(json.dumps({'result':str(out),'guard_exit':guard.get('actual_child_exit'),'completed_forward':report['completed_forward'],'trace_issues':summary['correlation_issues'],'completed_exclusive_seconds':summary['completed_exclusive_wall_seconds'],'open_frames':summary['open_at_trace_end'],'AV_projection':summary['AV_only_full35_layer_projection_seconds']},indent=2))

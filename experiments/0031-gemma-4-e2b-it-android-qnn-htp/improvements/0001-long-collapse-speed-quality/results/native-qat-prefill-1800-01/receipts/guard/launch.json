@@ -1,0 +1,67 @@
+{
+  "argv": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--unit=gemma-native-qat-full-1800-01",
+    "--property=MemoryHigh=10G",
+    "--property=MemoryMax=12G",
+    "--property=MemorySwapMax=2G",
+    "--property=OOMPolicy=kill",
+    "--property=CPUQuota=200%",
+    "--property=TasksMax=128",
+    "--property=Nice=15",
+    "--property=IOSchedulingClass=idle",
+    "--property=RuntimeMaxSec=1800",
+    "--property=TimeoutStopSec=20",
+    "--property=KillMode=control-group",
+    "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-1800-01-launch/guard.stdout",
+    "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-1800-01-launch/guard.stderr",
+    "/usr/bin/env",
+    "-i",
+    "PATH=/usr/bin:/bin",
+    "HOME=/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-1800-01-launch/home",
+    "TMPDIR=/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-1800-01-launch/tmp",
+    "/usr/bin/python3",
+    "-B",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-1800-01-launch/guard.py"
+  ],
+  "separate_pi_authorization": "ONE new full native-QAT1929 CPU prefill,1800s total inclcleanup; same12GiB/2GiBswap/2CPU/nativeBF16/eager/source, fix only missing decoder observation; no memory-lock admission",
+  "prior_grant_consumed_commit": "b376a3189764d0c6671cc55fa0b397f3a454b2f2",
+  "sources": {
+    "guard.py": "6f945e45609d2fe103c45dce728caf0aee7b316faa998ded708a8b6d6dadda33",
+    "native_qat_checkpoint.py": "7b7c5b8da59a3e18d5aa9cb978992d7bb0b42b6417e4069725bbf5d9ffa3f0f5",
+    "native_qat_cost_trace.py": "0e187e83303b456c5e2ca7f6f61a1860fcbe5068c2e82f1efb278fbf4aa52ed6"
+  },
+  "prior_cost_commit": "4f4d60a4500cfcfd1aa7cdb7a569a3f766d57452",
+  "observer_fix_commit": "5310954eb347e7a55471f21a2b5243f9ab4c1b64",
+  "work_limit_seconds": 1770,
+  "cleanup_reserve_seconds": 30,
+  "guard_changes": [
+    [
+      "cost-01-launch",
+      "full-1800-01-launch"
+    ],
+    [
+      "cost-prefill-01",
+      "full-prefill-1800-01"
+    ],
+    [
+      "cost-checkpoint-01-consumed.json",
+      "full-prefill-1800-01-consumed.json"
+    ],
+    [
+      "if now-started>580:",
+      "if now-started>1770:"
+    ],
+    [
+      "ONE separately authorized cost checkpoint",
+      "ONE separately authorized1800s full checkpoint"
+    ],
+    [
+      "Pi separately authorized ONE native-QAT observation-only cost checkpoint",
+      "Pi separately authorized ONE full native-QAT1929-ID CPU checkpoint with1800s total envelope"
+    ]
+  ]
+}
