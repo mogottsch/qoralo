@@ -1,5 +1,8 @@
 package dev.vibevoice.podcast.ui
 
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.os.SystemClock
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,11 +22,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.RandomAccessFile
+import java.security.MessageDigest
+import org.json.JSONObject
 
 /** Synthetic PCM/UI evidence only. No model loading, synthesis, or user database writes. */
 @RunWith(AndroidJUnit4::class)
 class PersistentPlayerRegressionTest {
     @get:Rule val rule = createComposeRule()
+    private val captureAttempt = System.currentTimeMillis().toString() + "-" + System.nanoTime().toString()
 
     @Test fun sharedPlayerKeepsPlayingThroughCollapseNavigationReopenAndBindsControlsToActiveEpisode() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -33,7 +39,15 @@ class PersistentPlayerRegressionTest {
         val repository = PodcastRepository(database, ArtifactStore(File(root, "episodes"), File(root, "models")), providerAdmission = false)
         val a = episode("a")
         val b = episode("b")
-        runBlocking { database.podcastDao().insertEpisode(a); database.podcastDao().insertEpisode(b) }
+        runBlocking {
+            for (ep in listOf(a, b)) {
+                database.podcastDao().insertEpisode(ep)
+                database.podcastDao().insertRevision(ScriptRevisionEntity("revision-${ep.id}", ep.id, null, 1,
+                    ep.title, "hash-${ep.id}", "synthetic-${ep.id}.json", 1))
+                database.podcastDao().insertChapters(listOf(ChapterEntity("row-${ep.id}", "revision-${ep.id}", "chapter-${ep.id}",
+                    0, "Synthetic chapter", "This is a synthetic playback fixture. No model or user content is involved.", 60)))
+            }
+        }
         lateinit var host: PlaybackHost
         var expanded by mutableStateOf(true)
         var route by mutableStateOf("Library")
@@ -45,7 +59,7 @@ class PersistentPlayerRegressionTest {
                 Column {
                     val active = host.active
                     if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true })
-                    if (active != null && expanded) PlayerScreen(active.episode, emptyList(), emptyList(), null, null,
+                    if (active != null && expanded) PlayerScreen(active.episode, active.chapters, active.audio, null, null,
                         onBack = { expanded = false }, onExport = {}, onPersist = { _, _, _ -> }, sharedPlayback = active)
                     else Text(route)
                 }
@@ -56,13 +70,19 @@ class PersistentPlayerRegressionTest {
             val session = host.active!!.session
             val player = session.player
             rule.onNodeWithContentDescription("Play", useUnmergedTree = true).performClick()
-            rule.waitUntil(10_000) { session.isPlaying }
+            rule.waitUntil(10_000) { session.isPlaying && host.active!!.chapters.size == 1 }
+            rule.onNodeWithText("Now playing").assertIsDisplayed()
+            captureSynthetic("full-player") { playbackSnapshot(host.active!!, if (expanded) "full-player" else route) }
             val before = session.positionMs
             rule.onNodeWithContentDescription("Minimize player").performClick()
             rule.onNodeWithContentDescription("Open player: Synthetic episode a").assertIsDisplayed()
             for (destination in listOf("Settings", "Sources for episode b", "Library")) {
                 rule.runOnIdle { route = destination }
                 rule.onNodeWithText(destination).assertIsDisplayed()
+                if (destination == "Settings") {
+                    rule.onNodeWithContentDescription("Open player: Synthetic episode a").assertIsDisplayed()
+                    captureSynthetic("minimized-settings") { playbackSnapshot(host.active!!, if (expanded) "full-player" else route) }
+                }
             }
             rule.waitUntil(10_000) { session.positionMs > before + 500 }
             rule.onNodeWithContentDescription("Pause", useUnmergedTree = true).performClick()
@@ -103,9 +123,62 @@ class PersistentPlayerRegressionTest {
         rule.runOnIdle { position = 15_000 }
         val after = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
         assertEquals("Chapter advancement must not scroll against the reader", before, after, 0.01f)
+        rule.onNodeWithText("Follow playback").assertIsDisplayed()
+        captureSynthetic("transcript-manual") {
+            JSONObject().put("episodeId", "synthetic").put("episodePhase", "SYNTHETIC_TRANSCRIPT")
+                .put("uiState", "manual").put("positionMs", position).put("scrollAxis", after).put("activePassage", 15)
+        }
         rule.onNodeWithText("Follow playback").performClick()
         rule.onNodeWithText(rows.last().text).assertIsDisplayed()
         rule.onNodeWithText("Following · stop").assertIsDisplayed()
+        captureSynthetic("transcript-follow-resumed") {
+            JSONObject().put("episodeId", "synthetic").put("episodePhase", "SYNTHETIC_TRANSCRIPT")
+                .put("uiState", "following").put("positionMs", position).put("activePassage", 15)
+        }
+    }
+
+    private fun playbackSnapshot(active: ActivePlayback, surface: String): JSONObject = JSONObject()
+        .put("episodeId", active.identity.episodeId).put("episodePhase", active.episode.phase).put("uiState", surface)
+        .put("sessionIdentity", System.identityHashCode(active.session)).put("playerIdentity", System.identityHashCode(active.session.player))
+        .put("positionMs", active.session.positionMs).put("durationMs", active.session.durationMs).put("speed", active.session.speed.toDouble())
+        .put("isPlaying", active.session.isPlaying).put("wantsPlayback", active.session.wantsPlayback)
+
+    /** Four bounded captures per profile, private and synthetic. Preserve prior attempts rather than overwrite. */
+    private fun captureSynthetic(state: String, snapshot: () -> JSONObject) {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        val args = InstrumentationRegistry.getArguments()
+        fun pathPart(key: String, fallback: String): String = (args.getString(key) ?: fallback).also {
+            require(it.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,159}"))) { "Unsafe capture argument: $key" }
+        }
+        val run = pathPart("diagnosticRun", "synthetic-player")
+        val profile = pathPart("profile", "unspecified")
+        val directory = File(context.filesDir, "player-ui-captures/$run/$profile/$captureAttempt/.private-ui").also { require(it.mkdirs() || it.isDirectory) }
+        val image = File(directory, "$state.png")
+        val metadataFile = File(directory, "$state.json")
+        require(!image.exists() && !metadataFile.exists())
+        rule.waitForIdle()
+        val before = rule.runOnIdle { snapshot().put("elapsedRealtimeMs", SystemClock.elapsedRealtime()) }
+        val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot()) { "Synthetic screenshot unavailable" }
+        val width = bitmap.width
+        val height = bitmap.height
+        try { image.outputStream().use { output -> check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)); output.fd.sync() } }
+        finally { bitmap.recycle() }
+        val after = rule.runOnIdle { snapshot().put("elapsedRealtimeMs", SystemClock.elapsedRealtime()) }
+        val stableKeys = listOf("episodeId", "episodePhase", "uiState", "sessionIdentity", "playerIdentity", "speed")
+        val sameState = stableKeys.all { before.opt(it) == after.opt(it) }
+        val metadata = JSONObject().put("schemaVersion", 1).put("diagnosticRun", run).put("profile", profile).put("state", state)
+            .put("syntheticOnly", true).put("modelsLoaded", false).put("before", before).put("after", after)
+            .put("sameIdentityAndPhase", sameState).put("widthPx", width).put("heightPx", height)
+            .put("fontScale", context.resources.configuration.fontScale.toDouble()).put("densityDpi", context.resources.configuration.densityDpi)
+            .put("screenWidthDp", context.resources.configuration.screenWidthDp).put("bytes", image.length())
+            .put("sha256", MessageDigest.getInstance("SHA-256").digest(image.readBytes()).joinToString("") { "%02x".format(it) })
+        metadataFile.writeText(metadata.toString(2))
+        instrumentation.sendStatus(0, Bundle().apply {
+            putString("playerUiScreenshot", image.absolutePath)
+            putString("playerUiMetadata", metadataFile.absolutePath)
+        })
+        assertTrue("Screenshot identity/phase changed while capturing $state; preserve evidence but do not review it as stable", sameState)
     }
 
     private fun episode(id: String) = EpisodeEntity(id, "Synthetic episode $id", EpisodePhase.FROZEN_READY, "", true,
