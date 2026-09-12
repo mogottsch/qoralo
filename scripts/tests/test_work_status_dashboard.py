@@ -1,6 +1,7 @@
 """Read-only collector + local file renderer tests. No HTTP, browser or agents."""
 import importlib.util
 import json
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import tempfile
@@ -95,6 +96,7 @@ class StatusTests(unittest.TestCase):
         loaded = source.stat().st_mtime_ns
         self.assertFalse(m.renderer_source_changed(loaded, source))
         source.write_text('second version')
+        os.utime(source, ns=(loaded + 1, loaded + 1))
         self.assertTrue(m.renderer_source_changed(loaded, source))
 
     def test_main_reexecs_when_renderer_changes(self):
