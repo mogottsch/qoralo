@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.os.SystemClock
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -51,17 +54,22 @@ class PersistentPlayerRegressionTest {
         lateinit var host: PlaybackHost
         var expanded by mutableStateOf(true)
         var route by mutableStateOf("Library")
+        var statusBarTopPx = 0
         val writes = mutableListOf<Pair<String, Long>>()
         rule.setContent {
             host = remember { PlaybackHost(context) }
             PlaybackHostEffects(host, repository)
             VibeVoiceTheme {
-                Column {
+                statusBarTopPx = WindowInsets.statusBars.getTop(LocalDensity.current)
+                Surface(color = MaterialTheme.colorScheme.surface) {
+                // Mirror PodcastApp's edge-to-edge inset ownership, not a bare fixture Column.
+                Column(Modifier.fillMaxSize().then(if (!expanded) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)) {
                     val active = host.active
                     if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true })
                     if (active != null && expanded) PlayerScreen(active.episode, active.chapters, active.audio, null, null,
                         onBack = { expanded = false }, onExport = {}, onPersist = { _, _, _ -> }, sharedPlayback = active)
                     else Text(route)
+                }
                 }
             }
         }
@@ -80,7 +88,10 @@ class PersistentPlayerRegressionTest {
                 rule.runOnIdle { route = destination }
                 rule.onNodeWithText(destination).assertIsDisplayed()
                 if (destination == "Settings") {
-                    rule.onNodeWithContentDescription("Open player: Synthetic episode a").assertIsDisplayed()
+                    val title = rule.onNodeWithContentDescription("Open player: Synthetic episode a").assertIsDisplayed().fetchSemanticsNode()
+                    val pause = rule.onNodeWithContentDescription("Pause", useUnmergedTree = true).assertIsDisplayed().fetchSemanticsNode()
+                    assertTrue("Mini title must clear the system status bar", title.boundsInRoot.top >= statusBarTopPx)
+                    assertTrue("Mini controls must clear the system status bar", pause.boundsInRoot.top >= statusBarTopPx)
                     captureSynthetic("minimized-settings") { playbackSnapshot(host.active!!, if (expanded) "full-player" else route) }
                 }
             }
@@ -168,7 +179,7 @@ class PersistentPlayerRegressionTest {
         val stableKeys = listOf("episodeId", "episodePhase", "uiState", "sessionIdentity", "playerIdentity", "speed")
         val sameState = stableKeys.all { before.opt(it) == after.opt(it) }
         val metadata = JSONObject().put("schemaVersion", 1).put("diagnosticRun", run).put("profile", profile).put("state", state)
-            .put("syntheticOnly", true).put("modelsLoaded", false).put("before", before).put("after", after)
+            .put("syntheticOnly", true).put("surfaceKind", "isolated-shared-host-fixture").put("modelsLoaded", false).put("before", before).put("after", after)
             .put("sameIdentityAndPhase", sameState).put("widthPx", width).put("heightPx", height)
             .put("fontScale", context.resources.configuration.fontScale.toDouble()).put("densityDpi", context.resources.configuration.densityDpi)
             .put("screenWidthDp", context.resources.configuration.screenWidthDp).put("bytes", image.length())
