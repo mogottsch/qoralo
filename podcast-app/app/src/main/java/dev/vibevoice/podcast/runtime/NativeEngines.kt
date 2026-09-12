@@ -187,7 +187,7 @@ class SupertonicQnnHtpEngine : TtsEngine {
         }
     }
 
-    override suspend fun renderChapter(chapter: FrozenChapter, output: File): AudioMetadata = withContext(Dispatchers.IO) {
+    override suspend fun renderChapter(chapter: FrozenChapter, output: File, onProgress: suspend (TtsSegmentProgress) -> Unit): AudioMetadata = withContext(Dispatchers.IO) {
         check(handle != 0L) { "Supertonic engine is not loaded" }
         output.parentFile?.mkdirs()
         val temporary = File(output.parentFile, ".${output.name}.tmp")
@@ -214,7 +214,7 @@ class SupertonicQnnHtpEngine : TtsEngine {
     }
 }
 
-private fun validateProvenance(
+internal fun validateProvenance(
     raw: String?,
     expectedModel: String,
     expectedBackend: String,
@@ -261,7 +261,7 @@ private fun RuntimeProvenance.componentInt(key: String): Int = readyComponents
     ?.substringAfter('=')?.toIntOrNull()
     ?: throw InferenceRouteException("Native runtime provenance is missing $key")
 
-private object NativeAppRuntime {
+internal object NativeAppRuntime {
     @Volatile private var loaded = false
 
     @Synchronized

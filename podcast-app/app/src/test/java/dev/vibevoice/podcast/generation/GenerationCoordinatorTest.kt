@@ -48,7 +48,7 @@ class GenerationCoordinatorTest {
     @Before fun setUp() {
         database = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), PodcastDatabase::class.java).allowMainThreadQueries().build()
         artifacts = ArtifactStore(temporary.newFolder("episodes"), temporary.newFolder("models"))
-        repository = PodcastRepository(database, artifacts)
+        repository = PodcastRepository(database, artifacts, providerAdmission = false)
     }
     @After fun close() = database.close()
 
@@ -162,7 +162,7 @@ class GenerationCoordinatorTest {
             setOf("duration_context", "text_context", "vector_context", "vocoder_context", "htp"))
         val rendered = mutableListOf<String>()
         override suspend fun load(pack: VerifiedModelPack, voiceId: String) = Unit
-        override suspend fun renderChapter(chapter: FrozenChapter, output: File): AudioMetadata {
+        override suspend fun renderChapter(chapter: FrozenChapter, output: File, onProgress: suspend (dev.vibevoice.podcast.runtime.TtsSegmentProgress) -> Unit): AudioMetadata {
             rendered += chapter.id
             if (rendered.size == failAt) error("injected chapter render failure")
             output.parentFile!!.mkdirs()

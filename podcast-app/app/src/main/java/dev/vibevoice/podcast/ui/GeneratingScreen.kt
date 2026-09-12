@@ -135,7 +135,9 @@ private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit, onReturnTo
                 modifier = Modifier.padding(top = 10.dp),
             )
             Text(
-                "No alternate model, CPU fallback, or hidden chapter splitting was attempted.",
+                if (dev.vibevoice.podcast.runtime.ProviderAudioPlan.selected && episode.lockedRevisionId != null)
+                    "This voice uses provider sentence segments. No alternate model, CPU fallback, script rewriting or forced duration was attempted."
+                else "No alternate model, CPU fallback, or hidden chapter splitting was attempted.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 textAlign = TextAlign.Center,

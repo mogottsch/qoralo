@@ -264,7 +264,8 @@ fun InstructionsScreen(
                 item {
                     val limit = dev.vibevoice.podcast.runtime.SupertonicTextCapacity.textLengthForManifest(dev.vibevoice.podcast.BuildConfig.SUPERTONIC_MANIFEST_SHA256)
                         ?.minus(dev.vibevoice.podcast.runtime.SupertonicTextCapacity.LANGUAGE_TAG_CODEPOINTS)
-                    Text(if (limit != null) "Current voice input limit: $limit normalized characters per chapter. Longer scripts can still be generated and reviewed, but cannot be locked for audio with this voice. Your instructions are not changed."
+                    Text(if (dev.vibevoice.podcast.runtime.ProviderAudioPlan.selected) "Full chapters use the provider's sentence-grouped HTP speech pipeline. Long individual sentences are never forcibly split; segment limits are checked before locking. Your instructions and script remain intact."
+                        else if (limit != null) "Current voice input limit: $limit normalized characters per chapter. Longer scripts can still be generated and reviewed, but cannot be locked for audio with this voice. Your instructions are not changed."
                         else "Voice input capacity is not configured. Scripts can still be generated and reviewed; audio locking is unavailable.",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 12.dp))
                 }

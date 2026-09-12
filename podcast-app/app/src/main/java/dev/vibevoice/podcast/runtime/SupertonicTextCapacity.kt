@@ -3,11 +3,15 @@ package dev.vibevoice.podcast.runtime
 import dev.vibevoice.podcast.BuildConfig
 
 /** Input-text admission only. Passing does NOT prove waveform capacity, runtime success, duration or speech coverage. */
-data class ChapterTextCapacity(val position: Int, val normalizedCodePoints: Int?, val activeCodePoints: Int?, val fits: Boolean)
-data class ScriptTextCapacity(val textLength: Int?, val chapters: List<ChapterTextCapacity>) {
+data class ChapterTextCapacity(val position: Int, val normalizedCodePoints: Int?, val activeCodePoints: Int?, val fits: Boolean,
+    val segmentCount: Int = 1, val largestSegment: Int? = activeCodePoints)
+data class ScriptTextCapacity(val textLength: Int?, val chapters: List<ChapterTextCapacity>, val providerPipeline: Boolean = false, val unavailableReason: String? = null) {
     val maxNormalizedCodePoints: Int? get() = textLength?.minus(SupertonicTextCapacity.LANGUAGE_TAG_CODEPOINTS)
-    val fits: Boolean get() = textLength != null && chapters.isNotEmpty() && chapters.all { it.fits }
-    val message: String get() = if (textLength == null) {
+    val fits: Boolean get() = unavailableReason == null && textLength != null && chapters.isNotEmpty() && chapters.all { it.fits }
+    val message: String get() = if (providerPipeline) {
+        unavailableReason ?: if (fits) "This draft uses ${chapters.sumOf { it.segmentCount }} provider speech segments. Complete chapter audio is published only after all of its segments finish."
+        else "A provider sentence segment exceeds $textLength processed text positions or contains unsupported characters. The 300-character grouping target does not force long sentences to split. Your full draft stays editable and is not shortened."
+    } else if (textLength == null) {
         "Audio input capacity is unknown for the configured voice pack. Your full draft stays editable; nothing is locked or queued."
     } else {
         "This voice supports at most $maxNormalizedCodePoints normalized characters per chapter. " +
@@ -28,9 +32,12 @@ object SupertonicTextCapacity {
     fun textLengthForManifest(manifestSha256: String): Int? = when (manifestSha256) {
         SHORT_MANIFEST -> 239
         LONG_MANIFEST -> 2048
+        ProviderAudioPlan.PACK_SHA256 -> 320
         else -> null // A new pack needs an explicit reviewed capacity binding; never assume it is unlimited.
     }
-    fun configured(texts: List<String>): ScriptTextCapacity = assess(texts, textLengthForManifest(BuildConfig.SUPERTONIC_MANIFEST_SHA256))
+    fun configured(texts: List<String>): ScriptTextCapacity = if (ProviderAudioPlan.selected)
+        ScriptTextCapacity(320, emptyList(), true, "Provider admission must be checked against the installed pack and actual sentence segments.")
+        else assess(texts, textLengthForManifest(BuildConfig.SUPERTONIC_MANIFEST_SHA256))
 
     fun assess(texts: List<String>, textLength: Int?): ScriptTextCapacity {
         require(textLength == null || textLength > LANGUAGE_TAG_CODEPOINTS)

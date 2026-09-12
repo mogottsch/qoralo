@@ -21,6 +21,8 @@
 #include "onnxruntime_cxx_api.h"
 #include "tensor_validation.h"
 
+bool RegisterProviderNatives(JNIEnv *env);
+
 namespace {
 constexpr int32_t kSampleRate = 44100;
 constexpr int64_t kLatentChunkSamples = 3072;
@@ -483,5 +485,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
   };
   if (env->RegisterNatives(diagnostic_type, diagnostic_methods, 1) != JNI_OK) return JNI_ERR;
 #endif
+  if (!RegisterProviderNatives(env)) return JNI_ERR;
   return JNI_VERSION_1_6;
 }

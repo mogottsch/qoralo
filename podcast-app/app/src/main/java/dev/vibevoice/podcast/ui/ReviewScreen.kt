@@ -88,11 +88,12 @@ fun ReviewScreen(
     onShowLock: () -> Unit,
     onDismissLock: () -> Unit,
     onLock: () -> Unit,
+    audioCapacity: (List<String>) -> ScriptTextCapacity = SupertonicTextCapacity::configured,
 ) {
     var expanded by remember(chapters) { mutableStateOf(setOf(chapters.firstOrNull()?.stableChapterId).filterNotNull().toSet()) }
     val capacityState = remember(chapters) { mutableStateOf<ScriptTextCapacity?>(null) }
     LaunchedEffect(chapters) {
-        capacityState.value = withContext(Dispatchers.Default) { SupertonicTextCapacity.configured(chapters.map { it.text }) }
+        capacityState.value = withContext(Dispatchers.IO) { audioCapacity(chapters.map { it.text }) }
     }
     val capacity = capacityState.value
     val working = job?.status in setOf(JobStatus.QUEUED, JobStatus.RUNNING)
@@ -133,10 +134,20 @@ fun ReviewScreen(
                             Text("Audio unavailable for this draft", style = MaterialTheme.typography.titleSmall)
                             Text(capacity.message, style = MaterialTheme.typography.bodyMedium)
                             capacity.chapters.filter { !it.fits }.forEach { part ->
-                                Text("Chapter ${part.position + 1}: ${part.normalizedCodePoints?.toString() ?: "no speakable text"} normalized characters" +
+                                Text(if (capacity.providerPipeline) "Chapter ${part.position + 1}: ${part.segmentCount} segments; largest processed segment ${part.largestSegment?.toString() ?: "unavailable"} (limit ${capacity.textLength})"
+                                    else "Chapter ${part.position + 1}: ${part.normalizedCodePoints?.toString() ?: "no speakable text"} normalized characters" +
                                     (capacity.maxNormalizedCodePoints?.let { " (limit $it)" } ?: ""), style = MaterialTheme.typography.bodySmall)
                             }
-                            Text("This is an input-text check, not proof of audio duration or speech coverage. Long-chapter audio remains unverified.", style = MaterialTheme.typography.bodySmall)
+                            Text("This checks input capability. Native duration limits, runtime checks and speech quality still apply.", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+                if (capacity?.providerPipeline == true && capacity.fits) item {
+                    Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(14.dp)) {
+                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("Provider speech pipeline", style = MaterialTheme.typography.titleSmall)
+                            Text(capacity.message, style = MaterialTheme.typography.bodyMedium)
+                            Text("Sentences are grouped toward 300 characters before normalization, with 0.3-second gaps between speech segments. Your script is not rewritten. Episode playback becomes available when generation finishes.", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }

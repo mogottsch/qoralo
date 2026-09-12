@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+"""One owned normal-app provider AUDIO integration. All raw phone evidence stays private."""
+import argparse,fcntl,hashlib,io,json,os,re,shlex,signal,sys,tarfile,time
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from run_wiring_gate import Device,APP,TEST_APP
+from prepare_wiring_gate import PROJECT,digest
+from duration_phone_guard import PhoneGuard,host_identity,close_inherited_fds,validate_snapshot,require
+from short_product_preservation import rows,compare,compare_files
+from run_short_product_gate import private_inventory
+from run_user_script_diagnostic import independent_cleanup
+
+REFERENCE={'episode':'7dbc3e96-f1cb-40b4-bb04-5df14f05c21a','revision':'8e303378-aa37-4647-81ac-60c670de21fe',
+    'revisionSha256':'e7d9d969de14604ee49548f66a69a22df37ce001fac74a906e5e4e19f90972db','chapter':'chapter-5',
+    'textSha256':'cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b'}
+
+def safe_close(data,owned):
+    for job in data['generation_jobs']:
+        require(job['status'] in ('COMPLETE','FAILED','QUEUED','RUNNING'),'unknown job status')
+        if job['status'] in ('QUEUED','RUNNING'):
+            require(owned is not None and job['episodeId']==owned and job['kind']=='AUDIO','foreign active work; never stop it')
+
+def main():
+    p=argparse.ArgumentParser();p.add_argument('--candidate',type=Path,required=True);p.add_argument('--run-id',required=True)
+    p.add_argument('--output',type=Path,required=True);p.add_argument('--execute',action='store_true');a=p.parse_args()
+    c=json.loads(a.candidate.read_text());require(c['kind']=='provider-app-integration','wrong candidate')
+    require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
+    require(digest(Path(__file__))==c['controllerSha256'] and host_identity()['sha256']==c['hostGuardSha256'],'controller/guard drift')
+    for key in ['app','test']:require(digest(Path(c[key]['path']))==c[key]['sha256'],'APK drift')
+    pack=Path(c['providerPack']['root']);manifest=json.loads((pack/'manifest.json').read_text())
+    require(digest(pack/'manifest.json')==c['providerPack']['manifestSha256'],'pack manifest drift')
+    for f in manifest['files']:require((pack/f['path']).stat().st_size==f['bytes'] and digest(pack/f['path'])==f['sha256'],'pack file drift')
+    if not a.execute:
+        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':660}));return
+    close_inherited_fds();os.umask(0o077);out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
+    device=Device('/home/moritz/Android/Sdk/platform-tools/adb','R5CW81PR8SY',out)
+    guard=PhoneGuard(device,out,a.candidate,digest(a.candidate),host_identity()['sha256'])
+    def save(name,obj):(out/name).write_text(json.dumps(obj,indent=2)+'\n')
+    def stable(label):
+        x=guard.snapshot(label,1);y=guard.snapshot(label,2);require(x==y,'unstable DB/WAL; do not disturb app');validate_snapshot(x);return x
+    def installed(expected):
+        got={}
+        for package,sha in expected.items():
+            line=device.shell('pm path '+package,timeout=10).strip();require(re.fullmatch(r'package:/data/app/[^\s]+/base\.apk',line),'unexpected APK path')
+            got[package]=device.shell('sha256sum '+shlex.quote(line[len('package:'):]),timeout=15).split()[0]
+            require(got[package]==sha,'installed identity mismatch')
+        return got
+    def health(label,enforce=False):
+        memory=device.shell('cat /proc/meminfo',timeout=10)
+        battery=device.shell('dumpsys battery',timeout=10)
+        mem=re.search(r'^MemAvailable:\\s+(\\d+) kB',memory,re.M)
+        temp=re.search(r'^\\s*temperature:\\s*(-?\\d+)',battery,re.M)
+        require(mem is not None and temp is not None,'health preflight unavailable')
+        value={'availableMemoryKiB':int(mem.group(1)),'batteryTemperatureC':int(temp.group(1))/10.0}
+        save(label+'.json',value)
+        if enforce:require(value['availableMemoryKiB']>=3584*1024 and value['batteryTemperatureC']<42,'phone headroom/thermal boundary')
+    def stop(state,owned):
+        safe_close(state,owned)
+        for package in (APP,TEST_APP):device.shell('am force-stop '+package,timeout=10)
+        guard.idle()
+    owned=None;before=None;files_before=None;setup=False;launched=False;remote_created=False;pull=0
+    remote='/data/local/tmp/'+a.run_id
+    cleanup={'errors':[],'deviceDataClear':False,'originalsUntouchedByController':True}
+    def interrupted(*_):raise InterruptedError('bounded owned provider gate interrupted')
+    signal.signal(signal.SIGINT,interrupted);signal.signal(signal.SIGTERM,interrupted)
+    def ownership():
+        nonlocal owned
+        def read(name):
+            path=f'files/provider-integration/{a.run_id}-driver/{name}'
+            raw=device.run(['exec-out',f'run-as {APP} head -c 8193 '+shlex.quote(path)],timeout=10,binary=True).read_bytes()
+            require(len(raw)<=8192,'oversized owner metadata');return json.loads(raw)
+        value=read('ownership.json');identity=read('identity.json');eid=value['episodeId']
+        require(value['runId']==a.run_id and value['createdThroughMainUi'] is True and re.fullmatch(r'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}',eid),'invalid owner')
+        require(eid not in {e['id'] for e in rows(before)['episodes']},'pre-existing episode cannot be owned')
+        require(identity['runId']==a.run_id and identity['appApkSha256']==c['app']['sha256'] and identity['testApkSha256']==c['test']['sha256'],'owner APK/run mismatch')
+        require(identity['originalEpisodeId']==REFERENCE['episode'] and identity['originalRevisionId']==REFERENCE['revision'] and identity['rawChapterSha256']==REFERENCE['textSha256'],'reference binding changed')
+        require(owned is None or owned==eid,'owner changed');owned=eid
+    def receipts():
+        nonlocal pull
+        pull+=1
+        paths=[f'files/provider-integration/{a.run_id}',f'files/provider-integration/{a.run_id}-driver']
+        if owned:paths.append(f'files/episodes/{owned}')
+        script='set --; '+''.join(f'if test -d {shlex.quote(x)}; then set -- "$@" {shlex.quote(x)}; fi; ' for x in paths)+'if test "$#" -gt 0; then tar -cf - "$@"; else printf NO_RECEIPTS; fi'
+        result=device.run(['exec-out',f'run-as {APP} sh -c '+shlex.quote(script)],timeout=90,binary=True)
+        raw=result.read_bytes();(out/f'private-receipts-{pull:02d}.tar').write_bytes(raw)
+        if raw==b'NO_RECEIPTS':return
+        require(len(raw)<192*1024**2,'bounded private episode archive')
+        target=out/f'private-extracted-{pull:02d}';target.mkdir(mode=0o700)
+        with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+            for member in archive:
+                if member.isdir():continue
+                require(member.isfile() and any(member.name.startswith(x+'/') for x in paths) and '..' not in Path(member.name).parts,'unsafe private archive member')
+                path=target/member.name;path.parent.mkdir(parents=True,exist_ok=True);require(not path.exists(),'duplicate archive member')
+                path.write_bytes(archive.extractfile(member).read())
+    def log():
+        uid=device.shell('cmd package list packages -U '+APP,timeout=10)
+        mapping=dict(re.findall(r'package:(\S+) uid:(\d+)',uid));require(APP in mapping,'app UID unavailable')
+        result=device.run(['logcat','-d','-b','main','-b','system','-b','crash','--uid='+mapping[APP],'-v','threadtime'],timeout=20,binary=True)
+        result.rename(out/'private-app-logcat.txt')
+    def closure():
+        device.enforce_quota=False
+        state=rows(stable('safety-before-close'));stop(state,owned)
+        active=[j for j in state['generation_jobs'] if j['status'] in ('QUEUED','RUNNING')]
+        if active:
+            require(all(j['status']=='RUNNING' for j in active),'queued work retained; no automatic dispatch retry')
+            device.shell(f'am start -W -n {APP}/dev.vibevoice.podcast.MainActivity',timeout=15)
+            deadline=time.monotonic()+25
+            while True:
+                state=rows(stable('watchdog-'+str(device.counter)));safe_close(state,owned)
+                jobs=[j for j in state['generation_jobs'] if j['status'] in ('QUEUED','RUNNING')]
+                if not jobs:break
+                require(time.monotonic()<deadline,'owned watchdog closure timed out');time.sleep(1)
+            stop(state,None);cleanup['ownedOrphanReconciledByNormalWatchdog']=True
+        cleanup['allActualPidsAbsent']=True
+    def disarm():
+        require(cleanup.get('allActualPidsAbsent'),'process closure missing')
+        path='files/provider-integration/active.json'
+        got=device.shell(f'run-as {APP} sh -c '+shlex.quote(f'if test -e {path}; then sha256sum {path}; else echo ABSENT; fi'),timeout=10).strip()
+        if got!='ABSENT':
+            require(owned is not None,'unknown provider control owner')
+            original=device.run(['exec-out',f'run-as {APP} head -c 8193 files/provider-integration/{a.run_id}-driver/control-original.json'],timeout=10,binary=True).read_bytes()
+            require(len(original)<=8192 and hashlib.sha256(original).hexdigest()==got.split()[0],'provider control changed')
+            record=json.loads(original);require(record['episodeId']==owned and record['runId']==a.run_id,'control owner mismatch')
+            device.shell(f'run-as {APP} rm '+path,timeout=10)
+        require(device.shell(f'run-as {APP} sh -c '+shlex.quote(f'test ! -e {path} && echo ABSENT'),timeout=10).strip()=='ABSENT','provider control remains')
+        cleanup['controlAbsent']=True
+    after={}
+    def files_after():after['files']=private_inventory(device,out,'after')
+    def db_after():after['db']=stable('after')
+    def preservation():
+        b=rows(before);end=rows(after['db']);result=compare(dict(b,installed_models=[]),dict(end,installed_models=[]),owned)
+        # Catalog is a current verified-route cache, not episode history. Only the new verified TTS entry may replace the old TTS cache.
+        unchanged=lambda rows:[m for m in rows['installed_models'] if m['route']!='SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP']
+        require(unchanged(b)==unchanged(end),'unrelated model catalog changed')
+        old_tts=[m for m in b['installed_models'] if m['route']=='SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP']
+        new_tts=[m for m in end['installed_models'] if m['route']=='SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP']
+        if new_tts!=old_tts:
+            require(len(new_tts)==1 and new_tts[0]['id']==manifest['id'] and new_tts[0]['version']==manifest['version'] and new_tts[0]['rootPath'].endswith('/model-packs/'+manifest['id']+'/current') and new_tts[0]['manifestSha256']==c['providerPack']['manifestSha256'],'unexpected catalog mutation')
+            route=json.loads(new_tts[0]['runtimeProvenanceJson']);require(route['model']=='SUPERTONIC_3_PROVIDER_PIPELINE' and route['backend']=='QNN_HTP' and route['cpuFallbackEnabled'] is False,'unverified provider cache')
+        added=[j for j in end['generation_jobs'] if j['id'] not in {r['id'] for r in b['generation_jobs']}]
+        require(len(added)<=1 and all(j['episodeId']==owned and j['kind']=='AUDIO' for j in added),'unexpected job outside single AUDIO scope')
+        require(end['agent_messages']==b['agent_messages'],'chat history changed')
+        result['files']=compare_files(files_before,after['files'],owned)
+        result['newAudioJobs']=len(added);result['newScriptOrEditJobs']=0;result['allowedCatalogChange']='only exact verified provider TTS cache'
+        save('preservation.json',result)
+    def remove_remote():
+        if remote_created:
+            require(device.shell(f'cat {remote}/owner',timeout=10).strip()==a.run_id,'remote owner mismatch')
+            device.shell('rm -rf '+shlex.quote(remote),timeout=20)
+            require(device.shell('test ! -e '+shlex.quote(remote)+' && echo ABSENT',timeout=10).strip()=='ABSENT','remote cleanup incomplete')
+        require(device.shell('test ! -e '+shlex.quote(remote)+' && echo ABSENT',timeout=10).strip()=='ABSENT','remote absence unproven')
+        cleanup['remoteAbsent']=True
+    with (PROJECT.parent/'artifacts/locks/phone.lock').open('a+') as lock:
+        os.set_inheritable(lock.fileno(),False);fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        try:
+            guard.identity();save('installed-before.json',installed(c['priorInstalled']));health('health-before',True)
+            before=stable('before');state=rows(before);safe_close(state,None)
+            ref=next(r for r in state['script_revisions'] if r['id']==REFERENCE['revision'])
+            chapter=next(r for r in state['chapters'] if r['revisionId']==ref['id'] and r['stableChapterId']==REFERENCE['chapter'])
+            require(ref['episodeId']==REFERENCE['episode'] and ref['contentHash']==REFERENCE['revisionSha256'] and hashlib.sha256(chapter['text'].encode()).hexdigest()==REFERENCE['textSha256'],'real reference changed')
+            files_before=private_inventory(device,out,'before')
+            controls=' || '.join('test -e '+x for x in ['files/provider-integration/active.json','files/user-failure-diagnostics/active.json','files/short-product-e2e/active.json'])
+            require(device.shell(f'run-as {APP} sh -c '+shlex.quote('if '+controls+'; then echo ARMED; else echo CLEAR; fi'),timeout=10).strip()=='CLEAR','foreign diagnostics armed')
+            device.shell(f'run-as {APP} sh -c '+shlex.quote(f'test ! -e files/provider-integration/{a.run_id} && test ! -e files/provider-integration/{a.run_id}-driver'),timeout=10)
+            stop(state,None);setup=True
+            for kind,package in [('app',APP),('test',TEST_APP)]:
+                if c['priorInstalled'][package]!=c[kind]['sha256']:device.run(['install','-r','-t',c[kind]['path']],timeout=180)
+            save('installed-candidate.json',installed({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}))
+            destination='no_backup/model-packs/'+manifest['id']+'/current'
+            present=device.shell(f'run-as {APP} sh -c '+shlex.quote(f'if test -d {destination}; then echo PRESENT; else echo MISSING; fi'),timeout=10).strip()
+            if present=='MISSING':
+                device.shell('test ! -e '+remote+' && mkdir '+remote+' && echo '+a.run_id+' > '+remote+'/owner',timeout=10);remote_created=True
+                device.run(['push',str(pack),remote+'/pack'],timeout=600);device.shell('chmod -R a+rX '+remote,timeout=20)
+                incoming='no_backup/model-packs/'+manifest['id']+'/.incoming-'+a.run_id
+                device.shell(f'run-as {APP} sh -c '+shlex.quote(f'set -eu; mkdir -p no_backup/model-packs/{manifest["id"]}; test ! -e {incoming}; cp -R {remote}/pack {incoming}; test ! -e {destination}; mv {incoming} {destination}'),timeout=90)
+            for item in [{'path':'manifest.json','sha256':c['providerPack']['manifestSha256']},*manifest['files']]:
+                got=device.shell(f'run-as {APP} sha256sum '+shlex.quote(destination+'/'+item['path']),timeout=30).split()[0];require(got==item['sha256'],'device provider pack mismatch')
+            pre=stable('before-instrument');require(pre==before,'database changed during update');guard.idle()
+            command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
+                '-e','providerIntegration','copied-real-chapter-v1','-e','diagnosticRun',a.run_id,
+                '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
+                '-e','originalEpisodeId',REFERENCE['episode'],'-e','originalRevisionId',REFERENCE['revision'],
+                '-e','originalRevisionSha256',REFERENCE['revisionSha256'],'-e','originalChapterId',REFERENCE['chapter'],
+                '-e','chapterSha256',REFERENCE['textSha256'],TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
+            launched=True;device.run(command,timeout=660);ownership();receipts()
+        except BaseException as error:save('private-controller-failure.json',{'error':repr(error),'launched':launched})
+        finally:
+            device.enforce_quota=False
+            if setup:
+                actions=[]
+                if launched:actions += [('minimal-owner',ownership),('logs',log),('receipts-before',receipts)]
+                actions += [('safe-closure',closure),('control-disarm',disarm)]
+                if launched:actions += [('receipts-after',receipts)]
+                actions += [('files-after',files_after),('db-after',db_after),('preservation',preservation),('health-after',lambda:health('health-after')),('remote-cleanup',remove_remote)]
+                independent_cleanup(actions,cleanup['errors'])
+            cleanup['ownedEpisodeId']=owned;cleanup['launched']=launched;save('cleanup.json',cleanup)
+            fcntl.flock(lock,fcntl.LOCK_UN)
+    print(json.dumps({'output':str(out),'launched':launched,'ownedEpisodeId':owned,'cleanupErrors':cleanup['errors'],'phoneLockReleased':True}))
+
+if __name__=='__main__':main()

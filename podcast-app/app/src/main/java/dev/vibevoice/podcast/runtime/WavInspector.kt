@@ -63,12 +63,19 @@ object WavInspector {
             val frames = dataBytes / blockAlign
             var nonZero = 0L
             var clipped = 0L
-            var index = 0L
-            while (index < frames) {
-                val sample = wav.readI16()
-                if (sample != 0.toShort()) nonZero++
-                if (abs(sample.toInt()) >= 32_760) clipped++
-                index++
+            var remaining = dataBytes
+            val samples = ByteArray(65_536)
+            while (remaining > 0) {
+                val count = minOf(remaining, samples.size.toLong()).toInt()
+                wav.readFully(samples, 0, count)
+                var index = 0
+                while (index < count) {
+                    val sample = ((samples[index].toInt() and 255) or ((samples[index + 1].toInt() and 255) shl 8)).toShort().toInt()
+                    if (sample != 0) nonZero++
+                    if (abs(sample) >= 32_760) clipped++
+                    index += 2
+                }
+                remaining -= count
             }
             require(nonZero > frames / 100L) { "Supertonic WAV is silent" }
             require(clipped <= frames / 10L) { "Supertonic WAV is heavily clipped" }

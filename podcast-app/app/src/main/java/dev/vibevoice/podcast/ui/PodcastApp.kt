@@ -99,6 +99,7 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                         viewModel::showLibrary, viewModel::openAgent, viewModel::closeAgent,
                         { request -> viewModel.requestAgentEdit(current.id, request).await() },
                         viewModel::showLock, viewModel::dismissLock, viewModel::lockAndCreate,
+                        audioCapacity = repository::audioTextCapacity,
                     )
                 } }
                 AppScreen.Generating -> {
@@ -143,8 +144,9 @@ private fun SettingsScreen(onBack: () -> Unit) {
                 Text("On-device models", style = MaterialTheme.typography.headlineSmall)
                 Text("Model data stays outside the APK and must match the manifest hashes pinned into this internal build.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 RuntimeCard("Gemma 4 E2B", "LiteRT GPU · outline + one request per chapter", gemmaPresent)
-                RuntimeCard(if (BuildConfig.SHORT_PRODUCT_E2E) "Supertonic 3 · short plumbing" else "Supertonic 3 · experimental",
-                    if (BuildConfig.SHORT_PRODUCT_E2E) "QNN/HTP · brief chapters only" else "QNN/HTP · speech coverage unverified", supertonicPresent)
+                val provider = dev.vibevoice.podcast.runtime.ProviderAudioPlan.selected
+                RuntimeCard(if (provider) "Supertonic 3 · provider pipeline" else if (BuildConfig.SHORT_PRODUCT_E2E) "Supertonic 3 · short plumbing" else "Supertonic 3 · experimental",
+                    if (provider) "QNN/HTP · sentence segments · 8 steps · speed 1.05" else if (BuildConfig.SHORT_PRODUCT_E2E) "QNN/HTP · brief chapters only" else "QNN/HTP · speech coverage unverified", supertonicPresent)
                 Text("There are no fallback inference routes.", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
             }
         }

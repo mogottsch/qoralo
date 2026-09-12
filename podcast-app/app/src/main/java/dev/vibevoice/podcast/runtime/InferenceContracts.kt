@@ -27,10 +27,12 @@ interface LlmEngine : Closeable {
     suspend fun editScript(requestJson: String): String
 }
 
+data class TtsSegmentProgress(val completed: Int, val total: Int, val completedFrames: Long)
+
 interface TtsEngine : Closeable {
     val provenance: RuntimeProvenance?
     suspend fun load(pack: VerifiedModelPack, voiceId: String = "M1/SID5")
-    suspend fun renderChapter(chapter: FrozenChapter, output: File): AudioMetadata
+    suspend fun renderChapter(chapter: FrozenChapter, output: File, onProgress: suspend (TtsSegmentProgress) -> Unit = {}): AudioMetadata
 }
 
 open class InferenceRouteException(message: String, cause: Throwable? = null) : Exception(message, cause)

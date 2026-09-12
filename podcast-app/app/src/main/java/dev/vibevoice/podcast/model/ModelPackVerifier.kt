@@ -48,6 +48,15 @@ sealed interface VerifiedModelContract
 
 data class GemmaModelContract(val contextTokens: Int, val runtimeVersion: String) : VerifiedModelContract
 
+data class ProviderPipelineContract(
+    val frontendVersion: String,
+    val segmentTarget: Int,
+    val speedHundredths: Int,
+    val gapFrames: Int,
+    val language: String,
+    val randomSeed: Int,
+)
+
 data class SupertonicModelContract(
     val textLength: Int,
     val latentLength: Int,
@@ -57,6 +66,7 @@ data class SupertonicModelContract(
     val channelCount: Int,
     val pcmBits: Int,
     val runtimeBuildIdentity: String,
+    val providerPipeline: ProviderPipelineContract? = null,
 ) : VerifiedModelContract
 
 data class VerifiedModelPack(
@@ -174,7 +184,9 @@ class ModelPackVerifier {
                 GemmaModelContract(contextTokens, runtimeVersion)
             }
             ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> {
-                requireExactKeys(contract, setOf("synthesisUnit", "externalContextCount", "sampleRateHz", "channelCount", "pcmBits", "textLength", "latentLength", "latentChannels", "diffusionSteps"), "contract")
+                val provider = if (contract.has("providerPipeline")) validateProviderPipeline(contract.requireObject("providerPipeline")) else null
+                val keys = setOf("synthesisUnit", "externalContextCount", "sampleRateHz", "channelCount", "pcmBits", "textLength", "latentLength", "latentChannels", "diffusionSteps") + if (provider != null) setOf("providerPipeline") else emptySet()
+                requireExactKeys(contract, keys, "contract")
                 val textLength = contract.requireInt("textLength")
                 val latentLength = contract.requireInt("latentLength")
                 val sampleRate = contract.requireInt("sampleRateHz")
@@ -184,11 +196,23 @@ class ModelPackVerifier {
                 val steps = contract.requireInt("diffusionSteps")
                 if (contract.requireString("synthesisUnit") != "COMPLETE_CHAPTER" || contract.requireInt("externalContextCount") != 4 ||
                     sampleRate != 44_100 || channels != 1 || bits != 16 || textLength !in 10..16_384 || latentLength !in 1..10_000 ||
-                    latentChannels != 144 || steps != 5
+                    latentChannels != 144 || steps != (if (provider != null) 8 else 5) ||
+                    (provider != null && (textLength != 320 || latentLength != 512))
                 ) throw ModelPackException.Invalid("Supertonic pack does not match the chapter WAV/shape contract")
-                SupertonicModelContract(textLength, latentLength, latentChannels, steps, sampleRate, channels, bits, buildIdentity)
+                SupertonicModelContract(textLength, latentLength, latentChannels, steps, sampleRate, channels, bits, buildIdentity, provider)
             }
         }
+    }
+
+    private fun validateProviderPipeline(json: JSONObject): ProviderPipelineContract {
+        requireExactKeys(json, setOf("frontendVersion", "segmentTarget", "speedHundredths", "gapFrames", "language", "randomSeed", "rng", "waveExtent", "nativeTextEdges", "nativeLatentEdges", "durationSentencePrefix"), "providerPipeline")
+        if (json.requireString("frontendVersion") != "supertonic-py-1.3.1-en-v1" || json.requireInt("segmentTarget") != 300 ||
+            json.requireInt("speedHundredths") != 105 || json.requireInt("gapFrames") != 13230 || json.requireString("language") != "en" ||
+            json.requireInt("randomSeed") != 20260911 || json.requireString("rng") != "NUMPY_LEGACY_MT19937" ||
+            json.requireString("waveExtent") != "FULL_NATIVE_VOCODER" || !json.requireBoolean("nativeTextEdges") ||
+            !json.requireBoolean("nativeLatentEdges") || json.requireInt("durationSentencePrefix") != 1
+        ) throw ModelPackException.Invalid("Unsupported provider pipeline contract")
+        return ProviderPipelineContract(json.getString("frontendVersion"), 300, 105, 13230, "en", 20260911)
     }
 
     private fun validateInventory(route: ModelRoute, files: List<VerifiedModelFile>) {

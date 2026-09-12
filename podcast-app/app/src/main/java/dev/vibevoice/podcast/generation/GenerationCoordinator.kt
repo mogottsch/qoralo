@@ -12,7 +12,7 @@ import dev.vibevoice.podcast.runtime.FrozenChapter
 import dev.vibevoice.podcast.runtime.GemmaLiteRtGpuEngine
 import dev.vibevoice.podcast.runtime.LlmEngine
 import dev.vibevoice.podcast.runtime.SourcePreparer
-import dev.vibevoice.podcast.runtime.SupertonicQnnHtpEngine
+import dev.vibevoice.podcast.runtime.ConfiguredTtsEngine
 import dev.vibevoice.podcast.runtime.TtsEngine
 import dev.vibevoice.podcast.runtime.WavAssembler
 import org.json.JSONArray
@@ -23,7 +23,7 @@ class GenerationCoordinator(
     private val artifacts: ArtifactStore,
     private val verifier: ModelPackVerifier = ModelPackVerifier(),
     private val llmFactory: () -> LlmEngine = { GemmaLiteRtGpuEngine() },
-    private val ttsFactory: () -> TtsEngine = ::SupertonicQnnHtpEngine,
+    private val ttsFactory: () -> TtsEngine = ::ConfiguredTtsEngine,
     private val testPackProvider: ((ModelRoute) -> dev.vibevoice.podcast.model.VerifiedModelPack)? = null,
 ) {
     suspend fun generateScript(episodeId: String, jobId: String, progress: suspend (String) -> Unit): String? {
@@ -79,6 +79,7 @@ class GenerationCoordinator(
         val (episode, chapters) = repository.lockedChapterData(episodeId)
         repository.claimJob(episodeId, jobId, JobKind.AUDIO, "Verifying Supertonic", chapters.size)
         val pack = loadPack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
+        repository.verifyAudioPlan(episodeId, jobId, pack)
         repository.resetChapterAudio(episodeId)
         val engine = ttsFactory()
         val rendered = mutableListOf<WavAssembler.Input>()
@@ -92,7 +93,11 @@ class GenerationCoordinator(
                 repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, "Creating ${chapter.title}")
                 progress("Creating chapter ${index + 1} of ${chapters.size}")
                 val output = artifacts.chapterWav(episodeId, chapter.position)
-                val metadata = engine.renderChapter(FrozenChapter(chapter.stableChapterId, chapter.title, chapter.text), output)
+                val metadata = engine.renderChapter(FrozenChapter(chapter.stableChapterId, chapter.title, chapter.text), output) { segment ->
+                    val status = "Chapter ${index + 1} of ${chapters.size}: speech segments ${segment.completed} of ${segment.total} ready"
+                    repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, status)
+                    progress(status)
+                }
                 repository.commitChapterAudio(episodeId, jobId, chapter, metadata, output, cursorFrame)
                 rendered += WavAssembler.Input(chapter.stableChapterId, chapter.title, output)
                 cursorFrame += metadata.frameCount + if (index < chapters.lastIndex) pauseFrames else 0L

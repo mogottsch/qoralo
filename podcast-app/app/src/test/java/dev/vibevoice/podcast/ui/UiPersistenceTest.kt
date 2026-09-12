@@ -44,7 +44,7 @@ class UiPersistenceTest {
         application = ApplicationProvider.getApplicationContext()
         database = Room.inMemoryDatabaseBuilder(application, PodcastDatabase::class.java).allowMainThreadQueries().build()
         artifacts = ArtifactStore(temporary.newFolder(), temporary.newFolder())
-        repository = PodcastRepository(database, artifacts)
+        repository = PodcastRepository(database, artifacts, providerAdmission = false)
     }
     @After fun close() { models.forEach { it.viewModelScope.cancel() }; database.close(); Dispatchers.resetMain() }
     private fun model(handle: SavedStateHandle = SavedStateHandle()) = PodcastViewModel(application, handle, repository).also(models::add)

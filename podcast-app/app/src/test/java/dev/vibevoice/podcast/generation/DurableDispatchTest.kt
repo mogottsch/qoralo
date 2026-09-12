@@ -31,7 +31,7 @@ class DurableDispatchTest {
 
     @Before fun setUp() {
         database = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext<Context>(), PodcastDatabase::class.java).allowMainThreadQueries().build()
-        repository = PodcastRepository(database, ArtifactStore(temporary.newFolder(), temporary.newFolder())) { now }
+        repository = PodcastRepository(database, ArtifactStore(temporary.newFolder(), temporary.newFolder()), providerAdmission = false) { now }
     }
     @After fun close() = database.close()
 

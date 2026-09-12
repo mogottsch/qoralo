@@ -14,7 +14,7 @@ val localProperties = Properties().apply {
 }
 fun pinnedHash(name: String): String = localProperties.getProperty(name, "").replace("\\", "\\\\").replace("\"", "\\\"")
 val nativeRuntimeEnabled = localProperties.getProperty("native.runtime.enabled", "false").toBoolean()
-// Explicit source-pinned short plumbing build; default long experimental preparation is unchanged.
+// Explicit legacy short plumbing override; the normal build selects the reusable provider pipeline.
 val shortProductE2e = providers.gradleProperty("podcast.shortProductE2e").orNull.let {
     require(it == null || it in setOf("true", "false")) { "Invalid short plumbing build selector" }
     it == "true"
@@ -38,7 +38,7 @@ android {
         minSdk = 29
         targetSdk = 35
         versionCode = 1
-        versionName = if (shortProductE2e) "0.1.0-short-plumbing" else "0.1.0-internal"
+        versionName = if (shortProductE2e) "0.1.0-short-plumbing" else "0.1.0-provider-htp"
         buildConfigField("boolean", "SHORT_PRODUCT_E2E", shortProductE2e.toString())
         buildConfigField("String", "GEMMA_MANIFEST_SHA256", "\"${pinnedHash("gemma.manifest.sha256")}\"")
         buildConfigField("String", "SUPERTONIC_PACK_ID", "\"$supertonicPackId\"")

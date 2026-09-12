@@ -14,9 +14,15 @@ import java.util.UUID
 class PodcastRepository(
     private val database: PodcastDatabase,
     private val artifacts: ArtifactStore,
+    private val providerAdmission: Boolean = dev.vibevoice.podcast.runtime.ProviderAudioPlan.selected,
     private val clock: () -> Long = System::currentTimeMillis,
 ) {
     private val dao = database.podcastDao()
+
+    fun audioTextCapacity(texts: List<String>): dev.vibevoice.podcast.runtime.ScriptTextCapacity =
+        if (providerAdmission) dev.vibevoice.podcast.runtime.ProviderAudioPlan.assess(artifacts, texts)
+        else dev.vibevoice.podcast.runtime.SupertonicTextCapacity.assess(texts,
+            dev.vibevoice.podcast.runtime.SupertonicTextCapacity.textLengthForManifest(dev.vibevoice.podcast.BuildConfig.SUPERTONIC_MANIFEST_SHA256))
 
     fun observeEpisodes(): Flow<List<EpisodeEntity>> = dao.observeEpisodes()
     fun observeEpisode(id: String): Flow<EpisodeEntity?> = dao.observeEpisode(id)
@@ -111,6 +117,7 @@ class PodcastRepository(
         validateScript(title, chapters)
         val revisionId = UUID.randomUUID().toString()
         val stored = artifacts.writeRevision(episodeId, revisionId, title, chapters)
+        var providerPlan: dev.vibevoice.podcast.runtime.ProviderAudioPlan.Saved? = null
         try {
             return database.withTransaction {
                 val episode = requireEpisode(episodeId)
@@ -121,19 +128,35 @@ class PodcastRepository(
                 val now = clock()
                 // Even review-OFF must keep the complete generated draft if this voice cannot accept it.
                 // This checks the same normalized text that would be sent; it never shortens the script.
-                if (episode.reviewEnabled || !dev.vibevoice.podcast.runtime.SupertonicTextCapacity.configured(chapters.map { it.text.trim() }).fits) {
-                    dao.updateEpisode(episode.copy(title = title, phase = EpisodePhase.SCRIPT_DRAFT, activeRevisionId = revisionId, updatedAtEpochMs = now))
+                var audioJob: GenerationJobEntity? = null
+                var planFailed = false
+                if (!episode.reviewEnabled && audioTextCapacity(chapters.map { it.text.trim() }).fits) {
+                    val proposed = newJob(episodeId, JobKind.AUDIO, revisionId, "Waiting to create audio")
+                    if (providerAdmission) {
+                        // Failure to prepare audio must not discard a successfully generated complete script.
+                        val plan = runCatching { dev.vibevoice.podcast.runtime.ProviderAudioPlan.save(artifacts, episodeId, revisionId,
+                            stored.sha256, proposed.id, dao.chapters(revisionId).map { ChapterDraft(it.stableChapterId, it.title, it.text) }) }.getOrNull()
+                        providerPlan = plan
+                        if (plan == null) planFailed = true else audioJob = proposed.copy(id = plan.jobId)
+                    } else audioJob = proposed
+                }
+                if (audioJob == null) {
+                    dao.updateEpisode(episode.copy(title = title, phase = EpisodePhase.SCRIPT_DRAFT, activeRevisionId = revisionId,
+                        failurePhase = if (planFailed) "audio_plan" else null,
+                        failureMessage = if (planFailed) "Audio preparation could not be saved. Your complete script remains editable." else null,
+                        updatedAtEpochMs = now))
                 } else {
                     dao.updateEpisode(episode.copy(
                         title = title, phase = EpisodePhase.LOCKED, activeRevisionId = revisionId,
                         lockedRevisionId = revisionId, lockedContentHash = stored.sha256, lockedAtEpochMs = now, updatedAtEpochMs = now,
                     ))
-                    dao.insertJob(newJob(episodeId, JobKind.AUDIO, revisionId, "Waiting to create audio"))
+                    dao.insertJob(audioJob)
                 }
                 dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Script complete", terminalAtEpochMs = now, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
                 revisionId
             }
         } catch (error: Throwable) {
+            providerPlan?.file?.delete()
             artifacts.resolveEpisodeFile(stored.relativePath).delete()
             throw error
         }
@@ -192,24 +215,47 @@ class PodcastRepository(
         }
     }
 
-    suspend fun lockAndQueueAudio(episodeId: String): String = database.withTransaction {
-        val episode = requireEpisode(episodeId)
-        require(episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId != null) { "Only the current draft can be locked" }
-        require(dao.activeJobCount(episodeId) == 0) { "Wait for the current agent edit to finish before locking" }
-        require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
-        val revision = dao.revision(episode.activeRevisionId) ?: error("Missing draft revision")
-        val chapters = dao.chapters(revision.id)
-        require(chapters.isNotEmpty()) { "Cannot lock an empty script" }
-        // Recompute under the same transaction as the current revision lock. UI prechecks are not authority.
-        dev.vibevoice.podcast.runtime.SupertonicTextCapacity.requireFits(chapters.map { it.text })
-        val now = clock()
-        dao.updateEpisode(episode.copy(
-            phase = EpisodePhase.LOCKED, lockedRevisionId = revision.id, lockedContentHash = revision.contentHash,
-            lockedAtEpochMs = now, failurePhase = null, failureMessage = null, updatedAtEpochMs = now,
-        ))
-        val job = newJob(episodeId, JobKind.AUDIO, revision.id, "Waiting to create audio")
-        dao.insertJob(job)
-        job.id
+    suspend fun lockAndQueueAudio(episodeId: String): String {
+        var plan: dev.vibevoice.podcast.runtime.ProviderAudioPlan.Saved? = null
+        try {
+            return database.withTransaction {
+                val episode = requireEpisode(episodeId)
+                require(episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId != null) { "Only the current draft can be locked" }
+                require(dao.activeJobCount(episodeId) == 0) { "Wait for the current agent edit to finish before locking" }
+                require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
+                val revision = dao.revision(episode.activeRevisionId) ?: error("Missing draft revision")
+                val chapters = dao.chapters(revision.id)
+                require(revision.episodeId == episodeId && chapters.isNotEmpty()) { "Cannot lock an invalid script" }
+                require(artifacts.sha256(artifacts.resolveEpisodeFile(revision.relativePath)) == revision.contentHash) { "Draft file integrity mismatch" }
+                // Recompute against current rows/pack inside the lock transaction; cached UI checks cannot authorize it.
+                val capacity = audioTextCapacity(chapters.map { it.text })
+                if (!capacity.fits) throw dev.vibevoice.podcast.runtime.AudioTextCapacityException(capacity)
+                var job = newJob(episodeId, JobKind.AUDIO, revision.id, "Waiting to create audio")
+                if (providerAdmission) {
+                    plan = dev.vibevoice.podcast.runtime.ProviderAudioPlan.save(artifacts, episodeId, revision.id, revision.contentHash,
+                        job.id, chapters.map { ChapterDraft(it.stableChapterId, it.title, it.text) })
+                    job = job.copy(id = requireNotNull(plan).jobId)
+                }
+                val now = clock()
+                dao.updateEpisode(episode.copy(
+                    phase = EpisodePhase.LOCKED, lockedRevisionId = revision.id, lockedContentHash = revision.contentHash,
+                    lockedAtEpochMs = now, failurePhase = null, failureMessage = null, updatedAtEpochMs = now,
+                ))
+                dao.insertJob(job)
+                job.id
+            }
+        } catch (error: Throwable) { plan?.file?.delete(); throw error }
+    }
+
+    suspend fun verifyAudioPlan(episodeId: String, jobId: String, pack: VerifiedModelPack) {
+        val contract = pack.contract as? dev.vibevoice.podcast.model.SupertonicModelContract ?: error("Missing audio contract")
+        if (contract.providerPipeline == null) return
+        val job = requireJob(jobId); val (episode, chapters) = lockedChapterData(episodeId)
+        require(job.kind == JobKind.AUDIO && job.episodeId == episodeId && job.requestedRevisionId == episode.lockedRevisionId && job.status == JobStatus.RUNNING)
+        val revision = requireNotNull(dao.revision(requireNotNull(episode.lockedRevisionId)))
+        require(revision.episodeId == episodeId && artifacts.sha256(artifacts.resolveEpisodeFile(revision.relativePath)) == revision.contentHash)
+        dev.vibevoice.podcast.runtime.ProviderAudioPlan.verify(artifacts, episodeId, jobId, revision.id, revision.contentHash,
+            pack.manifestSha256, chapters.map { ChapterDraft(it.stableChapterId, it.title, it.text) })
     }
 
     suspend fun claimJob(episodeId: String, jobId: String, expectedKind: String, status: String, totalChapters: Int = 0): JobClaim = database.withTransaction {

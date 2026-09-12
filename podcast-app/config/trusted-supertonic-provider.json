@@ -1,0 +1,110 @@
+{
+  "id": "supertonic-3-provider",
+  "version": "py131-t320-l512-gather-v1",
+  "manifestSha256": "423429c6642da131ac62511e3b233f1a121b97975aa5b6e9aa755bb13a927670",
+  "files": [
+    {
+      "role": "SUPERTONIC_CONFIG",
+      "path": "assets/config.json",
+      "bytes": 82,
+      "sha256": "aceeb12265265aee4beabd640845de8c6d01fcfebfa1e9b1135445cec24cff8e"
+    },
+    {
+      "role": "SUPERTONIC_DURATION_DESCRIPTOR",
+      "path": "contexts/duration-context.onnx",
+      "bytes": 872,
+      "sha256": "b6a07f411166d9d0e0651084de9ff429f4e59a6ab465fddd86c691737ae5fede"
+    },
+    {
+      "role": "SUPERTONIC_DURATION_BINARY",
+      "path": "contexts/duration-context_qnn.bin",
+      "bytes": 2264504,
+      "sha256": "5008c81e40516082528f0d0e9abfdaead5f5c1dcce625f86dba2c410a35784a3"
+    },
+    {
+      "role": "SUPERTONIC_TEXT_DESCRIPTOR",
+      "path": "contexts/text-context.onnx",
+      "bytes": 992,
+      "sha256": "9d3b076232440b9362ae28ccfd402b1808f2c519a4f1e62f038a9d97aa054f43"
+    },
+    {
+      "role": "SUPERTONIC_TEXT_BINARY",
+      "path": "contexts/text-context_qnn.bin",
+      "bytes": 19564936,
+      "sha256": "014e3277cb69b4dcc0c6214e9d0e96882c57554ab914b9dab23d7407f3160e9c"
+    },
+    {
+      "role": "SUPERTONIC_VECTOR_DESCRIPTOR",
+      "path": "contexts/vector-context.onnx",
+      "bytes": 1280,
+      "sha256": "d1560c57776569c51edfb4d047817b681a4e7a2c4364521dcf5164f3cfcee060"
+    },
+    {
+      "role": "SUPERTONIC_VECTOR_BINARY",
+      "path": "contexts/vector-context_qnn.bin",
+      "bytes": 136490968,
+      "sha256": "49b8647a53a1bcef866966323bd3478dccde76ac55b2cb14b3b14feb2f142d8a"
+    },
+    {
+      "role": "SUPERTONIC_VOCODER_DESCRIPTOR",
+      "path": "contexts/vocoder-context.onnx",
+      "bytes": 732,
+      "sha256": "b7316a8ca864ce37cad74932069dce9f97c97b4ecfbca76d8529e511258f81ea"
+    },
+    {
+      "role": "SUPERTONIC_VOCODER_BINARY",
+      "path": "contexts/vocoder-context_qnn.bin",
+      "bytes": 54282656,
+      "sha256": "e5472023c5f3b086be45049421fc777e81584294649b5b8f697157c511e09d0c"
+    },
+    {
+      "role": "SUPERTONIC_UNICODE_INDEXER",
+      "path": "assets/unicode-indexer.i32",
+      "bytes": 262144,
+      "sha256": "8402ca48e5189a8950138580b0fff64db6f072f24ac07cd54ba8b2fbb9883b30"
+    },
+    {
+      "role": "SUPERTONIC_VOICE",
+      "path": "assets/voice.bin",
+      "bytes": 51760,
+      "sha256": "b6d15b9e1fbb4a8efca004427bd05963a2b01ce11b780f3843956d82605d076a"
+    },
+    {
+      "role": "SUPERTONIC_TOKENIZER",
+      "path": "assets/tokenizer.json",
+      "bytes": 89,
+      "sha256": "d93ed50f507dee7ca0b7e4074df79aab211c93cb92ccfbbfb033a21eecfd9560"
+    },
+    {
+      "role": "SUPERTONIC_STYLE",
+      "path": "assets/voice-style.json",
+      "bytes": 59,
+      "sha256": "52ceefb99c6f2f5135322a972471b9d45c20a4e1952967e7e3445834d281ee5f"
+    }
+  ],
+  "providerPipeline": {
+    "frontendVersion": "supertonic-py-1.3.1-en-v1",
+    "segmentTarget": 300,
+    "speedHundredths": 105,
+    "gapFrames": 13230,
+    "language": "en",
+    "randomSeed": 20260911,
+    "rng": "NUMPY_LEGACY_MT19937",
+    "waveExtent": "FULL_NATIVE_VOCODER",
+    "nativeTextEdges": true,
+    "nativeLatentEdges": true,
+    "durationSentencePrefix": 1
+  },
+  "genericTextRange": [
+    1,
+    320
+  ],
+  "genericNativeLatentRange": [
+    1,
+    512
+  ],
+  "normalizerUnicodeTableSha256": "e77ed73ff2a4dfb12e7273ce959adf554b8d5aff559d77a2a81aaf3be127a456",
+  "legacyVectorStrictGateRemainsFailed": true,
+  "newPhysicalValidation": false,
+  "newWaveListening": "not_reviewed"
+}

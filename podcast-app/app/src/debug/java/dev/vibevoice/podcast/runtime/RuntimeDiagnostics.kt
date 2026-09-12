@@ -13,11 +13,38 @@ import java.util.concurrent.atomic.AtomicReference
 
 /** Available only in debug builds; enabled solely by the private wiring service. */
 internal object RuntimeDiagnostics {
+    @Volatile private var providerRetention = false
+    fun retainProviderIntermediates(): Boolean = providerRetention
     suspend fun beginJob(context: android.content.Context, episodeId: String, jobId: String) {
+        providerRetention = false
+        runCatching {
+            val marker = File(context.filesDir, "provider-integration/active.json")
+            if (marker.isFile && marker.length() in 1..8192) {
+                val control = JSONObject(marker.readText())
+                val run = control.getString("runId")
+                require(Regex("provider-app-[a-z0-9-]{1,48}").matches(run))
+                if (control.getString("episodeId") == episodeId) {
+                    val app = context.applicationContext as dev.vibevoice.podcast.PodcastApplication
+                    val episode = app.repository.episode(episodeId)
+                    val job = requireNotNull(app.repository.latestJob(episodeId))
+                    require(ProviderAudioPlan.selected && control.getString("packSha256") == ProviderAudioPlan.PACK_SHA256)
+                    require(job.id == jobId && job.kind == dev.vibevoice.podcast.data.JobKind.AUDIO && job.status == dev.vibevoice.podcast.data.JobStatus.QUEUED)
+                    require(episode.lockedRevisionId == control.getString("revisionId") && episode.lockedContentHash == control.getString("revisionSha256"))
+                    val apkHash = app.artifacts.sha256(File(context.applicationInfo.sourceDir))
+                    require(apkHash == control.getString("appApkSha256"))
+                    val root = File(marker.parentFile, run); require(root.mkdir())
+                    File(root, "job-identity.json").writeText(JSONObject().put("runId", run).put("episodeId", episodeId).put("jobId", jobId)
+                        .put("revisionId", episode.lockedRevisionId).put("revisionSha256", episode.lockedContentHash)
+                        .put("packSha256", ProviderAudioPlan.PACK_SHA256).put("appApkSha256", apkHash).put("pid", android.os.Process.myPid()).toString(2))
+                    providerRetention = true
+                }
+            }
+        }
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beginJob(context, episodeId, jobId)
         dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.beginJob(context, episodeId, jobId)
     }
     fun endJob() {
+        providerRetention = false
         dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.endJob()
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.endJob()
     }

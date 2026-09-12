@@ -30,7 +30,7 @@ class PodcastRepositoryTest {
     @Before fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(context, PodcastDatabase::class.java).allowMainThreadQueries().build()
-        repository = PodcastRepository(database, ArtifactStore(temporary.newFolder("episodes"), temporary.newFolder("models"))) { ++now }
+        repository = PodcastRepository(database, ArtifactStore(temporary.newFolder("episodes"), temporary.newFolder("models")), providerAdmission = false) { ++now }
     }
 
     @After fun close() = database.close()
@@ -100,7 +100,7 @@ class PodcastRepositoryTest {
         val id = episodeAtInstructions(); val job = repository.queueScriptGeneration(id, "Narration", true)
         repository.claimJob(id, job, JobKind.SCRIPT, "writing")
         val base = repository.commitGeneratedScript(id, job, "Draft", listOf(ChapterDraft("c1", "One", "Short narration.")))
-        assertTrue(dev.vibevoice.podcast.runtime.SupertonicTextCapacity.configured(repository.activeRevision(id).second.map { it.text }).fits)
+        assertTrue(repository.audioTextCapacity(repository.activeRevision(id).second.map { it.text }).fits)
         val edit = repository.queueAgentEdit(id, "Develop the full chapter")
         repository.claimJob(id, edit, JobKind.AGENT_EDIT, "editing")
         val full = "Full narration. ".repeat(300).trim()

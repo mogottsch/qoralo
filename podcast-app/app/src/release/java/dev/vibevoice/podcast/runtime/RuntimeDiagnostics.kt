@@ -4,6 +4,7 @@ import com.google.ai.edge.litertlm.Conversation
 
 /** Release has no diagnostic controls, output capture, or limit overrides. */
 internal object RuntimeDiagnostics {
+    fun retainProviderIntermediates(): Boolean = false
     suspend fun beginJob(context: android.content.Context, episodeId: String, jobId: String) = Unit
     fun endJob() = Unit
     fun verifiedGemma(pack: dev.vibevoice.podcast.model.VerifiedModelPack) = Unit
