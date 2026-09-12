@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sys
 import tempfile
 import time
 from urllib.parse import unquote, urlsplit
@@ -302,16 +303,27 @@ def write_snapshot(output=OUTPUT, repo=REPO, registry=REGISTRY):
     return output
 
 
+def renderer_source_changed(loaded_mtime_ns, source=Path(__file__)):
+    """Detect a local renderer edit so the long-lived loop can re-exec safely."""
+    try:
+        return source.stat().st_mtime_ns != loaded_mtime_ns
+    except OSError:
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--once', action='store_true', help='Write one snapshot and exit')
     args = parser.parse_args()
     print(str(OUTPUT), flush=True)
+    loaded_mtime_ns = Path(__file__).stat().st_mtime_ns
     while True:
         write_snapshot()
         if args.once:
             return
         time.sleep(12)
+        if renderer_source_changed(loaded_mtime_ns):
+            os.execv(sys.executable, [sys.executable, *sys.argv])
 
 
 if __name__ == '__main__':

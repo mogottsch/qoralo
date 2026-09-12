@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 MODULE = Path(__file__).resolve().parents[1] / 'work_status_dashboard.py'
 spec = importlib.util.spec_from_file_location('work_status_dashboard', MODULE)
@@ -87,6 +88,22 @@ class StatusTests(unittest.TestCase):
     def test_missing_registry_explicit(self):
         r = m.collect_presence(self.root/'absent', self.repo)
         self.assertFalse(r['available'])
+
+    def test_renderer_source_change_detector(self):
+        source = self.root / 'renderer.py'
+        source.write_text('first')
+        loaded = source.stat().st_mtime_ns
+        self.assertFalse(m.renderer_source_changed(loaded, source))
+        source.write_text('second version')
+        self.assertTrue(m.renderer_source_changed(loaded, source))
+
+    def test_main_reexecs_when_renderer_changes(self):
+        with patch.object(m.sys, 'argv', ['dashboard']), patch.object(m, 'write_snapshot'), \
+             patch.object(m.time, 'sleep'), patch.object(m, 'renderer_source_changed', return_value=True), \
+             patch.object(m.os, 'execv', side_effect=SystemExit) as reexec:
+            with self.assertRaises(SystemExit):
+                m.main()
+        reexec.assert_called_once()
 
     def test_refresh_never_rewrites_reported_times_or_source(self):
         data = {'schema_version':1,'workstreams':[{'id':'a','title':'A','status':'blocked','owner':'Ben','now':'Report','next':'Wait','reported_at':'2020-01-01T00:00:00Z'}],
