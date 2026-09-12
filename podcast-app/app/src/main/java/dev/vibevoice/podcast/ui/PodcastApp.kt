@@ -8,6 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -52,12 +57,32 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
     val job by viewModel.job.collectAsStateWithLifecycle()
     val audio by viewModel.audio.collectAsStateWithLifecycle()
     val playback by viewModel.playback.collectAsStateWithLifecycle()
+    val liveAudio by viewModel.liveAudio.collectAsStateWithLifecycle()
+    val livePlayback by viewModel.livePlayback.collectAsStateWithLifecycle()
+    val selectedLiveJob by viewModel.selectedLiveJobId.collectAsStateWithLifecycle()
+    val selectedPlayerEpisodeId by viewModel.selectedPlayerEpisodeId.collectAsStateWithLifecycle()
     val agentOpen by viewModel.agentSheetOpen.collectAsState()
     val lockOpen by viewModel.lockDialogOpen.collectAsState()
     val message by viewModel.transientMessage.collectAsState()
     val snackbar = remember { SnackbarHostState() }
     val context = LocalContext.current
     val repository = (context.applicationContext as PodcastApplication).repository
+    val playbackHost = remember(repository) { PlaybackHost(context.applicationContext) }
+    PlaybackHostEffects(playbackHost, repository)
+    val activePlayback = playbackHost.active
+    val showMiniPlayer = activePlayback != null && screen != AppScreen.Player
+    LaunchedEffect(screen, episode, selectedPlayerEpisodeId, selectedLiveJob, liveAudio, playback, livePlayback) {
+        if (screen != AppScreen.Player) return@LaunchedEffect
+        val current = episode?.takeIf { it.id == selectedPlayerEpisodeId } ?: return@LaunchedEffect
+        val available = liveAudio?.takeIf { it.binding.episodeId == current.id && it.binding.jobId == selectedLiveJob }
+        val binding = available?.binding
+        playbackHost.open(current, chapters, audio, selectedLiveJob,
+            current.finalAudioPath?.let(repository::resolveArtifact), available,
+            if (selectedLiveJob != null) livePlayback else playback) { position, speed, transcript ->
+            if (binding != null) viewModel.saveStreamPlayback(binding, position, speed, transcript)
+            else viewModel.savePlayback(current.id, position, speed, transcript)
+        }
+    }
 
     BackHandler(enabled = screen != AppScreen.Library) {
         when {
@@ -74,7 +99,15 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
 
     // Each screen owns system/IME insets; the snackbar host must not add them again.
     Scaffold(contentWindowInsets = WindowInsets(0, 0, 0, 0), snackbarHost = { SnackbarHost(snackbar, Modifier.navigationBarsPadding().imePadding()) }) { outerPadding ->
-        androidx.compose.foundation.layout.Box(Modifier.fillMaxSize().padding(outerPadding)) {
+        Column(Modifier.fillMaxSize().padding(outerPadding).then(
+            if (showMiniPlayer) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier
+        )) {
+            if (showMiniPlayer) Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+                MiniPlayer(activePlayback.episode.title, activePlayback.session,
+                    onOpen = { viewModel.reopenPlayer(activePlayback.identity.episodeId, activePlayback.identity.liveBinding) },
+                    modifier = Modifier.widthIn(max = 600.dp))
+            }
+            Box(Modifier.fillMaxWidth().weight(1f)) {
             when (screen) {
                 AppScreen.Library -> LibraryScreen(episodes, viewModel::newEpisode, viewModel::selectEpisode, viewModel::showSettings,
                     playbackStates = libraryPlayback, chapterCounts = libraryChapterCounts)
@@ -112,20 +145,26 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                         val action: () -> Unit = { viewModel.returnToSavedDraft(episodeId, jobId, revisionId) }
                         action
                     } else null
-                    GeneratingScreen(current, failedJob, viewModel::showLibrary, returnToDraft)
+                    val available = liveAudio?.takeIf { it.binding.episodeId == current?.id }
+                    GeneratingScreen(current, failedJob, viewModel::showLibrary, returnToDraft,
+                        available, { available?.let { viewModel.openLivePlayer(it.binding) } })
                 }
-                AppScreen.Player -> episode?.let { current ->
-                    val path = current.finalAudioPath
-                    if (path != null) key(current.id) {
-                        PlayerScreen(
-                            current, chapters, audio, playback?.takeIf { it.episodeId == current.id }, repository.resolveArtifact(path),
-                            viewModel::showLibrary,
-                            onExport = { destination -> viewModel.exportEpisode(current.id, destination) },
-                            onPersist = { position, speed, transcript -> viewModel.savePlayback(current.id, position, speed, transcript) },
-                        )
+                AppScreen.Player -> {
+                    val active = activePlayback?.takeIf {
+                        it.identity.episodeId == selectedPlayerEpisodeId && it.identity.episodeId == episode?.id &&
+                            (selectedLiveJob == null || it.identity.liveBinding?.jobId == selectedLiveJob)
+                    }
+                    if (active != null) PlayerScreen(active.episode, active.chapters, active.audio, null, null,
+                        onBack = viewModel::showLibrary,
+                        onExport = { destination -> viewModel.exportEpisode(active.identity.episodeId, destination) },
+                        onPersist = { _, _, _ -> }, liveAudio = active.stream, sharedPlayback = active)
+                    else Column(Modifier.fillMaxSize().padding(24.dp)) {
+                        Text("Checking available audio…")
+                        androidx.compose.material3.TextButton(onClick = viewModel::showLibrary) { Text("Return to library") }
                     }
                 }
                 AppScreen.Settings -> SettingsScreen(viewModel::showLibrary)
+            }
             }
         }
     }
