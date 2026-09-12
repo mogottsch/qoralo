@@ -272,9 +272,11 @@ def render(data, repo=REPO):
                       f'<span data-presence>{badge(a["presence"] if a else "unknown")}</span></div>'
                       f'<div class="task" title="{esc(r["task"])}">{esc(r["task"])}</div>'
                       f'<div class="activity">{esc(activity)}</div>{report(r, now)}</article>')
-    listening_url = safe_listening_link(c.get('listening', {}).get('url'))
+    listening = c.get('listening', {})
+    listening_url = safe_listening_link(listening.get('url'))
+    listening_label = listening.get('current_label', 'Open current listening page')
     listening_link = (f'<a href="{esc(listening_url)}" target="_blank" rel="noopener noreferrer">'
-                      'Open current paired listening page ↗</a>' if listening_url else '')
+                      f'{esc(listening_label)} ↗</a>' if listening_url else '')
     fields = {
         'CHECKED': esc(now.astimezone().strftime('%H:%M:%S')),
         'CHECKED_ISO': esc(data['checked_at']),
