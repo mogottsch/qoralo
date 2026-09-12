@@ -23,6 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 class GenerationService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -72,6 +74,10 @@ class GenerationService : Service() {
                     ACTION_AUDIO -> coordinator.generateAudio(episodeId, jobId, progress)
                 }
             } catch (cancelled: CancellationException) {
+                withContext(NonCancellable) {
+                    runCatching { (application as PodcastApplication).repository.failJob(episodeId, failureJob,
+                        "Generation was cancelled. Any completed audio is retained; the episode is not complete.", "cancelled") }
+                }
                 throw cancelled
             } catch (error: Throwable) {
                 val safeMessage = generationFailureMessage(error)

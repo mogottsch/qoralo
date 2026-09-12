@@ -46,7 +46,8 @@ import dev.vibevoice.podcast.data.GenerationJobEntity
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose: () -> Unit, onReturnToDraft: (() -> Unit)? = null) {
+fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose: () -> Unit, onReturnToDraft: (() -> Unit)? = null,
+    availableAudio: dev.vibevoice.podcast.runtime.AudioAvailability? = null, onOpenAudio: (() -> Unit)? = null) {
     val failed = episode?.phase == EpisodePhase.FAILED
     val restore = onReturnToDraft?.takeIf { dev.vibevoice.podcast.data.canReturnToSavedDraft(episode, job) }
     PhoneContent {
@@ -71,6 +72,16 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
                 item {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                         if (failed) FailurePanel(episode, onClose, restore) else GenerationPanel(episode, job)
+                        if (availableAudio?.canListen == true && onOpenAudio != null) {
+                            Text("${formatDuration(availableAudio.availableMs)} of audio available", style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Center, modifier = Modifier.padding(top = 20.dp))
+                            Text(if (failed) "Generation stopped. You can listen to the completed portion; export is unavailable."
+                                else "You can listen now. Playback will wait if it catches up with generation.",
+                                style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 6.dp))
+                            PrimaryAction("Listen", onOpenAudio, modifier = Modifier.padding(top = 12.dp))
+                            Text("Opens the player paused. Press Play when you are ready.", style = MaterialTheme.typography.bodySmall,
+                                textAlign = TextAlign.Center, modifier = Modifier.padding(top = 6.dp))
+                        }
                     }
                 }
             }

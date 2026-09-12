@@ -80,6 +80,10 @@ class GenerationCoordinator(
         repository.claimJob(episodeId, jobId, JobKind.AUDIO, "Verifying Supertonic", chapters.size)
         val pack = loadPack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
         val recovery = repository.verifyAudioPlan(episodeId, jobId, pack)
+        val stream = dev.vibevoice.podcast.runtime.ProgressiveAudio.create(artifacts,
+            dev.vibevoice.podcast.runtime.AudioAttemptBinding(episodeId, jobId, requireNotNull(episode.lockedRevisionId),
+                requireNotNull(episode.lockedContentHash), pack.manifestSha256,
+                if (recovery == null) (pack.contract as? dev.vibevoice.podcast.model.SupertonicModelContract)?.providerPipeline?.frontendVersion else null))
         repository.resetChapterAudio(episodeId)
         if (recovery != null) {
             require(recovery.size == chapters.size)
@@ -91,11 +95,13 @@ class GenerationCoordinator(
                 progress("Publishing completed audio without running the voice model")
                 val output = artifacts.chapterWav(episodeId, chapter.position)
                 dev.vibevoice.podcast.runtime.ProviderPublication.publish(saved.source, output, saved.metadata.sha256)
+                stream.append(index, chapter.stableChapterId, 0, output, saved.metadata)
                 repository.commitChapterAudio(episodeId, jobId, chapter, saved.metadata, output, cursor)
                 rendered += WavAssembler.Input(chapter.stableChapterId, chapter.title, output)
                 cursor += saved.metadata.frameCount + if (index < chapters.lastIndex) 44_100L * 700L / 1_000L else 0
             }
             val final = WavAssembler(artifacts).assemble(episodeId, jobId, rendered)
+            stream.finish(final.totalFrames, final.audioSha256)
             repository.completeAudio(episodeId, jobId, final)
             return // Crucially before constructing/loading any TtsEngine.
         }
@@ -111,11 +117,24 @@ class GenerationCoordinator(
                 repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, "Creating ${chapter.title}")
                 progress("Creating chapter ${index + 1} of ${chapters.size}")
                 val output = artifacts.chapterWav(episodeId, chapter.position)
+                var streamedSegments = 0
+                val spans = if (stream.binding.frontendVersion != null) dev.vibevoice.podcast.runtime.ProviderTextFrontend.segmentSpans(chapter.text) else emptyList()
                 val metadata = engine.renderChapter(FrozenChapter(chapter.stableChapterId, chapter.title, chapter.text), output) { segment ->
+                    segment.completedFile?.let { file ->
+                        require(segment.completed == streamedSegments + 1 && segment.completedMetadata != null)
+                        val span = spans.getOrNull(streamedSegments)
+                        if (stream.binding.frontendVersion != null) require(span != null && segment.total == spans.size)
+                        stream.append(index, chapter.stableChapterId, streamedSegments, file, segment.completedMetadata,
+                            if (span != null) dev.vibevoice.podcast.runtime.AudioPassageKind.PROVIDER_SEGMENT else dev.vibevoice.podcast.runtime.AudioPassageKind.COMPLETE_CHAPTER,
+                            span?.startUtf16, span?.endUtf16)
+                        streamedSegments++
+                    }
                     val status = "Chapter ${index + 1} of ${chapters.size}: speech segments ${segment.completed} of ${segment.total} ready"
                     repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, status)
                     progress(status)
                 }
+                if (stream.binding.frontendVersion != null) require(streamedSegments == spans.size && streamedSegments > 0)
+                if (streamedSegments == 0) stream.append(index, chapter.stableChapterId, 0, output, metadata)
                 repository.commitChapterAudio(episodeId, jobId, chapter, metadata, output, cursorFrame)
                 rendered += WavAssembler.Input(chapter.stableChapterId, chapter.title, output)
                 cursorFrame += metadata.frameCount + if (index < chapters.lastIndex) pauseFrames else 0L
@@ -126,6 +145,7 @@ class GenerationCoordinator(
         repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, chapters.size + 1, chapters.size, "Assembling episode")
         progress("Assembling ${episode.title}")
         val final = WavAssembler(artifacts).assemble(episodeId, jobId, rendered)
+        stream.finish(final.totalFrames, final.audioSha256)
         repository.completeAudio(episodeId, jobId, final)
     }
 

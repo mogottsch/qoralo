@@ -11,7 +11,8 @@ internal object RuntimeDiagnostics {
     fun responseReturned(raw: String) = Unit
     fun requestFailed(error: GemmaRequestException) = Unit
     fun jobFailed(error: Throwable) = Unit
-    fun configurePlayer(episodeId: String, player: androidx.media3.exoplayer.ExoPlayer) = Unit
+    fun configurePlayer(context: android.content.Context, episodeId: String, attemptId: String?, player: androidx.media3.exoplayer.ExoPlayer) = Unit
+    fun observePlayer(player: androidx.media3.exoplayer.ExoPlayer, episodeId: String, attemptId: String?, absolutePositionMs: Long, availableMs: Long, wantsPlayback: Boolean) = Unit
     fun beforeExport(context: android.content.Context, episodeId: String, uri: android.net.Uri) = Unit
     fun exportFinished(episodeId: String, uri: android.net.Uri) = Unit
     fun outputLimit(mode: String, productionLimit: Int): Int = productionLimit

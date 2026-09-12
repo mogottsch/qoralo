@@ -26,10 +26,22 @@ def parse_health(memory,battery):
     require(mem is not None and temp is not None,'health preflight unavailable')
     return {'availableMemoryKiB':int(mem.group(1)),'batteryTemperatureC':int(temp.group(1))/10.0}
 
+def require_quiet_audio(dump):
+    # AudioTrack state is observable even when an older app has no MediaSession.
+    section=re.search(r'PlaybackActivityMonitor[^\n]*\n.*?players:\s*\n(.*?)(?=\n\s*(?:ducked players|banned uids|player event|event log)|\Z)',dump,re.S|re.I)
+    require(section is not None,'current audio playback section unavailable')
+    current=[line for line in section.group(1).splitlines() if re.match(r'^\s*ID:\d+\s+--',line,re.I)]
+    for line in current:
+        state=re.search(r'--\s*state:\s*(\w+)',line,re.I)
+        require(state is not None,'current audio player state unavailable')
+        require(state.group(1).lower() not in ('started','2'),'existing active audio playback; preserve user listening')
+    require(not re.search(r'^\s*(?:Actual mode|mMode|Audio mode|mode)\s*[:=]\s*MODE_IN_(?:CALL|COMMUNICATION)\b',dump,re.M|re.I),'active call/communication audio; preserve it')
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--candidate',type=Path,required=True);p.add_argument('--run-id',required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--execute',action='store_true');a=p.parse_args()
     c=json.loads(a.candidate.read_text());require(c['kind']=='provider-app-integration','wrong candidate')
+    progressive=bool(c.get('progressivePlayback'))
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
     require(digest(Path(__file__))==c['controllerSha256'] and host_identity()['sha256']==c['hostGuardSha256'],'controller/guard drift')
     for key in ['app','test']:require(digest(Path(c[key]['path']))==c[key]['sha256'],'APK drift')
@@ -62,6 +74,19 @@ def main():
         for package in (APP,TEST_APP):device.shell('am force-stop '+package,timeout=10)
         guard.idle()
     owned=None;before=None;files_before=None;setup=False;launched=False;remote_created=False;pull=0
+    ui_settings={};ui_changed=False
+    def restore_ui():
+        nonlocal ui_changed
+        if not ui_changed:return
+        original=ui_settings['densityOverride']
+        device.shell('wm density '+(str(original) if original is not None else 'reset'),timeout=10)
+        font=ui_settings['fontScale']
+        device.shell('settings delete system font_scale' if font=='null' else 'settings put system font_scale '+shlex.quote(font),timeout=10)
+        density=device.shell('wm density',timeout=10)
+        value=re.search(r'Override density:\s*(\d+)',density)
+        require((int(value.group(1)) if value else None)==original,'density restore differs')
+        require(device.shell('settings get system font_scale',timeout=10).strip()==font,'font-scale restore differs')
+        ui_changed=False
     remote='/data/local/tmp/'+a.run_id
     cleanup={'errors':[],'deviceDataClear':False,'originalsUntouchedByController':True}
     def interrupted(*_):raise InterruptedError('bounded owned provider gate interrupted')
@@ -82,6 +107,7 @@ def main():
         nonlocal pull
         pull+=1
         paths=[f'files/provider-integration/{a.run_id}',f'files/provider-integration/{a.run_id}-driver']
+        if progressive:paths.append(f'files/player-ui-captures/{a.run_id}')
         if owned:paths.append(f'files/episodes/{owned}')
         script='set --; '+''.join(f'if test -d {shlex.quote(x)}; then set -- "$@" {shlex.quote(x)}; fi; ' for x in paths)+'if test "$#" -gt 0; then tar -cf - "$@"; else printf NO_RECEIPTS; fi'
         result=device.run(['exec-out',f'run-as {APP} sh -c '+shlex.quote(script)],timeout=90,binary=True)
@@ -158,6 +184,10 @@ def main():
         try:
             guard.identity();save('installed-before.json',installed(c['priorInstalled']));health('health-before')
             before=stable('before');state=rows(before);safe_close(state,None)
+            if progressive:
+                audio_state=device.shell('dumpsys audio',timeout=15)
+                (out/'private-audio-state-before.txt').write_text(audio_state)
+                require_quiet_audio(audio_state)
             ref=next(r for r in state['script_revisions'] if r['id']==REFERENCE['revision'])
             chapter=next(r for r in state['chapters'] if r['revisionId']==ref['id'] and r['stableChapterId']==REFERENCE['chapter'])
             require(ref['episodeId']==REFERENCE['episode'] and ref['contentHash']==REFERENCE['revisionSha256'] and hashlib.sha256(chapter['text'].encode()).hexdigest()==REFERENCE['textSha256'],'real reference changed')
@@ -180,6 +210,28 @@ def main():
             for item in [{'path':'manifest.json','sha256':c['providerPack']['manifestSha256']},*manifest['files']]:
                 got=device.shell(f'run-as {APP} sha256sum '+shlex.quote(destination+'/'+item['path']),timeout=30).split()[0];require(got==item['sha256'],'device provider pack mismatch')
             pre=stable('before-instrument');require(pre==before,'database changed during update');guard.idle()
+            if progressive:
+                density=device.shell('wm density',timeout=10);size=device.shell('wm size',timeout=10)
+                override=re.search(r'Override density:\s*(\d+)',density)
+                effective_size=re.search(r'Override size:\s*(\d+)x(\d+)',size) or re.search(r'Physical size:\s*(\d+)x(\d+)',size)
+                require(effective_size is not None,'display size unavailable')
+                ui_settings={'densityOverride':int(override.group(1)) if override else None,'fontScale':device.shell('settings get system font_scale',timeout=10).strip()}
+                save('ui-settings-before.json',ui_settings)
+                for profile in ['default','narrow-font2']:
+                    if profile=='narrow-font2':
+                        ui_changed=True
+                        device.shell('wm density '+str(round(int(effective_size.group(1))*160/320)),timeout=10)
+                        device.shell('settings put system font_scale 2.0',timeout=10)
+                    synthetic=device.run(['shell','am','instrument','-w','-e','class',
+                        'dev.vibevoice.podcast.ui.PersistentPlayerRegressionTest,dev.vibevoice.podcast.ui.ProgressivePlayerRegressionTest',
+                        '-e','diagnosticRun',a.run_id,'-e','profile',profile,
+                        TEST_APP+'/androidx.test.runner.AndroidJUnitRunner'],timeout=180)
+                    require(re.search(r'OK \(4 tests\)',synthetic) is not None and 'FAILURES!!!' not in synthetic,'synthetic '+profile+' playback regression failed; no model run')
+                    synthetic_state=rows(stable('after-synthetic-'+profile))
+                    require(synthetic_state==rows(before),'synthetic tests changed user database')
+                    stop(synthetic_state,None)
+                    save('synthetic-playback-'+profile+'.json',{'tests':4,'profile':profile,'status':'passed','modelCalls':0,'realNeuralRun':False})
+                restore_ui()
             health('health-before-inference',True)
             command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
                 '-e','providerIntegration','copied-real-chapter-v1','-e','diagnosticRun',a.run_id,
@@ -187,6 +239,7 @@ def main():
                 '-e','originalEpisodeId',REFERENCE['episode'],'-e','originalRevisionId',REFERENCE['revision'],
                 '-e','originalRevisionSha256',REFERENCE['revisionSha256'],'-e','originalChapterId',REFERENCE['chapter'],
                 '-e','chapterSha256',REFERENCE['textSha256'],TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
+            if progressive:command[-1:-1]=['-e','progressivePlayback','true']
             launched=True;device.run(command,timeout=660);ownership();receipts()
         except BaseException as error:save('private-controller-failure.json',{'error':repr(error),'launched':launched})
         finally:
@@ -194,7 +247,8 @@ def main():
             if setup:
                 actions=[]
                 if launched:actions += [('minimal-owner',ownership),('logs',log),('receipts-before',receipts)]
-                actions += [('safe-closure',closure),('control-disarm',disarm)]
+                elif progressive:actions += [('synthetic-receipts',receipts)]
+                actions += [('safe-closure',closure),('control-disarm',disarm),('ui-settings-restore',restore_ui)]
                 if launched:actions += [('receipts-after',receipts)]
                 actions += [('files-after',files_after),('db-after',db_after),('preservation',preservation),('health-after',lambda:health('health-after')),('remote-cleanup',remove_remote)]
                 independent_cleanup(actions,cleanup['errors'])

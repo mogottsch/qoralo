@@ -147,7 +147,7 @@ fun ReviewScreen(
                         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text("Provider speech pipeline", style = MaterialTheme.typography.titleSmall)
                             Text(capacity.message, style = MaterialTheme.typography.bodyMedium)
-                            Text("Sentences are grouped toward 300 characters before normalization, with 0.3-second gaps between speech segments. Your script is not rewritten. Episode playback becomes available when generation finishes.", style = MaterialTheme.typography.bodySmall)
+                            Text("Sentences are grouped toward 300 characters before normalization, with 0.3-second gaps between speech segments. Your script is not rewritten. Listening becomes available after the first complete speech segment; full-episode export waits for completion.", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }

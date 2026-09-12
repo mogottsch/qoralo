@@ -2,6 +2,7 @@ package dev.vibevoice.podcast.e2e
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.room.withTransaction
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -35,11 +36,14 @@ class ProviderAppIntegrationTest {
         assumeTrue(args.getString("providerIntegration") == "copied-real-chapter-v1")
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext;val app = context.applicationContext as PodcastApplication
+        val progressive = args.getString("progressivePlayback") == "true"
         val run = requireNotNull(args.getString("diagnosticRun"));require(Regex("provider-app-[a-z0-9-]{1,48}").matches(run))
         val parent = File(context.filesDir, "provider-integration").apply { mkdirs() }
         val root = File(parent, "$run-driver");require(root.mkdir())
         fun json(name: String, value: JSONObject) = ShortProductDiagnostics.json(File(root, name), value)
         var scenario: ActivityScenario<MainActivity>? = null
+        var retainedEpisodeId: String? = null
+        var audioDeadlineNs: Long? = null
         try {
             val appHash = app.artifacts.sha256(File(context.applicationInfo.sourceDir))
             val testHash = app.artifacts.sha256(File(instrumentation.context.applicationInfo.sourceDir))
@@ -101,6 +105,7 @@ class ProviderAppIntegrationTest {
             require(capability.chapters.single().segmentCount == 15)
             val control = JSONObject().put("runId", run).put("episodeId", id).put("revisionId", newRevision)
                 .put("revisionSha256", stored.sha256).put("appApkSha256", appHash).put("packSha256", ProviderAudioPlan.PACK_SHA256)
+                .put("progressivePlayback", progressive).put("mutePlayer", progressive)
             val controlBytes = (control.toString(2) + "\n").toByteArray()
             File(parent, "active.json").writeBytes(controlBytes);File(root, "control-original.json").writeBytes(controlBytes)
             scenario?.close();scenario = ActivityScenario.launch(MainActivity::class.java)
@@ -108,6 +113,9 @@ class ProviderAppIntegrationTest {
             rule.onNodeWithText(title).performClick()
             rule.waitUntil(15_000) { rule.onAllNodes(hasText("Provider speech pipeline")).fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Lock script & create audio").assertIsEnabled().performClick()
+            retainedEpisodeId=id
+            val lockRequestedNs = System.nanoTime()
+            audioDeadlineNs=lockRequestedNs+600_000_000_000L
             rule.onNodeWithText("Lock & create").performClick()
             var audio: GenerationJobEntity? = null
             rule.waitUntil(15_000) { audio = db { app.repository.latestJob(id) }; audio != null }
@@ -115,17 +123,129 @@ class ProviderAppIntegrationTest {
             require(audio!!.kind == JobKind.AUDIO && Regex("[a-f0-9]{64}").matches(audioId))
             json("audio-job.json", JSONObject().put("jobId", audioId).put("episodeId", id).put("revisionId", newRevision)
                 .put("revisionSha256", stored.sha256).put("kind", audio!!.kind).put("logicalChapters", 1).put("providerSegments", 15))
-            val deadline = System.nanoTime() + 600_000_000_000L
+            var observedPlayerId: Int? = null
+            var pausedPosition: Long? = null
+            fun playerEvents(): List<JSONObject> {
+                val file = File(parent, "$run/player-events.jsonl")
+                if (!file.isFile) return emptyList()
+                return file.readLines().mapNotNull { line -> runCatching { JSONObject(line) }.getOrNull() }
+            }
+            if (progressive) {
+                rule.waitUntil(90_000) { rule.onAllNodes(hasText("Listen")).fetchSemanticsNodes().isNotEmpty() }
+                val firstListenObservedNs = System.nanoTime()
+                require(db { app.repository.latestJob(id) }?.status == JobStatus.RUNNING)
+                rule.onNodeWithText("Listen").performScrollTo().performClick()
+                rule.waitUntil(15_000) { rule.onAllNodes(hasContentDescription("Play")).fetchSemanticsNodes().isNotEmpty() && playerEvents().isNotEmpty() }
+                val beforePlay = playerEvents().last()
+                require(beforePlay.getBoolean("muted") && !beforePlay.getBoolean("playing") && !beforePlay.getBoolean("wantsPlayback") && beforePlay.getLong("absolutePositionMs") == 0L)
+                val playRequestedNs = System.nanoTime()
+                rule.onNodeWithContentDescription("Play", useUnmergedTree = true).performClick()
+                rule.waitUntil(15_000) { playerEvents().any { it.getBoolean("playing") && it.getLong("absolutePositionMs") >= 1000 } }
+                val advanced = playerEvents().first { it.getBoolean("playing") && it.getLong("absolutePositionMs") >= 1000 }
+                require(advanced.getBoolean("muted") && db { app.repository.latestJob(id) }?.status == JobStatus.RUNNING && db { app.repository.episode(id) }.phase != EpisodePhase.FROZEN_READY)
+                val firstAdvancement = playerEvents().first { it.getBoolean("playing") && it.getLong("absolutePositionMs") > 0 }
+                observedPlayerId = advanced.getInt("playerIdentity")
+                json("progressive-before-ready.json", JSONObject().put("lockRequestedNs", lockRequestedNs).put("firstListenObservedNs", firstListenObservedNs)
+                    .put("playRequestedNs", playRequestedNs).put("firstObservedAdvancement", firstAdvancement).put("sustainedAdvancement", advanced)
+                    .put("listenAvailableBeforeGenerationComplete", true).put("playerAdvancedBeforeGenerationComplete", true)
+                    .put("firstListenObservedMsFromLock", (firstListenObservedNs-lockRequestedNs)/1_000_000.0)
+                    .put("firstObservedPlayerAdvanceMsFromLock", (firstAdvancement.getLong("monotonicNs")-lockRequestedNs)/1_000_000.0)
+                    .put("audiblePlaybackMeasured", false).put("muted", true))
+                fun capture(name: String) {
+                    fun owner(): String = android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand("dumpsys window windows")).bufferedReader().use { reader ->
+                        reader.readLines().single { it.contains("mCurrentFocus=") }
+                    }
+                    val beforeOwner=owner();require(beforeOwner.contains(context.packageName + "/"))
+                    val bitmap=requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+                    File(root,"private-$name.png").outputStream().use { require(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)) };bitmap.recycle()
+                    val afterOwner=owner();require(beforeOwner==afterOwner)
+                    json("$name-state.json",JSONObject().put("episodeId",id).put("jobId",audioId).put("package",context.packageName)
+                        .put("windowOwnerBefore",beforeOwner).put("windowOwnerAfter",afterOwner)
+                        .put("player",playerEvents().last()).put("phase",db { app.repository.episode(id) }.phase))
+                }
+                fun atTail(event: JSONObject?) = event != null && event.getBoolean("wantsPlayback") && !event.getBoolean("playing") &&
+                    event.getInt("playbackState")==4 && event.getLong("absolutePositionMs")>=event.getLong("availableMs")-2
+                fun seekAvailableFrontier(): JSONObject {
+                    repeat(8) {
+                        if (!atTail(playerEvents().lastOrNull())) {
+                            val forward=rule.onNodeWithContentDescription("Forward 15 seconds",useUnmergedTree=true)
+                            if (!forward.fetchSemanticsNode().config.contains(SemanticsProperties.Disabled)) forward.performClick()
+                            Thread.sleep(150)
+                        }
+                    }
+                    rule.waitUntil(15_000) { atTail(playerEvents().lastOrNull()) }
+                    return playerEvents().last()
+                }
+                val firstTail=seekAvailableFrontier();json("live-tail-before-pause.json",firstTail)
+                capture("live-tail")
+                rule.onNodeWithContentDescription("Pause", useUnmergedTree = true).performClick()
+                rule.waitUntil(10_000) { playerEvents().lastOrNull()?.let { !it.getBoolean("playing") && !it.getBoolean("wantsPlayback") } == true }
+                pausedPosition = playerEvents().last().getLong("absolutePositionMs")
+                rule.waitUntil(30_000) { (playerEvents().lastOrNull()?.getLong("availableMs") ?: 0L) > firstTail.getLong("availableMs") }
+                val afterArrival = playerEvents().last()
+                require(!afterArrival.getBoolean("playing") && !afterArrival.getBoolean("wantsPlayback") && kotlin.math.abs(afterArrival.getLong("absolutePositionMs")-requireNotNull(pausedPosition)) <= 50)
+                json("pause-survives-new-audio.json", afterArrival)
+                rule.onNodeWithContentDescription("Play",useUnmergedTree=true).performClick()
+                rule.waitUntil(10_000) { playerEvents().lastOrNull()?.let { it.getBoolean("playing") && it.getLong("absolutePositionMs")>firstTail.getLong("availableMs")+350 } == true }
+                val secondTail=seekAvailableFrontier();json("live-tail-before-auto-resume.json",secondTail)
+                rule.waitUntil(30_000) { playerEvents().lastOrNull()?.let { it.getBoolean("playing") && it.getLong("absolutePositionMs")>secondTail.getLong("availableMs")+350 } == true }
+                val resumed=playerEvents().last();require(resumed.getInt("playerIdentity")==observedPlayerId)
+                json("live-tail-auto-resumed.json",resumed)
+                rule.onNodeWithContentDescription("Minimize player").performClick()
+                rule.onNodeWithContentDescription("Open player: $title").assertIsDisplayed()
+                rule.onNodeWithText("Settings").performClick()
+                val beforeNavigation=playerEvents().last().getLong("absolutePositionMs")
+                rule.waitUntil(10_000) { (playerEvents().lastOrNull()?.getLong("absolutePositionMs") ?: 0L) > beforeNavigation+500 }
+                capture("mini-settings")
+                rule.onNodeWithContentDescription("Open player: $title").performClick()
+                rule.onNodeWithText("1.0× Speed").performClick()
+                rule.waitUntil(10_000) { playerEvents().lastOrNull()?.optDouble("speed")==1.25 }
+                require(playerEvents().last().getInt("playerIdentity")==observedPlayerId)
+                json("mini-navigation-reopen-speed.json",playerEvents().last())
+                rule.onNodeWithText("Transcript").performClick()
+                rule.waitUntil(10_000) { rule.onAllNodes(hasTestTag("Transcript passages")).fetchSemanticsNodes().isNotEmpty() }
+                rule.onNodeWithTag("Transcript passages").performTouchInput { swipeUp() }
+                rule.onNodeWithText("Follow playback").assertIsDisplayed()
+                val scrollBefore=rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
+                val itemBefore=playerEvents().last().getInt("mediaItemIndex")
+                rule.waitUntil(25_000) { (playerEvents().lastOrNull()?.getInt("mediaItemIndex") ?: 0) > itemBefore }
+                val scrollAfter=rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
+                require(kotlin.math.abs(scrollBefore-scrollAfter)<0.02f)
+                capture("transcript-manual")
+                json("manual-transcript-kept-position.json",JSONObject().put("before",scrollBefore).put("after",scrollAfter).put("passageAdvanced",true))
+                rule.onNodeWithText("Follow playback").performClick()
+                rule.waitUntil(5000) { rule.onAllNodes(hasText("Current passage")).fetchSemanticsNodes().isNotEmpty() }
+                capture("transcript-following")
+                rule.onNodeWithContentDescription("Close transcript").performClick()
+                require(playerEvents().last().getBoolean("wantsPlayback"))
+            }
+            var lastLivePosition=if(progressive) playerEvents().last().getLong("absolutePositionMs") else 0L
+            val deadline = requireNotNull(audioDeadlineNs)
             var finished: EpisodeEntity
             while (true) {
                 finished = db { app.repository.episode(id) }
                 val current = requireNotNull(db { app.repository.latestJob(id) })
                 require(current.id == audioId)
+                if(progressive) {
+                    val event=playerEvents().last()
+                    require(event.getInt("playerIdentity")==observedPlayerId && event.getLong("absolutePositionMs")>=lastLivePosition)
+                    lastLivePosition=event.getLong("absolutePositionMs")
+                }
                 if (finished.phase == EpisodePhase.FROZEN_READY || current.status == JobStatus.FAILED) break
                 require(System.nanoTime() < deadline) { "Provider AUDIO terminal-state deadline" }
                 Thread.sleep(500)
             }
             require(finished.phase == EpisodePhase.FROZEN_READY) { "Provider AUDIO failed; preserve exact private receipts" }
+            if (progressive) {
+                val atReady=lastLivePosition
+                rule.waitUntil(15_000) { playerEvents().lastOrNull()?.let { it.getLong("availableMs")==finished.durationMs && it.getBoolean("playing") && it.getLong("absolutePositionMs")>atReady+300 } == true }
+                val last = playerEvents().last()
+                require(last.getInt("playerIdentity") == observedPlayerId && last.getBoolean("playing") && last.getBoolean("wantsPlayback"))
+                json("finalization-same-player.json", last.put("samePlayerNoReset", true).put("generationComplete", true).put("playingAcrossReady",true).put("positionObservedAtReady",atReady))
+                rule.onNodeWithContentDescription("Pause",useUnmergedTree=true).performClick()
+                rule.waitUntil(10_000) { playerEvents().lastOrNull()?.let { !it.getBoolean("playing") && !it.getBoolean("wantsPlayback") } == true }
+                json("final-player-paused.json",playerEvents().last())
+            }
             val final = app.repository.resolveArtifact(requireNotNull(finished.finalAudioPath))
             val metadata = WavInspector.inspectSupertonicOutput(final)
             require(metadata.sha256 == finished.finalAudioSha256)
@@ -138,9 +258,26 @@ class ProviderAppIntegrationTest {
                 .put("finalAudioPath", finished.finalAudioPath).put("wavSha256", metadata.sha256).put("wavBytes", final.length())
                 .put("frames", metadata.frameCount).put("sampleRateHz", metadata.sampleRateHz).put("providerSegments", 15)
                 .put("newScriptModelCalls", 0).put("newAudioJobs", 1).put("originalEpisodeUnchanged", true)
-                .put("playOrExportRequested", false).put("listeningReview", "not_reviewed"))
+                .put("playRequested", progressive).put("mutedPlayer", progressive).put("exportRequested", false)
+                .put("progressivePlaybackVerified", progressive).put("listeningReview", "not_reviewed"))
         } catch (error: Throwable) {
             runCatching { json("private-driver-failure.json", JSONObject().put("error", error.stackTraceToString())) }
+            // A UI assertion is not a reason to throw away the one already-requested neural run.
+            // Close only our player, retain the first failure, and await this same owned job's
+            // terminal result within the original bounded deadline. Never queue a retry.
+            runCatching { scenario?.close();scenario=null }
+            if(progressive) runCatching {
+                val owned=retainedEpisodeId ?: return@runCatching
+                val until=audioDeadlineNs ?: return@runCatching
+                while(System.nanoTime()<until) {
+                    val job=db { app.repository.latestJob(owned) }
+                    if(job==null || job.kind!=JobKind.AUDIO || job.status !in listOf(JobStatus.QUEUED,JobStatus.RUNNING)) {
+                        json("audio-retained-after-ui-failure.json",JSONObject().put("episodeId",owned).put("jobId",job?.id).put("jobStatus",job?.status)
+                            .put("phase",db { app.repository.episode(owned) }.phase).put("newModelRetry",false));break
+                    }
+                    Thread.sleep(500)
+                }
+            }
             throw AssertionError("Provider integration stopped; inspect private originals; no automatic model retry")
         } finally { runCatching { scenario?.close() } }
     }

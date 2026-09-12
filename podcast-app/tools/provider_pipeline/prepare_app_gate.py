@@ -10,7 +10,8 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser();p.add_argument('--source-commit',required=True);p.add_argument('--work',type=Path,required=True)
     p.add_argument('--native-build',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');a=p.parse_args()
+    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');p.add_argument('--progressive-playback',action='store_true');a=p.parse_args()
+    if a.publication_recovery and a.progressive_playback:raise ValueError('Different validation scopes')
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);build=a.work.resolve()/'build-source/podcast-app'
     commit=subprocess.check_output(['git','rev-parse',a.source_commit],cwd=ROOT,text=True).strip()
     names=subprocess.check_output(['git','ls-tree','-r','--name-only',commit,'--','podcast-app/app/src','podcast-app/app/schemas','podcast-app/config','podcast-app/app/build.gradle.kts','podcast-app/build.gradle.kts','podcast-app/settings.gradle.kts','podcast-app/gradle.properties'],cwd=ROOT,text=True).splitlines()
@@ -78,9 +79,12 @@ def main():
         'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{ 'dev.vibevoice.podcast.internal':prior['app']['sha256'],'dev.vibevoice.podcast.internal.test':prior['test']['sha256']},
         'providerPack':{'root':str(pack),'manifestSha256':binding['manifestSha256'],'bytes':sum(x['bytes'] for x in manifest['files'])},
         'scope':'new non-neural publication attempt for exact already-completed owned chapter; original failed job/plan/WAV and all other user data preserved' if a.publication_recovery else 'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
+        'progressivePlayback':a.progressive_playback,
+        'syntheticPlaybackTestsBeforeModels':8 if a.progressive_playback else 0,
+        'playbackScope':'explicit muted Play on owned episode only' if a.progressive_playback else 'no Play requested',
         'instrumentationSeconds':120 if a.publication_recovery else 660,'driverAudioPollingSeconds':90 if a.publication_recovery else 600,'genericTextRange':[1,320],'genericLatentRange':[1,512],
         'steps':8,'speedHundredths':105,'gapFrames':13230,'frontend':'supertonic-py1.3.1 raw sentence grouping then globalUnicode14NFKD',
-        'noCpuFallback':True,'noStreamingPlaybackClaim':True,'legacyVectorStrictNumericalGate':'failed; preserved',
+        'noCpuFallback':True,'noStreamingPlaybackClaim':not a.progressive_playback,'legacyVectorStrictNumericalGate':'failed; preserved',
         'newAppWaveListening':'not_reviewed','independentReviewer':None,'hostTests':counts}
     for key in ['app','test']:
         file=out/(key+'.apk');value[key]={'path':str(file),'sha256':digest(file),'bytes':file.stat().st_size}

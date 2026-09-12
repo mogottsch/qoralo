@@ -7,12 +7,18 @@ import unittest
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(ROOT/'podcast-app/tools'))
-from run_app_gate import safe_close,parse_health
+from run_app_gate import safe_close,parse_health,require_quiet_audio
 from duration_phone_guard import GuardError
 from run_publication_recovery import compare_recovery,SCOPE
 from short_product_preservation import TABLES
 
 class ProviderPipelineTests(unittest.TestCase):
+    def test_current_audio_guard_ignores_history_but_preserves_active_playback_or_calls(self):
+        quiet='PlaybackActivityMonitor dump time\n  players:\n    ID:4 -- type:AudioTrack -- u/pid:123/456 -- state:paused\n  ducked players:\n  history 12:00 ID:3 -- state:started\n'
+        require_quiet_audio(quiet)
+        with self.assertRaises(GuardError):require_quiet_audio(quiet.replace('state:paused','state:started'))
+        with self.assertRaises(GuardError):require_quiet_audio(quiet+'  Actual mode = MODE_IN_COMMUNICATION\n')
+        with self.assertRaises(GuardError):require_quiet_audio('unreadable')
     def test_real_format_health_fields_parse_without_weakening_resource_limits(self):
         self.assertEqual({'availableMemoryKiB':4321000,'batteryTemperatureC':28.3},
             parse_health('MemTotal:       10240000 kB\nMemAvailable:    4321000 kB\n','Current Battery Service state:\n  temperature: 283\n'))

@@ -27,7 +27,8 @@ interface LlmEngine : Closeable {
     suspend fun editScript(requestJson: String): String
 }
 
-data class TtsSegmentProgress(val completed: Int, val total: Int, val completedFrames: Long)
+data class TtsSegmentProgress(val completed: Int, val total: Int, val completedFrames: Long,
+    val completedFile: File? = null, val completedMetadata: AudioMetadata? = null)
 
 interface TtsEngine : Closeable {
     val provenance: RuntimeProvenance?

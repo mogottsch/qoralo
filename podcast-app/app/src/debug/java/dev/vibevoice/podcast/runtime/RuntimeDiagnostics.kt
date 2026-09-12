@@ -53,8 +53,35 @@ internal object RuntimeDiagnostics {
     fun responseReturned(raw: String) = dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.responseReturned(raw)
     fun requestFailed(error: GemmaRequestException) = dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.failed(error)
     fun jobFailed(error: Throwable) = dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.jobFailed(error)
-    fun configurePlayer(episodeId: String, player: androidx.media3.exoplayer.ExoPlayer) =
+    private data class PlayerCapture(val episodeId: String, val attemptId: String, val file: File)
+    private val playerCaptures = java.util.WeakHashMap<androidx.media3.exoplayer.ExoPlayer, PlayerCapture>()
+    fun configurePlayer(context: android.content.Context, episodeId: String, attemptId: String?, player: androidx.media3.exoplayer.ExoPlayer) {
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.configurePlayer(episodeId, player)
+        runCatching {
+            val marker = File(context.filesDir, "provider-integration/active.json")
+            if (!marker.isFile || marker.length() !in 1..8192 || attemptId == null) return@runCatching
+            val control = JSONObject(marker.readText())
+            if (!control.optBoolean("progressivePlayback", false) || !control.optBoolean("mutePlayer", false) || control.getString("episodeId") != episodeId) return@runCatching
+            val run = control.getString("runId");require(Regex("provider-app-[a-z0-9-]{1,48}").matches(run))
+            val root = File(marker.parentFile, run);val identity = JSONObject(File(root, "job-identity.json").readText())
+            require(identity.getString("episodeId") == episodeId && identity.getString("jobId") == attemptId && identity.getString("appApkSha256") == control.getString("appApkSha256"))
+            player.volume = 0f // Owned test only; never changes device/global media volume or autoplay intent.
+            playerCaptures[player] = PlayerCapture(episodeId, attemptId, File(root, "player-events.jsonl"))
+        }
+    }
+    fun observePlayer(player: androidx.media3.exoplayer.ExoPlayer, episodeId: String, attemptId: String?, absolutePositionMs: Long, availableMs: Long, wantsPlayback: Boolean) {
+        val capture = playerCaptures[player] ?: return
+        if (capture.episodeId != episodeId || capture.attemptId != attemptId) return
+        runCatching {
+            if (capture.file.length() > 1_048_576) return@runCatching
+            val value = JSONObject().put("monotonicNs", System.nanoTime()).put("playerIdentity", System.identityHashCode(player))
+                .put("episodeId", episodeId).put("attemptId", attemptId).put("absolutePositionMs", absolutePositionMs).put("availableMs", availableMs)
+                .put("playing", player.isPlaying).put("wantsPlayback", wantsPlayback).put("playWhenReady", player.playWhenReady)
+                .put("playbackState", player.playbackState).put("mediaItemIndex", player.currentMediaItemIndex).put("muted", player.volume == 0f)
+                .put("speed", player.playbackParameters.speed)
+            FileOutputStream(capture.file, true).use { it.write((value.toString()+"\n").toByteArray());it.fd.sync() }
+        }
+    }
     fun beforeExport(context: android.content.Context, episodeId: String, uri: android.net.Uri) =
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beforeExport(context, episodeId, uri)
     fun exportFinished(episodeId: String, uri: android.net.Uri) =

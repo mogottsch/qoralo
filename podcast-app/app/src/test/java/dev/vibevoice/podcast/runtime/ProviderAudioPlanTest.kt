@@ -151,6 +151,11 @@ class ProviderAudioPlanTest {
         assertEquals(EpisodePhase.FROZEN_READY,ready.phase);assertEquals(metadata.sha256,ready.finalAudioSha256)
         assertEquals(failed,database.podcastDao().job(oldJob));assertEquals(locked.lockedAtEpochMs,ready.lockedAtEpochMs)
         assertEquals(metadata.sha256,ProviderPublication.hash(wave));assertEquals(JobStatus.COMPLETE,repository.latestJob(id)?.status)
+        val passages=repository.verifiedTranscriptPassages(id)
+        assertEquals(1,passages.size);assertEquals(text,text.substring(passages.single().sourceStartUtf16,passages.single().sourceEndUtf16))
+        assertEquals(0L,passages.single().speechStartFrame);assertEquals(3072L,passages.single().endFrame)
+        File(folder,"provider-receipt.json").appendText(" ")
+        assertTrue(repository.verifiedTranscriptPassages(id).isEmpty()) // Never guess timing after a receipt integrity mismatch.
     }
 
     @Test fun actualLocalPackPassesFullDataIntegrityAndDeclaresProviderRecipe() {

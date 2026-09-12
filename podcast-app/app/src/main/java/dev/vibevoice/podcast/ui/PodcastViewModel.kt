@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -38,8 +39,10 @@ class PodcastViewModel internal constructor(
 ) : AndroidViewModel(application) {
     constructor(application: Application, savedState: SavedStateHandle) : this(application, savedState, (application as PodcastApplication).repository)
     private val instructionWrites = Mutex()
-    private val selectedEpisodeId = MutableStateFlow<String?>(null)
-    private val explicitScreen = MutableStateFlow<AppScreen?>(null)
+    private val selectedEpisodeId = MutableStateFlow<String?>(savedState["livePlayer.episodeId"])
+    val selectedLiveJobId = MutableStateFlow<String?>(savedState["livePlayer.jobId"])
+    val selectedPlayerEpisodeId: StateFlow<String?> get() = selectedEpisodeId
+    private val explicitScreen = MutableStateFlow<AppScreen?>(if (selectedLiveJobId.value != null) AppScreen.Player else null)
     val agentSheetOpen = MutableStateFlow(false)
     val lockDialogOpen = MutableStateFlow(false)
     val transientMessage = MutableStateFlow<String?>(null)
@@ -63,23 +66,54 @@ class PodcastViewModel internal constructor(
     val playback = selectedEpisodeId.flatMapLatest { it?.let(repository::observePlayback) ?: flowOf(null) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
+    val liveAudio = combine(selectedEpisodeId, selectedLiveJobId) { id, jobId -> id to jobId }
+        .flatMapLatest { (id, jobId) -> if (id == null) flowOf(null) else repository.observeAudioAvailability(id, jobId) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    val livePlayback = liveAudio.map { value -> value?.let { repository.streamPlayback(it.binding) } }
+        .flowOn(Dispatchers.IO).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     val screen: StateFlow<AppScreen> = combine(episode, explicitScreen) { current, explicit ->
         explicit ?: screenForPersistedPhase(current?.phase)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppScreen.Library)
 
     fun newEpisode() = launchAction {
+        clearLiveSelection()
         selectedEpisodeId.value = repository.createEpisode()
         explicitScreen.value = AppScreen.Sources
     }
 
+    private fun clearLiveSelection() {
+        selectedLiveJobId.value = null
+        savedState.remove<String>("livePlayer.episodeId"); savedState.remove<String>("livePlayer.jobId")
+    }
+    fun openLivePlayer(binding: dev.vibevoice.podcast.runtime.AudioAttemptBinding) {
+        val available = liveAudio.value
+        if (selectedEpisodeId.value != binding.episodeId || available?.binding != binding || !available.canListen) return
+        selectedLiveJobId.value = binding.jobId
+        savedState["livePlayer.episodeId"] = binding.episodeId; savedState["livePlayer.jobId"] = binding.jobId
+        explicitScreen.value = AppScreen.Player
+    }
+    fun reopenPlayer(episodeId: String, liveBinding: dev.vibevoice.podcast.runtime.AudioAttemptBinding? = null) {
+        require(liveBinding == null || liveBinding.episodeId == episodeId)
+        selectedEpisodeId.value = episodeId
+        selectedLiveJobId.value = liveBinding?.jobId
+        if (liveBinding != null) {
+            savedState["livePlayer.episodeId"] = episodeId; savedState["livePlayer.jobId"] = liveBinding.jobId
+        } else {
+            savedState.remove<String>("livePlayer.episodeId"); savedState.remove<String>("livePlayer.jobId")
+        }
+        agentSheetOpen.value = false; lockDialogOpen.value = false
+        explicitScreen.value = AppScreen.Player
+    }
     fun selectEpisode(value: EpisodeEntity) {
+        clearLiveSelection()
         agentSheetOpen.value = false
         lockDialogOpen.value = false
         selectedEpisodeId.value = value.id
         explicitScreen.value = null
     }
 
-    fun showLibrary() { selectedEpisodeId.value = null; explicitScreen.value = AppScreen.Library }
+    fun showLibrary() { clearLiveSelection(); selectedEpisodeId.value = null; explicitScreen.value = AppScreen.Library }
     fun showSettings() { explicitScreen.value = AppScreen.Settings }
     fun showSources() { explicitScreen.value = AppScreen.Sources }
     fun showInstructions() { explicitScreen.value = AppScreen.Instructions }
@@ -161,6 +195,12 @@ class PodcastViewModel internal constructor(
     }
 
     // Bind writes to the episode being disposed/exported, not a selection that navigation can clear.
+    fun saveStreamPlayback(binding: dev.vibevoice.podcast.runtime.AudioAttemptBinding, positionMs: Long, speed: Float, transcriptVisible: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        try { repository.saveStreamPlayback(binding, positionMs, speed, transcriptVisible) }
+        catch (cancelled: CancellationException) { throw cancelled }
+        catch (_: Exception) { transientMessage.value = "Could not save this audio attempt's position" }
+    }
+
     fun savePlayback(episodeId: String, positionMs: Long, speed: Float, transcriptVisible: Boolean) = viewModelScope.launch {
         try { repository.savePlayback(episodeId, positionMs, speed, transcriptVisible) }
         catch (cancelled: CancellationException) { throw cancelled }
@@ -169,6 +209,7 @@ class PodcastViewModel internal constructor(
 
     fun exportEpisode(episodeId: String, destination: Uri) = launchAction {
         val current = repository.episode(episodeId)
+        require(current.phase == EpisodePhase.FROZEN_READY) { "Export is available only after the complete episode is ready" }
         val source = repository.resolveArtifact(requireNotNull(current.finalAudioPath))
         dev.vibevoice.podcast.runtime.RuntimeDiagnostics.beforeExport(getApplication(), episodeId, destination)
         val output = requireNotNull(getApplication<Application>().contentResolver.openOutputStream(destination, "w")) { "Could not open export destination" }

@@ -59,7 +59,7 @@ class ProviderQnnEngine(private val retainIntermediates: Boolean = false) : TtsE
             .put("rawChapterSha256", sha256(chapter.text.toByteArray(Charsets.UTF_8))).put("chapterId", chapter.id)
             .put("steps", 8).put("speedHundredths", 105).put("gapFrames", 13230).put("randomSeed", 20260911)
             .put("provider", "QNN_HTP").put("cpuFallback", false).put("profilingEnabled", false)
-            .put("segments", records).put("elapsedMs", (System.nanoTime() - started) / 1_000_000.0)
+            .put("segments", records).put("startedMonotonicNs", started).put("elapsedMs", (System.nanoTime() - started) / 1_000_000.0)
         try {
             ProviderNative.beginChapter(handle)
             var completedFrames = 0L
@@ -82,7 +82,7 @@ class ProviderQnnEngine(private val retainIntermediates: Boolean = false) : TtsE
                 File(scratch, "progress.json").writeText(receipt("rendering").toString(2))
                 pieces += file to metadata
                 completedFrames += metadata.frameCount + if (i > 0) 13230 else 0
-                onProgress(TtsSegmentProgress(i + 1, segments.size, completedFrames))
+                onProgress(TtsSegmentProgress(i + 1, segments.size, completedFrames, file, metadata))
             }
             ProviderWaveAssembly.assemble(pieces, temp, requireNotNull(config.providerPipeline).gapFrames)
             val result = WavInspector.inspectSupertonicOutput(temp)

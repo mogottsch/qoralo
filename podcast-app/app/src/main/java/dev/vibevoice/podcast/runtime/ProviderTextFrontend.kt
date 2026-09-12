@@ -73,6 +73,26 @@ object ProviderTextFrontend {
         return output
     }
 
+    data class SourceSpan(val raw: String, val startUtf16: Int, val endUtf16: Int)
+    /** Source offsets in the immutable chapter, including its original internal whitespace. No normalization/timing guess. */
+    fun segmentSpans(text: String): List<SourceSpan> {
+        val positions = mutableListOf<Pair<Int, Int>>()
+        var offset = 0
+        text.codePoints().forEach { cp ->
+            val end = offset + Character.charCount(cp)
+            if (!isPythonSpace(cp)) positions += offset to end
+            offset = end
+        }
+        var cursor = 0
+        return segmentRaw(text).map { raw ->
+            val count = raw.codePoints().toArray().count { !isPythonSpace(it) }
+            require(count > 0 && cursor + count <= positions.size)
+            val span = SourceSpan(raw, positions[cursor].first, positions[cursor + count - 1].second)
+            cursor += count
+            span
+        }.also { check(cursor == positions.size) }
+    }
+
     private fun emoji(cp: Int): Boolean = cp in 0x1f600..0x1f64f || cp in 0x1f300..0x1f5ff || cp in 0x1f680..0x1f6ff ||
         cp in 0x1f700..0x1f77f || cp in 0x1f780..0x1f7ff || cp in 0x1f800..0x1f8ff || cp in 0x1f900..0x1f9ff ||
         cp in 0x1fa00..0x1fa6f || cp in 0x1fa70..0x1faff || cp in 0x2600..0x26ff || cp in 0x2700..0x27bf || cp in 0x1f1e6..0x1f1ff

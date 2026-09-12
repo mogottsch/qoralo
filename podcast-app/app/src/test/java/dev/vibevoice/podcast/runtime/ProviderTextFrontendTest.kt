@@ -22,6 +22,14 @@ class ProviderTextFrontendTest {
             assertEquals("normalization case $i", c.getString("normalized"), ProviderTextFrontend.normalize(raw))
             val chunks = c.getJSONArray("chunks")
             assertEquals("segmentation case $i", (0 until chunks.length()).map(chunks::getString), ProviderTextFrontend.segmentRaw(raw))
+            val spans=ProviderTextFrontend.segmentSpans(raw)
+            assertEquals(ProviderTextFrontend.segmentRaw(raw),spans.map { it.raw })
+            spans.forEachIndexed { n, span ->
+                assertTrue(span.startUtf16 in 0 until span.endUtf16 && span.endUtf16<=raw.length)
+                assertFalse(Character.isLowSurrogate(raw[span.startUtf16]))
+                assertFalse(Character.isHighSurrogate(raw[span.endUtf16-1]))
+                if(n>0) assertTrue(spans[n-1].endUtf16<=span.startUtf16)
+            }
             val valid = runCatching { ProviderTextFrontend.validateOriginal(raw, indexer) }.isSuccess
             assertEquals("character admission case $i", c.getBoolean("validOriginal"), valid)
             if (valid && chunks.length() > 0) {
@@ -34,6 +42,16 @@ class ProviderTextFrontendTest {
                 }
             }
         }
+    }
+    @Test fun passageOffsetsRetainOriginalWhitespaceAndSupplementaryCharacters() {
+        val first="😀 First.\t Second."
+        val second="word ".repeat(100).trim()+"."
+        val original=" \t$first\r\n\r\n$second  "
+        val spans=ProviderTextFrontend.segmentSpans(original)
+        assertEquals(2,spans.size)
+        assertEquals(first,original.substring(spans[0].startUtf16,spans[0].endUtf16))
+        assertEquals(second,original.substring(spans[1].startUtf16,spans[1].endUtf16))
+        assertTrue(spans[1].raw.codePointCount(0,spans[1].raw.length)>300)
     }
     @Test fun overlongSentencesStayWholeAndNormalizationDoesNotChooseBoundaries() {
         val sentence = "word ".repeat(100).trim()+"."
@@ -55,6 +73,8 @@ class ProviderTextFrontendTest {
         val prepared = ProviderTextFrontend.prepare(text.toString(Charsets.UTF_8), IntArray(indexerJson.length()) { indexerJson.getInt(it) })
         val manifest = JSONObject(File(bundle, "manifest.json").readText()).getJSONArray("chunks")
         assertEquals(15, prepared.size)
+        val spans=ProviderTextFrontend.segmentSpans(text.toString(Charsets.UTF_8))
+        assertEquals(prepared.map { it.raw },spans.map { it.raw })
         prepared.forEachIndexed { i, segment ->
             val expected = manifest.getJSONObject(i)
             assertEquals("raw chunk hash $i", expected.getString("raw_chunk_sha256"), hash(segment.raw.toByteArray()))
