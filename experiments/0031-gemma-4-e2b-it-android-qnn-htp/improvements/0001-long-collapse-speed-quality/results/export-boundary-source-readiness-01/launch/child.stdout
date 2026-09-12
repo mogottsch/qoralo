@@ -1,0 +1,37 @@
+{
+  "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/export-boundary-source-readiness-01",
+  "node_count": 9596,
+  "explicit_SRQ_nodes": 0,
+  "input_requant_codebook": {
+    "inputs_embeds": {
+      "requant_scale": 81.15119161593829,
+      "requant_offset_int32": 16574,
+      "conversion_valid_for_all_codes": true,
+      "unclamped_out_of_range_codes": [],
+      "output_code_min": 16574,
+      "output_code_max": 37267,
+      "max_abs_added_error": 0.0008041618001537465,
+      "boundary": "Error introduced by source-defined UINT8-to-UINT16 conversion only, excluding prior LUT quantization and native BF16 differences; not execution proof."
+    },
+    "per_layer_inputs": {
+      "requant_scale": 210.29760100243902,
+      "requant_offset_int32": 6012,
+      "conversion_valid_for_all_codes": true,
+      "unclamped_out_of_range_codes": [],
+      "output_code_min": 6012,
+      "output_code_max": 59637,
+      "max_abs_added_error": 0.0005895822199386558,
+      "boundary": "Error introduced by source-defined UINT8-to-UINT16 conversion only, excluding prior LUT quantization and native BF16 differences; not execution proof."
+    }
+  },
+  "saved_QNN_candidates": [],
+  "partial_logits": {
+    "marker_count": 2048,
+    "entries_per_head_tail": {
+      "(10, 10)": 2048
+    },
+    "complete_vocabulary_vector": false,
+    "boundary": "Bound sampler source emits first10 and last10 typed entries only; not a sampled-ID reconstruction or full-logit comparison."
+  },
+  "seconds": 0.8514145219996863
+}

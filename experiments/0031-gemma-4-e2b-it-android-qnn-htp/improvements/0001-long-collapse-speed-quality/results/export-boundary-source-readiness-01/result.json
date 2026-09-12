@@ -1,0 +1,493 @@
+{
+  "classification": "source_and_saved_evidence_readiness_only",
+  "adb_calls": 0,
+  "raw_model_tensor_capture": false,
+  "archived_export": {
+    "graph_sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0",
+    "producer_name": "pytorch",
+    "producer_version": "2.10.0+cu128",
+    "node_count": 9596,
+    "function_count": 0,
+    "op_counts": {
+      "Shape": 1,
+      "Squeeze": 212,
+      "MatMul": 561,
+      "Constant": 52,
+      "Mul": 2527,
+      "Reshape": 2,
+      "Concat": 361,
+      "Pow": 734,
+      "ReduceMean": 487,
+      "Add": 1308,
+      "Gather": 35,
+      "Unsqueeze": 176,
+      "Transpose": 762,
+      "Conv": 521,
+      "Sqrt": 310,
+      "Reciprocal": 310,
+      "Slice": 590,
+      "Sub": 295,
+      "Softmax": 280,
+      "Tanh": 71,
+      "Div": 1
+    },
+    "node_domains": {
+      "": 9596
+    },
+    "args": {
+      "checkpoint": "google/gemma-4-E2B-it-qat-mobile-transformers",
+      "num_samples": 20,
+      "precision": "w4a16",
+      "raw_text_calibration": false,
+      "use_seq_mse": true
+    },
+    "encoding_version": "1.0.0",
+    "quantizer_args": {
+      "activation_bitwidth": 16,
+      "dtype": "int",
+      "is_symmetric": true,
+      "param_bitwidth": 4,
+      "per_channel_quantization": true,
+      "quant_scheme": "min_max"
+    },
+    "encoding_histograms": {
+      "activation_encodings": {
+        "(16, 'INT')": 6194
+      },
+      "param_encodings": {
+        "(4, 'INT')": 522
+      }
+    }
+  },
+  "available_exporter_source": {
+    "revision": "5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5",
+    "tag": "v0.61.0",
+    "relevant_paths_clean_at_inspection": true,
+    "archive_producer_source_revision_proven": false,
+    "default_model": "google/gemma-4-E2B-it",
+    "loader_boundary": "deq_proj calls weight.float(), does not unpack packed QAT or use weight_scale/SRQ; embedding loader expects .weight. Do not instantiate it on the retained packed QAT checkpoint as an archive oracle."
+  },
+  "SRQ_boundary": {
+    "native_observed_calls": 552,
+    "native_calibrated_calls": 550,
+    "native_bits": 8,
+    "export_explicit_round_clip_QDQ_nodes": 0,
+    "export_uses_new_16bit_activation_encodings": true,
+    "direct_native_to_HTP_numerical_match": false
+  },
+  "input_boundary": {
+    "contracts": {
+      "inputs_embeds": {
+        "lut": {
+          "version": 1,
+          "type": "lut",
+          "lut-path": "./embedding_int8_lut.bin",
+          "size": 1536,
+          "datatype": "ufixed8",
+          "quant-param": {
+            "scale": 0.050521295210894414,
+            "offset": -170
+          }
+        },
+        "graph_grid": {
+          "scale": 0.0006225576507858932,
+          "offset": -30370
+        },
+        "all_256_codes": {
+          "requant_scale": 81.15119161593829,
+          "requant_offset_int32": 16574,
+          "conversion_valid_for_all_codes": true,
+          "unclamped_out_of_range_codes": [],
+          "output_code_min": 16574,
+          "output_code_max": 37267,
+          "max_abs_added_error": 0.0008041618001537465,
+          "boundary": "Error introduced by source-defined UINT8-to-UINT16 conversion only, excluding prior LUT quantization and native BF16 differences; not execution proof."
+        }
+      },
+      "per_layer_inputs": {
+        "lut": {
+          "version": 1,
+          "type": "lut",
+          "lut-path": "./embed_tokens_per_layer_int8_lut.bin",
+          "size": 8960,
+          "datatype": "ufixed8",
+          "quant-param": {
+            "scale": 0.1107082815731273,
+            "offset": -134
+          }
+        },
+        "graph_grid": {
+          "scale": 0.0005264362553134561,
+          "offset": -34192
+        },
+        "all_256_codes": {
+          "requant_scale": 210.29760100243902,
+          "requant_offset_int32": 6012,
+          "conversion_valid_for_all_codes": true,
+          "unclamped_out_of_range_codes": [],
+          "output_code_min": 6012,
+          "output_code_max": 59637,
+          "max_abs_added_error": 0.0005895822199386558,
+          "boundary": "Error introduced by source-defined UINT8-to-UINT16 conversion only, excluding prior LUT quantization and native BF16 differences; not execution proof."
+        }
+      }
+    },
+    "graph_IO_metadata": [
+      {
+        "id": 1,
+        "name": "inputs_embeds",
+        "type": "QNN_TENSOR_TYPE_APP_WRITE",
+        "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+        "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+        "rank": 3,
+        "dimensions": [
+          1,
+          1,
+          1536
+        ],
+        "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+        "quantizeParams": {
+          "definition": "QNN_DEFINITION_DEFINED",
+          "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+          "scaleOffset": {
+            "scale": 0.0006225576507858932,
+            "offset": -30370
+          }
+        }
+      },
+      {
+        "id": 19,
+        "name": "per_layer_inputs",
+        "type": "QNN_TENSOR_TYPE_APP_WRITE",
+        "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+        "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+        "rank": 4,
+        "dimensions": [
+          1,
+          1,
+          35,
+          256
+        ],
+        "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+        "quantizeParams": {
+          "definition": "QNN_DEFINITION_DEFINED",
+          "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+          "scaleOffset": {
+            "scale": 0.0005264362553134561,
+            "offset": -34192
+          }
+        }
+      },
+      {
+        "id": 10969,
+        "name": "logits",
+        "type": "QNN_TENSOR_TYPE_APP_READ",
+        "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+        "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+        "rank": 3,
+        "dimensions": [
+          1,
+          1,
+          262144
+        ],
+        "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+        "quantizeParams": {
+          "definition": "QNN_DEFINITION_DEFINED",
+          "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+          "scaleOffset": {
+            "scale": 0.0008891067700460553,
+            "offset": -31869
+          }
+        }
+      },
+      {
+        "id": 10985,
+        "name": "inputs_embeds",
+        "type": "QNN_TENSOR_TYPE_APP_WRITE",
+        "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+        "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+        "rank": 3,
+        "dimensions": [
+          1,
+          128,
+          1536
+        ],
+        "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+        "quantizeParams": {
+          "definition": "QNN_DEFINITION_DEFINED",
+          "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+          "scaleOffset": {
+            "scale": 0.0006225576507858932,
+            "offset": -30370
+          }
+        }
+      },
+      {
+        "id": 11003,
+        "name": "per_layer_inputs",
+        "type": "QNN_TENSOR_TYPE_APP_WRITE",
+        "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+        "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+        "rank": 4,
+        "dimensions": [
+          1,
+          128,
+          35,
+          256
+        ],
+        "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+        "quantizeParams": {
+          "definition": "QNN_DEFINITION_DEFINED",
+          "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+          "scaleOffset": {
+            "scale": 0.0005264362553134561,
+            "offset": -34192
+          }
+        }
+      },
+      {
+        "id": 21983,
+        "name": "logits",
+        "type": "QNN_TENSOR_TYPE_APP_READ",
+        "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+        "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+        "rank": 3,
+        "dimensions": [
+          1,
+          128,
+          262144
+        ],
+        "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+        "quantizeParams": {
+          "definition": "QNN_DEFINITION_DEFINED",
+          "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+          "scaleOffset": {
+            "scale": 0.0008891067700460553,
+            "offset": -31869
+          }
+        }
+      }
+    ],
+    "layout": "Main1536, PLE35x256=8960; raw token-identity PLE is blended with an in-graph normalized model projection, not pre-projected twice.",
+    "native_rounding_boundary": "Native scales/products/output are BF16; LUT authoring unpacks/scales in F32, folds sqrt1536/sqrt256, then global UINT8 quantization. Native bitwise equality not established.",
+    "Genie_padding_boundary": "Bound source copies real per-layer vectors first and EOS-fill for remaining AR slots; a generic left-padding helper is not a proven equivalent."
+  },
+  "saved_logit_inventory": {
+    "searched_roots": [
+      "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/phone-runs",
+      "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/campaign-runs",
+      "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/phone-return-runs",
+      "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/phone-return-long-runs",
+      "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-phone-long-runs",
+      "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-phone-long-runs"
+    ],
+    "files_examined_by_name": 3857,
+    "raw_logit_candidate_files": [],
+    "selected_trace_provider": {
+      "marker_count": 2048,
+      "entries_per_head_tail": {
+        "(10, 10)": 2048
+      },
+      "complete_vocabulary_vector": false,
+      "boundary": "Bound sampler source emits first10 and last10 typed entries only; not a sampled-ID reconstruction or full-logit comparison."
+    },
+    "selected_trace_payloads": [
+      {
+        "name": "exit-code.txt",
+        "bytes": 2
+      },
+      {
+        "name": "genie-verbose.log",
+        "bytes": 54111156
+      },
+      {
+        "name": "input-token-ids.txt",
+        "bytes": 10304
+      },
+      {
+        "name": "launcher.stderr",
+        "bytes": 0
+      },
+      {
+        "name": "launcher.stdout",
+        "bytes": 0
+      },
+      {
+        "name": "long-output.txt",
+        "bytes": 9933
+      },
+      {
+        "name": "long-profile.json",
+        "bytes": 1433
+      },
+      {
+        "name": "model.pid",
+        "bytes": 6
+      },
+      {
+        "name": "model.start",
+        "bytes": 10
+      },
+      {
+        "name": "runner.stderr",
+        "bytes": 150619
+      },
+      {
+        "name": "runner.stdout",
+        "bytes": 22035
+      },
+      {
+        "name": "setup-profile.json",
+        "bytes": 628
+      },
+      {
+        "name": "start.uptime",
+        "bytes": 8
+      },
+      {
+        "name": "watchdog.pid",
+        "bytes": 6
+      },
+      {
+        "name": "watchdog.start",
+        "bytes": 10
+      },
+      {
+        "name": "watchdog.stderr",
+        "bytes": 0
+      },
+      {
+        "name": "watchdog.stdout",
+        "bytes": 0
+      },
+      {
+        "name": "wrapper.pid",
+        "bytes": 6
+      },
+      {
+        "name": "wrapper.start",
+        "bytes": 10
+      }
+    ],
+    "full_native_reference_commit": "a10cab6ce8d57991f665542a2766b1d14a185227",
+    "QNN_complete_prefill_logits_found": false,
+    "scope": "Named retained QNN run roots and bound sampler evidence only; not a global filesystem proof. LiteRT selected callbacks are not full logits.",
+    "provider_log_binding": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-phone-long-runs/trace-long-20260911T150027Z-01/raw/device/genie-verbose.log",
+      "bytes": 54111156,
+      "sha256": "04706bff87c532f9122667da8bb445f44101322a72db07b0866631d92a129414"
+    }
+  },
+  "local_reference_dependency_presence": {
+    "onnxruntime_package": true,
+    "aimet_onnx_package": false,
+    "inference_session_created": false
+  },
+  "readiness": {
+    "matched_causal_comparison_ready": false,
+    "next_inference_authorized": false,
+    "next_smallest_gate": "Static full active-weight mapping plus exact external-input/PLE/LUT/requantization and cache/mask/RoPE ledger; then bind a same-export/same-effective-quantization reference before one paired final-prefill logit comparison.",
+    "reject_selected_ID_only_comparison": true,
+    "reject_float_ONNX_as_w4a16_equivalent": true,
+    "reject_new_precision_variant": true
+  },
+  "source_bindings": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/checkpoint/extracted/gemma_4_e2b_it_w4a16/args.json",
+      "bytes": 179,
+      "sha256": "5c136b4ddd7760953d0b7bccfd979f4d1a7a03de6669a21b413eacedaa4e065c"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/checkpoint/extracted/gemma_4_e2b_it_w4a16/config.json",
+      "bytes": 4954,
+      "sha256": "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/checkpoint/extracted/gemma_4_e2b_it_w4a16/model_dynamic.onnx",
+      "bytes": 20653219,
+      "sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/checkpoint/extracted/gemma_4_e2b_it_w4a16/model.encodings",
+      "bytes": 74795410,
+      "sha256": "254c439615e1c0a7b40fb0076c844cc3f9a5ec7ef0b93001077eec2adb228e9c"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/build_embedding_luts.py",
+      "bytes": 7454,
+      "sha256": "004025e145a345774fd62e99865cbb9529570f7fa051670fea1d17fa109bb6a0"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/integrations/gemma_quant.py",
+      "bytes": 11075,
+      "sha256": "9bf6d109dfc3540a46953f5b183af766edcf6a044529c12d7751db47ee71cc17"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/source-323f2434-01/extracted/transformers-323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/models/gemma4/modeling_gemma4.py",
+      "bytes": 124550,
+      "sha256": "3f6a049b83b79be651693db5a10f229a33e81812a01ced73470fee2b5eeac86f"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/value-precision-path-context-attempt-01/raw/compile-02/context-info.json",
+      "bytes": 190096,
+      "sha256": "141ca57c7434deb5e021c31a8fab31635845c3d0b37857bfa0762d55cbd70701"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/selected-id-long-20260911T143756Z-01/gemma4-e2b-htp-cl4096-greedy.json",
+      "bytes": 2771,
+      "sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/ai-hub-models-v0.61.0/src/qai_hub_models/models/_shared/gemma4/_utils.py",
+      "bytes": 11690,
+      "sha256": "c0467b868083073e4c3d86c6a57d72048e62ba02c63e0003ddda460fd9edd197"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/ai-hub-models-v0.61.0/src/qai_hub_models/models/_shared/gemma4/model.py",
+      "bytes": 114557,
+      "sha256": "1b0995b026ffff31892a69392b435603c88f7f2a4b9f1821a812a76c7fb7217b"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/ai-hub-models-v0.61.0/src/qai_hub_models/models/_shared/gemma4/model_adaptations.py",
+      "bytes": 26700,
+      "sha256": "995ebaf652c4a7741984d9dd14c289052b52e9ec18f57c82f05ba222b8fa9826"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/ai-hub-models-v0.61.0/src/qai_hub_models/models/_shared/gemma4/quantize.py",
+      "bytes": 20921,
+      "sha256": "bb6f974f915d89002ca4bab00249b1d58419c720a075ee6de3932f7ca7dd3c40"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/ai-hub-models-v0.61.0/src/qai_hub_models/models/gemma_4_e2b_it/model.py",
+      "bytes": 6658,
+      "sha256": "1d07ab745f376ad71002501c5e98c7129c16b3c23eaa20208c678e34dd24ce73"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/src/qualla/sampler.cpp",
+      "bytes": 15757,
+      "sha256": "2996f597a5034be64a7ec51d01073130718c5dbbf7f83a9f67eed3b1d1c933ba"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/src/qualla/dialog.cpp",
+      "bytes": 113159,
+      "sha256": "baa2ff5b37431160b3d6526e009846f80272b75922f8a2ee3de24b476e5f0746"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/src/qualla/include/qualla/dialog.hpp",
+      "bytes": 23857,
+      "sha256": "584a7cf64122f57360ab67c76b1b93abb90754016fae0bf381f03a43679fcc5b"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/src/qualla/encoders/text-encoders/LUT.cpp",
+      "bytes": 10241,
+      "sha256": "ff7a399f9c14fb20ba21495a2dc51f025d6f88a86148f85b7682ee38ae43bc0f"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-model.cpp",
+      "bytes": 330590,
+      "sha256": "59f71750b92f13dfa797bfad009ebe7b633ae450a7b8eec0ff011ef1e2287f65"
+    }
+  ],
+  "seconds": 0.8514145219996863,
+  "neural_model_instantiations_or_forward_calls": 0
+}
