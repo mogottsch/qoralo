@@ -37,11 +37,16 @@ def require_quiet_audio(dump):
         require(state.group(1).lower() not in ('started','2'),'existing active audio playback; preserve user listening')
     require(not re.search(r'^\s*(?:Actual mode|mMode|Audio mode|mode)\s*[:=]\s*MODE_IN_(?:CALL|COMMUNICATION)\b',dump,re.M|re.I),'active call/communication audio; preserve it')
 
+def admission_floor_kib(synthetic_only):
+    return (2048 if synthetic_only else 3584)*1024
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--candidate',type=Path,required=True);p.add_argument('--run-id',required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--execute',action='store_true');a=p.parse_args()
     c=json.loads(a.candidate.read_text());require(c['kind']=='provider-app-integration','wrong candidate')
     progressive=bool(c.get('progressivePlayback'))
+    synthetic_only=bool(c.get('syntheticOnly'))
+    require(not synthetic_only or progressive,'synthetic-only requires progressive validation')
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
     require(digest(Path(__file__))==c['controllerSha256'] and host_identity()['sha256']==c['hostGuardSha256'],'controller/guard drift')
     for key in ['app','test']:require(digest(Path(c[key]['path']))==c[key]['sha256'],'APK drift')
@@ -49,7 +54,7 @@ def main():
     require(digest(pack/'manifest.json')==c['providerPack']['manifestSha256'],'pack manifest drift')
     for f in manifest['files']:require((pack/f['path']).stat().st_size==f['bytes'] and digest(pack/f['path'])==f['sha256'],'pack file drift')
     if not a.execute:
-        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':660}));return
+        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'synthetic-only; no model entry allowed' if synthetic_only else 'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':360 if synthetic_only else 660}));return
     close_inherited_fds();os.umask(0o077);out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     device=Device('/home/moritz/Android/Sdk/platform-tools/adb','R5CW81PR8SY',out)
     guard=PhoneGuard(device,out,a.candidate,digest(a.candidate),host_identity()['sha256'])
@@ -68,7 +73,8 @@ def main():
         battery=device.shell('dumpsys battery',timeout=10)
         value=parse_health(memory,battery)
         save(label+'.json',value)
-        if enforce:require(value['availableMemoryKiB']>=3584*1024 and value['batteryTemperatureC']<42,'phone headroom/thermal boundary')
+        floor=admission_floor_kib(synthetic_only)
+        if enforce:require(value['availableMemoryKiB']>=floor and value['batteryTemperatureC']<42,'phone headroom/thermal boundary')
     def stop(state,owned):
         safe_close(state,owned)
         for package in (APP,TEST_APP):device.shell('am force-stop '+package,timeout=10)
@@ -232,6 +238,9 @@ def main():
                     stop(synthetic_state,None)
                     save('synthetic-playback-'+profile+'.json',{'tests':4,'profile':profile,'status':'passed','modelCalls':0,'realNeuralRun':False})
                 restore_ui()
+            if synthetic_only:
+                save('synthetic-only-result.json',{'status':'ui_tests_passed_not_neural_e2e','tests':8,'modelCalls':0,'modelConstructions':0,'newAudioJobs':0,'neuralStageEntered':False,'admissionFloorKiB':2048*1024})
+                return # finally performs preservation/settings/identity/cleanup; never fall through to AUDIO.
             health('health-before-inference',True)
             command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
                 '-e','providerIntegration','copied-real-chapter-v1','-e','diagnosticRun',a.run_id,

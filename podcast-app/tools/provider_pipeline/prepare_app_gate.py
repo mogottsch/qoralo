@@ -10,7 +10,8 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser();p.add_argument('--source-commit',required=True);p.add_argument('--work',type=Path,required=True)
     p.add_argument('--native-build',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');p.add_argument('--progressive-playback',action='store_true');a=p.parse_args()
+    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');p.add_argument('--progressive-playback',action='store_true');p.add_argument('--synthetic-only',action='store_true');a=p.parse_args()
+    if a.synthetic_only and not a.progressive_playback:raise ValueError('Synthetic-only requires progressive validation')
     if a.publication_recovery and a.progressive_playback:raise ValueError('Different validation scopes')
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);build=a.work.resolve()/'build-source/podcast-app'
     commit=subprocess.check_output(['git','rev-parse',a.source_commit],cwd=ROOT,text=True).strip()
@@ -78,13 +79,16 @@ def main():
     value={'kind':'provider-publication-recovery' if a.publication_recovery else 'provider-app-integration','sourceCommit':commit,'controllerSha256':digest(Path(__file__).with_name('run_publication_recovery.py' if a.publication_recovery else 'run_app_gate.py')),
         'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{ 'dev.vibevoice.podcast.internal':prior['app']['sha256'],'dev.vibevoice.podcast.internal.test':prior['test']['sha256']},
         'providerPack':{'root':str(pack),'manifestSha256':binding['manifestSha256'],'bytes':sum(x['bytes'] for x in manifest['files'])},
-        'scope':'new non-neural publication attempt for exact already-completed owned chapter; original failed job/plan/WAV and all other user data preserved' if a.publication_recovery else 'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
+        'scope':'preserving install and eight synthetic-only playback UI cases; zero model construction/calls/new AUDIO jobs; explicit return before neural entry' if a.synthetic_only else 'new non-neural publication attempt for exact already-completed owned chapter; original failed job/plan/WAV and all other user data preserved' if a.publication_recovery else 'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
         'progressivePlayback':a.progressive_playback,
+        'syntheticOnly':a.synthetic_only,
+        'syntheticAdmissionFloorKiB':2048*1024 if a.synthetic_only else 3584*1024,
+        'neuralAdmissionFloorKiB':3584*1024,
         'syntheticPlaybackTestsBeforeModels':8 if a.progressive_playback else 0,
         'playbackScope':'explicit muted Play on owned episode only' if a.progressive_playback else 'no Play requested',
-        'instrumentationSeconds':120 if a.publication_recovery else 660,'driverAudioPollingSeconds':90 if a.publication_recovery else 600,'genericTextRange':[1,320],'genericLatentRange':[1,512],
+        'instrumentationSeconds':360 if a.synthetic_only else 120 if a.publication_recovery else 660,'driverAudioPollingSeconds':90 if a.publication_recovery else 600,'genericTextRange':[1,320],'genericLatentRange':[1,512],
         'steps':8,'speedHundredths':105,'gapFrames':13230,'frontend':'supertonic-py1.3.1 raw sentence grouping then globalUnicode14NFKD',
-        'noCpuFallback':True,'noStreamingPlaybackClaim':not a.progressive_playback,'legacyVectorStrictNumericalGate':'failed; preserved',
+        'noCpuFallback':True,'noStreamingPlaybackClaim':a.synthetic_only or not a.progressive_playback,'legacyVectorStrictNumericalGate':'failed; preserved',
         'newAppWaveListening':'not_reviewed','independentReviewer':None,'hostTests':counts}
     for key in ['app','test']:
         file=out/(key+'.apk');value[key]={'path':str(file),'sha256':digest(file),'bytes':file.stat().st_size}

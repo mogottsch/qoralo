@@ -7,12 +7,23 @@ import unittest
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(ROOT/'podcast-app/tools'))
-from run_app_gate import safe_close,parse_health,require_quiet_audio
+from run_app_gate import safe_close,parse_health,require_quiet_audio,admission_floor_kib
 from duration_phone_guard import GuardError
 from run_publication_recovery import compare_recovery,SCOPE
 from short_product_preservation import TABLES
 
 class ProviderPipelineTests(unittest.TestCase):
+    def test_synthetic_only_has_lower_floor_and_explicit_return_before_neural_entry(self):
+        self.assertEqual(2048*1024,admission_floor_kib(True))
+        self.assertEqual(3584*1024,admission_floor_kib(False))
+        source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
+        boundary=source.index("            if synthetic_only:\n                save('synthetic-only-result.json'")
+        neural=source.index("            health('health-before-inference',True)")
+        self.assertIn('return # finally',source[boundary:neural])
+        for name in ['PersistentPlayerRegressionTest','ProgressivePlayerRegressionTest']:
+            test=(ROOT/f'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/{name}.kt').read_text()
+            for forbidden in ['ProviderQnnEngine(', 'ConfiguredTtsEngine(', 'ProviderNative.', 'GenerationService', 'NativeGemmaEngine(']:
+                self.assertNotIn(forbidden,test)
     def test_current_audio_guard_ignores_history_but_preserves_active_playback_or_calls(self):
         quiet='PlaybackActivityMonitor dump time\n  players:\n    ID:4 -- type:AudioTrack -- u/pid:123/456 -- state:paused\n  ducked players:\n  history 12:00 ID:3 -- state:started\n'
         require_quiet_audio(quiet)
