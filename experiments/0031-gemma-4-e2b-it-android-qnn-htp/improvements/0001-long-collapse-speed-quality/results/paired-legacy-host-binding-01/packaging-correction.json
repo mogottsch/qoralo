@@ -1,0 +1,10 @@
+{
+  "phase": "saved-only summary packaging after successful validation/tests",
+  "error": "KeyError: 'differences_from_host_formula'",
+  "correct_saved_key": "host_formula_comparison",
+  "source_and_validation_commit_created_before_summary": "ade71463e89ef5ae2e3f917d1ccdd7edfa42ca41",
+  "cause_of_partial_packaging_commit": "The shell command continued after the Python summary error; result.json and outer SHA256SUMS were not yet written.",
+  "correction": "Add summary and manifest in a separate additive commit; no history rewrite or rerun.",
+  "phone_or_model_execution_for_correction": false,
+  "host_reference_started_at_error": false
+}
