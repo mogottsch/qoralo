@@ -56,6 +56,7 @@ def main():
     if owned_guard:
         proof=c['guardValidation'];require(digest(Path(proof['path']))==proof['sha256'],'guard proof drift')
         validated=json.loads(Path(proof['path']).read_text())
+        require(validated.get('wholeStartFloorKiB')==3072*1024 and validated.get('preContextFloorKiB')==2648*1024 and validated.get('startupMemoryCreditKiB')==0,'guard phase-budget mismatch')
         require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'] and validated.get('managedUnwindBlockedTeardown') is True and validated.get('affectedUiCases')==8,'guard proof APK/teardown/UI mismatch')
     require(not synthetic_only or progressive,'synthetic-only requires progressive validation')
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')

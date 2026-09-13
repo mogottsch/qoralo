@@ -269,7 +269,8 @@ class ProviderAppIntegrationTest {
             require(File(parent, "$run/job-identity.json").isFile) { "Provider diagnostic retention was not bound" }
             if(ownedGuard) {
                 val guardIdentity=JSONObject(File(parent,"$run/guard-identity.json").readText())
-                require(guardIdentity.getString("planSha256")==audioId && guardIdentity.getLong("startFloorKiB")==3072L*1024)
+                require(guardIdentity.getString("planSha256")==audioId && guardIdentity.getLong("wholeStartFloorKiB")==3072L*1024)
+                require(guardIdentity.getLong("preContextFloorKiB")==2648L*1024 && guardIdentity.getLong("startupMemoryCreditKiB")==0L)
                 val events=File(parent,"$run/guard-events.jsonl").readLines().filter {it.isNotBlank()}.map(::JSONObject)
                 require(events.any {it.getString("event")=="sample"} && events.any {it.getString("event")=="closed"})
                 require(events.none {it.getString("event")=="stop_requested"})

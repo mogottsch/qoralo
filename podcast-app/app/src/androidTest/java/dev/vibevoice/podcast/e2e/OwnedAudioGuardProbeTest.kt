@@ -63,6 +63,8 @@ class OwnedAudioGuardProbeTest {
             File(root,"probe-result.json").writeText(JSONObject().put("status","owned_non_neural_guard_passed").put("appApkSha256",hash).put("testApkSha256",testHash).put("pid",pid).put("startTicks",identity.getLong("startTicks"))
                 .put("planSha256",identity.getString("planSha256")).put("stopToObservedProcessAbsentMs",latencyMs)
                 .put("modelCalls",0).put("modelConstructions",0).put("newUserAudioJobs",0).put("syntheticPrivateWorkerRows",1)
+                .put("wholeStartFloorKiB",dev.vibevoice.podcast.runtime.AudioGuardPolicy.WHOLE_START_KIB)
+                .put("preContextFloorKiB",dev.vibevoice.podcast.runtime.AudioGuardPolicy.PRE_CONTEXT_KIB).put("startupMemoryCreditKiB",0)
                 .put("failureDurableBeforeTermination",true).put("managedUnwindBlockedTeardown",true).put("inFlightQnnCancellationProven",false).toString(2))
         } catch(error:Throwable) {
             File(root,"private-test-failure.txt").writeText(error.stackTraceToString())

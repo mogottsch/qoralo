@@ -56,7 +56,8 @@ internal object OwnedAudioGuardAndroid {
         val identity=AudioGuardIdentity(binding,binding.jobId,Process.myPid(),startTicks(Process.myPid()))
         write(File(root,"guard-identity.json"),JSONObject().put("bindingSha256",ProgressiveAudio.bindingHash(binding))
             .put("planSha256",identity.planSha256).put("pid",identity.pid).put("pidStartTicks",identity.startTicks)
-            .put("appApkSha256",control.getString("appApkSha256")).put("startFloorKiB",AudioGuardPolicy.START_KIB)
+            .put("appApkSha256",control.getString("appApkSha256")).put("wholeStartFloorKiB",AudioGuardPolicy.WHOLE_START_KIB)
+            .put("preContextFloorKiB",AudioGuardPolicy.PRE_CONTEXT_KIB).put("startupMemoryCreditKiB",0)
             .put("stopFloorKiB",AudioGuardPolicy.STOP_KIB).put("emergencyReserveKiB",AudioGuardPolicy.EMERGENCY_KIB)
             .put("inFlightQnnCancelSupported",false))
         return OwnedAudioGuard(identity,

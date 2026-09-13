@@ -9,10 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class OwnedAudioGuardTest {
     private val id=AudioGuardIdentity(AudioAttemptBinding("e","a".repeat(64),"r","h","pack"),"a".repeat(64),42,1234)
-    private fun sample(mem:Long=AudioGuardPolicy.START_KIB,temp:Double=35.0,ns:Long=100)=AudioGuardSample(id,ns,mem,temp)
+    private fun sample(mem:Long=AudioGuardPolicy.PRE_CONTEXT_KIB,temp:Double=35.0,ns:Long=100)=AudioGuardSample(id,ns,mem,temp)
     @Test fun exactAdmissionAndProactiveThresholdsKeepEmergencyReserveSeparate() {
+        assertEquals(3072L*1024,AudioGuardPolicy.WHOLE_START_KIB)
+        assertEquals((2048L+600L)*1024,AudioGuardPolicy.PRE_CONTEXT_KIB)
         assertNull(AudioGuardPolicy.stop(id,sample(),100,true))
-        assertEquals(AudioGuardStop.ADMISSION,AudioGuardPolicy.stop(id,sample(AudioGuardPolicy.START_KIB-1),100,true))
+        assertEquals(AudioGuardStop.ADMISSION,AudioGuardPolicy.stop(id,sample(AudioGuardPolicy.PRE_CONTEXT_KIB-1),100,true))
+        assertNull(AudioGuardPolicy.stop(id,sample(3_045_628),100,true)) // No credit for the prior global drop; full budget+reserve recharged.
         assertNull(AudioGuardPolicy.stop(id,sample(AudioGuardPolicy.STOP_KIB),100,false))
         assertEquals(AudioGuardStop.LOW_MEMORY,AudioGuardPolicy.stop(id,sample(AudioGuardPolicy.STOP_KIB-1),100,false))
         assertEquals(AudioGuardStop.LOW_MEMORY,AudioGuardPolicy.stop(id,sample(AudioGuardPolicy.EMERGENCY_KIB),100,false))
