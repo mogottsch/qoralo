@@ -1,5 +1,7 @@
 # Installed provider HTP app — 2026-09-12
 
+**Historical installed milestone:** the later [progressive Player handoff](progressive-player-handoff-2026-09-13.md) identifies the current tested APK and its explicitly mixed genuine/replay coverage. The original synthesis/publication-recovery receipts below remain unchanged.
+
 ## Current app
 
 The provider pipeline is installed. The library contains **Provider HTP 0912t112924z**, a Ready210.184-second episode made from a labelled copy of the authentic487-word chapter. Original user podcasts, sources, revisions, chat history, playback and exports were not overwritten.
