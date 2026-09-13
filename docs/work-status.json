@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T13:00:30+00:00",
+  "updated_at": "2026-09-13T13:00:58+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -18,14 +18,14 @@
     },
     {
       "id": "app-progressive-playback",
-      "title": "App playback: buffering, mini-player & transcript",
-      "status": "reviewing",
-      "owner": "Janek / Jens",
-      "now": "Final mixed-coverage review complete: retained replay verified all remaining player, mini-player, navigation, speed, transcript-follow, tail, and completion checks with one muted player and no new model/audio work.",
-      "next": "Four real-audio and eight profile captures had no UI finding; installed pair/data/files/cleanup verified. Report separates observed live playback during generation from replay-verified behavior. Original full script remains capture-failed; genuine same-player Ready transition and listening remain unverified.",
-      "reported_at": "2026-09-13T12:54:16+00:00",
-      "reported_by": "Janek — completed device replay check; handoff in progress",
-      "stale_after_seconds": 900,
+      "title": "Progressive player handoff (completed)",
+      "status": "released",
+      "owner": "Recorded app handoff",
+      "now": "Installed mixed-coverage handoff is complete. The final tested app was left installed, and all retained app data, settings, and files were preserved.",
+      "next": "It records real playback before generation finished plus replay-verified remaining UI behavior. The original full script still failed at optional capture, so this is not a retroactive clean end-to-end pass. No more synthesis.",
+      "reported_at": "2026-09-13T13:00:58+00:00",
+      "reported_by": "Janek — final installed mixed-coverage handoff",
+      "stale_after_seconds": "persistent",
       "links": []
     },
     {
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
-      "owner": "Janek",
-      "now": "Jere released the QNN capture phone lease after successful cleanup. Janek’s next phone window is clear.",
-      "next": "No current phone action. Jere’s host reference remains unstarted until capture checks pass.",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Progressive player handoff complete; tested app remains installed and phone lock was released.",
+      "next": "No current app playback work. Separate Gemma capture review and isolated episode-management integration remain.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -123,9 +123,9 @@
       "id": "host",
       "title": "On this computer",
       "status": "preparing",
-      "owner": "Janek / Jere / Nik",
-      "now": "Jens completed the mixed playback coverage review; Janek packages the app handoff, Jere validates capture, and Nik prepares isolated integration.",
-      "next": "No further UI work or synthesis. Mixed replay evidence does not retroactively pass the original genuine script or establish listening quality.",
+      "owner": "Jere / Nik",
+      "now": "Jere is validating the captured QNN data. Nik has an isolated episode-management integration ready for later validation.",
+      "next": "The completed progressive-player handoff is retained separately. No new app synthesis or shared deployment.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -151,20 +151,6 @@
       "reported_at": "2026-09-11T16:57:58+00:00",
       "reported_by": "Kate — live board cleanup",
       "stale_after_seconds": "persistent"
-    },
-    {
-      "name": "Janek",
-      "task": "Package final mixed-coverage app handoff",
-      "reported_at": "2026-09-13T12:55:43+00:00",
-      "reported_by": "Pi — app validation released",
-      "stale_after_seconds": 900
-    },
-    {
-      "name": "Jens",
-      "task": "Mixed playback review complete; standby",
-      "reported_at": "2026-09-13T13:00:30+00:00",
-      "reported_by": "Jens — no further UI work/synthesis",
-      "stale_after_seconds": 900
     },
     {
       "name": "Nik",
