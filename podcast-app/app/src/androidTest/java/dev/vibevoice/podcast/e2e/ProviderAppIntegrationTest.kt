@@ -44,6 +44,7 @@ class ProviderAppIntegrationTest {
         fun json(name: String, value: JSONObject) = ShortProductDiagnostics.json(File(root, name), value)
         var scenario: ActivityScenario<MainActivity>? = null
         var retainedEpisodeId: String? = null
+        var retainedAudioJobId: String? = null
         var audioDeadlineNs: Long? = null
         try {
             val appHash = app.artifacts.sha256(File(context.applicationInfo.sourceDir))
@@ -121,6 +122,7 @@ class ProviderAppIntegrationTest {
             var audio: GenerationJobEntity? = null
             rule.waitUntil(15_000) { audio = db { app.repository.latestJob(id) }; audio != null }
             val audioId = requireNotNull(audio).id
+            retainedAudioJobId=audioId
             require(audio!!.kind == JobKind.AUDIO && Regex("[a-f0-9]{64}").matches(audioId))
             json("audio-job.json", JSONObject().put("jobId", audioId).put("episodeId", id).put("revisionId", newRevision)
                 .put("revisionSha256", stored.sha256).put("kind", audio!!.kind).put("logicalChapters", 1).put("providerSegments", 15))
@@ -132,7 +134,19 @@ class ProviderAppIntegrationTest {
                 return file.readLines().mapNotNull { line -> runCatching { JSONObject(line) }.getOrNull() }
             }
             if (progressive) {
-                rule.waitUntil(90_000) { rule.onAllNodes(hasText("Listen")).fetchSemanticsNodes().isNotEmpty() }
+                rule.waitUntil(90_000) {
+                    val current=db { app.repository.latestJob(id) }
+                    when(OwnedAudioWaitPolicy.listen(id,audioId,current,rule.onAllNodes(hasText("Listen")).fetchSemanticsNodes().isNotEmpty())) {
+                        OwnedListenDecision.WAIT -> false
+                        OwnedListenDecision.LISTEN -> true
+                        else -> {
+                            json("listen-stopped-original-cause.json",JSONObject().put("episodeId",id).put("expectedJobId",audioId)
+                                .put("observedJobId",current?.id).put("status",current?.status).put("failureStage",current?.failureStage)
+                                .put("originalErrorMessage",current?.errorMessage).put("monotonicNs",System.nanoTime()))
+                            error("Owned AUDIO ended or changed before Listen; inspect its bound original cause")
+                        }
+                    }
+                }
                 val firstListenObservedNs = System.nanoTime()
                 require(db { app.repository.latestJob(id) }?.status == JobStatus.RUNNING)
                 rule.onNodeWithText("Listen").performScrollTo().performClick()
@@ -255,7 +269,8 @@ class ProviderAppIntegrationTest {
             require(File(parent, "$run/job-identity.json").isFile) { "Provider diagnostic retention was not bound" }
             if(ownedGuard) {
                 val guardIdentity=JSONObject(File(parent,"$run/guard-identity.json").readText())
-                require(guardIdentity.getString("planSha256")==audioId && guardIdentity.getLong("startFloorKiB")==3072L*1024)
+                require(guardIdentity.getString("planSha256")==audioId && guardIdentity.getLong("wholeStartFloorKiB")==3072L*1024)
+                require(guardIdentity.getLong("preContextFloorKiB")==2648L*1024 && guardIdentity.getLong("startupMemoryCreditKiB")==0L)
                 val events=File(parent,"$run/guard-events.jsonl").readLines().filter {it.isNotBlank()}.map(::JSONObject)
                 require(events.any {it.getString("event")=="sample"} && events.any {it.getString("event")=="closed"})
                 require(events.none {it.getString("event")=="stop_requested"})
@@ -277,9 +292,10 @@ class ProviderAppIntegrationTest {
             if(progressive) runCatching {
                 val owned=retainedEpisodeId ?: return@runCatching
                 val until=audioDeadlineNs ?: return@runCatching
+                val expected=retainedAudioJobId ?: return@runCatching
                 while(System.nanoTime()<until) {
                     val job=db { app.repository.latestJob(owned) }
-                    if(job==null || job.kind!=JobKind.AUDIO || job.status !in listOf(JobStatus.QUEUED,JobStatus.RUNNING)) {
+                    if(!OwnedAudioWaitPolicy.retainRunning(owned,expected,job)) {
                         json("audio-retained-after-ui-failure.json",JSONObject().put("episodeId",owned).put("jobId",job?.id).put("jobStatus",job?.status)
                             .put("phase",db { app.repository.episode(owned) }.phase).put("newModelRetry",false));break
                     }

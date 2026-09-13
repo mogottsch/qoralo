@@ -1,5 +1,7 @@
 # Allocation-stage discriminator: frozen, host-only preparation
 
+> **Controller postflight correction:** this frozen preparation inherited an APK-postflight override on the wrong lifecycle hook. That promise is superseded by the [scoped correction and tested future `_finish_remote` dispatch](../paired-postflight-claim-correction-01/README.md). No postflight identity is inferred for the new runs; genuine preflight, cleanup and release evidence remains separate. The observer/model artifacts are unchanged.
+
 **The allocation cause remains unknown.** This preparation adds bounded fixed-stack observations around the original allocations; it does not raise the 8 GiB address-space limit, change cap 1, alter model arithmetic, or replay the phone/model. Janek retains device priority.
 
 ## Cheap retained-launch clue

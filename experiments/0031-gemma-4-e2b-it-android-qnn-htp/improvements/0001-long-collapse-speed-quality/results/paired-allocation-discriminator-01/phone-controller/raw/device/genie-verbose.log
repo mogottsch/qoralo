@@ -1,0 +1,3842 @@
+     5.6ms [INFO]: Entering GenieDialog_create [GenieDialog.cpp:147]
+    13.1ms [VERBOSE]: dialog-new: dialog0 config {"context":{"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096},"encoder":{"context":{"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096},"lut-path":"./embedding_int8_lut.bin","tokenizer":"./tokenizer.json","type":"lut"},"engine":{"backend-ext-conf":"./htp_backend_ext_config.json","backend-lib":"libQnnHtp.so","cache-groups":[{"attention-mask-tensor-name":"attention_mask","kv-dim":512,"prefix":"past_","version":1},{"attention-mask-tensor-name":"swa_attention_mask","kv-dim":256,"longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_","version":1}],"cpumask":"0xe0","enable-graph-swit
+    13.1ms [VERBOSE]: ctx-new: dialog0 config {"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096}
+    13.8ms [VERBOSE]: sampler-new: basic ctx dialog0 config {"greedy":true,"role":"primary","seed":42,"temp":0.0,"top-k":1,"top-p":1.0,"type":"basic"}
+    14.1ms [VERBOSE]: engine-new: qnn-htp ctx dialog0 config {"backend-ext-conf":"./htp_backend_ext_config.json","backend-lib":"libQnnHtp.so","cache-groups":[{"attention-mask-tensor-name":"attention_mask","kv-dim":512,"prefix":"past_","version":1},{"attention-mask-tensor-name":"swa_attention_mask","kv-dim":256,"longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_","version":1}],"cpumask":"0xe0","enable-graph-switching":true,"kv-dim":256,"mmap-budget":40,"model-list":["./models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"],"n-threads":3,"poll":true,"positional-encoding":[{"rope-dim":256,"rope-scaling":{"partial-rotary-factor":0.25,"rope-type":"proportional"},"rope-theta":1000000.0,"type":"rope"},{"prefix":"swa_","rope-dim":128,"rope-theta":10000.0,"type":"rope"}],"role":"primary","shared-engine":false,"spill-fill-bufsize":0,"type":"qnn-htp","use-async-Init":true,"use-mmap":true}
+    14.1ms [VERBOSE]: qnn-htp: init start
+    15.7ms [VERBOSE]: Cache groups parameters = [{"attention-mask-tensor-name":"attention_mask","cache-index-tensor-name":"","longcontext":{"type":"disabled"},"prefix":"past_"},{"attention-mask-tensor-name":"swa_attention_mask","cache-index-tensor-name":"","longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_"}]
+    15.7ms [INFO]: qnn-htp: loading model
+    16.8ms [WARNING]: kv-update-method is deprecated. Defaulting to SMART_MASK or NATIVE_KV
+    17.0ms [VERBOSE]: nsp-model: starting threadpool : n_threads 3 params. 0xe0 poll true
+    17.6ms [VERBOSE]: qnn-htp: model init start
+    17.6ms [INFO]: Backend library : libQnnHtp.so
+    17.6ms [INFO]: System library  : libQnnSystem.so
+    17.6ms [INFO]: Model dir   : 
+    17.6ms [INFO]: Model files : ["./models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"]
+    17.6ms [INFO]: Backend extensions lib path : libQnnHtpNetRunExtensions.so
+    17.6ms [INFO]: Backend extensions config path : ./htp_backend_ext_config.json
+    18.8ms [INFO]: qnn-api initialized with 2 graph(s)
+    18.8ms [VERBOSE]: Detected CacheGroup parameters = [{"attention-mask-tensor-name":"attention_mask","cache-index-tensor-name":"","longcontext":{"type":"disabled"},"prefix":"past_"},{"attention-mask-tensor-name":"swa_attention_mask","cache-index-tensor-name":"","longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_"}]
+    18.8ms [VERBOSE]: Could not find cache index tensor for CacheGroup past_
+    18.8ms [VERBOSE]: Could not find cache index tensor for CacheGroup swa_
+    18.9ms [VERBOSE]: qnn-htp: Graph ar1_cl4096_1_of_1
+    19.0ms [INFO]: graphName ar1_cl4096_1_of_1 and its variant Type DEFAULT
+    19.0ms [VERBOSE]: qnn-htp: Graph ar128_cl4096_1_of_1
+    19.1ms [INFO]: graphName ar128_cl4096_1_of_1 and its variant Type DEFAULT
+    19.2ms [INFO]: Inserting graph ar1_cl4096_1_of_1 as idx 0 for AR-1 CL-4096
+    19.2ms [INFO]: Inserting graph ar128_cl4096_1_of_1 as idx 0 for AR-128 CL-4096
+    19.2ms [INFO]: qnn-htp: Graphs loaded ((AR-n, CL-x): #splits): {(1, 4096): 1, (128, 4096): 1}
+    19.2ms [VERBOSE]: Mapping for Cachegroup past_
+    19.2ms [VERBOSE]: Found AR-1 CL-4096 -> AR-1 CL-4096
+    19.2ms [VERBOSE]: Found AR-128 CL-4096 -> AR-128 CL-4096
+    19.2ms [VERBOSE]: Mapping for Cachegroup swa_
+    19.2ms [VERBOSE]: Found AR-1 CL-4096 -> AR-1 CL-513
+    19.2ms [VERBOSE]: Found AR-128 CL-4096 -> AR-128 CL-640
+     0.0ms [INFO]: QnnDsp <I> QnnLog_create started.
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered a new graph environment 0 with priority: 100, num hvx threads: 1001, num hmx threads: 1001
+
+     0.0ms [WARNING]: QnnDsp <W> Initializing HtpProvider
+
+     0.0ms [VERBOSE]: QnnDsp <V> Creating default router
+
+     0.0ms [VERBOSE]: QnnDsp <V> RouterFastRPC create
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the router
+
+     0.0ms [VERBOSE]: QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Allocating PlatformInfo struct size 120
+
+     0.0ms [VERBOSE]: QnnDsp <V> Async property not supported or not activated. Skipping setup async threads
+
+     0.0ms [VERBOSE]: QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Allocating PlatformInfo struct size 120
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the graph registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the context registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the device registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the tensor counter
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: setting isExitCalled to false
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: setting ssrInProgress to false
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: FinalCleanupFn fnPtr is nullptr
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: initializing mem registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: initializing mmap registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the logger lifecycle manager
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: constructing bundle
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+     0.0ms [INFO]: QnnDsp <I> exit with 0
+
+     0.0ms [INFO]: QnnDsp <I> exit with 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: initialization completed successfully
+
+     0.0ms [INFO]: QnnDsp <I> QnnLog_create exit.
+
+     2.4ms [INFO]: Key: perf profile, Value: burst 
+     2.4ms [INFO]: Key: perf_profile, Value: 5
+     2.4ms [INFO]: Key: rpc_control_latency, Value: 100
+     7.6ms [INFO]: Creating backend with QnnGraphTransformerAdapter
+     0.0ms [INFO]: QnnDsp <I> QnnBackend_create started. backend = 0x4d4a3050
+
+     0.0ms [VERBOSE]: QnnDsp <V> Oem key validation infra not found, limiting oemMaxPriority to HIGHEST
+
+     0.0ms [VERBOSE]: QnnDsp <V> Backend handle created: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+     0.0ms [INFO]: QnnDsp <I> QnnBackend_create done successfully. backend = 0x4d4a3050
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     7.8ms [INFO]: QnnGraphTransformer createBackend done, status = 0x0
+     2.6ms [INFO]: No deviceId specified by user, defaulting to deviceId=0
+     2.6ms [INFO]: Platform info reports 1 hw device(s)
+     2.6ms [INFO]: No deviceId specified by user; selecting first on-chip hw device found: deviceId=0
+     2.6ms [INFO]: No core Ids specified by user, setting default single core execution
+     0.0ms [INFO]: QnnDsp <I> QnnDevice_create started
+
+     0.0ms [VERBOSE]: QnnDsp <V> Create device with id 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting default value for unsigned PD usage
+
+     0.0ms [VERBOSE]: QnnDsp <V> Attempting to open dynamically linked so: /data/local/tmp/vibevoice-0031-allocation-allocation-20260912T144721Z-01/lib/libQnnHtpV73Stub.so using absolute filename
+
+     0.0ms [INFO]: QnnDsp <I> First connection to QNN stub established!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Loading remote funcs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully loaded off-chip memory allocation functions
+
+     0.0ms [VERBOSE]: QnnDsp <V> Kailua PD 0 uses default Domain ID
+
+     0.0ms [VERBOSE]: QnnDsp <V> No ADAS pltform detected, BCS disabled
+
+     0.0ms [VERBOSE]: QnnDsp <V> Transport config  BCS_enable:0  [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> isPollingAvailable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Polling not supported in queueMapping
+
+     0.0ms [VERBOSE]: QnnDsp <V> exits with 2, successfully initialized rpc memory
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successful rpcMemInit
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> 136 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Created transport wrapper for device {0 0 0} and devType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> 56 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 14 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 14 with length: 56 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 2 fd 14 with offset 0 size 56, va 0x000000fdffc000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> SharedMemoryMod 2 create/register fd 14 with len 56, offset(dspPa) = 0, va 0x000000fdffc000
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedMemoryMod Latency 839
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport execute faster ipc start polling [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> createDevicePollingContext for priority 100
+
+     0.0ms [VERBOSE]: QnnDsp <V> Async property not supported. Skipping setup Async context
+
+     0.0ms [VERBOSE]: QnnDsp <V> exits device initialization with  0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> setSkelLogLevel return 0
+
+     0.0ms [INFO]: QnnDsp <I> QnnDevice_create done. device = 0x1. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+   242.8ms [VERBOSE]: Setting Perf Profile to 5
+   242.9ms [INFO]: QnnDevice_getInfrastructure passed
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureCreatePowerConfigId started for deviceId: 0, coreId: 0
+
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device with device id 0 core id 0 found with core type 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Created power config id 3187561968 for device id 0 core id 0 processDomain id 0
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureCreatePowerConfigId done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+   243.0ms [INFO]: QnnDevice_getInfrastructure passed
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetMemoryConfig started for deviceId: 0, coreId: 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> set memory settings memory grow size 33554432
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set perf settings success
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetMemoryConfig done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+   243.4ms [INFO]: Perf Infra set memory config return [0]
+   243.4ms [INFO]: QnnDevice_getInfrastructure passed
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig started for powerConfigId: -1107405328
+
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> set power settings rpc control latency 100
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> set remote rpc control return 0
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+   244.2ms [INFO]: Perf Infra set power config success
+   244.2ms [INFO]: QnnDevice_getInfrastructure passed
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig started for powerConfigId: -1107405328
+
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> set power settings rpc polling time 9999
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting poll QoS to 9999
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> setPollQos for priority 100
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Dspqueue Polling not supported in setSessionProperty
+
+     0.0ms [VERBOSE]: QnnDsp <V> set power settings rpc polling time 9999
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> set remote rpc control return 0
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+   244.5ms [INFO]: Perf Infra set power config success
+   244.7ms [INFO]: QnnDevice_getInfrastructure passed
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig started for powerConfigId: -1107405328
+
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> set power settings DCVS V3 for context id -1107405328:
+
+     0.0ms [VERBOSE]: QnnDsp <V> setDcvsEnable 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> dcvsEnable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> powerMode 16
+
+     0.0ms [VERBOSE]: QnnDsp <V> setSleepLatency 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> sleepLatency 40
+
+     0.0ms [VERBOSE]: QnnDsp <V> setSleepDisable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> sleepDisable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> setBusParams 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> busVoltageCornerMin 160
+
+     0.0ms [VERBOSE]: QnnDsp <V> busVoltageCornerTarget 160
+
+     0.0ms [VERBOSE]: QnnDsp <V> busVoltageCornerMax 160
+
+     0.0ms [VERBOSE]: QnnDsp <V> setCoreParams 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> coreVoltageCornerMin 160
+
+     0.0ms [VERBOSE]: QnnDsp <V> coreVoltageCornerTarget 160
+
+     0.0ms [VERBOSE]: QnnDsp <V> coreVoltageCornerMax 160
+
+     0.0ms [VERBOSE]: QnnDsp <V> Resetting polling rpc graph stats
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph Stats ptr not added for device 0 core 0 processDomain 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set perf settings success
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+   246.6ms [INFO]: Perf Infra set power config success
+     0.0ms [INFO]: QnnDsp <I> QnnContext_createFromBinaryListAsync started. backend = 0x1, device = 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Creating deserializer for version 4.0.4
+
+     0.0ms [VERBOSE]: QnnDsp <V> Updated context 100 priority to 12970367456404648608
+
+     0.0ms [VERBOSE]: QnnDsp <V> VTCM backup buffer sharing disabled, isMutliCore false
+
+     0.0ms [VERBOSE]: QnnDsp <V> Thread 1495252080 started the work
+
+     0.0ms [VERBOSE]: QnnDsp <V> Creating deserializer for version 4.0.4
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting memory limit hint
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting persistent binary
+
+     0.0ms [VERBOSE]: QnnDsp <V> Multicore support is unavailable
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> 16 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context create from binary with context 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context Binary contains 2 graphs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph memory usage summary, context id 1, shared graph weights size 2321440768
+
+     0.0ms [VERBOSE]: QnnDsp <V> Number of HVX threads to be used not explicitly specified. Max available (4) will be used.
+
+     0.0ms [VERBOSE]: QnnDsp <V> Added 1 to registered graph env 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully opened graph env handle, envId 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered to graph env, envId 0 
+
+     0.0ms [VERBOSE]: QnnDsp <V> DLBC is set to 0 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> DLBC_WEIGHTS is set to 0 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> SPARSE_WEIGHTS_COMPRESSION is set to 0 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> NUM_CORES is set to 1 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> SLC_ALLOCATOR is set to 0 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> DSP ARCH graph is set to 73 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> BF16 is set to 0 for graph 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context Binary Graph 0 'ar1_cl4096_1_of_1' added for the processing
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get graph estimates from single core barrel
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context 1 graph ar1_cl4096_1_of_1 estimated PD size ~75.48MB, including nonSharedWeight 2097152 B I/O 32309248 B runlist 22459136 B spillfill 13893632 B 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph memory usage summary, context id 1, graph name:ar1_cl4096_1_of_1, hexagon graph id 256 in graph info: nonShared Wts/constSize 2097152, graphIOTensorSize 32309248 vtcm 8388608 spillFillBufferSizes 13893632, OpDataSize 14354432
+
+     0.0ms [VERBOSE]: QnnDsp <V> Number of HVX threads to be used not explicitly specified. Max available (4) will be used.
+
+     0.0ms [VERBOSE]: QnnDsp <V> Added 1 to registered graph env 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully opened graph env handle, envId 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered to graph env, envId 0 
+
+     0.0ms [VERBOSE]: QnnDsp <V> DLBC is set to 0 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> DLBC_WEIGHTS is set to 0 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> SPARSE_WEIGHTS_COMPRESSION is set to 0 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> NUM_CORES is set to 1 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> SLC_ALLOCATOR is set to 0 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> DSP ARCH graph is set to 73 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> BF16 is set to 0 for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context Binary Graph 1 'ar128_cl4096_1_of_1' added for the processing
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get graph estimates from single core barrel
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context 1 graph ar128_cl4096_1_of_1 estimated PD size ~237.95MB, including nonSharedWeight 2097152 B I/O 104235008 B runlist 70297856 B spillfill 64487424 B 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph memory usage summary, context id 1, graph name:ar128_cl4096_1_of_1, hexagon graph id 257 in graph info: nonShared Wts/constSize 2097152, graphIOTensorSize 104235008 vtcm 8388608 spillFillBufferSizes 64487424, OpDataSize 26604288
+
+     0.0ms [WARNING]: QnnDsp <W> In low memory, empty enable graphs list found. Loading the first graph only.
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph ar1_cl4096_1_of_1 is enabled: 1, loaded: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph ar128_cl4096_1_of_1 is enabled: 1, loaded: 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting context 1 adapter buffer size estimate to 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting context 1 shared weight near size estimate to 1161822208
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting context 1 reserved space to 1411328256
+
+     0.0ms [WARNING]: QnnDsp <W> m_CFBCallbackInfoObj is not initialized, return emptyList
+
+     0.0ms [WARNING]: QnnDsp <W> m_CFBCallbackInfoObj is not initialized, return emptyList
+
+     0.0ms [VERBOSE]: QnnDsp <V> Allocation is not required because no updatable component in serialize bin
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Allocate shared weights buffer with size 1160720384
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph rpc memory allocate or mapping for copyless weights buffer deviceId 0, coreId 0, pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 1161822208 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7a05d02000, fd 22, size 1161822208
+
+     0.0ms [VERBOSE]: QnnDsp <V> IHtpMemory allocated for Weights 0x7a05d02000 [1161822208 B] @ OS 1874000
+
+     0.0ms [VERBOSE]: QnnDsp <V> [SetBufName][SW] fd=22 size=1161822208 graphId=-1 groupId=-1 contextId=1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Copying weights in chunks of 4096 bytes using 1 iterations
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 4096
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 4096 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Preemption type is queried as 2147483647
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully retrieve preemption type as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Preemption type is set as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> The preemption type for this device is 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> The preemption type for devConfig {0,0,0} is 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context 1 estimated PD size requirement is ~1345.95MB, including largest Graph estimate 249506048 B
+
+     0.0ms [VERBOSE]: QnnDsp <V> Getting transport session for device 0, core 0, pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> PD 0 chosen for context 1, estimated future space on pd ~1345.95 MB device priority is -1, graph priority is 100
+
+     0.0ms [VERBOSE]: QnnDsp <V> Trying to deserialize contextId 1 on pdId 0 with deviceId 0 coreId 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Mapping is not required because no updatable component in serialize bin, group id: 0, context id: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> swb i:0, start:0x7a59d78000, offset:25640960, size:1160720384, swbIsFarMappable:0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Map shared weights to FAR: false
+
+     0.0ms [VERBOSE]: QnnDsp <V> Mapping shared weights at index 0 (size: 1160720384, offset: 25640960)
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph rpc memory allocate or mapping for copyless weights buffer deviceId 0, coreId 0, pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 22 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> Copying weights in chunks of 41943040 bytes using 28 iterations
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 22 with length: 1161822208 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 7 fd 22 with offset 0 size 1161822208, va 0x000000b8000000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> With fd: 22 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000b8000000
+
+     0.0ms [VERBOSE]: QnnDsp <V> RPC Memory mapped for Weights 0x7a05d02000 [1161822208 B] @ VA b8000000
+
+     0.0ms [VERBOSE]: QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph rpc memory manager::alloc deviceId 0, coreId 0, pdId 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph rpc memory manager::alloc numCores 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 3448 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7b5bf69000, fd 23, size 3448
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 2744 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7b5bf68000, fd 24, size 2744
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 134344 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7b5760c000, fd 25, size 134344
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 23 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 23 with length: 3448 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 2 fd 23 with offset 0 size 3448, va 0x000000201f5000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> With fd: 23 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f5000
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 24 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 24 with length: 2744 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 2 fd 24 with offset 0 size 2744, va 0x000000201f6000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> With fd: 24 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f6000
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 25 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 25 with length: 134344 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 2 fd 25 with offset 0 size 134344, va 0x00000020d60000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> With fd: 25 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x00000020d60000
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 72 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7b5bf64000, fd 26, size 72
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 26 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 26 with length: 72 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 2 fd 26 with offset 0 size 72, va 0x000000201f7000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> With fd: 26 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f7000
+
+     0.0ms [VERBOSE]: QnnDsp <V> RPC Memory allocated for graph ar1_cl4096_1_of_1 with In 0x7b5bf69000 [d78 B], Far In 0x0 [0 B], Inouts 0x7b5760c000 [20cc8 B], Outs 0x7b5bf68000 [ab8 B], Far Outs 0x0 [0 B]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Extended UDMA not enabled or not supported by platform for graph 256, skipping far mapping allocation
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph rpc memory allocate or mapping for copyless weights buffer deviceId 0, coreId 0, pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 2097152 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7a04a04000, fd 27, size 2097152
+
+     0.0ms [VERBOSE]: QnnDsp <V> IHtpMemory allocated for Weights 0x7a04a04000 [2097152 B] @ OS 71c000
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 27 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 27 with length: 2097152 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 7 fd 27 with offset 0 size 2097152, va 0x000000fd400000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> With fd: 27 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000fd400000
+
+     0.0ms [VERBOSE]: QnnDsp <V> RPC Memory mapped for Weights 0x7a04a04000 [2097152 B] @ VA fd400000
+
+     0.0ms [VERBOSE]: QnnDsp <V> [SetBufName][NSW] fd=27 size=2097152 graphName=ar1_cl4096_1_of_1 graphShortName=ar1...of1 graphId=256 groupId=-1 contextId=1
+
+     0.0ms [WARNING]: QnnDsp <W> Invalid file read memory budget: expected between 0 and 41943040, provided 1179648. 1179648 will be used.
+
+     0.0ms [VERBOSE]: QnnDsp <V> Copying weights in chunks of 41943040 bytes using 1 iterations
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 1179648
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 1179648 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> HtpTransport::graphPrepareDsp done. graph.m_hexNNGraphHandle = 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 104 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [WARNING]: QnnDsp <W> setInferenceBufferForHtpExtensionSkel: not supported for DeviceId 0 coreId 0 pdId 0
+
+     0.0ms [WARNING]: QnnDsp <W> setInferenceBufferForHtpExtensionSkel not supported on this platform
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context binary being sent to skel for processing. Number of graphs = 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> Creating deserializer for version 4.0.4
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph does not have mc metadata
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8004784 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Device type is queried as 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 48 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Graph does not have mc metadata
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Context 1 deserialized on pd 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 41943040
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 41943040 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Populating rpc buffer of size 28254208
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully copied 28254208 bytes of weights
+
+     0.0ms [VERBOSE]: QnnDsp <V> Finished copying shared weights.
+
+     0.0ms [INFO]: QnnDsp <I> exits with 0
+
+     0.0ms [INFO]: QnnDsp <I> graph ar1_cl4096_1_of_1 is loaded 1
+
+     0.0ms [INFO]: QnnDsp <I> graph ar128_cl4096_1_of_1 is loaded 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> 48 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Binary has already been prepared with Weight Sharing enabled. The Weight Sharing flag detected is 0. Regardless of the flag's value, deserialization will proceed with weight sharing. 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> exits with 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> WorkerPool threads joining in process, waiting for safe destruction
+
+     0.0ms [VERBOSE]: QnnDsp <V> WorkerPool all threads joined, safe to exit
+
+     0.0ms [VERBOSE]: QnnDsp <V> Ready to call notification function for graph 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Ready to call notification function for graph 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> Calling notification for context 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Create from binary status for context 12970367456404276784 is 0
+
+     0.0ms [INFO]: QnnDsp <I> Number of existing contexts: 1, graphs: 2
+
+     0.0ms [INFO]: QnnDsp <I> QnnContext_createFromBinaryListAsync done successfully
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 1536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 3072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 28 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 28 with length: 104235008 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 4 fd 28 with offset 0 size 104235008, va 0x000000b0200000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> SharedMemoryMod 4 create/register fd 28 with len 104235008, offset(dspPa) = 0, va 0x000000b0200000
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedMemoryMod Latency 2365
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb4ef0000 ARM 0x0 fd: 28, memHandle: 0x1, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 35
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 8960
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 17920 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5ac8000 ARM 0x0 fd: 28, memHandle: 0x2, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 256 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6240000 ARM 0x0 fd: 28, memHandle: 0x3, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 256 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6238000 ARM 0x0 fd: 28, memHandle: 0x4, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x4
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x4
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5938000 ARM 0x0 fd: 28, memHandle: 0x5, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x5
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x5
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6248000 ARM 0x0 fd: 28, memHandle: 0x6, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x6
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x6
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 513
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 513
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1026 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5510000 ARM 0x0 fd: 28, memHandle: 0x7, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x7
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x7
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5cf8000 ARM 0x0 fd: 28, memHandle: 0x8, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x8
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x8
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0e50000 ARM 0x0 fd: 28, memHandle: 0x9, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x9
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x9
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5d48000 ARM 0x0 fd: 28, memHandle: 0xa, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0xa
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0xa
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6428000 ARM 0x0 fd: 28, memHandle: 0xb, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0xb
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0xb
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6198000 ARM 0x0 fd: 28, memHandle: 0xc, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0xc
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0xc
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6478000 ARM 0x0 fd: 28, memHandle: 0xd, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0xd
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0xd
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb53f0000 ARM 0x0 fd: 28, memHandle: 0xe, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0xe
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0xe
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5500000 ARM 0x0 fd: 28, memHandle: 0xf, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0xf
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0xf
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 4095
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 2096640
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 4193280 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb4f50000 ARM 0x0 fd: 28, memHandle: 0x10, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x10
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x10
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 4095
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 2096640
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 4193280 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5538000 ARM 0x0 fd: 28, memHandle: 0x11, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x11
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x11
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 4096
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 4096
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 8192 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5400000 ARM 0x0 fd: 28, memHandle: 0x12, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x12
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x12
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5988000 ARM 0x0 fd: 28, memHandle: 0x13, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x13
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x13
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb64c8000 ARM 0x0 fd: 28, memHandle: 0x14, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x14
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x14
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0a00000 ARM 0x0 fd: 28, memHandle: 0x15, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x15
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x15
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6388000 ARM 0x0 fd: 28, memHandle: 0x16, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x16
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x16
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb61e8000 ARM 0x0 fd: 28, memHandle: 0x17, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x17
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x17
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5a28000 ARM 0x0 fd: 28, memHandle: 0x18, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x18
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x18
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb53a0000 ARM 0x0 fd: 28, memHandle: 0x19, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x19
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x19
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6518000 ARM 0x0 fd: 28, memHandle: 0x1a, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 4095
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 2096640
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 4193280 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5d98000 ARM 0x0 fd: 28, memHandle: 0x1b, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 4095
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 2096640
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 4193280 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0600000 ARM 0x0 fd: 28, memHandle: 0x1c, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1c
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1c
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5350000 ARM 0x0 fd: 28, memHandle: 0x1d, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1d
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1d
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6298000 ARM 0x0 fd: 28, memHandle: 0x1e, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1e
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1e
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb59d8000 ARM 0x0 fd: 28, memHandle: 0x1f, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x1f
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x1f
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb62e8000 ARM 0x0 fd: 28, memHandle: 0x20, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x20
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x20
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5a78000 ARM 0x0 fd: 28, memHandle: 0x21, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x21
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x21
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6338000 ARM 0x0 fd: 28, memHandle: 0x22, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x22
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x22
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0ea0000 ARM 0x0 fd: 28, memHandle: 0x23, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x23
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x23
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 131072
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 262144 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb63d8000 ARM 0x0 fd: 28, memHandle: 0x24, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x24
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x24
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 4095
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 2096640
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 4193280 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0a50000 ARM 0x0 fd: 28, memHandle: 0x25, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x25
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x25
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 4095
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 2096640
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 4193280 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0200000 ARM 0x0 fd: 28, memHandle: 0x26, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x26
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x26
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5978000 ARM 0x0 fd: 28, memHandle: 0x27, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x27
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x27
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5d38000 ARM 0x0 fd: 28, memHandle: 0x28, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x28
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x28
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5d88000 ARM 0x0 fd: 28, memHandle: 0x29, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x29
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x29
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb61d8000 ARM 0x0 fd: 28, memHandle: 0x2a, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1024 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb534fc00 ARM 0x0 fd: 28, memHandle: 0x2b, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb59c8000 ARM 0x0 fd: 28, memHandle: 0x2c, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2c
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2c
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0a40000 ARM 0x0 fd: 28, memHandle: 0x2d, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2d
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2d
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6228000 ARM 0x0 fd: 28, memHandle: 0x2e, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2e
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2e
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb53e0000 ARM 0x0 fd: 28, memHandle: 0x2f, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x2f
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x2f
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1024 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6197c00 ARM 0x0 fd: 28, memHandle: 0x30, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x30
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x30
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5390000 ARM 0x0 fd: 28, memHandle: 0x31, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x31
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x31
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5a18000 ARM 0x0 fd: 28, memHandle: 0x32, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x32
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x32
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5ab8000 ARM 0x0 fd: 28, memHandle: 0x33, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x33
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x33
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0ee0000 ARM 0x0 fd: 28, memHandle: 0x34, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x34
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x34
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1024 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0e4fc00 ARM 0x0 fd: 28, memHandle: 0x35, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x35
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x35
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 262144
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 262144
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 524288 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0ef0000 ARM 0x0 fd: 28, memHandle: 0x36, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x36
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x36
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1024 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb05ffc00 ARM 0x0 fd: 28, memHandle: 0x37, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x37
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x37
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1024 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5937c00 ARM 0x0 fd: 28, memHandle: 0x38, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x38
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x38
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 1024 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb09ffc00 ARM 0x0 fd: 28, memHandle: 0x39, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x39
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x39
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6288000 ARM 0x0 fd: 28, memHandle: 0x3a, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb62d8000 ARM 0x0 fd: 28, memHandle: 0x3b, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6328000 ARM 0x0 fd: 28, memHandle: 0x3c, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3c
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3c
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6378000 ARM 0x0 fd: 28, memHandle: 0x3d, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3d
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3d
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6418000 ARM 0x0 fd: 28, memHandle: 0x3e, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3e
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3e
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0e90000 ARM 0x0 fd: 28, memHandle: 0x3f, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x3f
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x3f
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6468000 ARM 0x0 fd: 28, memHandle: 0x40, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x40
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x40
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb64b8000 ARM 0x0 fd: 28, memHandle: 0x41, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x41
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x41
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6508000 ARM 0x0 fd: 28, memHandle: 0x42, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x42
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x42
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb63c8000 ARM 0x0 fd: 28, memHandle: 0x43, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x43
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x43
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5a68000 ARM 0x0 fd: 28, memHandle: 0x44, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x44
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x44
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 256
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 512 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6558000 ARM 0x0 fd: 28, memHandle: 0x45, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x45
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x45
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 65536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 131072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5330000 ARM 0x0 fd: 28, memHandle: 0x46, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x46
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x46
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 65536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 131072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb6178000 ARM 0x0 fd: 28, memHandle: 0x47, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x47
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x47
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 65536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x416 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 131072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb0e30000 ARM 0x0 fd: 28, memHandle: 0x48, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x48
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x48
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 65536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 131072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb5918000 ARM 0x0 fd: 28, memHandle: 0x49, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x49
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x49
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 65536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 131072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb09e0000 ARM 0x0 fd: 28, memHandle: 0x4a, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x4a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x4a
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register started. context 0x1 
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register 1 mem descriptors
+
+     0.0ms [VERBOSE]: QnnDsp <V> No groupId found for this context:0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[0]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[1]: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[2]: 128
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dim[3]: 512
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total elements: 65536
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize dataType 0x216 size 2
+
+     0.0ms [VERBOSE]: QnnDsp <V> getSize total size 131072 bytes
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Platform register mem QURT 0xb05e0000 ARM 0x0 fd: 28, memHandle: 0x4b, contextHandle: 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered memHandle 0x4b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Adding MemHandle: contextId 0x1 adding handle 0x4b
+
+     0.0ms [VERBOSE]: QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+     0.0ms [INFO]: QnnDsp <I> QnnMem_register done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+  2375.0ms [INFO]: QnnDevice_getInfrastructure passed
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig started for powerConfigId: -1107405328
+
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> set power settings DCVS V3 for context id -1107405328:
+
+     0.0ms [VERBOSE]: QnnDsp <V> setDcvsEnable 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> dcvsEnable 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> powerMode 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> setSleepLatency 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> sleepLatency 2000
+
+     0.0ms [VERBOSE]: QnnDsp <V> setSleepDisable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> sleepDisable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> setBusParams 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> busVoltageCornerMin 48
+
+     0.0ms [VERBOSE]: QnnDsp <V> busVoltageCornerTarget 64
+
+     0.0ms [VERBOSE]: QnnDsp <V> busVoltageCornerMax 64
+
+     0.0ms [VERBOSE]: QnnDsp <V> setCoreParams 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> coreVoltageCornerMin 48
+
+     0.0ms [VERBOSE]: QnnDsp <V> coreVoltageCornerTarget 64
+
+     0.0ms [VERBOSE]: QnnDsp <V> coreVoltageCornerMax 64
+
+     0.0ms [VERBOSE]: QnnDsp <V> Resetting polling rpc graph stats
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007b4d4e5a18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set perf settings success
+
+     0.0ms [INFO]: QnnDsp <I> htpPerfInfrastructureSetPowerConfig done. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+  2376.4ms [INFO]: Perf Infra set power config success
+  2407.0ms [VERBOSE]: qnn-htp: Model Init complete: 2389468 usec
+  2407.2ms [INFO]: qnn-htp: model has been validated!
+  2407.2ms [VERBOSE]: Initializing with KV$ update method = SMART_MASK
+  2407.3ms [VERBOSE]: Initializing to AR-128 CL-4096
+  2407.3ms [VERBOSE]: KVManager initialization complete wtih 1 splits 
+  2407.3ms [VERBOSE]: Supported configurations= [AR-1 CL-4096, AR-128 CL-4096]
+  2407.3ms [VERBOSE]: Group past_: nElem=2097152 @ nBytes=2 n_embed=512 quantized=true scatter=false
+  2407.3ms [VERBOSE]: clear=(0u8, 32768u16, 32768u32)
+  2407.3ms [VERBOSE]: Group past_ variants = [(1, 4096) -> (1, 4096), (128, 4096) -> (128, 4096)]
+  2407.3ms [VERBOSE]: #Splits = 1
+  2407.3ms [VERBOSE]: Graph[0] #Tensors = 3
+  2407.3ms [VERBOSE]: 	layer=4 head=0 n_heads=1 key=0x79fec49000 val=0x79ff231000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=9 head=0 n_heads=1 key=0x79ffa91000 val=0x79fa2f9000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=14 head=0 n_heads=1 key=0x79fa749000 val=0x79f9ef9000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: Group swa_: nElem=163840 @ nBytes=2 n_embed=256 quantized=true scatter=false
+  2407.3ms [VERBOSE]: clear=(0u8, 32768u16, 32768u32)
+  2407.3ms [VERBOSE]: Group swa_ variants = [(1, 4096) -> (1, 513), (128, 4096) -> (128, 640)]
+  2407.3ms [VERBOSE]: #Splits = 1
+  2407.3ms [VERBOSE]: Graph[0] #Tensors = 12
+  2407.3ms [VERBOSE]: 	layer=0 head=0 n_heads=1 key=0x79ff631000 val=0x79fff41000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=1 head=0 n_heads=1 key=0x79ff9f1000 val=0x79fab49000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=2 head=0 n_heads=1 key=0x79ffa41000 val=0x7a00121000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=3 head=0 n_heads=1 key=0x79ffe91000 val=0x7a00171000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=5 head=0 n_heads=1 key=0x79ff681000 val=0x7a001c1000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=6 head=0 n_heads=1 key=0x79fa6f9000 val=0x7a00081000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=7 head=0 n_heads=1 key=0x79ffee1000 val=0x79ff721000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=8 head=0 n_heads=1 key=0x79ff099000 val=0x7a00211000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=10 head=0 n_heads=1 key=0x79ff049000 val=0x79fff91000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=11 head=0 n_heads=1 key=0x79ff6d1000 val=0x79fffe1000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=12 head=0 n_heads=1 key=0x79ff771000 val=0x7a00031000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: 	layer=13 head=0 n_heads=1 key=0x79fab99000 val=0x7a000d1000 anchor=(0x0:0x0->0x0:0x0, 0) scores=0x0
+  2407.3ms [VERBOSE]: n_past: 0, m_n_past: 0
+  2407.3ms [VERBOSE]: clearCache()
+  2407.6ms [VERBOSE]: qnn-htp datatypes: d_input QNN_DATATYPE_UFIXED_POINT_16 d_attn_map QNN_DATATYPE_UFIXED_POINT_16
+  2450.0ms [INFO]: qnn-htp-engine: per-layer embeddings not yet supported in CB scheduler — using legacy strategy-loop path
+  2450.0ms [VERBOSE]: embedding-new: lut config {"context":{"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096},"lut-path":"./embedding_int8_lut.bin","tokenizer":"./tokenizer.json","type":"lut"}
+  2450.0ms [VERBOSE]: LUT-new: lut config {"context":{"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096},"lut-path":"./embedding_int8_lut.bin","tokenizer":"./tokenizer.json","type":"lut"}
+  2450.0ms [VERBOSE]: ctx-new: lut config {"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096}
+  2450.1ms [VERBOSE]: embedding-new: lut config {"context":{"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-134,"scale":0.1107082815731273},"size":4096},"lut-path":"./embed_tokens_per_layer_int8_lut.bin","tokenizer":"./tokenizer.json","type":"lut"}
+  2450.1ms [VERBOSE]: LUT-new: lut config {"context":{"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-134,"scale":0.1107082815731273},"size":4096},"lut-path":"./embed_tokens_per_layer_int8_lut.bin","tokenizer":"./tokenizer.json","type":"lut"}
+  2450.1ms [VERBOSE]: ctx-new: lut config {"bos-token":-1,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-134,"scale":0.1107082815731273},"size":4096}
+  2450.3ms [INFO]: Returning from GenieDialog_create [GenieDialog.cpp:147]
+  2450.5ms [INFO]: Entering GenieDialog_setMaxNumTokens [GenieDialog.cpp:967]
+  2450.5ms [INFO]: Returning from GenieDialog_setMaxNumTokens [GenieDialog.cpp:967]
+  2450.6ms [INFO]: Entering GenieDialog_query [GenieDialog.cpp:197]
+  2463.8ms [VERBOSE]: embedding-query: <bos><|turn>system
+You are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<turn|>
+<|turn>user
+Read the following fictional engineering brief.
+
+1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.
+
+2. The application normally remains open for twenty to forty minutes, although some users close it immediately after one request. A route with expensive setup can therefore be reasonable only when the loaded session is reused. The recommendation should account for both a one-request visit and a longer session
+  2463.9ms [VERBOSE]: embedding-prompt: <bos><|turn>system
+You are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<turn|>
+<|turn>user
+Read the following fictional engineering brief.
+
+1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.
+
+2. The application normally remains open for twenty to forty minutes, although some users close it immediately after one request. A route with expensive setup can therefore be reasonable only when the loaded session is reused. The recommendation should account for both a one-request visit and a longer sessio
+  2471.8ms [VERBOSE]: embedding-tokens: [2, 105, 9731, 107, 3048, 659, 496, 2263, 5192, 2028, 1208, 496, 3736, 1594, 236761, 58025, 528, 40137, 5422, 57243, 236761, 3574, 711, 4928, 506, 30998, 236764, 11497, 11808, 236764, 8369, 18558, 236764, 653, 506, 1707, 600, 611, 659, 1646, 10418, 236761, 106, 107, 105, 2364, 107, 6190, 506, 2269, 57728, 10630, 8652, 236761, 108, 236770, 236761, 669, 2434, 563, 22020, 1806, 2263, 34711, 18362, 580, 506, 1638, 10055, 236772, 36359, 4744, 236761, 7850, 64026, 19015, 496, 11236, 2028, 6077, 840, 1521, 4182, 13198, 236764, 3958, 150548, 49060, 4890, 17373, 1061, 2028, 840, 815, 29227, 1099, 8299, 236764, 532, 3958, 127649, 6178, 919, 6571, 528, 8770, 573, 11442, 11172, 8487, 236761, 2343, 10802, 1921, 23227, 10884, 236764, 11172, 8487, 236764, 532, 8369, 8299, 236761, 108, 236778, 236761, 669, 3739, 14102, 7474, 1932, 573, 12571, 531, 28959, 4310, 236764, 6151, 1070, 5089, 3107, 625, 6842, 1308, 886, 2864, 236761, 562, 9116, 607, 11162, 10884, 740, 5233, 577, 10559, 1186,
+  2614.0ms [VERBOSE]: embedding-query: <bos><|turn>system
+You are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<turn|>
+<|turn>user
+Read the following fictional engineering brief.
+
+1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.
+
+2. The application normally remains open for twenty to forty minutes, although some users close it immediately after one request. A route with expensive setup can therefore be reasonable only when the loaded session is reused. The recommendation should account for both a one-request visit and a longer session
+  2614.1ms [VERBOSE]: embedding-prompt: <bos><|turn>system
+You are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<turn|>
+<|turn>user
+Read the following fictional engineering brief.
+
+1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, pr

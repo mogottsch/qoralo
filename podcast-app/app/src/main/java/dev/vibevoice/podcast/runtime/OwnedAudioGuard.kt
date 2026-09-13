@@ -12,7 +12,8 @@ enum class AudioGuardStop { ADMISSION, LOW_MEMORY, THERMAL, STALE_SAMPLE, UNKNOW
 class AudioGuardCancellation(val reason: AudioGuardStop) : CancellationException("Owned audio guard stopped: ${reason.name}")
 
 object AudioGuardPolicy {
-    const val START_KIB = 3072L * 1024
+    const val WHOLE_START_KIB = 3072L * 1024
+    const val PRE_CONTEXT_KIB = (2048L + 600L) * 1024
     const val STOP_KIB = 1280L * 1024
     const val EMERGENCY_KIB = 600L * 1024
     const val MAX_SAMPLE_AGE_NS = 2_000_000_000L
@@ -24,7 +25,7 @@ object AudioGuardPolicy {
         sample.availableKiB <= 0 || !sample.temperatureC.isFinite() || sample.temperatureC !in -20.0..80.0 -> AudioGuardStop.UNKNOWN_SAMPLE
         sample.temperatureC >= 42.0 -> AudioGuardStop.THERMAL
         sample.availableKiB < STOP_KIB -> AudioGuardStop.LOW_MEMORY
-        admission && sample.availableKiB < START_KIB -> AudioGuardStop.ADMISSION
+        admission && sample.availableKiB < PRE_CONTEXT_KIB -> AudioGuardStop.ADMISSION
         else -> null
     }
     /** /proc stat comm may contain spaces/parentheses. Field22 is offset19 after its last closing parenthesis. */

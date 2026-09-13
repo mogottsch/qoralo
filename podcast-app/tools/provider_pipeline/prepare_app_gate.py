@@ -88,6 +88,8 @@ def main():
         'guardProbeOnly':a.guard_probe_only,
         'ownedMemoryGuard':a.owned_memory_guard,
         'guardPlanningEnvelopeMiB':2048,
+        'ownedPreContextAdmissionFloorKiB':2648*1024,
+        'startupMemoryCreditKiB':0,
         'guardProactiveStopKiB':1280*1024,
         'guardEmergencyReserveKiB':600*1024,
         'syntheticAdmissionFloorKiB':2048*1024 if a.synthetic_only or a.guard_probe_only else 3072*1024 if a.owned_memory_guard else 3584*1024,
@@ -106,9 +108,12 @@ def main():
     if a.owned_memory_guard:
         proof=json.loads(a.guard_validation.read_text())
         if proof.get('status')!='owned_non_neural_guard_passed' or not 0<=proof['stopToObservedProcessAbsentMs']<=3000 or proof['modelCalls']!=0 or not proof['failureDurableBeforeTermination'] or proof.get('managedUnwindBlockedTeardown') is not True or proof.get('affectedUiCases')!=8:raise ValueError('Guard probe not validated')
+        if proof.get('wholeStartFloorKiB')!=3072*1024 or proof.get('preContextFloorKiB')!=2648*1024 or proof.get('startupMemoryCreditKiB')!=0:raise ValueError('Guard phase-budget mismatch')
         if proof['appApkSha256']!=value['app']['sha256'] or proof['testApkSha256']!=value['test']['sha256']:raise ValueError('Guard probe used different APKs')
         value['guardValidation']={'path':str(a.guard_validation.resolve()),'sha256':digest(a.guard_validation)}
-        value['scope']='one provisional owned guarded AUDIO/livePlayer evaluation at3GiB, not a global relaxation or proven minimum; no resynthesis for UI'
+        value['syntheticPlaybackTestsBeforeModels']=0
+        value['reusedExactApkUiCases']=8
+        value['scope']='one provisional owned guarded AUDIO/livePlayer evaluation:3072MiB whole-start,2648MiB pre-context(full2048+600 recharged,no startup credit); not global relaxation/proven minimum; no resynthesis for UI'
     value['evidenceBindings']={str(f.relative_to(out)):{'sha256':digest(f),'bytes':f.stat().st_size} for f in out.rglob('*') if f.is_file() and f.suffix!='.apk'}
     save('candidate.json',value);print(json.dumps({'candidateSha256':digest(out/'candidate.json'),'app':value['app'],'test':value['test'],'hostTests':counts},indent=2))
 if __name__=='__main__':main()

@@ -26,6 +26,18 @@ class ProviderPipelineTests(unittest.TestCase):
             test=(ROOT/f'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/{name}.kt').read_text()
             for forbidden in ['ProviderQnnEngine(', 'ConfiguredTtsEngine(', 'ProviderNative.', 'GenerationService', 'NativeGemmaEngine(']:
                 self.assertNotIn(forbidden,test)
+    def test_phase_consistent_budget_keeps_host_whole_start_distinct(self):
+        self.assertEqual(3072*1024,admission_floor_kib(False,owned_guard=True))
+        self.assertGreater(admission_floor_kib(False,owned_guard=True),(2048+600)*1024)
+        source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
+        self.assertIn("validated.get('preContextFloorKiB')==2648*1024",source)
+        self.assertIn("validated.get('startupMemoryCreditKiB')==0",source)
+    def test_guarded_audio_reuses_only_exact_apk_completed_ui_proof(self):
+        source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
+        self.assertIn("validated.get('affectedUiCases')==8",source)
+        self.assertIn("validated['appApkSha256']==c['app']['sha256']",source)
+        self.assertIn("validated['testApkSha256']==c['test']['sha256']",source)
+        self.assertIn('if progressive and not owned_guard:',source)
     def test_guard_probe_is_non_neural_and_returns_before_audio(self):
         source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
         start=source.index('            if guard_probe_only:\n                output=')

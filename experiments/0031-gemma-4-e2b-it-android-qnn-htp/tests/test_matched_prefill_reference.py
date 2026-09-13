@@ -129,6 +129,60 @@ class CaptureReadinessTests(unittest.TestCase):
         with self.assertRaises(ValueError):c.validate_app(data,{'wrong':'c'*64})
         with self.assertRaises(ValueError):c.validate_app(data.replace(b':generation\t\n',b':generation\t123\n'),expected)
 
+    def exercise_actual_finish_lifecycle(self,native_failure=False,capture_failure=False,postflight_failure=False):
+        import test_phone_return_controller as fakes
+        c=importlib.import_module('phone_paired_prefill_capture')
+        expected={'dev.vibevoice.podcast.internal':'a'*64,'dev.vibevoice.podcast.internal.test':'b'*64}
+        m,_=c.load_lifecycle(expected,True)
+        app=('APK\tdev.vibevoice.podcast.internal\t'+'a'*64+'\nAPK\tdev.vibevoice.podcast.internal.test\t'+'b'*64+'\nPID\tdev.vibevoice.podcast.internal:generation\t\nPID\tdev.vibevoice.podcast.internal.test\t\n').encode()
+        quiet=b'PID\tdev.vibevoice.podcast.internal:generation\t\nPID\tdev.vibevoice.podcast.internal.test\t\n'
+        class Transport(fakes.FakeAdb):
+            def reply(self,operation):
+                if operation in ['preflight.current_APKs_and_generation','postflight.current_APKs_and_generation']:return m.Reply(0,app)
+                if operation=='preflight.current_job_quiescence':return m.Reply(0,quiet)
+                if 'actual_user_job_playback_v2' in operation:return m.Reply(0,b'PLAYBACK_GUARD_V2 main=absent verdict=quiescent\n')
+                if operation=='preflight.rpc_readiness':return m.Reply(0,b'')
+                if operation=='stage.manifest_hashes':return m.Reply(0,f'{m.DIGEST}  frozen-manifest.json\n{m.sha(self.controller.stage / "SHA256SUMS")}  SHA256SUMS\n'.encode())
+                if operation=='stage.payload_hashes':return m.Reply(0,b'bin/genie-app: OK\nexact-long.script: OK\nfrozen-manifest.json: OK\n')
+                return super().reply(operation)
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);stage=root/'stage';stage.mkdir();(stage/'SHA256SUMS').write_text('fake-only\n')
+            fake=Transport();clock=fakes.FakeClock()
+            if native_failure:fake.mode='exit7'
+            if capture_failure:fake.fail['raw.pull']=m.Reply(1,stderr=b'synthetic capture transfer failed')
+            if postflight_failure:fake.fail['postflight.current_APKs_and_generation']=m.Reply(1,stderr=b'synthetic postflight unavailable')
+            controller=m.Controller(stage=stage,output_root=root/'runs',slot_root=root/'slots',lock_path=root/'phone.lock',transport=fake,clock=clock,stage_verifier=lambda *_:{'files':{'bin/genie-app':{},'exact-long.script':{}}})
+            fake.controller=clock.controller=controller
+            result=controller.run(execute=True,reviewed_digest=m.DIGEST,pi_slot='fake-slot',run_id='fake-run')
+            self.assertTrue(result['phone_lock_released']);self.assertFalse(controller.lease.held)
+            operations=[x[0] for x in fake.calls]
+            return result,operations
+
+    def test_actual_finish_hook_runs_postflight_after_successful_cleanup(self):
+        x,ops=self.exercise_actual_finish_lifecycle()
+        self.assertEqual(x['cleanup'],'verified_absent');self.assertEqual(x['process_exit_code'],0)
+        self.assertTrue(x['postflight_app_identity']['verified'])
+        self.assertLess(ops.index('raw.pull'),ops.index('cleanup.remove'))
+        self.assertLess(ops.index('cleanup.absence'),ops.index('postflight.current_APKs_and_generation'))
+
+    def test_actual_finish_hook_runs_after_native_failure(self):
+        x,ops=self.exercise_actual_finish_lifecycle(native_failure=True)
+        self.assertEqual(x['process_exit_code'],7);self.assertEqual(x['cleanup'],'verified_absent')
+        self.assertTrue(x['postflight_app_identity']['verified'])
+        self.assertIn('postflight.current_APKs_and_generation',ops)
+
+    def test_capture_failure_retains_raw_and_root_without_skipping_postflight(self):
+        x,ops=self.exercise_actual_finish_lifecycle(capture_failure=True)
+        self.assertFalse(x['raw_pull_completed'])
+        self.assertEqual(x['cleanup'],'processes_absent_raw_incomplete_remote_root_retained')
+        self.assertNotIn('cleanup.remove',ops);self.assertTrue(x['postflight_app_identity']['verified'])
+
+    def test_postflight_failure_does_not_replace_independent_cleanup_proof(self):
+        x,ops=self.exercise_actual_finish_lifecycle(postflight_failure=True)
+        self.assertFalse(x['postflight_app_identity']['verified'])
+        self.assertEqual(x['cleanup'],'verified_absent');self.assertTrue(x['raw_pull_completed'])
+        self.assertTrue(x['postflight_app_identity']['cleanup_result_preserved'])
+
     def test_actual_captured_inputs_replace_formula_but_not_host_cache(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);policy_dir=root/'policy-01';policy_dir.mkdir();src=root/'source';src.mkdir();cap=root/'capture';cap.mkdir()

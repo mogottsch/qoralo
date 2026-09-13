@@ -56,7 +56,8 @@ def main():
     if owned_guard:
         proof=c['guardValidation'];require(digest(Path(proof['path']))==proof['sha256'],'guard proof drift')
         validated=json.loads(Path(proof['path']).read_text())
-        require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'] and validated.get('managedUnwindBlockedTeardown') is True,'guard proof APK/teardown mismatch')
+        require(validated.get('wholeStartFloorKiB')==3072*1024 and validated.get('preContextFloorKiB')==2648*1024 and validated.get('startupMemoryCreditKiB')==0,'guard phase-budget mismatch')
+        require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'] and validated.get('managedUnwindBlockedTeardown') is True and validated.get('affectedUiCases')==8,'guard proof APK/teardown/UI mismatch')
     require(not synthetic_only or progressive,'synthetic-only requires progressive validation')
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
     require(digest(Path(__file__))==c['controllerSha256'] and host_identity()['sha256']==c['hostGuardSha256'],'controller/guard drift')
@@ -252,7 +253,7 @@ def main():
                 require(result['status']=='owned_non_neural_guard_passed' and result['stopToObservedProcessAbsentMs']<=3000 and result['modelCalls']==0 and result['failureDurableBeforeTermination'] and result.get('managedUnwindBlockedTeardown') is True,'guard probe evidence failed')
                 require(rows(stable('after-guard-probe'))==rows(before),'guard probe changed user rows')
                 guard_probe_result=result
-            if progressive:
+            if progressive and not owned_guard:
                 density=device.shell('wm density',timeout=10);size=device.shell('wm size',timeout=10)
                 override=re.search(r'Override density:\s*(\d+)',density)
                 effective_size=re.search(r'Override size:\s*(\d+)x(\d+)',size) or re.search(r'Physical size:\s*(\d+)x(\d+)',size)
@@ -298,7 +299,7 @@ def main():
             require(result.get('episodeId')==owned and result.get('newAudioJobs')==1 and result.get('status')=='copied_real_chapter_normal_audio_complete','owned E2E result mismatch')
             if owned_guard:require(result.get('ownedMemoryGuardVerified') is True,'owned guard proof missing')
             if progressive:require(result.get('progressivePlaybackVerified') is True and result.get('mutedPlayer') is True,'progressive proof incomplete')
-            save('e2e-result.json',{'status':'passed','episodeId':owned,'driverReceiptSha256':digest(result_file),'progressivePlaybackVerified':progressive,'syntheticTests':8 if progressive else 0})
+            save('e2e-result.json',{'status':'passed','episodeId':owned,'driverReceiptSha256':digest(result_file),'progressivePlaybackVerified':progressive,'syntheticTestsRunHere':0 if owned_guard else 8 if progressive else 0,'reusedExactApkUiCases':8 if owned_guard else 0})
         except BaseException as error:save('private-controller-failure.json',{'error':repr(error),'launched':launched})
         finally:
             device.enforce_quota=False
