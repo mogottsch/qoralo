@@ -108,6 +108,8 @@ def main():
         if proof.get('status')!='owned_non_neural_guard_passed' or not 0<=proof['stopToObservedProcessAbsentMs']<=3000 or proof['modelCalls']!=0 or not proof['failureDurableBeforeTermination'] or proof.get('managedUnwindBlockedTeardown') is not True or proof.get('affectedUiCases')!=8:raise ValueError('Guard probe not validated')
         if proof['appApkSha256']!=value['app']['sha256'] or proof['testApkSha256']!=value['test']['sha256']:raise ValueError('Guard probe used different APKs')
         value['guardValidation']={'path':str(a.guard_validation.resolve()),'sha256':digest(a.guard_validation)}
+        value['syntheticPlaybackTestsBeforeModels']=0
+        value['reusedExactApkUiCases']=8
         value['scope']='one provisional owned guarded AUDIO/livePlayer evaluation at3GiB, not a global relaxation or proven minimum; no resynthesis for UI'
     value['evidenceBindings']={str(f.relative_to(out)):{'sha256':digest(f),'bytes':f.stat().st_size} for f in out.rglob('*') if f.is_file() and f.suffix!='.apk'}
     save('candidate.json',value);print(json.dumps({'candidateSha256':digest(out/'candidate.json'),'app':value['app'],'test':value['test'],'hostTests':counts},indent=2))
