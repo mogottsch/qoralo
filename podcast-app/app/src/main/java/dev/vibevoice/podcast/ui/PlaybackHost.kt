@@ -1,6 +1,7 @@
 package dev.vibevoice.podcast.ui
 
 import android.content.Context
+import android.os.Looper
 import androidx.compose.runtime.*
 import dev.vibevoice.podcast.data.*
 import dev.vibevoice.podcast.runtime.AudioAttemptBinding
@@ -46,6 +47,7 @@ class PlaybackHost(private val context: Context) {
     fun open(episode: EpisodeEntity, chapters: List<ChapterEntity>, audio: List<ChapterAudioEntity>,
              requestedJobId: String?, file: File?, stream: AudioAvailability?, saved: PlaybackStateEntity?,
              persist: (Long, Float, Boolean) -> Unit) {
+        check(Looper.myLooper() == Looper.getMainLooper()) { "PlaybackHost.open requires the main player looper" }
         val previous = active
         if (previous?.identity?.canReuse(episode.id, requestedJobId, file?.absolutePath) == true &&
             (previous.identity.liveBinding == null || previous.identity.liveBinding.revisionId == episode.lockedRevisionId) &&
@@ -62,7 +64,10 @@ class PlaybackHost(private val context: Context) {
         active = ActivePlayback(identity, session, episode, chapters, audio, selectedStream)
     }
 
-    fun close() { active?.session?.close(); active = null }
+    fun close() {
+        check(Looper.myLooper() == Looper.getMainLooper()) { "PlaybackHost.close requires the main player looper" }
+        active?.session?.close(); active = null
+    }
 }
 
 @Composable
@@ -71,6 +76,11 @@ fun PlaybackHostEffects(host: PlaybackHost, repository: PodcastRepository) {
     DisposableEffect(host) { onDispose { host.close() } }
     LaunchedEffect(active) {
         val current = active ?: return@LaunchedEffect
+        // Do not inherit Compose/test continuation interceptors for media access: a
+        // flowOn(IO) emission can otherwise resume that collector on its producer thread.
+        // Every child collector, restore and tick uses the actual Android main looper;
+        // flowOn(IO)/withContext(IO) below still keep all file/receipt work off main.
+        withContext(Dispatchers.Main.immediate) {
         val session = current.session
         launch { repository.observeEpisode(session.episodeId).collect { episode ->
             if (host.active !== current) return@collect
@@ -103,6 +113,7 @@ fun PlaybackHostEffects(host: PlaybackHost, repository: PodcastRepository) {
             session.tick()
             if (session.isPlaying && ++ticks % 10 == 0) session.checkpoint()
             delay(300)
+        }
         }
     }
 }
