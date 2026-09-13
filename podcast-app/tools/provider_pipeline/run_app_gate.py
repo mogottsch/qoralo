@@ -37,8 +37,8 @@ def require_quiet_audio(dump):
         require(state.group(1).lower() not in ('started','2'),'existing active audio playback; preserve user listening')
     require(not re.search(r'^\s*(?:Actual mode|mMode|Audio mode|mode)\s*[:=]\s*MODE_IN_(?:CALL|COMMUNICATION)\b',dump,re.M|re.I),'active call/communication audio; preserve it')
 
-def admission_floor_kib(synthetic_only):
-    return (2048 if synthetic_only else 3584)*1024
+def admission_floor_kib(synthetic_only,guard_probe_only=False,owned_guard=False):
+    return (2048 if synthetic_only or guard_probe_only else 3072 if owned_guard else 3584)*1024
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--candidate',type=Path,required=True);p.add_argument('--run-id',required=True)
@@ -46,6 +46,13 @@ def main():
     c=json.loads(a.candidate.read_text());require(c['kind']=='provider-app-integration','wrong candidate')
     progressive=bool(c.get('progressivePlayback'))
     synthetic_only=bool(c.get('syntheticOnly'))
+    guard_probe_only=bool(c.get('guardProbeOnly'))
+    owned_guard=bool(c.get('ownedMemoryGuard'))
+    require(sum((synthetic_only,guard_probe_only,owned_guard))<=1,'mixed execution phases')
+    if owned_guard:
+        proof=c['guardValidation'];require(digest(Path(proof['path']))==proof['sha256'],'guard proof drift')
+        validated=json.loads(Path(proof['path']).read_text())
+        require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'],'guard proof APK mismatch')
     require(not synthetic_only or progressive,'synthetic-only requires progressive validation')
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
     require(digest(Path(__file__))==c['controllerSha256'] and host_identity()['sha256']==c['hostGuardSha256'],'controller/guard drift')
@@ -54,7 +61,7 @@ def main():
     require(digest(pack/'manifest.json')==c['providerPack']['manifestSha256'],'pack manifest drift')
     for f in manifest['files']:require((pack/f['path']).stat().st_size==f['bytes'] and digest(pack/f['path'])==f['sha256'],'pack file drift')
     if not a.execute:
-        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'synthetic-only; no model entry allowed' if synthetic_only else 'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':360 if synthetic_only else 660}));return
+        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'non-neural only; no model entry allowed' if synthetic_only or guard_probe_only else 'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':90 if guard_probe_only else 360 if synthetic_only else 660}));return
     close_inherited_fds();os.umask(0o077);out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     device=Device('/home/moritz/Android/Sdk/platform-tools/adb','R5CW81PR8SY',out)
     guard=PhoneGuard(device,out,a.candidate,digest(a.candidate),host_identity()['sha256'])
@@ -73,7 +80,7 @@ def main():
         battery=device.shell('dumpsys battery',timeout=10)
         value=parse_health(memory,battery)
         save(label+'.json',value)
-        floor=admission_floor_kib(synthetic_only)
+        floor=admission_floor_kib(synthetic_only,guard_probe_only,owned_guard)
         if enforce:require(value['availableMemoryKiB']>=floor and value['batteryTemperatureC']<42,'phone headroom/thermal boundary')
     def stop(state,owned):
         safe_close(state,owned)
@@ -114,6 +121,7 @@ def main():
         pull+=1
         paths=[f'files/provider-integration/{a.run_id}',f'files/provider-integration/{a.run_id}-driver']
         if progressive:paths.append(f'files/player-ui-captures/{a.run_id}')
+        if guard_probe_only:paths.append(f'files/owned-guard-probe/{a.run_id}')
         if owned:paths.append(f'files/episodes/{owned}')
         script='set --; '+''.join(f'if test -d {shlex.quote(x)}; then set -- "$@" {shlex.quote(x)}; fi; ' for x in paths)+'if test "$#" -gt 0; then tar -cf - "$@"; else printf NO_RECEIPTS; fi'
         result=device.run(['exec-out',f'run-as {APP} sh -c '+shlex.quote(script)],timeout=90,binary=True)
@@ -134,7 +142,9 @@ def main():
         result.rename(out/'private-app-logcat.txt')
     def closure():
         device.enforce_quota=False
-        state=rows(stable('safety-before-close'));stop(state,owned)
+        state=rows(stable('safety-before-close'))
+        if guard_probe_only:require(not device.shell('pidof '+APP+':guard_probe',timeout=10,check=False).strip(),'probe still alive; do not hide ownership/termination failure with a package kill')
+        stop(state,owned)
         active=[j for j in state['generation_jobs'] if j['status'] in ('QUEUED','RUNNING')]
         if active:
             require(all(j['status']=='RUNNING' for j in active),'queued work retained; no automatic dispatch retry')
@@ -216,6 +226,21 @@ def main():
             for item in [{'path':'manifest.json','sha256':c['providerPack']['manifestSha256']},*manifest['files']]:
                 got=device.shell(f'run-as {APP} sha256sum '+shlex.quote(destination+'/'+item['path']),timeout=30).split()[0];require(got==item['sha256'],'device provider pack mismatch')
             pre=stable('before-instrument');require(pre==before,'database changed during update');guard.idle()
+            if guard_probe_only:
+                output=device.run(['shell','am','instrument','-w','-e','class',
+                    'dev.vibevoice.podcast.e2e.OwnedAudioGuardProbeTest,dev.vibevoice.podcast.ui.ProgressivePlayerRegressionTest',
+                    '-e','ownedGuardProbe','true','-e','diagnosticRun',a.run_id,'-e','profile','guard-probe',
+                    '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
+                    TEST_APP+'/androidx.test.runner.AndroidJUnitRunner'],timeout=90)
+                receipts()
+                require(re.search(r'OK \(3 tests\)',output) is not None and 'FAILURES!!!' not in output,'owned non-neural guard/progressive regression failed')
+                result_file=out/f'private-extracted-{pull:02d}/files/owned-guard-probe/{a.run_id}/probe-result.json'
+                require(result_file.is_file(),'guard probe success receipt missing')
+                result=json.loads(result_file.read_text())
+                require(result['status']=='owned_non_neural_guard_passed' and result['stopToObservedProcessAbsentMs']<=3000 and result['modelCalls']==0 and result['failureDurableBeforeTermination'],'guard probe evidence failed')
+                require(rows(stable('after-guard-probe'))==rows(before),'guard probe changed user rows')
+                save('guard-probe-result.json',result)
+                return # Dedicated non-neural phase; never enter AUDIO here.
             if progressive:
                 density=device.shell('wm density',timeout=10);size=device.shell('wm size',timeout=10)
                 override=re.search(r'Override density:\s*(\d+)',density)
@@ -249,11 +274,13 @@ def main():
                 '-e','originalRevisionSha256',REFERENCE['revisionSha256'],'-e','originalChapterId',REFERENCE['chapter'],
                 '-e','chapterSha256',REFERENCE['textSha256'],TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
             if progressive:command[-1:-1]=['-e','progressivePlayback','true']
+            if owned_guard:command[-1:-1]=['-e','ownedMemoryGuard','true']
             launched=True;device.run(command,timeout=660);ownership();receipts()
             result_file=out/f'private-extracted-{pull:02d}/files/provider-integration/{a.run_id}-driver/driver-result.json'
             require(result_file.is_file(),'owned E2E did not produce a success receipt; preserve its first result')
             result=json.loads(result_file.read_text())
             require(result.get('episodeId')==owned and result.get('newAudioJobs')==1 and result.get('status')=='copied_real_chapter_normal_audio_complete','owned E2E result mismatch')
+            if owned_guard:require(result.get('ownedMemoryGuardVerified') is True,'owned guard proof missing')
             if progressive:require(result.get('progressivePlaybackVerified') is True and result.get('mutedPlayer') is True,'progressive proof incomplete')
             save('e2e-result.json',{'status':'passed','episodeId':owned,'driverReceiptSha256':digest(result_file),'progressivePlaybackVerified':progressive,'syntheticTests':8 if progressive else 0})
         except BaseException as error:save('private-controller-failure.json',{'error':repr(error),'launched':launched})

@@ -422,6 +422,15 @@ class PodcastRepository(
         true
     }
 
+    /** Guard-only CAS: authenticate the exact locked plan/stream and sole active AUDIO attempt. */
+    suspend fun abortOwnedAudio(binding: dev.vibevoice.podcast.runtime.AudioAttemptBinding, reason: String): Boolean = database.withTransaction {
+        val job=dao.latestJob(binding.episodeId) ?: return@withTransaction false
+        val episode=dao.episode(binding.episodeId) ?: return@withTransaction false
+        if(job.id!=binding.jobId || job.status!=JobStatus.RUNNING || job.kind!=JobKind.AUDIO || dao.activeJobCount()!=1 ||
+            episode.phase!=EpisodePhase.GENERATING_AUDIO || audioBinding(binding.episodeId,binding.jobId)!=binding) return@withTransaction false
+        failJob(binding.episodeId,binding.jobId,"Owned validation stopped: $reason. Completed audio is retained; no retry was queued.","owned_resource_guard")
+    }
+
     /** Explicit user action for drafts hidden by older failed-edit handling. Never retries the edit. */
     suspend fun returnToSavedDraft(episodeId: String, failedJobId: String, revisionId: String) = database.withTransaction {
         val episode = requireEpisode(episodeId)

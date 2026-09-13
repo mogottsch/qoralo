@@ -25,6 +25,7 @@ class GenerationCoordinator(
     private val llmFactory: () -> LlmEngine = { GemmaLiteRtGpuEngine() },
     private val ttsFactory: () -> TtsEngine = ::ConfiguredTtsEngine,
     private val testPackProvider: ((ModelRoute) -> dev.vibevoice.podcast.model.VerifiedModelPack)? = null,
+    private val audioGuardFactory: ((dev.vibevoice.podcast.runtime.AudioAttemptBinding) -> dev.vibevoice.podcast.runtime.AudioExecutionGuard?)? = null,
 ) {
     suspend fun generateScript(episodeId: String, jobId: String, progress: suspend (String) -> Unit): String? {
         repository.claimJob(episodeId, jobId, JobKind.SCRIPT, "Verifying Gemma 4 E2B")
@@ -105,13 +106,17 @@ class GenerationCoordinator(
             repository.completeAudio(episodeId, jobId, final)
             return // Crucially before constructing/loading any TtsEngine.
         }
-        val engine = ttsFactory()
+        val guard=audioGuardFactory?.invoke(stream.binding)
+        var engine: TtsEngine?=null
         val rendered = mutableListOf<WavAssembler.Input>()
         var cursorFrame = 0L
         val pauseFrames = 44_100L * 700L / 1_000L
         try {
+            guard?.start();guard?.check()
+            engine=ttsFactory()
             progress("Loading four Supertonic contexts on HTP")
             engine.load(pack, "M1/SID5")
+            guard?.check()
             repository.recordVerifiedPack(pack, requireNotNull(engine.provenance))
             chapters.forEachIndexed { index, chapter ->
                 repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, "Creating ${chapter.title}")
@@ -119,7 +124,9 @@ class GenerationCoordinator(
                 val output = artifacts.chapterWav(episodeId, chapter.position)
                 var streamedSegments = 0
                 val spans = if (stream.binding.frontendVersion != null) dev.vibevoice.podcast.runtime.ProviderTextFrontend.segmentSpans(chapter.text) else emptyList()
+                guard?.check()
                 val metadata = engine.renderChapter(FrozenChapter(chapter.stableChapterId, chapter.title, chapter.text), output) { segment ->
+                    guard?.check()
                     segment.completedFile?.let { file ->
                         require(segment.completed == streamedSegments + 1 && segment.completedMetadata != null)
                         val span = spans.getOrNull(streamedSegments)
@@ -140,7 +147,7 @@ class GenerationCoordinator(
                 cursorFrame += metadata.frameCount + if (index < chapters.lastIndex) pauseFrames else 0L
             }
         } finally {
-            engine.close()
+            try { guard?.close() } finally { engine?.close() }
         }
         repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, chapters.size + 1, chapters.size, "Assembling episode")
         progress("Assembling ${episode.title}")

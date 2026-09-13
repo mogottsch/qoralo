@@ -16,6 +16,8 @@ class ProviderPipelineTests(unittest.TestCase):
     def test_synthetic_only_has_lower_floor_and_explicit_return_before_neural_entry(self):
         self.assertEqual(2048*1024,admission_floor_kib(True))
         self.assertEqual(3584*1024,admission_floor_kib(False))
+        self.assertEqual(2048*1024,admission_floor_kib(False,guard_probe_only=True))
+        self.assertEqual(3072*1024,admission_floor_kib(False,owned_guard=True))
         source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
         boundary=source.index("            if synthetic_only:\n                save('synthetic-only-result.json'")
         neural=source.index("            health('health-before-inference',True)")
@@ -24,6 +26,18 @@ class ProviderPipelineTests(unittest.TestCase):
             test=(ROOT/f'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/{name}.kt').read_text()
             for forbidden in ['ProviderQnnEngine(', 'ConfiguredTtsEngine(', 'ProviderNative.', 'GenerationService', 'NativeGemmaEngine(']:
                 self.assertNotIn(forbidden,test)
+    def test_guard_probe_is_non_neural_and_returns_before_audio(self):
+        source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
+        start=source.index('            if guard_probe_only:\n                output=')
+        end=source.index("            health('health-before-inference',True)")
+        self.assertIn('return # Dedicated non-neural phase',source[start:end])
+        service=(ROOT/'podcast-app/app/src/debug/java/dev/vibevoice/podcast/runtime/OwnedAudioGuardProbeService.kt').read_text()
+        for forbidden in ['ProviderNative.', 'ConfiguredTtsEngine(', 'GenerationCoordinator(', 'NativeAppRuntime']:
+            self.assertNotIn(forbidden,service)
+        self.assertIn('START_NOT_STICKY',service)
+        self.assertIn('Process.killProcess(pid)',service)
+        runtime=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/runtime/ProviderQnnEngine.kt').read_text()
+        self.assertEqual(2,runtime.count('catch (cancelled: CancellationException)'))
     def test_current_audio_guard_ignores_history_but_preserves_active_playback_or_calls(self):
         quiet='PlaybackActivityMonitor dump time\n  players:\n    ID:4 -- type:AudioTrack -- u/pid:123/456 -- state:paused\n  ducked players:\n  history 12:00 ID:3 -- state:started\n'
         require_quiet_audio(quiet)
@@ -43,7 +57,7 @@ class ProviderPipelineTests(unittest.TestCase):
         after['generation_jobs'][0]['status']='COMPLETE'
         with self.assertRaises(GuardError):compare_recovery(before,after)
         source=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/generation/GenerationCoordinator.kt').read_text()
-        self.assertLess(source.index('if (recovery != null)'),source.index('val engine = ttsFactory()'))
+        self.assertLess(source.index('if (recovery != null)'),source.index('engine=ttsFactory()'))
         self.assertIn('return // Crucially before constructing/loading any TtsEngine.',source)
         driver=(ROOT/'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/e2e/ProviderPublicationRecoveryTest.kt').read_text()
         for forbidden in ('ProviderNative','GemmaLiteRtGpuEngine','renderChapter','throw error','performClick'):

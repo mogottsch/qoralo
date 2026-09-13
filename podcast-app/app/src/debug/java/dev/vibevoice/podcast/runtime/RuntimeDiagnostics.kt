@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicReference
 internal object RuntimeDiagnostics {
     @Volatile private var providerRetention = false
     fun retainProviderIntermediates(): Boolean = providerRetention
+    fun createOwnedAudioGuard(context: android.content.Context, binding: AudioAttemptBinding, ownsLease: () -> Boolean): AudioExecutionGuard? =
+        OwnedAudioGuardAndroid.create(context,binding,ownsLease)
     suspend fun beginJob(context: android.content.Context, episodeId: String, jobId: String) {
         providerRetention = false
         runCatching {

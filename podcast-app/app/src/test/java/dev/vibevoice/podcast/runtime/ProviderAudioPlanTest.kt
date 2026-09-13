@@ -158,6 +158,29 @@ class ProviderAudioPlanTest {
         assertTrue(repository.verifiedTranscriptPassages(id).isEmpty()) // Never guess timing after a receipt integrity mismatch.
     }
 
+    @Test fun ownedGuardAuthenticatesAttemptAndRetainsPartialWithoutReadyOrRetry() = runTest {
+        val text="A sentence.";val id=draft(text);val revision=repository.activeRevision(id).first
+        val job=repository.lockAndQueueAudio(id);repository.claimJob(id,job,JobKind.AUDIO,"Rendering")
+        val binding=AudioAttemptBinding(id,job,revision.id,revision.contentHash,ProviderAudioPlan.PACK_SHA256,ProviderTextFrontend.VERSION)
+        val stream=ProgressiveAudio.create(artifacts,binding)
+        val wave=temp.newFile("guard-partial.wav")
+        RandomAccessFile(wave,"rw").use { out ->
+            fun u16(v:Int){out.write(v and 255);out.write((v ushr 8) and 255)}
+            fun u32(v:Int){u16(v and 65535);u16((v ushr 16) and 65535)}
+            out.writeBytes("RIFF");u32(36+6144);out.writeBytes("WAVEfmt ");u32(16);u16(1);u16(1);u32(44100);u32(88200);u16(2);u16(16);out.writeBytes("data");u32(6144);repeat(3072){u16(1200)}
+        }
+        stream.append(0,"c1",0,wave,WavInspector.inspectSupertonicOutput(wave),AudioPassageKind.PROVIDER_SEGMENT,0,text.length)
+        val available=ProgressiveAudio.Reader(artifacts,binding).read(AudioAvailabilityState.GENERATING)
+        assertFalse(repository.abortOwnedAudio(binding.copy(jobId="other"),"LOW_MEMORY"))
+        assertFalse(repository.abortOwnedAudio(binding.copy(revisionSha256="other"),"LOW_MEMORY"))
+        assertTrue(repository.abortOwnedAudio(binding,"LOW_MEMORY"))
+        assertEquals(JobStatus.FAILED,repository.latestJob(id)?.status)
+        assertEquals(job,repository.latestJob(id)?.id);assertEquals(EpisodePhase.FAILED,repository.episode(id).phase)
+        assertNull(repository.episode(id).finalAudioPath)
+        assertEquals(available.chunks,ProgressiveAudio.Reader(artifacts,binding).read(AudioAvailabilityState.FAILED).chunks)
+        assertFalse(repository.abortOwnedAudio(binding,"SECOND_STOP"))
+    }
+
     @Test fun actualLocalPackPassesFullDataIntegrityAndDeclaresProviderRecipe() {
         val pack = ModelPackVerifier().verify(File(requireNotNull(System.getenv("PODCAST_PROVIDER_PACK"))),
             ModelPackRequirement(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP, ProviderAudioPlan.PACK_ID, ProviderAudioPlan.PACK_SHA256))

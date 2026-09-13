@@ -1,6 +1,9 @@
 package dev.vibevoice.podcast.runtime
 
 import dev.vibevoice.podcast.model.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -32,14 +35,17 @@ class ProviderQnnEngine(private val retainIntermediates: Boolean = false) : TtsE
         val view = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
         indexer = IntArray(65536) { view.int }
         try {
+            currentCoroutineContext().ensureActive()
             NativeAppRuntime.ensureLoaded()
             handle = ProviderNative.create(pack.root.absolutePath)
+            currentCoroutineContext().ensureActive()
             require(handle != 0L) { "Provider contexts did not initialize" }
             val actual = validateProvenance(ProviderNative.provenance(handle), "SUPERTONIC_3_PROVIDER_PIPELINE", "QNN_HTP",
                 setOf("duration_context", "text_context", "vector_context", "vocoder_context", "htp", "native_text_edges", "native_latent_edges", "numpy_legacy_rng"))
             provenance = requireMatchingSupertonicContract(shape, actual)
             contract = shape; packHash = pack.manifestSha256
-        } catch (error: Throwable) { close(); throw InferenceRouteException("Provider HTP initialization failed; no CPU fallback", error) }
+        } catch (cancelled: CancellationException) { close();throw cancelled }
+        catch (error: Throwable) { close(); throw InferenceRouteException("Provider HTP initialization failed; no CPU fallback", error) }
     }
 
     override suspend fun renderChapter(chapter: FrozenChapter, output: File, onProgress: suspend (TtsSegmentProgress) -> Unit): AudioMetadata = withContext(Dispatchers.IO) {
@@ -66,8 +72,10 @@ class ProviderQnnEngine(private val retainIntermediates: Boolean = false) : TtsE
             var consumedNoise = 0L
             onProgress(TtsSegmentProgress(0, segments.size, 0))
             segments.forEachIndexed { i, segment ->
+                currentCoroutineContext().ensureActive()
                 val file = File(scratch, "segment-$i.wav")
                 val record = JSONObject(ProviderNative.renderSegment(handle, segment.ids, file.absolutePath))
+                currentCoroutineContext().ensureActive()
                 val metadata = WavInspector.inspectSupertonicOutput(file)
                 val nativeL = record.getLong("nativeLatentLength")
                 require(record.getInt("nativeTextLength") == segment.textExtent && nativeL in 1..config.latentLength.toLong())
@@ -93,6 +101,9 @@ class ProviderQnnEngine(private val retainIntermediates: Boolean = false) : TtsE
             ProviderPublication.publish(temp, output, result.sha256)
             published = true
             result
+        } catch (cancelled: CancellationException) {
+            runCatching { File(scratch,"cancelled.json").writeText(receipt("cancelled").toString(2)) }
+            throw cancelled
         } catch (error: Throwable) {
             // Failure artifacts stay private for diagnosis; never delete the first failed waveform/receipt.
             runCatching { File(scratch, "private-failure.json").writeText(receipt("failed").put("error", error.stackTraceToString()).toString(2)) }

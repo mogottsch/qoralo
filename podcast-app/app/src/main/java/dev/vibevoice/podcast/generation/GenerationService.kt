@@ -36,7 +36,11 @@ class GenerationService : Service() {
     override fun onCreate() {
         super.onCreate()
         val app = application as PodcastApplication
-        coordinator = GenerationCoordinator(app.repository, app.artifacts)
+        coordinator = GenerationCoordinator(app.repository, app.artifacts, audioGuardFactory = { binding ->
+            dev.vibevoice.podcast.runtime.RuntimeDiagnostics.createOwnedAudioGuard(this, binding) {
+                activeJobId == binding.jobId && activeEpisodeId == binding.episodeId
+            }
+        })
         getSystemService(NotificationManager::class.java).createNotificationChannel(
             NotificationChannel(CHANNEL_ID, getString(R.string.generation_channel_name), NotificationManager.IMPORTANCE_LOW).apply {
                 description = getString(R.string.generation_channel_description)

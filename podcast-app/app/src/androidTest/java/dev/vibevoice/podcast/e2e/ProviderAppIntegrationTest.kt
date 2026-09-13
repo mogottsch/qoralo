@@ -37,6 +37,7 @@ class ProviderAppIntegrationTest {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext;val app = context.applicationContext as PodcastApplication
         val progressive = args.getString("progressivePlayback") == "true"
+        val ownedGuard = args.getString("ownedMemoryGuard") == "true"
         val run = requireNotNull(args.getString("diagnosticRun"));require(Regex("provider-app-[a-z0-9-]{1,48}").matches(run))
         val parent = File(context.filesDir, "provider-integration").apply { mkdirs() }
         val root = File(parent, "$run-driver");require(root.mkdir())
@@ -105,7 +106,7 @@ class ProviderAppIntegrationTest {
             require(capability.chapters.single().segmentCount == 15)
             val control = JSONObject().put("runId", run).put("episodeId", id).put("revisionId", newRevision)
                 .put("revisionSha256", stored.sha256).put("appApkSha256", appHash).put("packSha256", ProviderAudioPlan.PACK_SHA256)
-                .put("progressivePlayback", progressive).put("mutePlayer", progressive)
+                .put("progressivePlayback", progressive).put("mutePlayer", progressive).put("ownedMemoryGuard",ownedGuard)
             val controlBytes = (control.toString(2) + "\n").toByteArray()
             File(parent, "active.json").writeBytes(controlBytes);File(root, "control-original.json").writeBytes(controlBytes)
             scenario?.close();scenario = ActivityScenario.launch(MainActivity::class.java)
@@ -252,6 +253,13 @@ class ProviderAppIntegrationTest {
             require(original == db { app.repository.episode(originalId) })
             require(app.artifacts.sha256(app.repository.resolveArtifact(revision.relativePath)) == revision.contentHash)
             require(File(parent, "$run/job-identity.json").isFile) { "Provider diagnostic retention was not bound" }
+            if(ownedGuard) {
+                val guardIdentity=JSONObject(File(parent,"$run/guard-identity.json").readText())
+                require(guardIdentity.getString("planSha256")==audioId && guardIdentity.getLong("startFloorKiB")==3072L*1024)
+                val events=File(parent,"$run/guard-events.jsonl").readLines().filter {it.isNotBlank()}.map(::JSONObject)
+                require(events.any {it.getString("event")=="sample"} && events.any {it.getString("event")=="closed"})
+                require(events.none {it.getString("event")=="stop_requested"})
+            }
             json("driver-result.json", JSONObject().put("status", "copied_real_chapter_normal_audio_complete")
                 .put("appApkSha256", appHash).put("testApkSha256", testHash).put("episodeId", id).put("jobId", audioId)
                 .put("revisionId", newRevision).put("revisionSha256", stored.sha256).put("referenceTextSha256", sourceHash)
@@ -259,7 +267,7 @@ class ProviderAppIntegrationTest {
                 .put("frames", metadata.frameCount).put("sampleRateHz", metadata.sampleRateHz).put("providerSegments", 15)
                 .put("newScriptModelCalls", 0).put("newAudioJobs", 1).put("originalEpisodeUnchanged", true)
                 .put("playRequested", progressive).put("mutedPlayer", progressive).put("exportRequested", false)
-                .put("progressivePlaybackVerified", progressive).put("listeningReview", "not_reviewed"))
+                .put("progressivePlaybackVerified", progressive).put("ownedMemoryGuardVerified",ownedGuard).put("listeningReview", "not_reviewed"))
         } catch (error: Throwable) {
             runCatching { json("private-driver-failure.json", JSONObject().put("error", error.stackTraceToString())) }
             // A UI assertion is not a reason to throw away the one already-requested neural run.

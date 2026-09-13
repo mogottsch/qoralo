@@ -10,7 +10,10 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser();p.add_argument('--source-commit',required=True);p.add_argument('--work',type=Path,required=True)
     p.add_argument('--native-build',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');p.add_argument('--progressive-playback',action='store_true');p.add_argument('--synthetic-only',action='store_true');a=p.parse_args()
+    p.add_argument('--prior-candidate',type=Path,default=APP/'.local/user-edit-ready/candidate-02/candidate.json');p.add_argument('--publication-recovery',action='store_true');p.add_argument('--progressive-playback',action='store_true');p.add_argument('--synthetic-only',action='store_true');p.add_argument('--guard-probe-only',action='store_true');p.add_argument('--owned-memory-guard',action='store_true');p.add_argument('--guard-validation',type=Path);a=p.parse_args()
+    if sum((a.synthetic_only,a.guard_probe_only,a.owned_memory_guard,a.publication_recovery))>1:raise ValueError('Different frozen execution phases')
+    if (a.guard_probe_only or a.owned_memory_guard) and not a.progressive_playback:raise ValueError('Guard validation requires progressive candidate')
+    if a.owned_memory_guard and a.guard_validation is None:raise ValueError('Validated non-neural guard evidence required before neural freeze')
     if a.synthetic_only and not a.progressive_playback:raise ValueError('Synthetic-only requires progressive validation')
     if a.publication_recovery and a.progressive_playback:raise ValueError('Different validation scopes')
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);build=a.work.resolve()/'build-source/podcast-app'
@@ -82,8 +85,13 @@ def main():
         'scope':'preserving install and eight synthetic-only playback UI cases; zero model construction/calls/new AUDIO jobs; explicit return before neural entry' if a.synthetic_only else 'new non-neural publication attempt for exact already-completed owned chapter; original failed job/plan/WAV and all other user data preserved' if a.publication_recovery else 'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
         'progressivePlayback':a.progressive_playback,
         'syntheticOnly':a.synthetic_only,
-        'syntheticAdmissionFloorKiB':2048*1024 if a.synthetic_only else 3584*1024,
-        'neuralAdmissionFloorKiB':3584*1024,
+        'guardProbeOnly':a.guard_probe_only,
+        'ownedMemoryGuard':a.owned_memory_guard,
+        'guardPlanningEnvelopeMiB':2048,
+        'guardProactiveStopKiB':1280*1024,
+        'guardEmergencyReserveKiB':600*1024,
+        'syntheticAdmissionFloorKiB':2048*1024 if a.synthetic_only or a.guard_probe_only else 3072*1024 if a.owned_memory_guard else 3584*1024,
+        'neuralAdmissionFloorKiB':3072*1024 if a.owned_memory_guard else 3584*1024,
         'syntheticPlaybackTestsBeforeModels':8 if a.progressive_playback else 0,
         'playbackScope':'explicit muted Play on owned episode only' if a.progressive_playback else 'no Play requested',
         'instrumentationSeconds':360 if a.synthetic_only else 120 if a.publication_recovery else 660,'driverAudioPollingSeconds':90 if a.publication_recovery else 600,'genericTextRange':[1,320],'genericLatentRange':[1,512],
@@ -92,6 +100,13 @@ def main():
         'newAppWaveListening':'not_reviewed','independentReviewer':None,'hostTests':counts}
     for key in ['app','test']:
         file=out/(key+'.apk');value[key]={'path':str(file),'sha256':digest(file),'bytes':file.stat().st_size}
+    if a.guard_probe_only:value['scope']='one owned non-neural blocking-worker guard/latency check plus two progressive regressions; never enters AUDIO'
+    if a.owned_memory_guard:
+        proof=json.loads(a.guard_validation.read_text())
+        if proof.get('status')!='owned_non_neural_guard_passed' or not 0<=proof['stopToObservedProcessAbsentMs']<=3000 or proof['modelCalls']!=0 or not proof['failureDurableBeforeTermination']:raise ValueError('Guard probe not validated')
+        if proof['appApkSha256']!=value['app']['sha256'] or proof['testApkSha256']!=value['test']['sha256']:raise ValueError('Guard probe used different APKs')
+        value['guardValidation']={'path':str(a.guard_validation.resolve()),'sha256':digest(a.guard_validation)}
+        value['scope']='one provisional owned guarded AUDIO/livePlayer evaluation at3GiB, not a global relaxation or proven minimum; no resynthesis for UI'
     value['evidenceBindings']={str(f.relative_to(out)):{'sha256':digest(f),'bytes':f.stat().st_size} for f in out.rglob('*') if f.is_file() and f.suffix!='.apk'}
     save('candidate.json',value);print(json.dumps({'candidateSha256':digest(out/'candidate.json'),'app':value['app'],'test':value['test'],'hostTests':counts},indent=2))
 if __name__=='__main__':main()
