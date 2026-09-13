@@ -1,0 +1,16 @@
+[
+  "g++",
+  "-std=c++20",
+  "-O0",
+  "-pthread",
+  "-I/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-allocation-observer/build-01/sdk-source/examples/Genie/Genie/src/qualla/MmappedFile/include",
+  "-I/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-mapping-observer/fixture-01/headers",
+  "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-mapping-observer/fixture-01/original.cpp",
+  "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-mapping-observer/fixture-01/test.cpp",
+  "-Wl,--wrap=mmap",
+  "-Wl,--wrap=malloc",
+  "-Wl,--wrap=calloc",
+  "-Wl,--wrap=realloc",
+  "-o",
+  "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-mapping-observer/fixture-01/original"
+]

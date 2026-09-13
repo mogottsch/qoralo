@@ -1,0 +1,40 @@
+{
+  "classification": "tiny_injected_mmap_failure_contract_fixture",
+  "cases": [
+    {
+      "mode": "original",
+      "injected_failure": false,
+      "exit": 0,
+      "summary": "injected_failure=0 mmap_calls=2 remap_open_return=1 isOpen=1 pointer_null=0 mapped_bytes=4096"
+    },
+    {
+      "mode": "original",
+      "injected_failure": true,
+      "exit": 0,
+      "summary": "injected_failure=1 mmap_calls=2 remap_open_return=1 isOpen=0 pointer_null=1 mapped_bytes=0"
+    },
+    {
+      "mode": "observed",
+      "injected_failure": false,
+      "exit": 0,
+      "summary": "injected_failure=0 mmap_calls=2 remap_open_return=1 isOpen=1 pointer_null=0 mapped_bytes=4096",
+      "log_events": 32,
+      "log_bytes": 17994,
+      "CLOEXEC_and_no_authored_heap_calls_passed": true
+    },
+    {
+      "mode": "observed",
+      "injected_failure": true,
+      "exit": 0,
+      "summary": "injected_failure=1 mmap_calls=2 remap_open_return=1 isOpen=0 pointer_null=1 mapped_bytes=0",
+      "log_events": 32,
+      "log_bytes": 17977,
+      "CLOEXEC_and_no_authored_heap_calls_passed": true
+    }
+  ],
+  "original_and_observed_results_equal": true,
+  "forced_MAP_FAILED_ENOMEM_can_leave_open_return_true_pointer_null_size0": true,
+  "fixture_proves_actual_Android_cause": false,
+  "AS_changed": false,
+  "phone_or_model_executed": false
+}

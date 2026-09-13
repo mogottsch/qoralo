@@ -1,0 +1,47 @@
+{
+  "classification": "host_only_mapping_AS_discriminator_readiness",
+  "actual_Android_mapping_failure_proven": false,
+  "source_failure_propagation_fixture_passed": true,
+  "AS_change": false,
+  "new_phone_or_model_runs": 0,
+  "build": {
+    "actual_native_exit": 0,
+    "seconds": 8.841721487000086,
+    "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-mapping-observer/build-01/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+    "model_or_phone_executed": false,
+    "binary_sha256": "ee2b10d89d9fec2442bdf6cfd6a1e369eb525ec1c0d091acd2ee19bcb00ba099",
+    "binary_bytes": 11672744
+  },
+  "stage": {
+    "stage": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/paired-mapping-observer-stage-01",
+    "manifest_sha256": "807980c106a59584752ce52abece89dd50062c827505fb2136ae0c950ca7206e",
+    "files": 19,
+    "bytes": 4013562980,
+    "only_payload_change": "lib/libGenie.so",
+    "model_or_phone_executed": false
+  },
+  "mapping_metadata_cap": {
+    "events": 32,
+    "bytes": 32768
+  },
+  "instrumented_source_files_plus_header": 3,
+  "original_mmap_flags_call_count_open_returns_and_LUT_binding_behavior_preserved": true,
+  "contemporaneous_evidence_planned": [
+    "mmap.before request length + actual AS/selfmemory",
+    "mmap.after actual address/MAP_FAILED + immediately saved errno",
+    "File.open boolean return + mapped bytes/isOpen",
+    "LUT cached pointer + independent declared file bytes/mapped bytes/isOpen"
+  ],
+  "prior_snapshot": {
+    "AS": 8589934592,
+    "VmSize": 6343651328,
+    "AS_headroom": 2246283264,
+    "PLE_file_bytes": 2348810240,
+    "map_timing_is_earlier_than_snapshot": true,
+    "that_difference_proves_AS_cause": false
+  },
+  "postflight_hook": "Corrected actual _finish_remote, independently recorded from cleanup",
+  "next_control": "Request one separately scheduled same8GiBAS/cap1/300s mapping-observer checkpoint only after app priority. Do not revise AS unless contemporaneous mapping result/headroom identifies the constraint; no automatic replay or host-reference fallback.",
+  "tests_passed": 311,
+  "implementation_bindings_sha256": "5c7990db70efa1e36e73701120059c34f9c319fbe11a66b852c09ed7a1c842ef"
+}
