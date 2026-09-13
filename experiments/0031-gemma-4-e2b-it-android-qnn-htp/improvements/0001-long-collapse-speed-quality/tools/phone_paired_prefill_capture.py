@@ -84,10 +84,21 @@ def load_lifecycle(expected_apks,job_quiet):
             reply=self._shell('preflight.rpc_readiness',health.PROBE,10);observed=health.classify(reply.stdout);self.result['rpc_preflight']=observed
             if observed['explicit_resource_blockers']:raise module.GuardError('RPC_RESOURCE_NOT_READY')
             return super()._launch_and_wait()
-        def _cleanup_root(self):
-            super()._cleanup_root()
-            if self.launch_attempted:
-                reply=self._shell('postflight.current_APKs_and_generation',old_app.IDENTITY+QUIET,45);self.result['postflight_app_identity']=validate_app(reply.stdout,expected_apks)
+        def _finish_remote(self):
+            # This is the hook invoked by the preserved lifecycle. Cleanup/raw
+            # preservation must happen even if the independent identity check fails.
+            try:
+                super()._finish_remote()
+            finally:
+                if self.launch_attempted:
+                    try:
+                        reply=self._shell('postflight.current_APKs_and_generation',old_app.IDENTITY+QUIET,45)
+                        observation=validate_app(reply.stdout,expected_apks)
+                        self.result['postflight_app_identity']={'verified':True,**observation}
+                    except Exception as error:
+                        self.result['postflight_app_identity']={'verified':False,'error_type':type(error).__name__,'reason':str(error),'cleanup_result_preserved':True}
+                else:
+                    self.result['postflight_app_identity']={'verified':None,'reason':'native launch not attempted; no postflight identity observation'}
     module.Controller=CaptureController
     prior_plan=module.plan
     def capture_plan():

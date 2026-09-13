@@ -1,12 +1,14 @@
 # Paired checkpoint: native allocation failure before the first graph
 
+> **Postflight correction:** the original derived claim that APK hashes matched “before and after” is withdrawn. Only the preflight hashes were verified; no postflight identity command was recorded. The original text/manifests and raw receipts are preserved in the [scoped correction](../paired-postflight-claim-correction-01/README.md). Independent raw-pull, owned-process/root cleanup and phone-release evidence are unchanged.
+
 **The corrected phone preflight passed, but the query failed with `std::bad_alloc`. No input/logit capture or host reference ran. The phone was released for Janek.**
 
 Run `paired-prefill-20260912T140747Z-02` used the freshly granted slot, frozen observer/model/stage, both cap-1 controls, 300-second process deadline and 8 GiB address-space setting.
 
 ## What completed
 
-- Fresh main/test APK hashes matched `04d9293b…aef7f` / `2dd4e0d8…6d3184`, before and after the attempt.
+- Fresh **preflight** main/test APK hashes matched `04d9293b…aef7f` / `2dd4e0d8…6d3184`. Postflight APK identity was **not observed**; the earlier “before and after” claim is superseded by the correction above.
 - Both streaming playback checks returned upstream exit 0, parse OK, zero owned active players and one owned inactive player. Generation/test processes were absent. The idle main process was not mislabeled as generation.
 - Dialog creation completed in the retained profile: 2,300,470 microseconds. The runtime reported 104,235,008 bytes allocated for an I/O buffer set; that is **not** process RSS or total memory.
 - One query was attempted. It returned `std::bad_alloc` and `Failed to query (-1)`.

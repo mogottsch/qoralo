@@ -1,5 +1,7 @@
 # Paired-prefill readiness: captured inputs, independent caches
 
+> **Postflight correction:** the originally prepared APK-postflight override was not dispatched by the preserved lifecycle. Treat its postflight promise below as superseded, not as verification. Genuine new-run preflight checks and independent cleanup evidence remain valid. See the [scoped correction and future-hook tests](../paired-postflight-claim-correction-01/README.md); original derived documents and all raw receipts are preserved.
+
 **The phone observer and host declared-policy reference are prepared and frozen. No phone or full-model execution occurred in this preparation.** A new Pi-granted paired checkpoint can now be scheduled around Janek's playback work, subject to fresh full APK identities and actual user-job quiescence.
 
 This is a reference for the **declared final DLC quantization/precision policy**, not bit-exact emulation of proprietary DSP rounding, fusion, accumulation or transcendental kernels. Unknown historical exporter provenance is not being used as an indefinite blocker.
