@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T13:20:24+00:00",
+  "updated_at": "2026-09-13T13:21:55+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -93,8 +93,8 @@
       "title": "Gemma QNN diagnostics",
       "status": "reviewing",
       "owner": "Jere",
-      "now": "The single host reference completed and released its resources. Its final score row differs sharply from the captured QNN row: different top choice, no equal codes, no shared top-20 choices, and negative cosine similarity.",
-      "next": "All captured inputs were bound and matched their expected formulas. This does not yet identify QNN/DSP as the cause: Jere is auditing the reference operator and encoding semantics before treating it as numerical ground truth. No rerun, phone replay, or quality claim.",
+      "now": "Jere is auditing the saved reference calculation before any rerun. The completed capture and the large mismatch are retained observations, not a QNN defect or quality result.",
+      "next": "Check how compact weights, input/output grids, masks, casts, and matrix/softmax shapes are interpreted against the documented model contract. Use saved ranges and first anomalous-node statistics only; no new forward, phone replay, or claimed correction yet.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere / Nik",
-      "now": "Jere’s single host reference is complete; a saved-data semantics audit and packaging follow. Nik’s non-neural fixture validation is still pending.",
-      "next": "No new model run, QNN phone replay, or quality claim. The divergence is not yet attributed to QNN or DSP.",
+      "now": "Jere performs a saved-data reference audit. Nik’s non-neural fixture validation is still pending.",
+      "next": "No new model run or phone replay. Do not choose a reference interpretation simply because it matches the QNN output.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Audit saved reference semantics and package divergence",
-      "reported_at": "2026-09-13T13:20:24+00:00",
-      "reported_by": "Jere — host reference complete/no rerun",
+      "task": "Audit saved reference encoding and operator semantics",
+      "reported_at": "2026-09-13T13:21:55+00:00",
+      "reported_by": "Pi — no rerun/correction yet",
       "stale_after_seconds": 900
     },
     {
