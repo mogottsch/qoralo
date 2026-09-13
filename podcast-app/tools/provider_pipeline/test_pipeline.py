@@ -7,7 +7,7 @@ import unittest
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(ROOT/'podcast-app/tools'))
-from run_app_gate import safe_close,parse_health,require_quiet_audio,admission_floor_kib
+from run_app_gate import safe_close,parse_health,require_quiet_audio,require_fresh_quiet_audio,admission_floor_kib
 from duration_phone_guard import GuardError
 from run_publication_recovery import compare_recovery,SCOPE
 from short_product_preservation import TABLES
@@ -38,6 +38,19 @@ class ProviderPipelineTests(unittest.TestCase):
         self.assertIn('Process.killProcess(pid)',service)
         runtime=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/runtime/ProviderQnnEngine.kt').read_text()
         self.assertEqual(2,runtime.count('catch (cancelled: CancellationException)'))
+    def test_package_stop_refreshes_audio_and_probe_covers_shared_teardown(self):
+        source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
+        stop=source[source.index('    def stop(state,owned):'):source.index('    owned=None;')]
+        self.assertLess(stop.index('fresh_quiet_audio()'),stop.index("device.shell('am force-stop '"))
+        for relative in ['app/src/main/java/dev/vibevoice/podcast/generation/GenerationCoordinator.kt','app/src/debug/java/dev/vibevoice/podcast/runtime/OwnedAudioGuardProbeService.kt']:
+            self.assertIn('closeGuardedAudio(guard)',(ROOT/'podcast-app'/relative).read_text())
+    def test_quiet_then_foreign_play_and_stale_unknown_close_observations_reject(self):
+        quiet='PlaybackActivityMonitor dump time\n  players:\n    ID:4 -- type:AudioTrack -- u/pid:123/456 -- state:paused\n  ducked players:\n'
+        require_fresh_quiet_audio(quiet,10,10.2,10.2)
+        with self.assertRaises(GuardError):require_fresh_quiet_audio(quiet.replace('state:paused','state:started'),11,11.2,11.2)
+        with self.assertRaises(GuardError):require_fresh_quiet_audio(quiet,10,10.2,12)
+        with self.assertRaises(GuardError):require_fresh_quiet_audio(quiet,10,13,13)
+        with self.assertRaises(GuardError):require_fresh_quiet_audio('unavailable',10,10.2,10.2)
     def test_current_audio_guard_ignores_history_but_preserves_active_playback_or_calls(self):
         quiet='PlaybackActivityMonitor dump time\n  players:\n    ID:4 -- type:AudioTrack -- u/pid:123/456 -- state:paused\n  ducked players:\n  history 12:00 ID:3 -- state:started\n'
         require_quiet_audio(quiet)

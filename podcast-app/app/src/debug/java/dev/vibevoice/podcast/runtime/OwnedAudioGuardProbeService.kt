@@ -8,6 +8,8 @@ import org.json.JSONObject
 import java.io.File
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /** Dedicated, non-sticky, non-neural process. Never opens the user's podcast database or a model. */
 class OwnedAudioGuardProbeService:Service() {
@@ -36,14 +38,17 @@ class OwnedAudioGuardProbeService:Service() {
                 database.execSQL("INSERT INTO worker VALUES(?,?,?,?)",arrayOf<Any>(planHash,pid,ticks,"RUNNING"))
                 OwnedAudioGuardAndroid.write(File(root,"worker-identity.json"),JSONObject().put("pid",pid).put("startTicks",ticks).put("planSha256",planHash).put("modelConstructions",0).put("modelCalls",0))
                 val blocked=AtomicBoolean(false)
+                val working=AtomicBoolean(false)
+                val teardownEntered=CountDownLatch(1)
                 val guard=OwnedAudioGuard(identity,
                     sample={
                         val live=OwnedAudioGuardAndroid.actualSample(this,identity)
-                        OwnedAudioGuardAndroid.write(File(root,"live-samples.jsonl"),JSONObject().put("monotonicNs",live.monotonicNs).put("availableKiB",live.availableKiB).put("temperatureC",live.temperatureC).put("injectedLow",blocked.get()),true)
-                        live.copy(availableKiB=if(blocked.get()) 1024L*1024 else 4096L*1024)
+                        OwnedAudioGuardAndroid.write(File(root,"live-samples.jsonl"),JSONObject().put("monotonicNs",live.monotonicNs).put("availableKiB",live.availableKiB).put("temperatureC",live.temperatureC).put("injectedLow",working.get()),true)
+                        live.copy(availableKiB=if(working.get()) 1024L*1024 else 4096L*1024)
                     },
                     ownsLease={active.get() && Process.myPid()==pid && OwnedAudioGuardAndroid.startTicks(pid)==ticks && hash(plan)==planHash},
                     persistFailure={reason ->
+                        require(teardownEntered.await(2,TimeUnit.SECONDS)) { "Managed unwind did not enter native-style teardown" }
                         database.beginTransaction()
                         val changed=try {
                             val update=database.compileStatement("UPDATE worker SET state='FAILED' WHERE plan=? AND pid=? AND ticks=? AND state='RUNNING'")
@@ -54,10 +59,20 @@ class OwnedAudioGuardProbeService:Service() {
                         changed
                     },terminateSelf={Process.killProcess(pid)},receipt={event,sample,reason->OwnedAudioGuardAndroid.trace(root,event,sample,reason)})
                 guard.start()
-                OwnedAudioGuardAndroid.write(File(root,"blocked-worker.json"),JSONObject().put("monotonicNs",System.nanoTime()).put("nonNeural",true))
-                blocked.set(true)
-                SystemClock.sleep(600_000) // Deliberately blocked, independent of the sampler/watchdog.
-                error("Guard failed to terminate its owned blocking worker")
+                working.set(true)
+                try {
+                    while(true) { guard.check();SystemClock.sleep(5) }
+                } finally {
+                    // Same ordering as the production coordinator: keep the guard alive through
+                    // synchronous destruction after cancellation crosses a managed boundary.
+                    closeGuardedAudio(guard) {
+                        blocked.set(true)
+                        OwnedAudioGuardAndroid.write(File(root,"blocked-worker.json"),JSONObject().put("monotonicNs",System.nanoTime()).put("nonNeural",true).put("phase","managed_unwind_blocked_teardown"))
+                        teardownEntered.countDown()
+                        SystemClock.sleep(600_000)
+                        error("Guard failed to terminate its owned blocked teardown")
+                    }
+                }
             } catch(error:Throwable) {
                 runCatching {val run=intent?.getStringExtra("run");if(run!=null && Regex("provider-app-[a-z0-9-]{1,48}").matches(run)) OwnedAudioGuardAndroid.write(File(filesDir,"owned-guard-probe/$run/private-failure.json"),JSONObject().put("type",error.javaClass.simpleName))}
                 stopSelf(startId)

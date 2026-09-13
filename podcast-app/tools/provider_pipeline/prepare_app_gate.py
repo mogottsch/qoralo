@@ -100,10 +100,12 @@ def main():
         'newAppWaveListening':'not_reviewed','independentReviewer':None,'hostTests':counts}
     for key in ['app','test']:
         file=out/(key+'.apk');value[key]={'path':str(file),'sha256':digest(file),'bytes':file.stat().st_size}
-    if a.guard_probe_only:value['scope']='one owned non-neural blocking-worker guard/latency check plus two progressive regressions; never enters AUDIO'
+    if a.guard_probe_only:
+        value['scope']='one owned non-neural managed-unwind/blocked-teardown guard check plus eight default/narrow progressive and transcript regressions; never enters AUDIO'
+        value['instrumentationSeconds']=450
     if a.owned_memory_guard:
         proof=json.loads(a.guard_validation.read_text())
-        if proof.get('status')!='owned_non_neural_guard_passed' or not 0<=proof['stopToObservedProcessAbsentMs']<=3000 or proof['modelCalls']!=0 or not proof['failureDurableBeforeTermination']:raise ValueError('Guard probe not validated')
+        if proof.get('status')!='owned_non_neural_guard_passed' or not 0<=proof['stopToObservedProcessAbsentMs']<=3000 or proof['modelCalls']!=0 or not proof['failureDurableBeforeTermination'] or proof.get('managedUnwindBlockedTeardown') is not True or proof.get('affectedUiCases')!=8:raise ValueError('Guard probe not validated')
         if proof['appApkSha256']!=value['app']['sha256'] or proof['testApkSha256']!=value['test']['sha256']:raise ValueError('Guard probe used different APKs')
         value['guardValidation']={'path':str(a.guard_validation.resolve()),'sha256':digest(a.guard_validation)}
         value['scope']='one provisional owned guarded AUDIO/livePlayer evaluation at3GiB, not a global relaxation or proven minimum; no resynthesis for UI'

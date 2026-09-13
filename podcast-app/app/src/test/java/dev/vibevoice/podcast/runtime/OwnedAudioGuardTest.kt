@@ -56,6 +56,25 @@ class OwnedAudioGuardTest {
             finally {runCatching {guard.close()}}
         }
     }
+    @Test fun managedLowMemoryUnwindKeepsGuardAliveThroughBlockingEngineClose() {
+        val low=AtomicBoolean(false);val teardown=CountDownLatch(1);val release=CountDownLatch(1);val terminated=CountDownLatch(1)
+        val guard=OwnedAudioGuard(id,{sample(if(low.get()) 1000000 else 4000000,ns=System.nanoTime())},{true},
+            {assertTrue(teardown.await(2,TimeUnit.SECONDS));true},{terminated.countDown();release.countDown()},{_,_,_->})
+        guard.start()
+        val worker=Thread {
+            runCatching {
+                try {
+                    low.set(true)
+                    while(true) {guard.check();Thread.sleep(5)}
+                } finally {
+                    closeGuardedAudio(guard) {teardown.countDown();release.await(10,TimeUnit.SECONDS)}
+                }
+            }
+        }.apply {start()}
+        try {assertTrue(terminated.await(3,TimeUnit.SECONDS));assertEquals(0L,teardown.count)}
+        finally {release.countDown();worker.join(3000);runCatching {guard.close()}}
+        assertFalse(worker.isAlive)
+    }
     @Test fun closeRevokesLeaseAndDoesNotKillLaterWork() {
         val low=AtomicBoolean(false);val kills=AtomicInteger()
         val guard=OwnedAudioGuard(id,{sample(if(low.get()) 1000000 else 4000000,ns=System.nanoTime())},{true},{true},{kills.incrementAndGet()},{_,_,_->})

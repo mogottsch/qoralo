@@ -147,7 +147,7 @@ class GenerationCoordinator(
                 cursorFrame += metadata.frameCount + if (index < chapters.lastIndex) pauseFrames else 0L
             }
         } finally {
-            try { guard?.close() } finally { engine?.close() }
+            dev.vibevoice.podcast.runtime.closeGuardedAudio(guard) { engine?.close() }
         }
         repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, chapters.size + 1, chapters.size, "Assembling episode")
         progress("Assembling ${episode.title}")

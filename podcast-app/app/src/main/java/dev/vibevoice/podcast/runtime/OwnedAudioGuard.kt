@@ -40,6 +40,11 @@ interface AudioExecutionGuard : AutoCloseable {
     fun check()
 }
 
+/** Native destruction is part of the guarded lifetime, including cancellation unwinds. */
+fun closeGuardedAudio(guard: AudioExecutionGuard?, destroyEngine: () -> Unit) {
+    try { destroyEngine() } finally { guard?.close() }
+}
+
 /** Two independent threads: a blocked sampler cannot prevent the watchdog detecting a stale sample.
  * Termination is self-only, serialized with close; it requires durable failure AND a still-current
  * process/attempt lease. Missing ownership never authorizes killing a replacement worker.

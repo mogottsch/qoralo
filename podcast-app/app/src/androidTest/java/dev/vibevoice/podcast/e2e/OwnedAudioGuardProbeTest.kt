@@ -42,6 +42,7 @@ class OwnedAudioGuardProbeTest {
             rule.runOnIdle { ContextCompat.startForegroundService(context,Intent(context,OwnedAudioGuardProbeService::class.java).putExtra("run",run)) }
             rule.waitUntil(15_000) {File(root,"blocked-worker.json").isFile || File(root,"private-failure.json").isFile}
             require(!File(root,"private-failure.json").isFile)
+            require(JSONObject(File(root,"blocked-worker.json").readText()).getString("phase")=="managed_unwind_blocked_teardown")
             val identity=JSONObject(File(root,"worker-identity.json").readText())
             val pid=identity.getInt("pid")
             rule.waitUntil(8000) { context.getSystemService(ActivityManager::class.java).runningAppProcesses.orEmpty().none {it.pid==pid && it.processName==context.packageName+":guard_probe"} }
@@ -62,7 +63,7 @@ class OwnedAudioGuardProbeTest {
             File(root,"probe-result.json").writeText(JSONObject().put("status","owned_non_neural_guard_passed").put("appApkSha256",hash).put("testApkSha256",testHash).put("pid",pid).put("startTicks",identity.getLong("startTicks"))
                 .put("planSha256",identity.getString("planSha256")).put("stopToObservedProcessAbsentMs",latencyMs)
                 .put("modelCalls",0).put("modelConstructions",0).put("newUserAudioJobs",0).put("syntheticPrivateWorkerRows",1)
-                .put("failureDurableBeforeTermination",true).put("inFlightQnnCancellationProven",false).toString(2))
+                .put("failureDurableBeforeTermination",true).put("managedUnwindBlockedTeardown",true).put("inFlightQnnCancellationProven",false).toString(2))
         } catch(error:Throwable) {
             File(root,"private-test-failure.txt").writeText(error.stackTraceToString())
             throw AssertionError("Owned non-neural guard probe failed; retain private state, no model entry")

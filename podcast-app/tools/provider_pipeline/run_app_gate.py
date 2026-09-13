@@ -37,6 +37,10 @@ def require_quiet_audio(dump):
         require(state.group(1).lower() not in ('started','2'),'existing active audio playback; preserve user listening')
     require(not re.search(r'^\s*(?:Actual mode|mMode|Audio mode|mode)\s*[:=]\s*MODE_IN_(?:CALL|COMMUNICATION)\b',dump,re.M|re.I),'active call/communication audio; preserve it')
 
+def require_fresh_quiet_audio(dump,started,finished,now):
+    require(0<=finished-started<=2 and 0<=now-finished<=1,'stale/unknown playback observation; refuse destructive close')
+    require_quiet_audio(dump)
+
 def admission_floor_kib(synthetic_only,guard_probe_only=False,owned_guard=False):
     return (2048 if synthetic_only or guard_probe_only else 3072 if owned_guard else 3584)*1024
 
@@ -52,7 +56,7 @@ def main():
     if owned_guard:
         proof=c['guardValidation'];require(digest(Path(proof['path']))==proof['sha256'],'guard proof drift')
         validated=json.loads(Path(proof['path']).read_text())
-        require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'],'guard proof APK mismatch')
+        require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'] and validated.get('managedUnwindBlockedTeardown') is True,'guard proof APK/teardown mismatch')
     require(not synthetic_only or progressive,'synthetic-only requires progressive validation')
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
     require(digest(Path(__file__))==c['controllerSha256'] and host_identity()['sha256']==c['hostGuardSha256'],'controller/guard drift')
@@ -61,7 +65,7 @@ def main():
     require(digest(pack/'manifest.json')==c['providerPack']['manifestSha256'],'pack manifest drift')
     for f in manifest['files']:require((pack/f['path']).stat().st_size==f['bytes'] and digest(pack/f['path'])==f['sha256'],'pack file drift')
     if not a.execute:
-        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'non-neural only; no model entry allowed' if synthetic_only or guard_probe_only else 'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':90 if guard_probe_only else 360 if synthetic_only else 660}));return
+        print(json.dumps({'mode':'plan-only','adbCalls':0,'modelCalls':0,'scope':'non-neural only; no model entry allowed' if synthetic_only or guard_probe_only else 'one copied-real-chapter normal AUDIO job;0newSCRIPT/EDIT; no originals mutated','instrumentationSeconds':450 if guard_probe_only else 360 if synthetic_only else 660}));return
     close_inherited_fds();os.umask(0o077);out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     device=Device('/home/moritz/Android/Sdk/platform-tools/adb','R5CW81PR8SY',out)
     guard=PhoneGuard(device,out,a.candidate,digest(a.candidate),host_identity()['sha256'])
@@ -82,9 +86,16 @@ def main():
         save(label+'.json',value)
         floor=admission_floor_kib(synthetic_only,guard_probe_only,owned_guard)
         if enforce:require(value['availableMemoryKiB']>=floor and value['batteryTemperatureC']<42,'phone headroom/thermal boundary')
+    def fresh_quiet_audio():
+        started=time.monotonic();text=device.shell('dumpsys audio',timeout=5);finished=time.monotonic()
+        require_fresh_quiet_audio(text,started,finished,time.monotonic())
     def stop(state,owned):
         safe_close(state,owned)
-        for package in (APP,TEST_APP):device.shell('am force-stop '+package,timeout=10)
+        # A user may begin listening without creating a job. Refuse even our own active audio
+        # here rather than silently interrupt unknown/foreign playback during package cleanup.
+        for package in (APP,TEST_APP):
+            fresh_quiet_audio()
+            device.shell('am force-stop '+package,timeout=10)
         guard.idle()
     owned=None;before=None;files_before=None;setup=False;launched=False;remote_created=False;pull=0;candidate_installed=False
     ui_settings={};ui_changed=False
@@ -226,21 +237,21 @@ def main():
             for item in [{'path':'manifest.json','sha256':c['providerPack']['manifestSha256']},*manifest['files']]:
                 got=device.shell(f'run-as {APP} sha256sum '+shlex.quote(destination+'/'+item['path']),timeout=30).split()[0];require(got==item['sha256'],'device provider pack mismatch')
             pre=stable('before-instrument');require(pre==before,'database changed during update');guard.idle()
+            fresh_quiet_audio()
             if guard_probe_only:
                 output=device.run(['shell','am','instrument','-w','-e','class',
-                    'dev.vibevoice.podcast.e2e.OwnedAudioGuardProbeTest,dev.vibevoice.podcast.ui.ProgressivePlayerRegressionTest',
+                    'dev.vibevoice.podcast.e2e.OwnedAudioGuardProbeTest',
                     '-e','ownedGuardProbe','true','-e','diagnosticRun',a.run_id,'-e','profile','guard-probe',
                     '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
                     TEST_APP+'/androidx.test.runner.AndroidJUnitRunner'],timeout=90)
                 receipts()
-                require(re.search(r'OK \(3 tests\)',output) is not None and 'FAILURES!!!' not in output,'owned non-neural guard/progressive regression failed')
+                require(re.search(r'OK \(1 test\)',output) is not None and 'FAILURES!!!' not in output,'owned non-neural guard regression failed')
                 result_file=out/f'private-extracted-{pull:02d}/files/owned-guard-probe/{a.run_id}/probe-result.json'
                 require(result_file.is_file(),'guard probe success receipt missing')
                 result=json.loads(result_file.read_text())
-                require(result['status']=='owned_non_neural_guard_passed' and result['stopToObservedProcessAbsentMs']<=3000 and result['modelCalls']==0 and result['failureDurableBeforeTermination'],'guard probe evidence failed')
+                require(result['status']=='owned_non_neural_guard_passed' and result['stopToObservedProcessAbsentMs']<=3000 and result['modelCalls']==0 and result['failureDurableBeforeTermination'] and result.get('managedUnwindBlockedTeardown') is True,'guard probe evidence failed')
                 require(rows(stable('after-guard-probe'))==rows(before),'guard probe changed user rows')
-                save('guard-probe-result.json',result)
-                return # Dedicated non-neural phase; never enter AUDIO here.
+                guard_probe_result=result
             if progressive:
                 density=device.shell('wm density',timeout=10);size=device.shell('wm size',timeout=10)
                 override=re.search(r'Override density:\s*(\d+)',density)
@@ -253,6 +264,7 @@ def main():
                         ui_changed=True
                         device.shell('wm density '+str(round(int(effective_size.group(1))*160/320)),timeout=10)
                         device.shell('settings put system font_scale 2.0',timeout=10)
+                    fresh_quiet_audio()
                     synthetic=device.run(['shell','am','instrument','-w','-e','class',
                         'dev.vibevoice.podcast.ui.PersistentPlayerRegressionTest,dev.vibevoice.podcast.ui.ProgressivePlayerRegressionTest',
                         '-e','diagnosticRun',a.run_id,'-e','profile',profile,
@@ -263,10 +275,14 @@ def main():
                     stop(synthetic_state,None)
                     save('synthetic-playback-'+profile+'.json',{'tests':4,'profile':profile,'status':'passed','modelCalls':0,'realNeuralRun':False})
                 restore_ui()
+            if guard_probe_only:
+                save('guard-probe-result.json',dict(guard_probe_result,affectedUiCases=8))
+                return # Dedicated non-neural phase; never enter AUDIO here.
             if synthetic_only:
                 save('synthetic-only-result.json',{'status':'ui_tests_passed_not_neural_e2e','tests':8,'modelCalls':0,'modelConstructions':0,'newAudioJobs':0,'neuralStageEntered':False,'admissionFloorKiB':2048*1024})
                 return # finally performs preservation/settings/identity/cleanup; never fall through to AUDIO.
             health('health-before-inference',True)
+            fresh_quiet_audio()
             command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
                 '-e','providerIntegration','copied-real-chapter-v1','-e','diagnosticRun',a.run_id,
                 '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
