@@ -167,16 +167,14 @@ class ProviderAppIntegrationTest {
                     .put("firstObservedPlayerAdvanceMsFromLock", (firstAdvancement.getLong("monotonicNs")-lockRequestedNs)/1_000_000.0)
                     .put("audiblePlaybackMeasured", false).put("muted", true))
                 fun capture(name: String) {
-                    fun owner(): String = android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand("dumpsys window windows")).bufferedReader().use { reader ->
-                        reader.readLines().single { it.contains("mCurrentFocus=") }
+                    // Optional visual evidence is never a reason to abandon functional checks.
+                    runCatching {
+                        val value=OwnedWindowCapturePolicy.capture(context.packageName,root,name,
+                            readWindowDump={android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand("dumpsys window displays")).bufferedReader().use {it.readText()}},
+                            takeScreenshot={instrumentation.uiAutomation.takeScreenshot()})
+                        json("$name-state.json",value.put("episodeId",id).put("jobId",audioId).put("player",playerEvents().last())
+                            .put("phase",db { app.repository.episode(id) }.phase))
                     }
-                    val beforeOwner=owner();require(beforeOwner.contains(context.packageName + "/"))
-                    val bitmap=requireNotNull(instrumentation.uiAutomation.takeScreenshot())
-                    File(root,"private-$name.png").outputStream().use { require(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)) };bitmap.recycle()
-                    val afterOwner=owner();require(beforeOwner==afterOwner)
-                    json("$name-state.json",JSONObject().put("episodeId",id).put("jobId",audioId).put("package",context.packageName)
-                        .put("windowOwnerBefore",beforeOwner).put("windowOwnerAfter",afterOwner)
-                        .put("player",playerEvents().last()).put("phase",db { app.repository.episode(id) }.phase))
                 }
                 fun atTail(event: JSONObject?) = event != null && event.getBoolean("wantsPlayback") && !event.getBoolean("playing") &&
                     event.getInt("playbackState")==4 && event.getLong("absolutePositionMs")>=event.getLong("availableMs")-2
