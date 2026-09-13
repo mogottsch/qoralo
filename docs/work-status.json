@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T13:12:35+00:00",
+  "updated_at": "2026-09-13T13:20:24+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "The QNN capture is complete and correctly bound. It contains all 129 expected payloads, including the final score row. Jere has started the single bounded host reference using those exact inputs.",
-      "next": "The host run uses the saved inputs and its own caches under unchanged limits. No second run or retry. No claim yet about numerical agreement, DSP precision, root cause, quality, or speed.",
+      "now": "The single host reference completed and released its resources. Its final score row differs sharply from the captured QNN row: different top choice, no equal codes, no shared top-20 choices, and negative cosine similarity.",
+      "next": "All captured inputs were bound and matched their expected formulas. This does not yet identify QNN/DSP as the cause: Jere is auditing the reference operator and encoding semantics before treating it as numerical ground truth. No rerun, phone replay, or quality claim.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -122,10 +122,10 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere / Nik",
-      "now": "Jere is running one bounded host reference from the complete capture. Nik is preparing one non-neural episode-management fixture run.",
-      "next": "No numerical result yet. Jere has no retry; Nik has no real user deletion, model run, or timing claim.",
+      "now": "Jere’s single host reference is complete; a saved-data semantics audit and packaging follow. Nik’s non-neural fixture validation is still pending.",
+      "next": "No new model run, QNN phone replay, or quality claim. The divergence is not yet attributed to QNN or DSP.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run one bounded host reference from QNN capture",
-      "reported_at": "2026-09-13T13:12:35+00:00",
-      "reported_by": "Jere — complete binding/host start",
+      "task": "Audit saved reference semantics and package divergence",
+      "reported_at": "2026-09-13T13:20:24+00:00",
+      "reported_by": "Jere — host reference complete/no rerun",
       "stale_after_seconds": 900
     },
     {
