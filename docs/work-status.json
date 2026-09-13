@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T12:56:34+00:00",
+  "updated_at": "2026-09-13T12:58:45+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Corrected QNN score-row capture started after app release. It is collecting the real prefill inputs and final score row under the existing safety limits.",
-      "next": "The phone will be released before analysis. A single host reference remains unstarted unless all 129 expected payloads and strict binding checks are complete.",
+      "now": "Corrected QNN capture finished and released successfully. Raw files were pulled; owned processes and remote files are gone, and the app identity matched before and after.",
+      "next": "Jere is checking that the capture is complete and correctly bound. The host reference has not started; Janek’s phone window is clear.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
-      "owner": "Jere",
-      "now": "Jere is running the single bounded QNN score-row capture under the phone lease.",
-      "next": "No capture result yet. Raw files, postflight checks, cleanup, and release come before analysis; no replay.",
+      "status": "preparing",
+      "owner": "Janek",
+      "now": "Jere released the QNN capture phone lease after successful cleanup. Janek’s next phone window is clear.",
+      "next": "No current phone action. Jere’s host reference remains unstarted until capture checks pass.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jere / Nik",
-      "now": "Janek packages the app handoff, Jere runs the QNN capture, and Nik prepares an isolated integration.",
-      "next": "The host reference is conditional on a complete, strictly bound capture after release.",
+      "now": "Janek packages the app handoff, Jere validates the saved QNN capture, and Nik prepares an isolated integration.",
+      "next": "No host reference result yet. Phone capture evidence is being checked before any host work.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -175,9 +175,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run bounded QNN score-row capture",
-      "reported_at": "2026-09-13T12:56:34+00:00",
-      "reported_by": "Jere — capture started/no outcome",
+      "task": "Check QNN capture completeness and binding",
+      "reported_at": "2026-09-13T12:58:45+00:00",
+      "reported_by": "Jere — phone capture released",
       "stale_after_seconds": 900
     },
     {
