@@ -1,0 +1,31 @@
+{
+  "classification": "real_PLE_dispatch_with_synthetic_QNN_backend_fixture",
+  "variants": {
+    "original": {
+      "exit": 0,
+      "summary": "legacy_PLE_dispatch=1 cap=1 final_n_past=1920 final_n_process=9 row=8 raw_values=262144 original_dequant_calls=1 sampler_calls=1 capture_before_dequant=0 raw_unchanged=1",
+      "capture_records": 0,
+      "dequant_F32_sha256": "8ff35c3f75509b39bf8a75e689c2d6eeeb3e4f5c3c51f2dd191fe84f2780f5bb"
+    },
+    "relocated": {
+      "exit": 0,
+      "summary": "legacy_PLE_dispatch=1 cap=1 final_n_past=1920 final_n_process=9 row=8 raw_values=262144 original_dequant_calls=1 sampler_calls=1 capture_before_dequant=1 raw_unchanged=1",
+      "capture_records": 2,
+      "dequant_F32_sha256": "8ff35c3f75509b39bf8a75e689c2d6eeeb3e4f5c3c51f2dd191fe84f2780f5bb",
+      "raw_values_verified": 262144,
+      "row8_selected_once": true,
+      "raw_payload_sha256": "f44a27d345f3f6b2d900732db810ddf05df8c93825e099922bc15c01d1e4b1f8",
+      "grid_metadata_verified": true,
+      "capture_before_original_dequant": true
+    }
+  },
+  "original_and_relocated_dequant_bit_identical": true,
+  "config_and_script_cap1_verified": true,
+  "request_sampler_calls": 1,
+  "original_dequant_call_count": 1,
+  "actual_engine_dispatch_and_getDequant_source_compiled": true,
+  "full_QNN_loop_or_model_executed": false,
+  "real_sampler_executed": false,
+  "phone_executed": false,
+  "prior_input_capture_budget_counters_seeded_only": true
+}

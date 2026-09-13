@@ -1,0 +1,33 @@
+{
+  "classification": "HOST_only_real_PLE_final_logit_capture_readiness",
+  "only_native_source_change": "raw final-row hook moved from unused getLogits(Tensor&) into actual getDequantLogits before unchanged dequant",
+  "single_row8_offset": true,
+  "original_dequant_unchanged_once": true,
+  "real_PLE_engine_dispatch_regression_passed": true,
+  "full_model_or_phone_run": false,
+  "fixture_scope": "Actual PLE NspEngine process/processAll, original legacy entry/output sizing/final dispatch/getDequantLogits and dequant template. QNN execution loop replaced with sentinel backend; sampler is downstream stand-in.",
+  "fixture_first_failure_preserved": "Ambiguous legacy overload source anchor; corrected to the complete std::vector<float> signature. No model/phone or C++ compilation in failed attempt.",
+  "build": {
+    "actual_native_exit": 0,
+    "seconds": 20.624843319999854,
+    "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/paired-legacy-logits/build-01/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+    "model_or_phone_executed": false,
+    "binary_sha256": "e2b554ca4e216f1df77c3c331b3f1295584cf030c7120cccc3b15bbce3a1e1ed",
+    "binary_bytes": 11674360
+  },
+  "stage": {
+    "stage": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/paired-legacy-logits-stage-01",
+    "manifest_sha256": "7b61cf0a03ad93292127a7ad59e1b74ae9b61ac4e660691a0cff5a947b40486c",
+    "files": 19,
+    "bytes": 4013564596,
+    "only_payload_change": "lib/libGenie.so",
+    "model_or_phone_executed": false
+  },
+  "AS_soft_hard_expected": 12884901888,
+  "same_model_LUT_input_cap1_300s_capture_limits": true,
+  "fresh_device_capture_proven": false,
+  "host_reference_started": false,
+  "next_phone_requires_actual_Pi_scheduled_slot_after_Janek_priority": true,
+  "tests_passed": 321,
+  "implementation_bindings_sha256": "e7fd167b4c5530e3d1654e1683493f77e654afcb162ac133064e7967680ba449"
+}
