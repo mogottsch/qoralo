@@ -3,8 +3,14 @@ package dev.vibevoice.podcast.ui
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Looper
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
@@ -13,6 +19,8 @@ import androidx.room.withTransaction
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.vibevoice.podcast.PodcastApplication
+import dev.vibevoice.podcast.e2e.OwnedWindowCapturePolicy
+import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
 import dev.vibevoice.podcast.data.ArtifactStore
 import dev.vibevoice.podcast.data.EpisodePhase
 import dev.vibevoice.podcast.data.JobStatus
@@ -64,7 +72,11 @@ class LiveCollectorRegressionTest {
         }
         val originals = linkedMapOf<String, String>()
         val stages = JSONArray()
+        val captures = JSONArray()
+        val coverage = JSONObject()
         var host: PlaybackHost? = null
+        var expanded by mutableStateOf(true)
+        var route by mutableStateOf("Library")
         var passed = false
         var producerWasOffMain = false
         val wrongListenerThread = AtomicBoolean(false)
@@ -119,7 +131,21 @@ class LiveCollectorRegressionTest {
                 val currentHost = remember { PlaybackHost(isolatedContext) }
                 host = currentHost
                 PlaybackHostEffects(currentHost, repository)
-                Text("Retained audio · background collector replay · no synthesis")
+                VibeVoiceTheme {
+                    Surface(color = MaterialTheme.colorScheme.surface) {
+                        Column(Modifier.fillMaxSize().then(if (!expanded) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)) {
+                            val active = currentHost.active
+                            if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true })
+                            Box(Modifier.weight(1f)) {
+                                if (active != null && expanded) PlayerScreen(active.episode, active.chapters, active.audio, null, null,
+                                    onBack = { expanded = false; route = "Library" }, onExport = {}, onPersist = { _, _, _ -> },
+                                    liveAudio = active.stream, sharedPlayback = active)
+                                else if (active != null && route == "Library") LibraryScreen(listOf(active.episode), {}, { expanded = true }, { route = "Settings" })
+                                else Text("Replay settings destination")
+                            }
+                        }
+                    }
+                }
             }
             rule.runOnIdle { requireNotNull(host).open(replayEpisode, chapters, emptyList(), jobId, null, initial, null) { _, _, _ -> } }
             val session = requireNotNull(host?.active).session
@@ -132,7 +158,6 @@ class LiveCollectorRegressionTest {
                         if (Looper.myLooper() != player.applicationLooper) wrongListenerThread.set(true)
                     }
                 })
-                session.seek(500); session.changeSpeed(1.25f)
             }
             fun snapshot(stage: String) = rule.runOnIdle {
                 assertSame(Looper.getMainLooper(), Looper.myLooper())
@@ -144,10 +169,22 @@ class LiveCollectorRegressionTest {
                     .put("playing", session.isPlaying).put("wantsPlayback", session.wantsPlayback)
                     .put("state", session.streamState?.name).put("muted", player.volume == 0f)
                     .put("speed", session.speed.toDouble()).put("applicationLooper", player.applicationLooper.thread.name)
+                    .put("surface", if (expanded) "player" else route)
+            }
+            fun captureOptional(name: String) {
+                val result = OwnedWindowCapturePolicy.capture(context.packageName, receiptDir, name,
+                    readWindowDump = {
+                        android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand("dumpsys window displays"))
+                            .bufferedReader().use { it.readText() }
+                    }, takeScreenshot = { instrumentation.uiAutomation.takeScreenshot() })
+                captures.put(JSONObject().put("name", name).put("result", result))
+                runCatching { writeJson(File(receiptDir, "capture-$name.json"), result) } // Optional capture never changes functional control flow.
             }
             stages.put(snapshot("initial-paused"))
+            require(!session.isPlaying && !session.wantsPlayback && session.positionMs == 0L)
+            coverage.put("noAutoplay", true)
             var published = 1
-            for (count in listOf(2, 5, 15)) {
+            fun stageTo(count: Int) {
                 io {
                     delay(150) // Real IO dispatcher publication, not main-thread session.update injection.
                     for (index in published until count) {
@@ -159,13 +196,86 @@ class LiveCollectorRegressionTest {
                 published = count
                 rule.waitUntil(15_000) { session.availableChunks.size == count }
                 val event = snapshot("io-prefix-$count")
-                require(!event.getBoolean("playing") && !event.getBoolean("wantsPlayback") && event.getBoolean("muted"))
-                require(event.getLong("absolutePositionMs") == 500L && event.getDouble("speed") == 1.25)
-                require(event.getInt("mediaItems") == count)
+                require(event.getBoolean("muted") && event.getInt("mediaItems") == count)
                 stages.put(event)
             }
-            rule.runOnIdle { session.togglePlay() }
-            rule.waitUntil(15_000) { session.isPlaying && session.positionMs > 900 }
+            fun seekToTail(): Long {
+                repeat(16) {
+                    if (!session.waiting) {
+                        val forward = rule.onNodeWithContentDescription("Forward 15 seconds", useUnmergedTree = true)
+                        if (!forward.fetchSemanticsNode().config.contains(SemanticsProperties.Disabled)) forward.performClick()
+                    }
+                }
+                rule.waitUntil(15_000) { session.waiting && session.wantsPlayback && !session.isPlaying && session.positionMs >= session.durationMs - 2 }
+                require(session.positionMs <= session.durationMs)
+                return session.positionMs
+            }
+            rule.onNodeWithContentDescription("Back 15 seconds", useUnmergedTree = true).assertIsNotEnabled()
+            rule.onNodeWithContentDescription("Forward 15 seconds", useUnmergedTree = true).performClick()
+            rule.runOnIdle { require(session.positionMs in 1..session.durationMs) }
+            rule.onNodeWithContentDescription("Back 15 seconds", useUnmergedTree = true).performClick()
+            rule.runOnIdle { require(session.positionMs == 0L) }
+            rule.onNodeWithContentDescription("Play", useUnmergedTree = true).performClick()
+            rule.waitUntil(15_000) { session.isPlaying && session.positionMs > 400 }
+            val firstTail = seekToTail()
+            coverage.put("availableOnlySeek", true)
+            stages.put(snapshot("tail-before-pause")); captureOptional("replay-live-tail")
+            rule.onNodeWithContentDescription("Pause", useUnmergedTree = true).performClick()
+            rule.waitUntil(10_000) { !session.isPlaying && !session.wantsPlayback }
+            stageTo(2)
+            require(!session.isPlaying && !session.wantsPlayback && kotlin.math.abs(session.positionMs - firstTail) <= 2)
+            coverage.put("tailPausePreserved", true)
+            stages.put(snapshot("pause-survives-arrival"))
+            rule.onNodeWithContentDescription("Play", useUnmergedTree = true).performClick()
+            rule.waitUntil(15_000) { session.isPlaying && session.positionMs > firstTail + 350 }
+            stages.put(snapshot("explicit-resume-at-frontier"))
+            coverage.put("explicitResumeAtFrontier", true)
+            val secondTail = seekToTail()
+            stageTo(5)
+            rule.waitUntil(15_000) { session.isPlaying && session.positionMs > secondTail + 350 }
+            coverage.put("autoResumeAtFrontier", true)
+            stages.put(snapshot("tail-auto-resumed"))
+            rule.onNodeWithContentDescription("Minimize player").performClick()
+            rule.onNodeWithContentDescription("Open player: ${sourceEpisode.title}").assertIsDisplayed()
+            rule.onNodeWithText("Settings").performClick()
+            rule.onNodeWithText("Replay settings destination").assertIsDisplayed()
+            val beforeNavigation = rule.runOnIdle { session.positionMs }
+            rule.waitUntil(10_000) { session.isPlaying && session.positionMs > beforeNavigation + 500 }
+            stages.put(snapshot("mini-settings")); captureOptional("replay-mini-settings")
+            coverage.put("playbackAdvancesWhileMinimized", true)
+            rule.onNodeWithContentDescription("Open player: ${sourceEpisode.title}").performClick()
+            rule.onNodeWithText("1.0× Speed").performClick()
+            rule.waitUntil(10_000) { session.speed == 1.25f }
+            stages.put(snapshot("reopened-same-player-speed"))
+            coverage.put("miniNavigationSamePlayer", true)
+            rule.onNodeWithText("Transcript").performClick()
+            rule.onNodeWithTag("Transcript passages").performTouchInput { swipeUp() }
+            rule.onNodeWithText("Follow playback").assertIsDisplayed()
+            val beforeNode = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode()
+            val scrollBefore = beforeNode.config[SemanticsProperties.VerticalScrollAxisRange].value()
+            val viewportBefore = beforeNode.boundsInRoot
+            val itemBefore = rule.runOnIdle { player.currentMediaItemIndex }
+            stageTo(15)
+            rule.waitUntil(25_000) {
+                session.availableChunks.indexOfLast { session.positionMs >= it.speechStartFrame * 1000L / 44_100L } > itemBefore
+            }
+            val afterNode = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode()
+            val scrollAfter = afterNode.config[SemanticsProperties.VerticalScrollAxisRange].value()
+            val manual = snapshot("manual-transcript-after-arrival").put("scrollBefore", scrollBefore).put("scrollAfter", scrollAfter)
+                .put("sameViewport", viewportBefore == afterNode.boundsInRoot).put("previousMediaItem", itemBefore)
+            stages.put(manual); captureOptional("replay-transcript-manual")
+            require(kotlin.math.abs(scrollBefore - scrollAfter) < 0.02f && viewportBefore == afterNode.boundsInRoot)
+            rule.onNodeWithText("Follow playback").assertIsDisplayed()
+            coverage.put("manualTranscriptFollow", true)
+            rule.onNodeWithText("Follow playback").performClick()
+            val currentPassage = SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Current passage, segment timing")
+            rule.waitUntil(10_000) { rule.onAllNodes(currentPassage).fetchSemanticsNodes().isNotEmpty() }
+            rule.onNode(currentPassage).assertIsDisplayed()
+            captureOptional("replay-transcript-following")
+            coverage.put("resumeFollowing", true)
+            rule.onNodeWithContentDescription("Close transcript").performClick()
+            rule.onNodeWithText("1.25× Speed").assertIsDisplayed()
+            coverage.put("speedPreserved", true)
             stages.put(snapshot("replay-advanced-before-fixture-complete"))
             val positionBeforeComplete = rule.runOnIdle { session.positionMs }
             io {
@@ -180,7 +290,11 @@ class LiveCollectorRegressionTest {
             }
             rule.waitUntil(15_000) { session.streamState == AudioAvailabilityState.COMPLETE && session.isPlaying && session.positionMs > positionBeforeComplete + 300 }
             stages.put(snapshot("same-player-after-fixture-complete"))
-            rule.runOnIdle { session.pause(); requireNotNull(host).close() }
+            coverage.put("samePlayerFinalization", true)
+            rule.onNodeWithContentDescription("Pause", useUnmergedTree = true).performClick()
+            rule.waitUntil(10_000) { !session.isPlaying && !session.wantsPlayback }
+            stages.put(snapshot("final-paused")); coverage.put("pausedAtEnd", true)
+            rule.runOnIdle { requireNotNull(host).close() }
             rule.waitForIdle()
             io {
                 require(app.repository.episode(episodeId) == sourceEpisode)
@@ -193,6 +307,8 @@ class LiveCollectorRegressionTest {
                     .put("newModelCalls", 0).put("newAudioJobs", 0).put("replay", true).put("htpConcurrency", false)
                     .put("producerOffMain", producerWasOffMain).put("playerApplicationLooper", "main")
                     .put("sourceDataUnchanged", true).put("sourceFilesChecked", originals.size).put("stages", stages)
+                    .put("remainingUiReplayVerified", true).put("coverage", coverage).put("optionalCaptures", captures)
+                    .put("navigationScope", "production Player/Mini/Transcript/Library components in isolated replay host")
                     .put("appApkSha256", sha256(File(context.applicationInfo.sourceDir)))
                     .put("testApkSha256", sha256(File(instrumentation.context.applicationInfo.sourceDir))))
             }
@@ -200,7 +316,8 @@ class LiveCollectorRegressionTest {
         } catch (error: Throwable) {
             io { writeJson(failure, JSONObject().put("status", "failed").put("replay", true).put("newModelCalls", 0)
                 .put("sourceEpisodeId", episodeId).put("sourceJobId", jobId).put("sourceMasterSha256", expectedMaster)
-                .put("cacheFixtureRetained", cache.absolutePath).put("stages", stages).put("error", error.stackTraceToString())) }
+                .put("cacheFixtureRetained", cache.absolutePath).put("stages", stages).put("coverage", coverage).put("optionalCaptures", captures)
+                .put("error", error.stackTraceToString())) }
             throw AssertionError("Retained-audio collector replay failed; inspect its private receipt. No model retry.")
         } finally {
             runCatching { rule.runOnIdle { host?.close() }; rule.waitForIdle() }
