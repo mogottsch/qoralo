@@ -100,10 +100,12 @@ internal fun <C : AutoCloseable> executeGemmaRequest(
         phase = GemmaFailurePhase.JSON_PARSE
         JSONObject(json)
         return json
+    } catch (cancelled: kotlinx.coroutines.CancellationException) {
+        throw cancelled // Keep cancellation distinct; use() still closes and retains suppressed failures.
     } catch (error: Throwable) {
         val failure = GemmaRequestException(mode, phase, FailureTypeGraph.capture(error), error)
         runCatching { failed(failure) }
-        // Retains the previous wrapper behavior, including cancellation as the original cause.
+        // Preserve structured runtime failures; cancellation is handled separately above.
         throw failure
     }
 }

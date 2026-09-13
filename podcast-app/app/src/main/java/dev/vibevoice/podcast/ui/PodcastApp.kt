@@ -36,6 +36,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.key
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -64,11 +66,28 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
     val agentOpen by viewModel.agentSheetOpen.collectAsState()
     val lockOpen by viewModel.lockDialogOpen.collectAsState()
     val message by viewModel.transientMessage.collectAsState()
+    val deletionTarget by viewModel.deletionTarget.collectAsState()
+    val deletionBusy by viewModel.deletionBusy.collectAsState()
+    val deletionError by viewModel.deletionError.collectAsState()
+    val detailsTarget by viewModel.detailsTarget.collectAsState()
+    val detailsError by viewModel.detailsError.collectAsState()
+    val diagnostics by viewModel.diagnostics.collectAsStateWithLifecycle()
+    val actionsScope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
     val context = LocalContext.current
     val repository = (context.applicationContext as PodcastApplication).repository
     val playbackHost = remember(repository) { PlaybackHost(context.applicationContext) }
     PlaybackHostEffects(playbackHost, repository)
+    deletionTarget?.let { target ->
+        DeleteEpisodeConfirmation(target, deletionBusy, deletionError, viewModel::cancelDeletion) {
+            actionsScope.launch {
+                if (viewModel.confirmDeletion(target.id).await()) {
+                    playbackHost.closeIfEpisode(target.id)
+                    viewModel.deletionAccepted(target.id)
+                }
+            }
+        }
+    }
     val activePlayback = playbackHost.active
     val showMiniPlayer = activePlayback != null && screen != AppScreen.Player
     LaunchedEffect(screen, episode, selectedPlayerEpisodeId, selectedLiveJob, liveAudio, playback, livePlayback) {
@@ -110,7 +129,8 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
             Box(Modifier.fillMaxWidth().weight(1f)) {
             when (screen) {
                 AppScreen.Library -> LibraryScreen(episodes, viewModel::newEpisode, viewModel::selectEpisode, viewModel::showSettings,
-                    playbackStates = libraryPlayback, chapterCounts = libraryChapterCounts)
+                    playbackStates = libraryPlayback, chapterCounts = libraryChapterCounts,
+                    episodeActions = { current -> EpisodeOverflow(current, viewModel::showDiagnostics, viewModel::askToDelete) })
                 AppScreen.Sources -> episode?.let { current -> key(current.id) {
                     SourcesScreen(
                         sources = sources.filter { it.episodeId == current.id },
@@ -163,6 +183,7 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                         androidx.compose.material3.TextButton(onClick = viewModel::showLibrary) { Text("Return to library") }
                     }
                 }
+                AppScreen.Diagnostics -> EpisodeDiagnosticsScreen(detailsTarget?.title ?: "Episode", diagnostics, detailsError, viewModel::showLibrary)
                 AppScreen.Settings -> SettingsScreen(viewModel::showLibrary)
             }
             }

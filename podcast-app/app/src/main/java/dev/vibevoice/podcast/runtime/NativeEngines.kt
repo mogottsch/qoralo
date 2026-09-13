@@ -14,6 +14,11 @@ import dev.vibevoice.podcast.model.ModelRoute
 import dev.vibevoice.podcast.model.SupertonicModelContract
 import dev.vibevoice.podcast.model.VerifiedModelPack
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import dev.vibevoice.podcast.episode.EpisodeMetrics
+import dev.vibevoice.podcast.episode.runtimeRequestMetrics
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -52,7 +57,8 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
                 readyComponents = setOf("model", "tokenizer", "gpu_delegate"),
             )
             RuntimeDiagnostics.verifiedGemma(pack)
-        } catch (error: Throwable) {
+        } catch (cancelled: CancellationException) { close(); throw cancelled }
+        catch (error: Throwable) {
             close()
             throw InferenceRouteException("Gemma 4 E2B LiteRT GPU failed to initialize", error)
         }
@@ -101,7 +107,16 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
         return generate("edit", requestJson)
     }
 
+    @OptIn(com.google.ai.edge.litertlm.ExperimentalApi::class)
     private suspend fun generate(mode: String, request: String, specificInstruction: String? = null): String = withContext(Dispatchers.Default) {
+        currentCoroutineContext().ensureActive()
+        val metrics = currentCoroutineContext()[EpisodeMetrics]
+        val started = System.nanoTime()
+        fun elapsed(ns: Long) = (System.nanoTime() - ns).coerceAtLeast(0) / 1_000_000.0
+        var setupMs: Double? = null
+        var sendMs: Double? = null
+        var counters: com.google.ai.edge.litertlm.BenchmarkInfo? = null
+        var outcome = "failed"
         val loaded = engine ?: error("Gemma engine is not loaded")
         val maxOutput = RuntimeDiagnostics.outputLimit(mode, when (mode) {
             "source_notes", "outline" -> 1_200
@@ -113,30 +128,45 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
         val responseFormat = responseSchema?.let(ResponseFormat::json)
         RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput, responseSchema)
         runCatching { observer?.beforeRequest(mode, request, instruction, maxOutput, responseSchema) }
+        try {
         executeGemmaRequest(
             mode = mode,
             create = {
-                loaded.createConversation(ConversationConfig(
+                val begin = System.nanoTime()
+                try { loaded.createConversation(ConversationConfig(
                     systemInstruction = Contents.of(instruction),
                     samplerConfig = SamplerConfig(topK = 1, topP = 1.0, temperature = 1.0),
                     channels = emptyList(),
                     maxOutputToken = maxOutput,
                     thinkingConfig = ThinkingConfig(enableThinking = false),
                     enableResponseFormat = responseFormat != null,
-                ))
+                )) } finally { setupMs = elapsed(begin) }
             },
             send = { conversation ->
-                val raw = RuntimeDiagnostics.send(conversation, request, responseFormat)
-                runCatching { observer?.responseReturned(raw) }
-                runCatching { observer?.conversationReturned(conversation) }
-                raw
+                val begin = System.nanoTime()
+                try {
+                    val raw = RuntimeDiagnostics.send(conversation, request, responseFormat)
+                    runCatching { observer?.responseReturned(raw) }
+                    runCatching { observer?.conversationReturned(conversation) }
+                    raw
+                } finally {
+                    sendMs = elapsed(begin)
+                    if (metrics != null) counters = runCatching { conversation.getBenchmarkInfo() }.getOrNull()
+                }
             },
             returned = { raw -> runCatching { RuntimeDiagnostics.responseReturned(raw) }; Unit },
             failed = { error ->
                 runCatching { RuntimeDiagnostics.requestFailed(error) }
                 runCatching { observer?.requestFailed(error) }
             },
-        )
+        ).also { currentCoroutineContext().ensureActive(); outcome = "complete" }
+        } catch (cancelled: CancellationException) { outcome = "cancelled"; throw cancelled }
+        finally {
+            metrics?.request(runtimeRequestMetrics(mode, outcome, elapsed(started), setupMs, sendMs,
+                counters?.lastPrefillTokenCount, counters?.lastDecodeTokenCount,
+                counters?.lastPrefillTokensPerSecond, counters?.lastDecodeTokensPerSecond,
+                counters?.initTimeInSecond, counters?.timeToFirstTokenInSecond))
+        }
     }
 
     override fun close() {

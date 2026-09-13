@@ -39,7 +39,10 @@ class ActivePlayback(
 }
 
 /** The app calls this above its navigation switch, so collapsing a screen cannot dispose audio. */
-class PlaybackHost(private val context: Context) {
+class PlaybackHost(private val context: Context, private val acquireFiles: (String) -> java.io.Closeable = { id ->
+    (context.applicationContext as dev.vibevoice.podcast.PodcastApplication).repository.acquireEpisodeFiles(id)
+}) {
+    private var fileLease: java.io.Closeable? = null
     var active by mutableStateOf<ActivePlayback?>(null)
         private set
 
@@ -54,15 +57,25 @@ class PlaybackHost(private val context: Context) {
         if (requestedJobId == null && file == null) return
         val selectedStream = stream.takeIf { requestedJobId != null }
         // Close before constructing its replacement: never two live ExoPlayers.
-        active?.session?.close()
-        active = null
-        val identity = PlaybackIdentity(episode.id, selectedStream?.binding, file?.absolutePath)
-        val session = EpisodePlayerSession(context.applicationContext, episode.id, file, selectedStream,
-            saved?.takeIf { it.episodeId == episode.id }, episode.durationMs ?: 0, persist)
-        active = ActivePlayback(identity, session, episode, chapters, audio, selectedStream)
+        val lease = try { acquireFiles(episode.id) } catch (_: dev.vibevoice.podcast.episode.EpisodeDeletedException) { return }
+        try {
+            close()
+            val identity = PlaybackIdentity(episode.id, selectedStream?.binding, file?.absolutePath)
+            val session = EpisodePlayerSession(context.applicationContext, episode.id, file, selectedStream,
+                saved?.takeIf { it.episodeId == episode.id }, episode.durationMs ?: 0, persist)
+            fileLease = lease
+            active = ActivePlayback(identity, session, episode, chapters, audio, selectedStream)
+        } catch (error: Throwable) { lease.close(); throw error }
     }
 
-    fun close() { active?.session?.close(); active = null }
+    fun closeIfEpisode(episodeId: String): Boolean {
+        if (active?.identity?.episodeId != episodeId) return false
+        close(); return true
+    }
+    fun close() {
+        val previous = active; active = null
+        try { previous?.session?.close() } finally { fileLease?.close(); fileLease = null }
+    }
 }
 
 @Composable
@@ -74,7 +87,7 @@ fun PlaybackHostEffects(host: PlaybackHost, repository: PodcastRepository) {
         val session = current.session
         launch { repository.observeEpisode(session.episodeId).collect { episode ->
             if (host.active !== current) return@collect
-            if (episode != null) current.episode = episode else session.pause(PlaybackStopReason.STALE_ATTEMPT)
+            if (episode != null) current.episode = episode else host.closeIfEpisode(session.episodeId)
         } }
         launch { repository.observeChapters(session.episodeId).collect { if (host.active === current) current.chapters = it.filter { row -> row.revisionId == current.revisionId } } }
         launch { repository.observeAudio(session.episodeId).collect { if (host.active === current) current.audio = it.filter { row -> row.episodeId == session.episodeId && row.lockedRevisionId == current.revisionId } } }

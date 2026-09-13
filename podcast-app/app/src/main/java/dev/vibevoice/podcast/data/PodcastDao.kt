@@ -14,6 +14,11 @@ interface PodcastDao {
     @Query("SELECT * FROM episodes WHERE id = :id") suspend fun episode(id: String): EpisodeEntity?
     @Query("SELECT * FROM episodes WHERE id = :id") fun observeEpisode(id: String): Flow<EpisodeEntity?>
     @Query("SELECT * FROM episodes ORDER BY updatedAtEpochMs DESC") fun observeEpisodes(): Flow<List<EpisodeEntity>>
+    @Query("DELETE FROM episodes WHERE id = :id") suspend fun deleteEpisodeRows(id: String): Int
+    @Query("SELECT relativePath FROM episode_sources WHERE episodeId != :id AND substr(relativePath, 1, length(:prefix)) = :prefix")
+    suspend fun foreignSourcePaths(id: String, prefix: String): List<String>
+    @Query("SELECT * FROM generation_jobs WHERE episodeId = :id ORDER BY createdAtEpochMs, rowid")
+    suspend fun episodeJobs(id: String): List<GenerationJobEntity>
 
     @Insert suspend fun insertSource(value: EpisodeSourceEntity)
     @Query("DELETE FROM episode_sources WHERE id = :id") suspend fun deleteSourceById(id: String): Int

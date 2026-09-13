@@ -181,6 +181,24 @@ class ProviderAudioPlanTest {
         assertFalse(repository.abortOwnedAudio(binding,"SECOND_STOP"))
     }
 
+    @Test fun deletionDoesNotDisableAuthenticatedResourceStopDuringNativeTeardown() = runTest {
+        val id = draft("A sentence."); val revision = repository.activeRevision(id).first
+        val job = repository.lockAndQueueAudio(id); repository.claimJob(id, job, JobKind.AUDIO, "Rendering")
+        val binding = AudioAttemptBinding(id, job, revision.id, revision.contentHash, ProviderAudioPlan.PACK_SHA256, ProviderTextFrontend.VERSION)
+        ProgressiveAudio.create(artifacts, binding)
+        repository.acquireEpisodeFiles(id).use {
+            repository.requestEpisodeDeletion(id)
+            assertFalse(repository.abortOwnedAudio(binding.copy(revisionSha256 = "other"), "LOW_MEMORY"))
+            assertTrue(repository.abortOwnedAudio(binding, "LOW_MEMORY"))
+            assertEquals("DELETING", database.podcastDao().episode(id)?.phase)
+            assertEquals(JobStatus.FAILED, database.podcastDao().job(job)?.status)
+            repository.reapEpisodeDeletions()
+            assertNotNull(database.podcastDao().episode(id))
+        }
+        repository.reapEpisodeDeletions()
+        assertNull(database.podcastDao().episode(id))
+    }
+
     @Test fun actualLocalPackPassesFullDataIntegrityAndDeclaresProviderRecipe() {
         val pack = ModelPackVerifier().verify(File(requireNotNull(System.getenv("PODCAST_PROVIDER_PACK"))),
             ModelPackRequirement(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP, ProviderAudioPlan.PACK_ID, ProviderAudioPlan.PACK_SHA256))

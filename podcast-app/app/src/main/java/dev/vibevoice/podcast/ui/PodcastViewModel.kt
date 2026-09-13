@@ -30,6 +30,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Suppress("OPT_IN_USAGE")
 class PodcastViewModel internal constructor(
@@ -46,6 +47,44 @@ class PodcastViewModel internal constructor(
     val agentSheetOpen = MutableStateFlow(false)
     val lockDialogOpen = MutableStateFlow(false)
     val transientMessage = MutableStateFlow<String?>(null)
+    val deletionTarget = MutableStateFlow<EpisodeDeletionTarget?>(null)
+    val deletionBusy = MutableStateFlow(false)
+    val deletionError = MutableStateFlow<String?>(null)
+    val detailsTarget = MutableStateFlow<EpisodeDeletionTarget?>(null)
+    val detailsError = MutableStateFlow<String?>(null)
+    val diagnostics = detailsTarget.flatMapLatest { target ->
+        kotlinx.coroutines.flow.flow<List<Pair<GenerationJobEntity, org.json.JSONObject?>>?> {
+            emit(null)
+            if (target != null) try {
+                while (true) { emit(repository.episodeDiagnostics(target.id)); kotlinx.coroutines.delay(1_000) }
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (_: Exception) { detailsError.value = "These episode details are no longer available. Return to the library." }
+        }.flowOn(Dispatchers.IO)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(0), null)
+
+    fun showDiagnostics(value: EpisodeEntity) {
+        detailsError.value = null
+        detailsTarget.value = EpisodeDeletionTarget(value.id, value.title)
+        explicitScreen.value = AppScreen.Diagnostics
+    }
+    fun askToDelete(value: EpisodeEntity) {
+        if (deletionBusy.value || value.phase == "DELETING") return
+        deletionError.value = null; deletionTarget.value = EpisodeDeletionTarget(value.id, value.title)
+    }
+    fun cancelDeletion() { if (!deletionBusy.value) { deletionTarget.value = null; deletionError.value = null } }
+    fun confirmDeletion(id: String): Deferred<Boolean> = viewModelScope.async {
+        if (deletionTarget.value?.id != id || deletionBusy.value) return@async false
+        deletionBusy.value = true; deletionError.value = null
+        try { withContext(Dispatchers.IO) { repository.requestEpisodeDeletion(id) }; true }
+        catch (cancelled: CancellationException) { throw cancelled }
+        catch (_: Exception) { deletionError.value = "Could not finish requesting deletion. Keep this dialog open and try again."; false }
+        finally { deletionBusy.value = false }
+    }
+    fun deletionAccepted(id: String) {
+        if (deletionTarget.value?.id == id) deletionTarget.value = null
+        if (selectedEpisodeId.value == id || detailsTarget.value?.id == id) showLibrary()
+        transientMessage.value = "Episode deletion requested. Files are removed when they are safely released."
+    }
 
     val episodes = repository.observeEpisodes().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val libraryPlayback = repository.observeLibraryPlayback().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
@@ -113,7 +152,7 @@ class PodcastViewModel internal constructor(
         explicitScreen.value = null
     }
 
-    fun showLibrary() { clearLiveSelection(); selectedEpisodeId.value = null; explicitScreen.value = AppScreen.Library }
+    fun showLibrary() { clearLiveSelection(); selectedEpisodeId.value = null; detailsTarget.value = null; explicitScreen.value = AppScreen.Library }
     fun showSettings() { explicitScreen.value = AppScreen.Settings }
     fun showSources() { explicitScreen.value = AppScreen.Sources }
     fun showInstructions() { explicitScreen.value = AppScreen.Instructions }
@@ -196,18 +235,21 @@ class PodcastViewModel internal constructor(
 
     // Bind writes to the episode being disposed/exported, not a selection that navigation can clear.
     fun saveStreamPlayback(binding: dev.vibevoice.podcast.runtime.AudioAttemptBinding, positionMs: Long, speed: Float, transcriptVisible: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        if (repository.deletionRequested(binding.episodeId)) return@launch
         try { repository.saveStreamPlayback(binding, positionMs, speed, transcriptVisible) }
         catch (cancelled: CancellationException) { throw cancelled }
-        catch (_: Exception) { transientMessage.value = "Could not save this audio attempt's position" }
+        catch (_: Exception) { if (!repository.deletionRequested(binding.episodeId)) transientMessage.value = "Could not save this audio attempt's position" }
     }
 
     fun savePlayback(episodeId: String, positionMs: Long, speed: Float, transcriptVisible: Boolean) = viewModelScope.launch {
+        if (repository.deletionRequested(episodeId)) return@launch
         try { repository.savePlayback(episodeId, positionMs, speed, transcriptVisible) }
         catch (cancelled: CancellationException) { throw cancelled }
-        catch (error: Exception) { transientMessage.value = error.message ?: "Could not save playback position" }
+        catch (error: Exception) { if (!repository.deletionRequested(episodeId)) transientMessage.value = error.message ?: "Could not save playback position" }
     }
 
     fun exportEpisode(episodeId: String, destination: Uri) = launchAction {
+        withContext(Dispatchers.IO) { repository.acquireEpisodeFiles(episodeId).use {
         val current = repository.episode(episodeId)
         require(current.phase == EpisodePhase.FROZEN_READY) { "Export is available only after the complete episode is ready" }
         val source = repository.resolveArtifact(requireNotNull(current.finalAudioPath))
@@ -215,6 +257,7 @@ class PodcastViewModel internal constructor(
         val output = requireNotNull(getApplication<Application>().contentResolver.openOutputStream(destination, "w")) { "Could not open export destination" }
         output.use { destinationStream -> source.inputStream().use { it.copyTo(destinationStream) } }
         dev.vibevoice.podcast.runtime.RuntimeDiagnostics.exportFinished(episodeId, destination)
+        } }
         transientMessage.value = "Episode exported"
     }
 
@@ -227,7 +270,7 @@ class PodcastViewModel internal constructor(
     }
 }
 
-enum class AppScreen { Library, Sources, Instructions, Review, Generating, Player, Settings }
+enum class AppScreen { Library, Sources, Instructions, Review, Generating, Player, Settings, Diagnostics }
 
 data class EpisodeUiData(
     val episode: EpisodeEntity?,
