@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T13:11:07+00:00",
+  "updated_at": "2026-09-13T13:12:35+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Corrected QNN capture finished and released successfully. Raw files were pulled; owned processes and remote files are gone, and the app identity matched before and after.",
-      "next": "Jere is checking that the capture is complete and correctly bound. The host reference has not started; Janek’s phone window is clear.",
+      "now": "The QNN capture is complete and correctly bound. It contains all 129 expected payloads, including the final score row. Jere has started the single bounded host reference using those exact inputs.",
+      "next": "The host run uses the saved inputs and its own caches under unchanged limits. No second run or retry. No claim yet about numerical agreement, DSP precision, root cause, quality, or speed.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -112,8 +112,8 @@
       "title": "Phone",
       "status": "preparing",
       "owner": "Nik",
-      "now": "Nik has one non-neural fixture-validation phone window. Fresh identity, current user-state, playback, and safety checks are required before start.",
-      "next": "No real user episode deletion or model call. If it passes, the exact tested app remains installed; if not, preserve the failure and report a targeted fix.",
+      "now": "Jere released the phone after the complete QNN capture. Nik’s non-neural fixture-validation window is next.",
+      "next": "No current QNN phone work. The host reference is running separately.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -122,10 +122,10 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere / Nik",
-      "now": "Jere is validating captured QNN data. Nik is preparing one isolated non-neural feature-validation run.",
-      "next": "No shared deployment, data reset, model run, or runtime timing claim. Preserve the current main branch and unrelated work.",
+      "now": "Jere is running one bounded host reference from the complete capture. Nik is preparing one non-neural episode-management fixture run.",
+      "next": "No numerical result yet. Jere has no retry; Nik has no real user deletion, model run, or timing claim.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Check QNN capture completeness and binding",
-      "reported_at": "2026-09-13T12:58:45+00:00",
-      "reported_by": "Jere — phone capture released",
+      "task": "Run one bounded host reference from QNN capture",
+      "reported_at": "2026-09-13T13:12:35+00:00",
+      "reported_by": "Jere — complete binding/host start",
       "stale_after_seconds": 900
     },
     {
