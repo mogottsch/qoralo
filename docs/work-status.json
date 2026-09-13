@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T10:53:02+00:00",
+  "updated_at": "2026-09-13T10:54:39+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -105,10 +105,10 @@
       "title": "Gemma aligned-GPU reference build",
       "status": "preparing",
       "owner": "Jere",
-      "now": "AS12 validation: exactly16 AR128/status0,zero AR1; genuine first ID818/full postquery IDs present; all128 noncache input payloads complete (65,536,000B). Final logit payload absent/journal ends128/no capture-error marker.",
-      "next": "Capture incomplete; conditional host remains unstarted. QNN5005/6000/1009 absent here (only known usesCrossAttention warning). Saved-only final-logit hook dispatch audit/outcome preservation; no phone run/bypass/replay.",
-      "reported_at": "2026-09-13T10:52:03+00:00",
-      "reported_by": "Jere — completed capture validation/incomplete final logit",
+      "now": "Missing final logit cause located: PLE CB scheduler uses legacy strategy-loop then getDequantLogits for final AR128 n_past1920/n_process9; old observer only in bypassed getLogits(Tensor&).",
+      "next": "All128 inputs captured but output hook never dispatched; no full QNN vector from selected ID/partial debug. Narrow read-only row8 hook proposal in actual getDequantLogits after pointer offset/before original deQuantizeOutputs; no computation/limit change, host/device unstarted.",
+      "reported_at": "2026-09-13T10:54:39+00:00",
+      "reported_by": "Jere — bound source/saved-trace logit-hook diagnosis",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -136,10 +136,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jens / Jere / Nik",
-      "now": "Janek/Jens final source handoff/real-IO replay readiness; Jere final-logit audit; Nik lease integration held.",
-      "next": "No app candidate/device/model action. Current app baseline939c731e/1b2ef1c1 unchanged; no extra scope.",
-      "reported_at": "2026-09-13T10:53:02+00:00",
-      "reported_by": "Janek — current consolidated host work",
+      "now": "Janek/Jens playback handoff; Jere proposes actual dequant-logit hook relocation; Nik lease integration held.",
+      "next": "No Jere host/device action. Hook proposal read-only/no compute-limit change; no QNN vector reconstruction claim.",
+      "reported_at": "2026-09-13T10:54:39+00:00",
+      "reported_by": "Jere — source trace diagnosis/proposal",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -187,9 +187,9 @@
     },
     {
       "name": "Jere",
-      "task": "Audit saved final-logit hook; preserve incomplete capture",
-      "reported_at": "2026-09-13T10:52:03+00:00",
-      "reported_by": "Jere — no host/phone retry",
+      "task": "Prepare read-only actual dequant-logit hook relocation",
+      "reported_at": "2026-09-13T10:54:39+00:00",
+      "reported_by": "Jere — no device/host execution",
       "stale_after_seconds": 900
     },
     {
