@@ -1,0 +1,86 @@
+{
+  "actual_AS_bytes": 12884901888,
+  "maximum_observed_kernel_VmPeak": 8554459136,
+  "maximum_sampled_RSS": 205819904,
+  "minimum_sampled_MemAvailable": 2814427136,
+  "minimum_sampled_AS_headroom": 4345516032,
+  "kernel_VmPeak_below_old8GiB_cap": true,
+  "AS12_uniquely_necessary_or_sole_cause_proven": false,
+  "physical_RAM_exhaustion_claim": false,
+  "provider_errors": [
+    {
+      "line": 13748,
+      "text": "  6003.2ms [ERROR]: qnn-htp-engine does not support usesCrossAttention"
+    }
+  ],
+  "earlier_QNN5005_6000_1009_observed_this_run": false,
+  "final_output_dispatch_runtime_trace": [
+    {
+      "line": 3801,
+      "text": "  2389.7ms [INFO]: qnn-htp-engine: per-layer embeddings not yet supported in CB scheduler \u2014 using legacy strategy-loop path"
+    },
+    {
+      "line": 13744,
+      "text": "  5999.9ms [VERBOSE]: qnn-htp: getDequantLogits Returning 1*262144 from [AR-128 CL-4096 n_past=1920 n_kv=1920 n_process=9 @ past_idx=0 new_idx=3968]"
+    },
+    {
+      "line": 13745,
+      "text": "  6000.7ms [VERBOSE]: qnn-htp: getDequantLogits complete. Returning 1 outputs in 818 usec"
+    }
+  ],
+  "bound_nsp_source_sha256": "ebe9e4ef26efce16b0de64c9f021e60de9dc9366ca8e6c02cc5011c474277a6f",
+  "existing_hook_path": "getLogits(Tensor&)",
+  "actual_PLE_path": "getDequantLogits(std::span<float>, finalstep, count1)",
+  "final_pointer_row8_offset_already_applied_before_new_proposed_hook": true,
+  "old_capture_hook_never_dispatched_in_actual_path": true,
+  "captured_steps": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "capture_error_marker_present": false,
+  "profile": {
+    "type": "GenieDialog_query",
+    "duration": 3628908,
+    "start": 949705133830,
+    "stop": 949708762738,
+    "num-prompt-tokens": {
+      "value": 1929,
+      "unit": ""
+    },
+    "prompt-processing-rate": {
+      "value": 643.0867919921875,
+      "unit": "toks/sec"
+    },
+    "time-to-first-token": {
+      "value": 3000575,
+      "unit": "us"
+    },
+    "num-generated-tokens": {
+      "value": 0,
+      "unit": ""
+    },
+    "token-generation-rate": {
+      "value": 0.0,
+      "unit": "toks/sec"
+    },
+    "token-generation-time": {
+      "value": 0,
+      "unit": "us"
+    }
+  },
+  "timings_comparable_to_uninstrumented_campaign": false
+}

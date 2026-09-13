@@ -3,9 +3,11 @@
 This feature is developed on `nik/episode-management`, in the isolated
 `.local/episode-management/source` worktree. It is not part of the separate
 progressive-player validation APK until explicitly integrated and tested. The
-isolated integration now includes Janek's `7b06a3fe` lineage: 3072 MiB whole-start
-and 2648 MiB pre-context admission, guarded teardown, fresh playback checks and
-the terminal-aware driver. Those upstream implementations are unchanged.
+isolated integration now includes Janek/Jens's passed `e07d4d4e` lineage: 3072 MiB
+whole-start and 2648 MiB pre-context admission, guarded teardown, fresh playback
+checks, terminal-aware driver and explicit Main/applicationLooper ownership.
+Their physical handoff combines genuine concurrent playback evidence and later
+zero-neural replay; it is not one clean original-script pass or a feature APK pass.
 
 ## Private diagnostics
 
@@ -69,10 +71,17 @@ owned resource guard can still persist that exact attempt's failure while keepin
 the episode tombstoned; deletion cannot disable the guard during blocked teardown.
 Its independent PID/start/plan/current-lease checks remain unchanged.
 
-`PlaybackHost.closeIfEpisode(id)` releases/checkpoints only that matching single
-session; deletion of another episode leaves the current player and its lease
-alone. The observer also closes a matching tombstoned session. Export holds a
-lease until copying completes; already exported files are never removed.
+`PlaybackHost.closeIfEpisodeAndAwait(id)` switches to Main.immediate before reading
+host/session state, rechecks that immutable ID there, and non-cancellably awaits
+release. The synchronous close/open APIs reject the wrong looper before mutation.
+Deletion of another episode leaves the current player and its lease alone. The
+observer also closes a matching tombstoned session, under the upstream Main
+collector context. A checkpoint failure cannot prevent release; a release failure
+retains both host ownership and the file lease. Session release remains retryable
+(the permanent released flag is set only after success), while new controls are
+rejected during closure. The next close/disposal can retry; process death releases
+the OS lease for restart cleanup. Export holds a lease until copying completes;
+already exported files are never removed.
 
 The main application retries pending cleanup on launch and once per second:
 
@@ -97,15 +106,16 @@ leases, process-death lock release, restart after marker persistence, symlinks,
 shared-source preservation, late callback rejection, genuine runtime-counter
 mapping, missing data, gap-inclusive RTF and no synthesis rate for recovery.
 
-`EpisodeManagementRegressionTest` is a three-case Android fixture-only suite:
+`EpisodeManagementRegressionTest` is a four-case Android fixture-only suite:
 confirmation/Cancel and captured ID; another-episode deletion preserving the
-same muted real ExoPlayer plus matching deletion releasing it; empty historical
-diagnostics without model entry. It uses new cache roots and a separate
+same muted real ExoPlayer plus matching deletion releasing it from Default;
+wrong-thread rejection and failed release retaining files until an awaited Main
+retry; historical diagnostics without measurements or model entry. It uses new cache roots and a separate
 in-memory database, never deletes a real user episode, and makes zero model calls.
 
 Device execution, default/narrow-font2 visual inspection, final APK hashes and
-tested deployment must be scheduled by Pi after the current progressive
-candidate's independent validation boundary, under the full phone lock and fresh
+tested deployment must be scheduled by Pi after the progressive handoff,
+under the full phone lock and fresh
 preservation/identity checks. Host compilation is not a physical UI/deployment
 verdict. The SDK adapter and metric boundaries have host evidence only; actual
 on-device SDK metric availability and runtime observations remain unverified.

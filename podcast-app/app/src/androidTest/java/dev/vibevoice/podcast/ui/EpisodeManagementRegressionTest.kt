@@ -10,6 +10,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import dev.vibevoice.podcast.data.*
 import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import android.os.Looper
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -77,16 +79,49 @@ class EpisodeManagementRegressionTest {
             rule.waitUntil(10_000) { host.active?.session?.isPlaying == true }
             val original = requireNotNull(host.active); val priorSaves = saves
             runBlocking { repo.requestEpisodeDeletion(b) }
-            rule.runOnIdle { assertFalse(host.closeIfEpisode(b)); assertSame(original, host.active); assertEquals(priorSaves, saves); assertTrue(original.session.wantsPlayback) }
+            assertFalse(runBlocking(Dispatchers.Default) { host.closeIfEpisodeAndAwait(b) })
+            rule.runOnIdle { assertSame(original, host.active); assertEquals(priorSaves, saves); assertTrue(original.session.wantsPlayback) }
             runBlocking { repo.reapEpisodeDeletions() }
             assertNull(runBlocking { db.podcastDao().episode(b) }); assertTrue(source.isFile)
             runBlocking { repo.requestEpisodeDeletion(a); repo.reapEpisodeDeletions() }
             assertNotNull(runBlocking { db.podcastDao().episode(a) }); assertTrue(source.isFile)
-            rule.runOnIdle { assertTrue(host.closeIfEpisode(a)); assertNull(host.active) }
+            assertTrue(runBlocking(Dispatchers.Default) { host.closeIfEpisodeAndAwait(a) })
+            rule.runOnIdle { assertNull(host.active); assertTrue(original.session.isReleased) }
             runBlocking { repo.reapEpisodeDeletions() }
             assertNull(runBlocking { db.podcastDao().episode(a) }); assertFalse(source.exists())
         } finally { rule.runOnIdle { host.close() } }
     }
+    @Test fun failedPlayerReleaseRetainsFilesAndDefaultDispatcherRetryAwaitsMainRelease() = fixture { repo, db, store ->
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val id = runBlocking { repo.createEpisode() }
+        val source = File(store.episodesRoot, "$id/fixture.wav").apply { parentFile!!.mkdirs() }; wave(source)
+        val episode = runBlocking { repo.episode(id) }.copy(phase = EpisodePhase.FROZEN_READY, durationMs = 10000)
+        var fail = true
+        var releases = 0
+        val host = PlaybackHost(context, repo::acquireEpisodeFiles, releaseSession = { session ->
+            assertSame(Looper.getMainLooper(), Looper.myLooper())
+            releases++
+            if (fail) { fail = false; error("Owned injected release failure") }
+            session.close()
+        })
+        rule.setContent { VibeVoiceTheme { Text("Owned release failure fixture; no models") } }
+        try {
+            rule.runOnIdle { host.open(episode, emptyList(), emptyList(), null, source, null, null) { _, _, _ -> error("Owned checkpoint failure") } }
+            val original = rule.runOnIdle { requireNotNull(host.active) }
+            runBlocking { repo.requestEpisodeDeletion(id) }
+            assertThrows(IllegalStateException::class.java) { runBlocking(Dispatchers.Default) { host.closeIfEpisode(id) } }
+            assertEquals(0, releases) // Wrong-thread access rejected before state/player mutation.
+            assertThrows(IllegalStateException::class.java) { runBlocking(Dispatchers.Default) { host.closeIfEpisodeAndAwait(id) } }
+            runBlocking { repo.reapEpisodeDeletions() }
+            assertNotNull(runBlocking { db.podcastDao().episode(id) }); assertTrue(source.isFile)
+            rule.runOnIdle { assertSame(original, host.active); assertFalse(original.session.isReleased) }
+            assertTrue(runBlocking(Dispatchers.Default) { host.closeIfEpisodeAndAwait(id) })
+            rule.runOnIdle { assertNull(host.active); assertTrue(original.session.isReleased); assertEquals(2, releases) }
+            runBlocking { repo.reapEpisodeDeletions() }
+            assertNull(runBlocking { db.podcastDao().episode(id) }); assertFalse(source.exists())
+        } finally { rule.runOnIdle { fail = false; host.close() } }
+    }
+
     @Test fun historicalDiagnosticsSayUnavailableWithoutLaunchingGeneration() = fixture { repo, _, _ ->
         val id = runBlocking { repo.createEpisode() }
         runBlocking {

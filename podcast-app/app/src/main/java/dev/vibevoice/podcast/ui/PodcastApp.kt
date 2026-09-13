@@ -45,6 +45,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.vibevoice.podcast.BuildConfig
 import dev.vibevoice.podcast.PodcastApplication
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
@@ -82,8 +84,11 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
         DeleteEpisodeConfirmation(target, deletionBusy, deletionError, viewModel::cancelDeletion) {
             actionsScope.launch {
                 if (viewModel.confirmDeletion(target.id).await()) {
-                    playbackHost.closeIfEpisode(target.id)
-                    viewModel.deletionAccepted(target.id)
+                    try {
+                        playbackHost.closeIfEpisodeAndAwait(target.id)
+                        viewModel.deletionAccepted(target.id)
+                    } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+                    catch (_: Exception) { viewModel.deletionReleasePending(target.id) }
                 }
             }
         }
@@ -93,13 +98,17 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
     LaunchedEffect(screen, episode, selectedPlayerEpisodeId, selectedLiveJob, liveAudio, playback, livePlayback) {
         if (screen != AppScreen.Player) return@LaunchedEffect
         val current = episode?.takeIf { it.id == selectedPlayerEpisodeId } ?: return@LaunchedEffect
-        val available = liveAudio?.takeIf { it.binding.episodeId == current.id && it.binding.jobId == selectedLiveJob }
+        val requestedJob = selectedLiveJob
+        val available = liveAudio?.takeIf { it.binding.episodeId == current.id && it.binding.jobId == requestedJob }
         val binding = available?.binding
-        playbackHost.open(current, chapters, audio, selectedLiveJob,
-            current.finalAudioPath?.let(repository::resolveArtifact), available,
-            if (selectedLiveJob != null) livePlayback else playback) { position, speed, transcript ->
-            if (binding != null) viewModel.saveStreamPlayback(binding, position, speed, transcript)
-            else viewModel.savePlayback(current.id, position, speed, transcript)
+        withContext(Dispatchers.Main.immediate) {
+            if (screen != AppScreen.Player || selectedPlayerEpisodeId != current.id || selectedLiveJob != requestedJob) return@withContext
+            playbackHost.open(current, chapters, audio, requestedJob,
+                current.finalAudioPath?.let(repository::resolveArtifact), available,
+                if (requestedJob != null) livePlayback else playback) { position, speed, transcript ->
+                if (binding != null) viewModel.saveStreamPlayback(binding, position, speed, transcript)
+                else viewModel.savePlayback(current.id, position, speed, transcript)
+            }
         }
     }
 

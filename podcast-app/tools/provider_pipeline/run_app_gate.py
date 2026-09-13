@@ -14,6 +14,25 @@ REFERENCE={'episode':'7dbc3e96-f1cb-40b4-bb04-5df14f05c21a','revision':'8e303378
     'revisionSha256':'e7d9d969de14604ee49548f66a69a22df37ce001fac74a906e5e4e19f90972db','chapter':'chapter-5',
     'textSha256':'cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b'}
 
+REPLAY={'episodeId':'b8119444-092e-408e-b594-4e2e74e789a2',
+    'jobId':'e827aec4ad568ac804f5bc90c46ac9f71676c942aad71f51b413235cb4afb37b',
+    'masterSha256':'2194bce66f8abd05bdf10fefc5cf4aaef49cac647992f637db319b7d14be532a'}
+
+REPLAY_COVERAGE=('tailPausePreserved','explicitResumeAtFrontier','autoResumeAtFrontier','miniNavigationSamePlayer',
+    'availableOnlySeek','speedPreserved','manualTranscriptFollow','resumeFollowing','samePlayerFinalization','pausedAtEnd')
+
+def validate_collector_replay(value,app_sha,test_sha):
+    require(value.get('remainingUiReplayVerified') is True and all(value.get('coverage',{}).get(key) is True for key in REPLAY_COVERAGE),'remaining replay UI coverage incomplete')
+    require(value.get('status')=='passed' and value.get('producerOffMain') is True and value.get('playerApplicationLooper')=='main' and value.get('sourceDataUnchanged') is True,'collector thread/preservation proof mismatch')
+    require(value.get('realRepoIO') is True and value.get('replay') is True and value.get('htpConcurrency') is False,'replay scope mismatch')
+    require(value.get('sourceEpisodeId')==REPLAY['episodeId'] and value.get('sourceJobId')==REPLAY['jobId'],'replay attempt mismatch')
+    require(value.get('sourceMasterSha256')==REPLAY['masterSha256'] and value.get('newModelCalls')==0 and value.get('newAudioJobs')==0,'replay source/model scope mismatch')
+    require(value.get('appApkSha256')==app_sha and value.get('testApkSha256')==test_sha,'replay APK mismatch')
+    stages=value.get('stages',[])
+    require(stages and len({s['playerIdentity'] for s in stages})==1 and all(s['muted'] and s['applicationLooper']=='main' for s in stages),'replay player identity/mute/thread mismatch')
+    require(any(s['stage']=='replay-advanced-before-fixture-complete' and s['playing'] and s['absolutePositionMs']>900 for s in stages),'replay advancement missing')
+    require(any(s['stage']=='same-player-after-fixture-complete' and s['playing'] for s in stages),'replay finalization missing')
+
 def safe_close(data,owned):
     for job in data['generation_jobs']:
         require(job['status'] in ('COMPLETE','FAILED','QUEUED','RUNNING'),'unknown job status')
@@ -57,6 +76,7 @@ def main():
         proof=c['guardValidation'];require(digest(Path(proof['path']))==proof['sha256'],'guard proof drift')
         validated=json.loads(Path(proof['path']).read_text())
         require(validated.get('wholeStartFloorKiB')==3072*1024 and validated.get('preContextFloorKiB')==2648*1024 and validated.get('startupMemoryCreditKiB')==0,'guard phase-budget mismatch')
+        replay=validated['collectorReplay'];require(replay['sourceMasterSha256']==REPLAY['masterSha256'] and replay['newModelCalls']==0 and replay['realRepoIO'] is True,'collector replay proof missing')
         require(validated['status']=='owned_non_neural_guard_passed' and validated['appApkSha256']==c['app']['sha256'] and validated['testApkSha256']==c['test']['sha256'] and validated.get('managedUnwindBlockedTeardown') is True and validated.get('affectedUiCases')==8,'guard proof APK/teardown/UI mismatch')
     require(not synthetic_only or progressive,'synthetic-only requires progressive validation')
     require(re.fullmatch(r'provider-app-[a-z0-9-]{1,48}',a.run_id),'invalid run ID')
@@ -241,18 +261,22 @@ def main():
             fresh_quiet_audio()
             if guard_probe_only:
                 output=device.run(['shell','am','instrument','-w','-e','class',
-                    'dev.vibevoice.podcast.e2e.OwnedAudioGuardProbeTest',
+                    'dev.vibevoice.podcast.e2e.OwnedAudioGuardProbeTest,dev.vibevoice.podcast.ui.LiveCollectorRegressionTest',
                     '-e','ownedGuardProbe','true','-e','diagnosticRun',a.run_id,'-e','profile','guard-probe',
+                    '-e','sourceEpisodeId',REPLAY['episodeId'],'-e','sourceJobId',REPLAY['jobId'],'-e','expectedMasterSha256',REPLAY['masterSha256'],
                     '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
                     TEST_APP+'/androidx.test.runner.AndroidJUnitRunner'],timeout=90)
                 receipts()
-                require(re.search(r'OK \(1 test\)',output) is not None and 'FAILURES!!!' not in output,'owned non-neural guard regression failed')
+                require(re.search(r'OK \(2 tests\)',output) is not None and 'FAILURES!!!' not in output,'owned non-neural guard/collector replay regression failed')
                 result_file=out/f'private-extracted-{pull:02d}/files/owned-guard-probe/{a.run_id}/probe-result.json'
                 require(result_file.is_file(),'guard probe success receipt missing')
                 result=json.loads(result_file.read_text())
                 require(result['status']=='owned_non_neural_guard_passed' and result['stopToObservedProcessAbsentMs']<=3000 and result['modelCalls']==0 and result['failureDurableBeforeTermination'] and result.get('managedUnwindBlockedTeardown') is True,'guard probe evidence failed')
                 require(rows(stable('after-guard-probe'))==rows(before),'guard probe changed user rows')
-                guard_probe_result=result
+                replay_file=out/f'private-extracted-{pull:02d}/files/player-ui-captures/{a.run_id}/live-collector/.private-ui/replay.json'
+                require(replay_file.is_file(),'real IO collector replay receipt missing')
+                replay=json.loads(replay_file.read_text());validate_collector_replay(replay,c['app']['sha256'],c['test']['sha256'])
+                guard_probe_result=dict(result,collectorReplay={'sha256':digest(replay_file),'sourceMasterSha256':REPLAY['masterSha256'],'newModelCalls':0,'realRepoIO':True,'remainingUiReplayVerified':True,'coverage':replay['coverage']})
             if progressive and not owned_guard:
                 density=device.shell('wm density',timeout=10);size=device.shell('wm size',timeout=10)
                 override=re.search(r'Override density:\s*(\d+)',density)

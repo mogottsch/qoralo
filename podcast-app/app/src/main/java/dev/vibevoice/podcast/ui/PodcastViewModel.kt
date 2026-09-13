@@ -85,6 +85,11 @@ class PodcastViewModel internal constructor(
         if (selectedEpisodeId.value == id || detailsTarget.value?.id == id) showLibrary()
         transientMessage.value = "Episode deletion requested. Files are removed when they are safely released."
     }
+    fun deletionReleasePending(id: String) {
+        if (deletionTarget.value?.id == id) deletionTarget.value = null
+        if (selectedEpisodeId.value == id || detailsTarget.value?.id == id) showLibrary()
+        transientMessage.value = "Deletion is pending: the player has not released its files. They remain protected until release or app restart."
+    }
 
     val episodes = repository.observeEpisodes().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val libraryPlayback = repository.observeLibraryPlayback().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
