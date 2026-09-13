@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T10:48:38+00:00",
+  "updated_at": "2026-09-13T10:49:49+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -103,12 +103,12 @@
     {
       "id": "gemma",
       "title": "Gemma aligned-GPU reference build",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "ONE cdf6dc31 AS-only12GiB control granted now; actual start unreported. Require soft+hard RLIMIT readback12,884,901,888; same stage807/libee2/model/LUT/cap1/300s/capture guards.",
-      "next": "Fresh current app/job/playback/full lock checks; raw-first pull/cleanup/correct postflight/release, no app changes/restoration/second attempt. Preserve8GiB failures/QNN5005/6000/1009; no guaranteed fix/physical-RAM claim.",
-      "reported_at": "2026-09-13T10:48:38+00:00",
-      "reported_by": "Pi — granted narrow12GiB AS control",
+      "now": "AS12 mapping control STARTED: mapping-as12-20260913T104909Z-01/slotpi… PID56886; cdf6dc31/stage807/libee2. Fresh app/job/playback checks under full lock.",
+      "next": "Only virtual AS12 differs; same cap1/300s/observers/model. Soft+hard readback required; raw-first release before analysis/no second attempt. Host reference conditional on complete capture/strict binding/release.",
+      "reported_at": "2026-09-13T10:49:49+00:00",
+      "reported_by": "Jere — actual AS12 mapping control start",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -122,12 +122,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
-      "owner": "Jere → Janek / Jens",
-      "now": "Janek completed app wave/released phone; Jere12GiB AS-only control granted/free, actual start unreported.",
-      "next": "No second attempt. Host reference conditional after complete actual capture+strict binding+release; otherwise unstarted. App thread fix remains host-only.",
-      "reported_at": "2026-09-13T10:48:38+00:00",
-      "reported_by": "Pi — released app wave/granted Gemma control",
+      "status": "active",
+      "owner": "Jere",
+      "now": "Jere AS12 mapping control active after app handoff under full phone lock; no capture/result yet.",
+      "next": "Only virtual allowance differs; raw-first release/no second attempt. Host reference conditional after complete capture/binding/release.",
+      "reported_at": "2026-09-13T10:49:49+00:00",
+      "reported_by": "Jere — actual control start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -136,10 +136,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jens / Jere / Nik",
-      "now": "Jere AS-only control granted; Janek/Jens thread fix/reuse regression host-only; Nik lease integration held.",
-      "next": "No Gemma start/result yet. No app device action; host reference conditional on complete capture/binding/release.",
-      "reported_at": "2026-09-13T10:48:38+00:00",
-      "reported_by": "Pi — current ordered work",
+      "now": "Jere AS12 mapping control active; Janek/Jens host-only thread fix; Nik lease integration held.",
+      "next": "No Gemma capture/result. Host reference conditional; no app device action.",
+      "reported_at": "2026-09-13T10:49:49+00:00",
+      "reported_by": "Jere — current mapping run",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -187,9 +187,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run granted one 12GiB AS-only mapping control",
-      "reported_at": "2026-09-13T10:48:38+00:00",
-      "reported_by": "Pi — not started",
+      "task": "Run active AS12 mapping capture",
+      "reported_at": "2026-09-13T10:49:49+00:00",
+      "reported_by": "Jere — no capture result",
       "stale_after_seconds": 900
     },
     {
