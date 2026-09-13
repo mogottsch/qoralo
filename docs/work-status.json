@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T10:49:49+00:00",
+  "updated_at": "2026-09-13T10:51:46+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -103,12 +103,12 @@
     {
       "id": "gemma",
       "title": "Gemma aligned-GPU reference build",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "AS12 mapping control STARTED: mapping-as12-20260913T104909Z-01/slotpi… PID56886; cdf6dc31/stage807/libee2. Fresh app/job/playback checks under full lock.",
-      "next": "Only virtual AS12 differs; same cap1/300s/observers/model. Soft+hard readback required; raw-first release before analysis/no second attempt. Host reference conditional on complete capture/strict binding/release.",
-      "reported_at": "2026-09-13T10:49:49+00:00",
-      "reported_by": "Jere — actual AS12 mapping control start",
+      "now": "AS12 mapping control released native/controller0; raw pull complete/owned roles-root absent/no signals,67 locked ADB. Fresh postflight app hashes939c731…/1b2ef1c1 verified;28 RLIMIT readbacks soft+hard12,884,901,888.",
+      "next": "128 input raw files retained. Validate complete16-chunk/final-logit capture+strict host binding before conditional one host execution; host unstarted.",
+      "reported_at": "2026-09-13T10:51:46+00:00",
+      "reported_by": "Jere — completed AS12 mapping control/release",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -122,12 +122,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
-      "owner": "Jere",
-      "now": "Jere AS12 mapping control active after app handoff under full phone lock; no capture/result yet.",
-      "next": "Only virtual allowance differs; raw-first release/no second attempt. Host reference conditional after complete capture/binding/release.",
-      "reported_at": "2026-09-13T10:49:49+00:00",
-      "reported_by": "Jere — actual control start",
+      "status": "preparing",
+      "owner": "Janek / Jens",
+      "now": "Jere AS12 mapping control released; Janek next phone window clear.",
+      "next": "Jere host execution conditional/host unstarted. Janek/Jens thread-affinity regression remains host-only until candidate ready.",
+      "reported_at": "2026-09-13T10:51:46+00:00",
+      "reported_by": "Jere — control release/app window clear",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -136,10 +136,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jens / Jere / Nik",
-      "now": "Jere AS12 mapping control active; Janek/Jens host-only thread fix; Nik lease integration held.",
-      "next": "No Gemma capture/result. Host reference conditional; no app device action.",
-      "reported_at": "2026-09-13T10:49:49+00:00",
-      "reported_by": "Jere — current mapping run",
+      "now": "Jere validates complete capture/strict host binding; Janek/Jens host thread fix; Nik lease integration held.",
+      "next": "No Jere host execution yet. Phone clear for Janek when app candidate ready.",
+      "reported_at": "2026-09-13T10:51:46+00:00",
+      "reported_by": "Jere — post-control validation",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -187,9 +187,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run active AS12 mapping capture",
-      "reported_at": "2026-09-13T10:49:49+00:00",
-      "reported_by": "Jere — no capture result",
+      "task": "Validate capture/binding before conditional host reference",
+      "reported_at": "2026-09-13T10:51:46+00:00",
+      "reported_by": "Jere — host unstarted",
       "stale_after_seconds": 900
     },
     {
