@@ -7,7 +7,7 @@ import unittest
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(ROOT/'podcast-app/tools'))
-from run_app_gate import safe_close,parse_health,require_quiet_audio,require_fresh_quiet_audio,admission_floor_kib,validate_collector_replay,REPLAY
+from run_app_gate import safe_close,parse_health,require_quiet_audio,require_fresh_quiet_audio,admission_floor_kib,validate_collector_replay,REPLAY,REPLAY_COVERAGE
 from duration_phone_guard import GuardError
 from run_publication_recovery import compare_recovery,SCOPE
 from short_product_preservation import TABLES
@@ -27,13 +27,14 @@ class ProviderPipelineTests(unittest.TestCase):
             for forbidden in ['ProviderQnnEngine(', 'ConfiguredTtsEngine(', 'ProviderNative.', 'GenerationService', 'NativeGemmaEngine(']:
                 self.assertNotIn(forbidden,test)
     def test_collector_replay_requires_exact_source_apks_and_zero_model_scope(self):
-        value={'status':'passed','producerOffMain':True,'playerApplicationLooper':'main','sourceDataUnchanged':True,
+        value={'remainingUiReplayVerified':True,'coverage':{key:True for key in REPLAY_COVERAGE},'status':'passed','producerOffMain':True,'playerApplicationLooper':'main','sourceDataUnchanged':True,
             'realRepoIO':True,'replay':True,'htpConcurrency':False,'sourceMasterSha256':REPLAY['masterSha256'],
+            'sourceEpisodeId':REPLAY['episodeId'],'sourceJobId':REPLAY['jobId'],
             'newModelCalls':0,'newAudioJobs':0,'appApkSha256':'app','testApkSha256':'test',
             'stages':[{'stage':stage,'playerIdentity':7,'muted':True,'applicationLooper':'main','playing':True,'absolutePositionMs':1000}
                 for stage in ['replay-advanced-before-fixture-complete','same-player-after-fixture-complete']]}
         validate_collector_replay(value,'app','test')
-        for key,bad in [('producerOffMain',False),('playerApplicationLooper','worker'),('sourceDataUnchanged',False),('realRepoIO',False),('replay',False),('htpConcurrency',True),('sourceMasterSha256','other'),('newModelCalls',1),('newAudioJobs',1),('appApkSha256','other'),('testApkSha256','other')]:
+        for key,bad in [('remainingUiReplayVerified',False),('coverage',{}),('producerOffMain',False),('playerApplicationLooper','worker'),('sourceDataUnchanged',False),('realRepoIO',False),('replay',False),('htpConcurrency',True),('sourceMasterSha256','other'),('sourceEpisodeId','other'),('sourceJobId','other'),('newModelCalls',1),('newAudioJobs',1),('appApkSha256','other'),('testApkSha256','other')]:
             with self.assertRaises(GuardError):validate_collector_replay(dict(value,**{key:bad}),'app','test')
     def test_phase_consistent_budget_keeps_host_whole_start_distinct(self):
         self.assertEqual(3072*1024,admission_floor_kib(False,owned_guard=True))

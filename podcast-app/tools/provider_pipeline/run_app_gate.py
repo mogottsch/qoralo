@@ -14,13 +14,18 @@ REFERENCE={'episode':'7dbc3e96-f1cb-40b4-bb04-5df14f05c21a','revision':'8e303378
     'revisionSha256':'e7d9d969de14604ee49548f66a69a22df37ce001fac74a906e5e4e19f90972db','chapter':'chapter-5',
     'textSha256':'cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b'}
 
-REPLAY={'episodeId':'f029ddbe-5346-454b-9572-77662eb92826',
-    'jobId':'75b87fb718c53af43ab177bb086fad85b56cead166c96c949de7bb5b8528cd97',
+REPLAY={'episodeId':'b8119444-092e-408e-b594-4e2e74e789a2',
+    'jobId':'e827aec4ad568ac804f5bc90c46ac9f71676c942aad71f51b413235cb4afb37b',
     'masterSha256':'2194bce66f8abd05bdf10fefc5cf4aaef49cac647992f637db319b7d14be532a'}
 
+REPLAY_COVERAGE=('tailPausePreserved','explicitResumeAtFrontier','autoResumeAtFrontier','miniNavigationSamePlayer',
+    'availableOnlySeek','speedPreserved','manualTranscriptFollow','resumeFollowing','samePlayerFinalization','pausedAtEnd')
+
 def validate_collector_replay(value,app_sha,test_sha):
+    require(value.get('remainingUiReplayVerified') is True and all(value.get('coverage',{}).get(key) is True for key in REPLAY_COVERAGE),'remaining replay UI coverage incomplete')
     require(value.get('status')=='passed' and value.get('producerOffMain') is True and value.get('playerApplicationLooper')=='main' and value.get('sourceDataUnchanged') is True,'collector thread/preservation proof mismatch')
     require(value.get('realRepoIO') is True and value.get('replay') is True and value.get('htpConcurrency') is False,'replay scope mismatch')
+    require(value.get('sourceEpisodeId')==REPLAY['episodeId'] and value.get('sourceJobId')==REPLAY['jobId'],'replay attempt mismatch')
     require(value.get('sourceMasterSha256')==REPLAY['masterSha256'] and value.get('newModelCalls')==0 and value.get('newAudioJobs')==0,'replay source/model scope mismatch')
     require(value.get('appApkSha256')==app_sha and value.get('testApkSha256')==test_sha,'replay APK mismatch')
     stages=value.get('stages',[])
@@ -271,7 +276,7 @@ def main():
                 replay_file=out/f'private-extracted-{pull:02d}/files/player-ui-captures/{a.run_id}/live-collector/.private-ui/replay.json'
                 require(replay_file.is_file(),'real IO collector replay receipt missing')
                 replay=json.loads(replay_file.read_text());validate_collector_replay(replay,c['app']['sha256'],c['test']['sha256'])
-                guard_probe_result=dict(result,collectorReplay={'sha256':digest(replay_file),'sourceMasterSha256':REPLAY['masterSha256'],'newModelCalls':0,'realRepoIO':True})
+                guard_probe_result=dict(result,collectorReplay={'sha256':digest(replay_file),'sourceMasterSha256':REPLAY['masterSha256'],'newModelCalls':0,'realRepoIO':True,'remainingUiReplayVerified':True,'coverage':replay['coverage']})
             if progressive and not owned_guard:
                 density=device.shell('wm density',timeout=10);size=device.shell('wm size',timeout=10)
                 override=re.search(r'Override density:\s*(\d+)',density)
