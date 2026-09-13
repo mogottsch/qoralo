@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-13T10:54:39+00:00",
+  "updated_at": "2026-09-13T10:55:56+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -105,10 +105,10 @@
       "title": "Gemma aligned-GPU reference build",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Missing final logit cause located: PLE CB scheduler uses legacy strategy-loop then getDequantLogits for final AR128 n_past1920/n_process9; old observer only in bypassed getLogits(Tensor&).",
-      "next": "All128 inputs captured but output hook never dispatched; no full QNN vector from selected ID/partial debug. Narrow read-only row8 hook proposal in actual getDequantLogits after pointer offset/before original deQuantizeOutputs; no computation/limit change, host/device unstarted.",
-      "reported_at": "2026-09-13T10:54:39+00:00",
-      "reported_by": "Jere — bound source/saved-trace logit-hook diagnosis",
+      "now": "Authorized host-only narrow observer relocation into actual PLE legacy getDequantLogits: after original pointer offset (already row8), before unchanged deQuantizeOutputs/sampler; no double row8 offset.",
+      "next": "Regression real legacy dispatch/cap1/final n_past1920/n_process9 with row-distinct sentinels,exact262144 raw UINT16/grid/source-row8 provenance,once capture. Freeze observer-only delta same12GiB AS/model/LUT/cap1/300s; no phone/full model.",
+      "reported_at": "2026-09-13T10:55:56+00:00",
+      "reported_by": "Pi — authorized narrow logit-hook host preparation",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -136,10 +136,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Jens / Jere / Nik",
-      "now": "Janek/Jens playback handoff; Jere proposes actual dequant-logit hook relocation; Nik lease integration held.",
-      "next": "No Jere host/device action. Hook proposal read-only/no compute-limit change; no QNN vector reconstruction claim.",
-      "reported_at": "2026-09-13T10:54:39+00:00",
-      "reported_by": "Jere — source trace diagnosis/proposal",
+      "now": "Jere builds/freezes observer-only legacy dequant-logit relocation; Janek/Jens playback handoff/Nik integration continue.",
+      "next": "AS12 result remains16 AR128+128 inputs/incomplete capture. No controlled phone capture until frozen/scheduled around Janek; host reference unstarted until complete binding.",
+      "reported_at": "2026-09-13T10:55:56+00:00",
+      "reported_by": "Pi — current host-only observer work",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -187,9 +187,9 @@
     },
     {
       "name": "Jere",
-      "task": "Prepare read-only actual dequant-logit hook relocation",
-      "reported_at": "2026-09-13T10:54:39+00:00",
-      "reported_by": "Jere — no device/host execution",
+      "task": "Freeze/test legacy dequant-logit observer delta",
+      "reported_at": "2026-09-13T10:55:56+00:00",
+      "reported_by": "Pi — no phone/full model",
       "stale_after_seconds": 900
     },
     {
