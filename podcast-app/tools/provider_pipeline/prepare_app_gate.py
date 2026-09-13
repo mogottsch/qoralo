@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3];APP=ROOT/'podcast-app'
 sys.path.insert(0,str(APP/'tools'))
 from duration_phone_guard import host_identity
+from run_app_gate import REPLAY
 
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
@@ -86,6 +87,7 @@ def main():
         'progressivePlayback':a.progressive_playback,
         'syntheticOnly':a.synthetic_only,
         'guardProbeOnly':a.guard_probe_only,
+        'retainedCollectorReplaySource':REPLAY if a.guard_probe_only or a.owned_memory_guard else None,
         'ownedMemoryGuard':a.owned_memory_guard,
         'guardPlanningEnvelopeMiB':2048,
         'ownedPreContextAdmissionFloorKiB':2648*1024,
@@ -103,11 +105,13 @@ def main():
     for key in ['app','test']:
         file=out/(key+'.apk');value[key]={'path':str(file),'sha256':digest(file),'bytes':file.stat().st_size}
     if a.guard_probe_only:
-        value['scope']='one owned non-neural managed-unwind/blocked-teardown guard check plus eight default/narrow progressive and transcript regressions; never enters AUDIO'
+        value['scope']='owned non-neural blocked-teardown guard + retained2194 real-IO collector replay + eight default/narrow regressions; never enters AUDIO'
         value['instrumentationSeconds']=450
     if a.owned_memory_guard:
         proof=json.loads(a.guard_validation.read_text())
         if proof.get('status')!='owned_non_neural_guard_passed' or not 0<=proof['stopToObservedProcessAbsentMs']<=3000 or proof['modelCalls']!=0 or not proof['failureDurableBeforeTermination'] or proof.get('managedUnwindBlockedTeardown') is not True or proof.get('affectedUiCases')!=8:raise ValueError('Guard probe not validated')
+        replay=proof.get('collectorReplay',{})
+        if replay.get('sourceMasterSha256')!=REPLAY['masterSha256'] or replay.get('newModelCalls')!=0 or replay.get('realRepoIO') is not True:raise ValueError('Production IO collector replay proof required')
         if proof.get('wholeStartFloorKiB')!=3072*1024 or proof.get('preContextFloorKiB')!=2648*1024 or proof.get('startupMemoryCreditKiB')!=0:raise ValueError('Guard phase-budget mismatch')
         if proof['appApkSha256']!=value['app']['sha256'] or proof['testApkSha256']!=value['test']['sha256']:raise ValueError('Guard probe used different APKs')
         value['guardValidation']={'path':str(a.guard_validation.resolve()),'sha256':digest(a.guard_validation)}
