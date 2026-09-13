@@ -2,7 +2,10 @@
 
 This feature is developed on `nik/episode-management`, in the isolated
 `.local/episode-management/source` worktree. It is not part of the separate
-progressive-player validation APK until explicitly integrated and tested.
+progressive-player validation APK until explicitly integrated and tested. The
+isolated integration now includes Janek's `7b06a3fe` lineage: 3072 MiB whole-start
+and 2648 MiB pre-context admission, guarded teardown, fresh playback checks and
+the terminal-aware driver. Those upstream implementations are unchanged.
 
 ## Private diagnostics
 
@@ -104,4 +107,7 @@ Device execution, default/narrow-font2 visual inspection, final APK hashes and
 tested deployment must be scheduled by Pi after the current progressive
 candidate's independent validation boundary, under the full phone lock and fresh
 preservation/identity checks. Host compilation is not a physical UI/deployment
-verdict. No duplicate model run is needed to validate the deletion fixtures.
+verdict. The SDK adapter and metric boundaries have host evidence only; actual
+on-device SDK metric availability and runtime observations remain unverified.
+Missing historic measurements stay unavailable. No duplicate model run is needed
+to validate the deletion fixtures or fill old statistics.
