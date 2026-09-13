@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,13 +80,13 @@ fun TranscriptSheet(
                 IconButton(onClick = onDismiss) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Close transcript") }
             }
             if (largeText) Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
-                Text(status, style = MaterialTheme.typography.bodySmall)
+                Text(status, style = MaterialTheme.typography.bodySmall, minLines = 2, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 TextButton(onClick = { following = !following }, modifier = Modifier.heightIn(min = 48.dp).align(Alignment.End)) {
                     Text(if (following) "Following · stop" else "Follow playback")
                 }
             } else Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(status, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                Text(status, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), minLines = 2, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 TextButton(onClick = { following = !following }, modifier = Modifier.heightIn(min = 48.dp)) {
                     Text(if (following) "Following · stop" else "Follow playback")
                 }
@@ -133,15 +134,17 @@ fun TranscriptSheet(
                                         fontWeight = FontWeight.Medium,
                                         color = if (active) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimaryContainer)
                                 }
-                                if (passage.precision == TranscriptPrecision.UNAVAILABLE) Text("Audio timing unavailable", style = MaterialTheme.typography.labelSmall)
+                                // Arrival changes availability, not the row's measured height.
+                                val unavailable = passage.precision == TranscriptPrecision.UNAVAILABLE
+                                Text("Audio timing unavailable", style = MaterialTheme.typography.labelSmall,
+                                    modifier = Modifier.alpha(if (unavailable) 1f else 0f)
+                                        .then(if (unavailable) Modifier else Modifier.clearAndSetSemantics {}))
                             }
                         }
                     }
                 }
             }
-            Text(if (timeline.passages.any { it.precision == TranscriptPrecision.SEGMENT })
-                "Highlights follow available segment or chapter timing, not individual words."
-                else "Chapter timing only. Passage and word alignment is not available.",
+            Text("Highlights follow available segment or chapter timing, not individual words.",
                 style = MaterialTheme.typography.labelSmall, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp))
         }
     }

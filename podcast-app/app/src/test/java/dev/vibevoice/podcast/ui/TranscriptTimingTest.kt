@@ -41,6 +41,20 @@ class TranscriptTimingTest {
         assertNull(t.activeIndex(1000)); assertNull(t.activeIndex(3000))
         assertEquals("Second passage.", t.passages[1].text)
     }
+    @Test fun liveArrivalDoesNotReplaceUntimedPassageKeysOrText() {
+        val chapter = chapter(text = "First passage.\n\nSecond passage.\n\nThird passage.")
+        val chapterChunks = chunks.take(2) + chunk(2, 0, 2, 101_430, 44_100, 13_230, 33, 47)
+        val stages = (0..3).map { count -> TranscriptTiming.progressive("episode", listOf(chapter),
+            AudioAvailability(binding, chapterChunks.take(count), if (count == 3) AudioAvailabilityState.COMPLETE else AudioAvailabilityState.GENERATING)) }
+        for (stage in stages) {
+            assertEquals("Availability must not split or replace the text being manually read", stages[0].passages.map { it.key to it.text }, stage.passages.map { it.key to it.text })
+            assertEquals(3, stage.passages.size)
+        }
+        assertTrue(stages[0].passages.all { it.interval == null })
+        assertEquals(TranscriptPrecision.UNAVAILABLE, stages[1].passages[1].precision)
+        assertEquals(TranscriptPrecision.SEGMENT, stages[2].passages[1].precision)
+        assertTrue(stages[3].passages.all { it.precision == TranscriptPrecision.SEGMENT })
+    }
     @Test fun staleForeignAttemptAndUnknownFrontendNeverBorrowSegmentTiming() {
         assertTrue(timeline(AudioAvailabilityState.STALE).passages.all { it.interval == null })
         for (b in listOf(binding.copy(episodeId = "other"), binding.copy(frontendVersion = null))) {

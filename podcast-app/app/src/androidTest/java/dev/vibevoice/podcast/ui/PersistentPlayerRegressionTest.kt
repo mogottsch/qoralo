@@ -17,6 +17,12 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.vibevoice.podcast.data.*
+import dev.vibevoice.podcast.runtime.AudioAttemptBinding
+import dev.vibevoice.podcast.runtime.AudioAvailability
+import dev.vibevoice.podcast.runtime.AudioAvailabilityState
+import dev.vibevoice.podcast.runtime.AudioPassageKind
+import dev.vibevoice.podcast.runtime.AvailableAudioChunk
+import dev.vibevoice.podcast.runtime.ProviderTextFrontend
 import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -27,6 +33,7 @@ import java.io.File
 import java.io.RandomAccessFile
 import java.security.MessageDigest
 import org.json.JSONObject
+import org.json.JSONArray
 
 /** Synthetic PCM/UI evidence only. No model loading, synthesis, or user database writes. */
 @RunWith(AndroidJUnit4::class)
@@ -123,23 +130,49 @@ class PersistentPlayerRegressionTest {
 
     @Test fun manualTranscriptScrollSurvivesChapterChangesUntilExplicitFollow() {
         var position by mutableLongStateOf(0)
-        val rows = (0..15).map { i -> TranscriptPassage("p$i", "c${i / 4}", i / 4, "Synthetic chapter ${i / 4}",
-            "Synthetic passage $i. This complete passage has measured segment timing, not individual word alignment.",
-            TranscriptInterval(i * 44_100L, (i + 1) * 44_100L, 44_100), TranscriptPrecision.SEGMENT) }
-        rule.setContent { VibeVoiceTheme { TranscriptSheet("synthetic", TranscriptTimeline(rows), position, true, false, {}) } }
+        var availableCount by mutableIntStateOf(0)
+        val binding = AudioAttemptBinding("synthetic", "job", "revision", "revision-hash", "pack-hash", ProviderTextFrontend.VERSION)
+        val chapters = (0..3).map { c -> ChapterEntity("row-$c", "revision", "c$c", c, "Synthetic chapter $c",
+            (c * 4 until c * 4 + 4).joinToString("\n\n") { i ->
+                "Synthetic passage $i. This complete passage has measured segment timing, not individual word alignment."
+            }, 60) }
+        // Synthetic measured intervals only; no media files are opened and no model runs.
+        val chunks = chapters.flatMap { chapter -> ProviderTextFrontend.segmentSpans(chapter.text).mapIndexed { index, span ->
+            val ordinal = chapter.position * 4 + index
+            AvailableAudioChunk(ordinal, chapter.position, chapter.stableChapterId, index, File("synthetic-$ordinal.wav"),
+                "synthetic-$ordinal", ordinal * 44_100L, 44_100L, 0, AudioPassageKind.PROVIDER_SEGMENT, span.startUtf16, span.endUtf16)
+        } }
+        val rows = TranscriptTiming.progressive("synthetic", chapters, AudioAvailability(binding, chunks, AudioAvailabilityState.COMPLETE)).passages
+        rule.setContent {
+            val timeline = remember(availableCount) { TranscriptTiming.progressive("synthetic", chapters,
+                AudioAvailability(binding, chunks.take(availableCount), if (availableCount == chunks.size) AudioAvailabilityState.COMPLETE else AudioAvailabilityState.GENERATING)) }
+            VibeVoiceTheme { TranscriptSheet("synthetic", timeline, position, true, false, {}) }
+        }
         rule.onNodeWithText("Following · stop").assertIsDisplayed()
         rule.onNodeWithTag("Transcript passages").performTouchInput { swipeUp() }
         rule.onNodeWithText("Follow playback").assertIsDisplayed()
-        val before = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
-        rule.runOnIdle { position = 15_000 }
+        val initial = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode()
+        val before = initial.config[SemanticsProperties.VerticalScrollAxisRange].value()
+        val viewport = initial.boundsInRoot
+        val transitions = JSONArray()
+        var stable = true
+        for (count in listOf(1, 4, 8, 16)) {
+            rule.runOnIdle { availableCount = count; position = (count - 1) * 1_000L }
+            val node = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode()
+            val axis = node.config[SemanticsProperties.VerticalScrollAxisRange].value()
+            val same = kotlin.math.abs(before - axis) <= 0.01f && node.boundsInRoot == viewport
+            stable = stable && same
+            transitions.put(JSONObject().put("availableChunks", count).put("scrollAxis", axis).put("sameViewportAndPosition", same))
+            rule.onNodeWithText("Follow playback").assertIsDisplayed()
+        }
         val after = rule.onNodeWithTag("Transcript passages").fetchSemanticsNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
-        rule.onNodeWithText("Follow playback").assertIsDisplayed()
         // Preserve the failed visual state too; never lose the evidence by asserting first.
         captureSynthetic("transcript-manual") {
             JSONObject().put("episodeId", "synthetic").put("episodePhase", "SYNTHETIC_TRANSCRIPT")
                 .put("uiState", "manual").put("positionMs", position).put("scrollAxisBefore", before)
-                .put("scrollAxis", after).put("manualPositionPreserved", kotlin.math.abs(before - after) <= 0.01f).put("activePassage", 15)
+                .put("scrollAxis", after).put("manualPositionPreserved", stable).put("availabilityTransitions", transitions).put("activePassage", 15)
         }
+        assertTrue("0→partial→more→complete and chapter advancement must preserve the manual viewport: $transitions", stable)
         assertEquals("Chapter advancement must not scroll against the reader", before, after, 0.01f)
         rule.onNodeWithText("Follow playback").performClick()
         rule.onNodeWithText(rows.last().text).assertIsDisplayed()

@@ -49,15 +49,24 @@ object TranscriptTiming {
             val complete = chunks.singleOrNull { it.passageKind == AudioPassageKind.COMPLETE_CHAPTER }
             if (complete != null && complete.endFrame > complete.speechStartFrame) {
                 listOf(row(chapter, 0, chapter.text.length, TranscriptInterval(complete.speechStartFrame, complete.endFrame, 44_100), TranscriptPrecision.CHAPTER))
-            } else {
-                val spans = if (audio.binding.frontendVersion == ProviderTextFrontend.VERSION) chunks.filter { it.passageKind == AudioPassageKind.PROVIDER_SEGMENT }.mapNotNull { chunk ->
-                    val start = chunk.sourceStartUtf16 ?: return@mapNotNull null
-                    val end = chunk.sourceEndUtf16 ?: return@mapNotNull null
-                    if (chunk.speechStartFrame < 0 || chunk.endFrame <= chunk.speechStartFrame) return@mapNotNull null
-                    MeasuredSpan(start, end, TranscriptInterval(chunk.speechStartFrame, chunk.endFrame, 44_100))
-                } else emptyList()
-                segmentedRows(chapter, spans)
-            }
+            } else if (audio.binding.frontendVersion == ProviderTextFrontend.VERSION) {
+                // Source grouping is known before audio exists. Keep every planned text row
+                // stable; arriving audio may add timing, never replace a reader's text/key.
+                val planned = ProviderTextFrontend.segmentSpans(chapter.text)
+                val ordered = chunks.sortedBy { it.segmentIndex }
+                val valid = ordered.withIndex().all { (index, chunk) ->
+                    val span = planned.getOrNull(index)
+                    chunk.passageKind == AudioPassageKind.PROVIDER_SEGMENT && chunk.segmentIndex == index && span != null &&
+                        chunk.sourceStartUtf16 == span.startUtf16 && chunk.sourceEndUtf16 == span.endUtf16 &&
+                        chunk.speechStartFrame >= 0 && chunk.endFrame > chunk.speechStartFrame &&
+                        (index == 0 || chunk.speechStartFrame >= ordered[index - 1].endFrame)
+                }
+                planned.mapIndexed { index, span ->
+                    val interval = if (valid) ordered.getOrNull(index)?.let { TranscriptInterval(it.speechStartFrame, it.endFrame, 44_100) } else null
+                    row(chapter, span.startUtf16, span.endUtf16, interval,
+                        if (interval != null) TranscriptPrecision.SEGMENT else TranscriptPrecision.UNAVAILABLE)
+                }
+            } else segmentedRows(chapter, emptyList())
         }
         return TranscriptTimeline(rows, audio.availableMs)
     }
