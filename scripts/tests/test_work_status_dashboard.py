@@ -152,6 +152,18 @@ class StatusTests(unittest.TestCase):
         self.assertNotIn('fetch(',text)
         self.assertIn('refresher-warning',text)
 
+    def test_render_collapses_completed_records_newest_first(self):
+        curated = self.sample()
+        curated['workstreams'].extend([
+            {'id': 'old', 'title': 'Old', 'status': 'released', 'owner': 'A', 'now': 'Old', 'next': 'Retained', 'reported_at': '2020-01-01T00:00:00Z'},
+            {'id': 'new', 'title': 'New', 'status': 'released', 'owner': 'A', 'now': 'New', 'next': 'Retained', 'reported_at': '2021-01-01T00:00:00Z'},
+        ])
+        text = m.render({'checked_at': self.now.isoformat(), 'curated': curated,
+                         'curated_error': None, 'presence': {'available': True, 'errors': 0, 'agents': []}}, self.repo)
+        self.assertIn('<details class="completed-records">', text)
+        self.assertLess(text.index('>New</td>'), text.index('>Old</td>'))
+        self.assertLess(text.index('>A</td>'), text.index('<details class="completed-records">'))
+
     def test_render_shows_only_curated_agent_cards(self):
         data = {'checked_at': self.now.isoformat(), 'curated': self.sample(),
                 'curated_error': None, 'presence': {'available': True, 'errors': 0,

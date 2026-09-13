@@ -249,16 +249,28 @@ def render(data, repo=REPO):
         resources.append(f'<div class="resource" title="{esc(r["next"])}"><strong>{esc(labels.get(r["id"], r["title"]))}:</strong> '
                          f'{esc(r["now"])} <small class="{"warn" if stale else ""}">{state_label}</small></div>')
     streams = []
-    for r in c['workstreams']:
+    completed_streams = []
+
+    def stream_row(r):
         title = esc(r['title'])
         for item in r.get('links', []):
             url = safe_link(item.get('url'), repo)
             if url:
                 title = f'<a href="{esc(url)}" target="_blank" rel="noopener noreferrer">{title}</a>'
                 break
-        streams.append(f'<tr><td>{title}</td><td>{esc(r["owner"])}</td><td>{badge(r["status"])}</td>'
-                       f'<td><div>{esc(r["now"])}</div><div class="next">{esc(r["next"])}</div></td>'
-                       f'<td>{report(r, now)}</td></tr>')
+        return (f'<tr><td>{title}</td><td>{esc(r["owner"])}</td><td>{badge(r["status"])}</td>'
+                f'<td><div>{esc(r["now"])}</div><div class="next">{esc(r["next"])}</div></td>'
+                f'<td>{report(r, now)}</td></tr>')
+
+    completed_records = []
+    for r in c['workstreams']:
+        if r['status'] in {'released', 'completed'}:
+            completed_records.append(r)
+        else:
+            streams.append(stream_row(r))
+    # Completed items are historical records, newest completion report first.
+    completed_records.sort(key=lambda r: timestamp(r.get('reported_at')) or '', reverse=True)
+    completed_streams = [stream_row(r) for r in completed_records]
     live = {a['name']: a for a in presence['agents']}
     tasks = {a['name']: a for a in c['agents']}
     agents = []
@@ -283,6 +295,7 @@ def render(data, repo=REPO):
         'WARNINGS': ''.join(f'<div class="error">{esc(w)}</div>' for w in warnings),
         'RESOURCES': ''.join(resources),
         'STREAMS': ''.join(streams) or '<tr><td colspan="5">No current work reports.</td></tr>',
+        'COMPLETED_STREAMS': ''.join(completed_streams) or '<tr><td colspan="5">No completed records.</td></tr>',
         'AGENTS': ''.join(agents),
         'CONTRACT': esc((repo / 'docs/work-status.md').resolve().as_uri()),
         'LISTENING_LINK': listening_link,
