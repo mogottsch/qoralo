@@ -47,7 +47,7 @@ The earlier f029/75b87 job/audio and its pre-Play wrong-thread failure remain in
 
 Final run: `provider-app-remaining-replay-20260913t125100z`.
 - 10 Android cases passed: guard +expanded real-IO replay +default4/narrow-font2 4.
-- All10 required remaining UI flags passed, plus no-autoplay and playback-while-minimized.
+- All10 required remaining UI flags passed, plus no-autoplay and playback-while-minimized. Jens's final scoped review checked4 paired replay captures+8 profile images, stage values, identity hashes and preservation; no further source changes requested.
 - 245 JVM tests and15 Python checks passed;1 pre-existing optional test skipped. Debug/test APKs and release Kotlin compiled.
 - The existing debug Cursor `Recycle` lint diagnostic remains disclosed; no lint-pass claim.
 - Zero new AUDIO/model calls in the final replay. It reused b811/e827/2194 rather than synthesizing for screenshot/I/O repair.

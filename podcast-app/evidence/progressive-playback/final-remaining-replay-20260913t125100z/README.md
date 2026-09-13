@@ -12,6 +12,8 @@ The replay consumed the exact b811/e827 master/chunks (`2194bce6…532a`) from t
 
 Representative replay measurements:18.947s held paused through new arrival; explicit resume19.549s; automatic resume33.943s; mini Settings34.546s; speed1.25 on reopen; manual transcript axis4124→4124 with unchanged viewport; playing49.906→50.689s across fixture COMPLETE; explicit final pause50.765s. Four optional replay PNGs were successfully paired with unique owned focus. These are retained-data replay timings, not extra genuine-generation observations.
 
+[Jens's final scoped mixed-coverage review](jens-final-mixed-coverage-review.md) passed without further source changes: all4 paired replay captures,8 profile images, stage/coverage values, hashes and preservation were checked. This is implementation-owner UI review, not a new independent Nik review.
+
 The owned guard's private blocked-teardown fixture committed failure before self-only termination, with51.571ms observed stop latency. This is not a universal DSP teardown bound or an in-flight QNN cancellation API.
 
 [Installed handoff and concise coverage table](../../../docs/progressive-player-handoff-2026-09-13.md) distinguish:
