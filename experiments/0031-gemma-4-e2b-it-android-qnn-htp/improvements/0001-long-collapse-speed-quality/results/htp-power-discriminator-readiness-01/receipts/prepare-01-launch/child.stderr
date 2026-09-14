@@ -1,0 +1,41 @@
+2026-09-14 14:58:03,636 - ConverterLogger - INFO - Attempting to retrieve input dimensions from Input Tensors
+OptimizerLogger: 2026-09-14T14:58:03Z | WARNING | log_warning | converter_utils.py:283 - Unable to register converter supported Operation [Inverse:Version 1] with your Onnx installation. Converter will bail if Model contains this Op.
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_INITIALIZATION_SUCCESS: 
+2026-09-14 14:58:03,781 - 278 - INFO - INFO_INITIALIZATION_SUCCESS: 
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_CONVERSION_SUCCESS: Conversion completed successfully
+2026-09-14 14:58:03,797 - 278 - INFO - INFO_CONVERSION_SUCCESS: Conversion completed successfully
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_WRITE_SUCCESS: 
+2026-09-14 14:58:03,800 - 278 - INFO - INFO_WRITE_SUCCESS: 
+Quantization is disabled as --enable_float_fallback flag is provided Some Ops may fallback to float datatype
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_INITIALIZATION_SUCCESS: 
+2026-09-14 14:58:03,851 - 278 - INFO - INFO_INITIALIZATION_SUCCESS: 
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_CONVERSION_SUCCESS: Conversion completed successfully
+2026-09-14 14:58:03,857 - 278 - INFO - INFO_CONVERSION_SUCCESS: Conversion completed successfully
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_WRITE_SUCCESS: 
+2026-09-14 14:58:03,858 - 278 - INFO - INFO_WRITE_SUCCESS: 
+Quantization is disabled as --enable_float_fallback flag is provided Some Ops may fallback to float datatype
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_INITIALIZATION_SUCCESS: 
+2026-09-14 14:58:03,908 - 278 - INFO - INFO_INITIALIZATION_SUCCESS: 
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_CONVERSION_SUCCESS: Conversion completed successfully
+2026-09-14 14:58:03,913 - 278 - INFO - INFO_CONVERSION_SUCCESS: Conversion completed successfully
+OptimizerLogger: 2026-09-14T14:58:03Z | INFO | log_info | converter_utils.py:278 - INFO_WRITE_SUCCESS: 
+2026-09-14 14:58:03,914 - 278 - INFO - INFO_WRITE_SUCCESS: 
+Quantization is disabled as --enable_float_fallback flag is provided Some Ops may fallback to float datatype
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/prepare_htp_power_discriminator.py", line 106, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/prepare_htp_power_discriminator.py", line 101, in main
+    compiled=qairt.compile(models,config=qairt.CompileConfig(**config));context=out/'power-edge-context.bin';shutil.copyfile(compiled.module.path,context);result['context']={'path':str(context),'bytes':context.stat().st_size,'sha256':sha(context)};result['classification']='tiny_HTP_context_compiled_pending_runtime_bundle';save();return 0
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/profiler/profiler.py", line 178, in wrapper
+    return func(*args, **kwargs)
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/compiler/_compile.py", line 235, in compile
+    out_config = context_bin_gen.generate(ctx_arg_config)
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/tools/core/modules/context_bin_gen/context_bin_gen_module.py", line 226, in generate
+    output_binary, output_backend_binary_path = context_bin_gen.generate(
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/workflow/context_binary_generator.py", line 62, in generate
+    self._executor.generate_context_binary(
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/executor/native_executor.py", line 813, in generate_context_binary
+    _check_pnr_error(err,
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/executor/native_executor.py", line 80, in _check_pnr_error
+    raise exception_type(netrun_error_enum, msg)
+qti.aisw.core.model_level_api.utils.exceptions.ContextBinaryGenerationError: (<NetRunErrorCode.COMPOSE_GRAPHS: 14>, 'Failed to compose graphs')

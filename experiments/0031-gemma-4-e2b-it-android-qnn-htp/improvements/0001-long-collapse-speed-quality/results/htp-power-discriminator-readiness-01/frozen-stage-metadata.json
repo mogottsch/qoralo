@@ -1,0 +1,830 @@
+{
+  "backend_id": 6,
+  "classification": "frozen_authored_HTP_power_edge_and_normalization_fragment",
+  "context_sha256": "6cd4e825a5a55430ced91b2238ab0c060ab60b7956f49dd84c248246087c0ee4",
+  "dsp_arch": "v73",
+  "execution_limits": {
+    "address_space_bytes": 12884901888,
+    "evidence_poll_budget_bytes": 16777216,
+    "process_seconds": 90,
+    "total_host_wrapper_cleanup_separately_bounded": true
+  },
+  "expected_graph_order": [
+    "power_edge",
+    "normalization_chain",
+    "normalization_exposed"
+  ],
+  "expected_output_bytes": 1180672,
+  "files": {
+    "bin/qnn-net-run": {
+      "bytes": 5254464,
+      "mode": "0o555",
+      "sha256": "7b0b806033bb2bd074c233632eb0f06f34c5f5f10040c5a363e8720dd60fd8e9"
+    },
+    "inputs/normalization_chain.uint16le": {
+      "bytes": 393216,
+      "mode": "0o400",
+      "sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7"
+    },
+    "inputs/normalization_exposed.uint16le": {
+      "bytes": 393216,
+      "mode": "0o400",
+      "sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7"
+    },
+    "inputs/power_edge.uint16le": {
+      "bytes": 256,
+      "mode": "0o400",
+      "sha256": "566a9d3713603f1dc2b4b91f2e4725582393db2aeefd8a2e7ab03f2db19b6228"
+    },
+    "lib/libQnnHtp.so": {
+      "bytes": 3786400,
+      "mode": "0o400",
+      "sha256": "4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb"
+    },
+    "lib/libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "mode": "0o400",
+      "sha256": "e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8"
+    },
+    "lib/libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "mode": "0o400",
+      "sha256": "7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0"
+    },
+    "lib/libQnnSystem.so": {
+      "bytes": 4072160,
+      "mode": "0o400",
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "power-edge-context.bin": {
+      "bytes": 167936,
+      "mode": "0o400",
+      "sha256": "6cd4e825a5a55430ced91b2238ab0c060ab60b7956f49dd84c248246087c0ee4"
+    }
+  },
+  "full_LLM_or_reference": false,
+  "fusion_note": "Same explicit five-op chain; exposed variant makes intermediates graph outputs and can change fusion/materialization. No standalone-result-to-whole-model or CPU-to-HTP policy transfer.",
+  "graphs": [
+    {
+      "DLC_operator_types": [
+        "Eltwise_Binary"
+      ],
+      "HTP_backend_fusion_proven": false,
+      "authored": {
+        "active_grids": {
+          "base": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              1526.1595458984375
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.023287702351808548
+            ]
+          },
+          "inverse": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              6.8366379737854
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.00010432041017338634
+            ]
+          }
+        },
+        "expected_output_shapes": {
+          "inverse": [
+            1,
+            128,
+            1
+          ]
+        },
+        "graph": "power_edge",
+        "input": "base",
+        "input_bytes": 256,
+        "input_sha256": "566a9d3713603f1dc2b4b91f2e4725582393db2aeefd8a2e7ab03f2db19b6228",
+        "logical_shape": [
+          1,
+          128,
+          1
+        ],
+        "no_model_inputs_or_checkpoint_weights": true,
+        "operators_requested": 1,
+        "parameter_grids": {
+          "exponent": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              0.0
+            ],
+            "min": [
+              -0.5
+            ],
+            "offset": [
+              -65535
+            ],
+            "scale": [
+              7.629510946571827e-06
+            ]
+          }
+        },
+        "pattern_repetitions": 32,
+        "row_patterns_codes": [
+          0,
+          1,
+          2,
+          65535
+        ],
+        "synthetic_calibration": {
+          "LLM_or_captured_model_inputs": false,
+          "all_grids_overridden": true,
+          "bytes": 512,
+          "code": 43,
+          "float_value": 1.001371145248413,
+          "samples": 1,
+          "sha256": "f6edde084a327b9d16c8527e20ddee3721105028fc2bddb55e458cafb6759d53"
+        }
+      },
+      "converter_fusion_observed": false,
+      "inputs": {
+        "base": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 1,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "base",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "name": "power_edge",
+      "outputs": {
+        "inverse": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 3,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "inverse",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.00010432041017338634
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      }
+    },
+    {
+      "DLC_operator_types": [
+        "Eltwise_Binary",
+        "Reduce",
+        "Eltwise_Binary",
+        "Eltwise_Binary",
+        "Eltwise_Binary"
+      ],
+      "HTP_backend_fusion_proven": false,
+      "authored": {
+        "active_grids": {
+          "denom": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              1526.1595458984375
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.023287702351808548
+            ]
+          },
+          "inverse": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              6.8366379737854
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.00010432041017338634
+            ]
+          },
+          "mean": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              1526.1595458984375
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.023287702351808548
+            ]
+          },
+          "normalized": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              16.73546028137207
+            ],
+            "min": [
+              -15.495595932006836
+            ],
+            "offset": [
+              -31507
+            ],
+            "scale": [
+              0.0004918143968097866
+            ]
+          },
+          "squared": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              33096.25
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.5050163865089417
+            ]
+          },
+          "x": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              22.7065372467041
+            ],
+            "min": [
+              -181.9239501953125
+            ],
+            "offset": [
+              -58263
+            ],
+            "scale": [
+              0.0031224610283970833
+            ]
+          }
+        },
+        "changed_fusion_opportunity": false,
+        "expected_output_shapes": {
+          "normalized": [
+            1,
+            128,
+            1536
+          ]
+        },
+        "graph": "normalization_chain",
+        "input": "x",
+        "input_bytes": 393216,
+        "input_sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7",
+        "intermediates_exposed": false,
+        "learned_gamma_or_Gemma_weights_included": false,
+        "logical_shape": [
+          1,
+          128,
+          1536
+        ],
+        "no_model_inputs_or_checkpoint_weights": true,
+        "operators_requested": 5,
+        "parameter_grids": {
+          "epsilon": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              9.999999747378752e-05
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              1.5259021823865737e-09
+            ]
+          },
+          "exponent": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              0.0
+            ],
+            "min": [
+              -0.5
+            ],
+            "offset": [
+              -65535
+            ],
+            "scale": [
+              7.629510946571827e-06
+            ]
+          }
+        },
+        "pattern_repetitions": 32,
+        "row_patterns_codes": [
+          58263,
+          58264,
+          58519,
+          59287
+        ],
+        "scope": "Exact-shape/grid square/mean/epsilon/power/multiply fragment only, not whole layer/model.",
+        "synthetic_calibration": {
+          "LLM_or_captured_model_inputs": false,
+          "all_grids_overridden": true,
+          "bytes": 786432,
+          "code": 58583,
+          "float_value": 0.9991875290870667,
+          "samples": 1,
+          "sha256": "8679deaed4938bfa96d6372d744e246c3e3b3b39142fb7e3e41bcca10b86a6f6"
+        }
+      },
+      "converter_fusion_observed": false,
+      "inputs": {
+        "x": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 4,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "x",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": -58263,
+              "scale": 0.0031224610283970833
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "name": "normalization_chain",
+      "outputs": {
+        "normalized": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 12,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "normalized",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": -31507,
+              "scale": 0.0004918143968097866
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      }
+    },
+    {
+      "DLC_operator_types": [
+        "Eltwise_Binary",
+        "Reduce",
+        "Eltwise_Binary",
+        "Eltwise_Binary",
+        "Eltwise_Binary"
+      ],
+      "HTP_backend_fusion_proven": false,
+      "authored": {
+        "active_grids": {
+          "denom": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              1526.1595458984375
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.023287702351808548
+            ]
+          },
+          "inverse": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              6.8366379737854
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.00010432041017338634
+            ]
+          },
+          "mean": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              1526.1595458984375
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.023287702351808548
+            ]
+          },
+          "normalized": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              16.73546028137207
+            ],
+            "min": [
+              -15.495595932006836
+            ],
+            "offset": [
+              -31507
+            ],
+            "scale": [
+              0.0004918143968097866
+            ]
+          },
+          "squared": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              33096.25
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              0.5050163865089417
+            ]
+          },
+          "x": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              22.7065372467041
+            ],
+            "min": [
+              -181.9239501953125
+            ],
+            "offset": [
+              -58263
+            ],
+            "scale": [
+              0.0031224610283970833
+            ]
+          }
+        },
+        "changed_fusion_opportunity": true,
+        "expected_output_shapes": {
+          "denom": [
+            1,
+            128,
+            1
+          ],
+          "inverse": [
+            1,
+            128,
+            1
+          ],
+          "mean": [
+            1,
+            128,
+            1
+          ],
+          "normalized": [
+            1,
+            128,
+            1536
+          ],
+          "squared": [
+            1,
+            128,
+            1536
+          ]
+        },
+        "graph": "normalization_exposed",
+        "input": "x",
+        "input_bytes": 393216,
+        "input_sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7",
+        "intermediates_exposed": true,
+        "learned_gamma_or_Gemma_weights_included": false,
+        "logical_shape": [
+          1,
+          128,
+          1536
+        ],
+        "no_model_inputs_or_checkpoint_weights": true,
+        "operators_requested": 5,
+        "parameter_grids": {
+          "epsilon": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              9.999999747378752e-05
+            ],
+            "min": [
+              0.0
+            ],
+            "offset": [
+              0
+            ],
+            "scale": [
+              1.5259021823865737e-09
+            ]
+          },
+          "exponent": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "max": [
+              0.0
+            ],
+            "min": [
+              -0.5
+            ],
+            "offset": [
+              -65535
+            ],
+            "scale": [
+              7.629510946571827e-06
+            ]
+          }
+        },
+        "pattern_repetitions": 32,
+        "row_patterns_codes": [
+          58263,
+          58264,
+          58519,
+          59287
+        ],
+        "scope": "Exact-shape/grid square/mean/epsilon/power/multiply fragment only, not whole layer/model.",
+        "synthetic_calibration": {
+          "LLM_or_captured_model_inputs": false,
+          "all_grids_overridden": true,
+          "bytes": 786432,
+          "code": 58583,
+          "float_value": 0.9991875290870667,
+          "samples": 1,
+          "sha256": "8679deaed4938bfa96d6372d744e246c3e3b3b39142fb7e3e41bcca10b86a6f6"
+        }
+      },
+      "converter_fusion_observed": false,
+      "inputs": {
+        "x": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 13,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "x",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": -58263,
+              "scale": 0.0031224610283970833
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "name": "normalization_exposed",
+      "outputs": {
+        "denom": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 18,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "denom",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        },
+        "inverse": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 20,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "inverse",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.00010432041017338634
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        },
+        "mean": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 15,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "mean",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        },
+        "normalized": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 21,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "normalized",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": -31507,
+              "scale": 0.0004918143968097866
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        },
+        "squared": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 14,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "squared",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.5050163865089417
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      }
+    }
+  ],
+  "learned_weights_or_actual_model_inputs": false,
+  "native_inputs_and_outputs": true,
+  "payload_bytes": 26698768,
+  "phone_permission_granted": false,
+  "requested_graph_executions_each": 1,
+  "soc_model": 43,
+  "stage_id": "htp-power-edge-stage-01"
+}

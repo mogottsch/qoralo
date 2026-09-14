@@ -1,0 +1,427 @@
+{
+    "header": {
+        "artifact_type": "CONTEXT_BINARY_INFO",
+        "version": {
+            "major": 3,
+            "minor": 0,
+            "patch": 0
+        },
+        "header_version": {
+            "major": 0,
+            "minor": 1,
+            "patch": 0
+        }
+    },
+    "version": "QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_3",
+    "info": {
+        "backendId": 6,
+        "buildId": "v2.49.40.260810104044",
+        "coreApiVersion": "2.38.0",
+        "backendApiVersion": "5.49.0",
+        "socVersion": "",
+        "contextBlobVersion": "4.0.4",
+        "contextBlobSize": 163840,
+        "numContextTensors": 0,
+        "contextTensors": [],
+        "numGraphs": 3,
+        "graphs": [
+            {
+                "version": "QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_3",
+                "info": {
+                    "graphName": "power_edge",
+                    "numGraphInputs": 1,
+                    "graphInputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 1,
+                                "name": "base",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.023287702351808549,
+                                        "offset": 0
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "numGraphOutputs": 1,
+                    "graphOutputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 3,
+                                "name": "inverse",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.00010432041017338634,
+                                        "offset": 0
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "numUpdateableTensors": 0,
+                    "updateableTensors": [],
+                    "graphBlobInfoSize": 112,
+                    "graphBlobInfo": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V1",
+                        "info": {
+                            "spillFillBufferSize": 0,
+                            "optimizationLevel": 3,
+                            "vtcmSize": 4,
+                            "htpDlbc": 0,
+                            "numHvxThreads": 0
+                        }
+                    },
+                    "graphBlobInfoV2": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V2",
+                        "nativeKChannelSize": 256,
+                        "nativeVChannelSize": 64,
+                        "isSafeShareIO": 0,
+                        "ioTensorSize": 16384,
+                        "opDataSize": 3072,
+                        "constSize": 0,
+                        "ddrTensorSize": 0,
+                        "sharedWeightsSize": 8192
+                    },
+                    "startOpIndex": 0,
+                    "endOpIndex": 0
+                }
+            },
+            {
+                "version": "QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_3",
+                "info": {
+                    "graphName": "normalization_chain",
+                    "numGraphInputs": 1,
+                    "graphInputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 4,
+                                "name": "x",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1536
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.0031224610283970834,
+                                        "offset": -58263
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "numGraphOutputs": 1,
+                    "graphOutputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 12,
+                                "name": "normalized",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1536
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.0004918143968097866,
+                                        "offset": -31507
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "numUpdateableTensors": 0,
+                    "updateableTensors": [],
+                    "graphBlobInfoSize": 112,
+                    "graphBlobInfo": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V1",
+                        "info": {
+                            "spillFillBufferSize": 0,
+                            "optimizationLevel": 3,
+                            "vtcmSize": 4,
+                            "htpDlbc": 0,
+                            "numHvxThreads": 0
+                        }
+                    },
+                    "graphBlobInfoV2": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V2",
+                        "nativeKChannelSize": 256,
+                        "nativeVChannelSize": 64,
+                        "isSafeShareIO": 0,
+                        "ioTensorSize": 786432,
+                        "opDataSize": 55040,
+                        "constSize": 256,
+                        "ddrTensorSize": 0,
+                        "sharedWeightsSize": 8192
+                    },
+                    "startOpIndex": 0,
+                    "endOpIndex": 0
+                }
+            },
+            {
+                "version": "QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_3",
+                "info": {
+                    "graphName": "normalization_exposed",
+                    "numGraphInputs": 1,
+                    "graphInputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 13,
+                                "name": "x",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1536
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.0031224610283970834,
+                                        "offset": -58263
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "numGraphOutputs": 5,
+                    "graphOutputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 14,
+                                "name": "squared",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1536
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.5050163865089417,
+                                        "offset": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 15,
+                                "name": "mean",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.023287702351808549,
+                                        "offset": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 18,
+                                "name": "denom",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.023287702351808549,
+                                        "offset": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 20,
+                                "name": "inverse",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.00010432041017338634,
+                                        "offset": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_2",
+                            "info": {
+                                "id": 21,
+                                "name": "normalized",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    1536
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_DEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+                                    "scaleOffset": {
+                                        "scale": 0.0004918143968097866,
+                                        "offset": -31507
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "numUpdateableTensors": 0,
+                    "updateableTensors": [],
+                    "graphBlobInfoSize": 112,
+                    "graphBlobInfo": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V1",
+                        "info": {
+                            "spillFillBufferSize": 0,
+                            "optimizationLevel": 3,
+                            "vtcmSize": 4,
+                            "htpDlbc": 0,
+                            "numHvxThreads": 0
+                        }
+                    },
+                    "graphBlobInfoV2": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V2",
+                        "nativeKChannelSize": 256,
+                        "nativeVChannelSize": 64,
+                        "isSafeShareIO": 0,
+                        "ioTensorSize": 1204224,
+                        "opDataSize": 55808,
+                        "constSize": 256,
+                        "ddrTensorSize": 0,
+                        "sharedWeightsSize": 8192
+                    },
+                    "startOpIndex": 0,
+                    "endOpIndex": 0
+                }
+            }
+        ],
+        "platformInfo": {
+            "version": "QNN_DEVICE_PLATFORM_INFO_VERSION_1",
+            "info": {
+                "numHwDevices": 1,
+                "hwDevices": [
+                    {
+                        "version": "QNN_DEVICE_HARDWARE_DEVICE_INFO_VERSION_1",
+                        "info": {
+                            "deviceId": 0,
+                            "deviceType": 0,
+                            "numCores": 1,
+                            "cores": [
+                                {
+                                    "version": "QNN_DEVICE_CORE_INFO_VERSION_1",
+                                    "info": {
+                                        "coreId": 0,
+                                        "coreType": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "contextMetadataSize": 8,
+        "contextMetadata": {
+            "version": "QNN_SYSTEM_CONTEXT_HTP_CONTEXT_INFO_BLOB_VERSION_V1",
+            "info": {
+                "dspArch": 73
+            }
+        },
+        "socModel": 43
+    }
+}

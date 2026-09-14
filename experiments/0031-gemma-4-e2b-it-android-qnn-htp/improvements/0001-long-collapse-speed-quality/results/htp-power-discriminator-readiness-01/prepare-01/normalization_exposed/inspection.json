@@ -1,0 +1,268 @@
+{
+  "graph_name": "fixture",
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "squared",
+    "mean",
+    "denom",
+    "inverse",
+    "normalized"
+  ],
+  "tensors": {
+    "x": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1,
+        128,
+        1536
+      ],
+      "tensor_type": "APP_WRITE",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          0.0031224610283970833
+        ],
+        "offset": [
+          -58263
+        ],
+        "axis": null
+      }
+    },
+    "squared": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1,
+        128,
+        1536
+      ],
+      "tensor_type": "APP_READ",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          0.5050163865089417
+        ],
+        "offset": [
+          0
+        ],
+        "axis": null
+      }
+    },
+    "mean": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1,
+        128,
+        1
+      ],
+      "tensor_type": "APP_READ",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          0.023287702351808548
+        ],
+        "offset": [
+          0
+        ],
+        "axis": null
+      }
+    },
+    "epsilon": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1
+      ],
+      "tensor_type": "STATIC",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          1.5259021823865737e-09
+        ],
+        "offset": [
+          0
+        ],
+        "axis": null
+      },
+      "static": {
+        "dtype": "uint16",
+        "shape": [
+          1
+        ],
+        "bytes": 2,
+        "sha256": "c5a67093d30146120703cb59950e29ab0143a4053e507612b90a4ac7013fdc6d",
+        "values": [
+          655
+        ]
+      }
+    },
+    "denom": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1,
+        128,
+        1
+      ],
+      "tensor_type": "APP_READ",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          0.023287702351808548
+        ],
+        "offset": [
+          0
+        ],
+        "axis": null
+      }
+    },
+    "exponent": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1
+      ],
+      "tensor_type": "STATIC",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          7.629510946571827e-06
+        ],
+        "offset": [
+          -65535
+        ],
+        "axis": null
+      },
+      "static": {
+        "dtype": "uint16",
+        "shape": [
+          1
+        ],
+        "bytes": 2,
+        "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+        "values": [
+          0
+        ]
+      }
+    },
+    "inverse": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1,
+        128,
+        1
+      ],
+      "tensor_type": "APP_READ",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          0.00010432041017338634
+        ],
+        "offset": [
+          0
+        ],
+        "axis": null
+      }
+    },
+    "normalized": {
+      "datatype": "uFxp_16",
+      "dimensions": [
+        1,
+        128,
+        1536
+      ],
+      "tensor_type": "APP_READ",
+      "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+      "grid": {
+        "bitwidths": [
+          16
+        ],
+        "scale": [
+          0.0004918143968097866
+        ],
+        "offset": [
+          -31507
+        ],
+        "axis": null
+      }
+    }
+  },
+  "operators": [
+    {
+      "name": "actual_grid_square",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "x",
+        "x"
+      ],
+      "outputs": [
+        "squared"
+      ]
+    },
+    {
+      "name": "actual_grid_mean",
+      "type": "Reduce",
+      "inputs": [
+        "squared"
+      ],
+      "outputs": [
+        "mean"
+      ]
+    },
+    {
+      "name": "actual_grid_add_epsilon",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "mean",
+        "epsilon"
+      ],
+      "outputs": [
+        "denom"
+      ]
+    },
+    {
+      "name": "actual_grid_power",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "denom",
+        "exponent"
+      ],
+      "outputs": [
+        "inverse"
+      ]
+    },
+    {
+      "name": "actual_grid_normalize",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "x",
+        "inverse"
+      ],
+      "outputs": [
+        "normalized"
+      ]
+    }
+  ],
+  "converter_RmsNorm_fusion_present": false,
+  "actual_IO_contract_passed": true,
+  "physical_execution_proven": false
+}

@@ -1,0 +1,208 @@
+{
+  "row_patterns_codes": [
+    58263,
+    58264,
+    58519,
+    59287
+  ],
+  "pattern_repetitions": 32,
+  "input": "x",
+  "logical_shape": [
+    1,
+    128,
+    1536
+  ],
+  "operators_requested": 5,
+  "intermediates_exposed": true,
+  "changed_fusion_opportunity": true,
+  "learned_gamma_or_Gemma_weights_included": false,
+  "scope": "Exact-shape/grid square/mean/epsilon/power/multiply fragment only, not whole layer/model.",
+  "graph": "normalization_exposed",
+  "active_grids": {
+    "x": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        0.0031224610283970833
+      ],
+      "offset": [
+        -58263
+      ],
+      "min": [
+        -181.9239501953125
+      ],
+      "max": [
+        22.7065372467041
+      ]
+    },
+    "squared": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        0.5050163865089417
+      ],
+      "offset": [
+        0
+      ],
+      "min": [
+        0.0
+      ],
+      "max": [
+        33096.25
+      ]
+    },
+    "mean": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        0.023287702351808548
+      ],
+      "offset": [
+        0
+      ],
+      "min": [
+        0.0
+      ],
+      "max": [
+        1526.1595458984375
+      ]
+    },
+    "denom": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        0.023287702351808548
+      ],
+      "offset": [
+        0
+      ],
+      "min": [
+        0.0
+      ],
+      "max": [
+        1526.1595458984375
+      ]
+    },
+    "inverse": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        0.00010432041017338634
+      ],
+      "offset": [
+        0
+      ],
+      "min": [
+        0.0
+      ],
+      "max": [
+        6.8366379737854
+      ]
+    },
+    "normalized": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        0.0004918143968097866
+      ],
+      "offset": [
+        -31507
+      ],
+      "min": [
+        -15.495595932006836
+      ],
+      "max": [
+        16.73546028137207
+      ]
+    }
+  },
+  "parameter_grids": {
+    "epsilon": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        1.5259021823865737e-09
+      ],
+      "offset": [
+        0
+      ],
+      "min": [
+        0.0
+      ],
+      "max": [
+        9.999999747378752e-05
+      ]
+    },
+    "exponent": {
+      "axis": null,
+      "bitwidths": [
+        16
+      ],
+      "scale": [
+        7.629510946571827e-06
+      ],
+      "offset": [
+        -65535
+      ],
+      "min": [
+        -0.5
+      ],
+      "max": [
+        0.0
+      ]
+    }
+  },
+  "input_bytes": 393216,
+  "input_sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7",
+  "expected_output_shapes": {
+    "normalized": [
+      1,
+      128,
+      1536
+    ],
+    "squared": [
+      1,
+      128,
+      1536
+    ],
+    "mean": [
+      1,
+      128,
+      1
+    ],
+    "denom": [
+      1,
+      128,
+      1
+    ],
+    "inverse": [
+      1,
+      128,
+      1
+    ]
+  },
+  "no_model_inputs_or_checkpoint_weights": true,
+  "synthetic_calibration": {
+    "samples": 1,
+    "code": 58583,
+    "float_value": 0.9991875290870667,
+    "bytes": 786432,
+    "sha256": "8679deaed4938bfa96d6372d744e246c3e3b3b39142fb7e3e41bcca10b86a6f6",
+    "LLM_or_captured_model_inputs": false,
+    "all_grids_overridden": true
+  }
+}

@@ -1,0 +1,1315 @@
+{
+  "classification": "tiny_HTP_context_compiled_pending_runtime_bundle",
+  "graphs": [
+    {
+      "authored": {
+        "row_patterns_codes": [
+          0,
+          1,
+          2,
+          65535
+        ],
+        "pattern_repetitions": 32,
+        "input": "base",
+        "logical_shape": [
+          1,
+          128,
+          1
+        ],
+        "operators_requested": 1,
+        "graph": "power_edge",
+        "active_grids": {
+          "base": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.023287702351808548
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              1526.1595458984375
+            ]
+          },
+          "inverse": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.00010432041017338634
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              6.8366379737854
+            ]
+          }
+        },
+        "parameter_grids": {
+          "exponent": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              7.629510946571827e-06
+            ],
+            "offset": [
+              -65535
+            ],
+            "min": [
+              -0.5
+            ],
+            "max": [
+              0.0
+            ]
+          }
+        },
+        "input_bytes": 256,
+        "input_sha256": "566a9d3713603f1dc2b4b91f2e4725582393db2aeefd8a2e7ab03f2db19b6228",
+        "expected_output_shapes": {
+          "inverse": [
+            1,
+            128,
+            1
+          ]
+        },
+        "no_model_inputs_or_checkpoint_weights": true,
+        "synthetic_calibration": {
+          "samples": 1,
+          "code": 43,
+          "float_value": 1.001371145248413,
+          "bytes": 512,
+          "sha256": "f6edde084a327b9d16c8527e20ddee3721105028fc2bddb55e458cafb6759d53",
+          "LLM_or_captured_model_inputs": false,
+          "all_grids_overridden": true
+        }
+      },
+      "calibration_config": {
+        "dataset": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/power_edge/calibration.txt",
+        "batch_size": 1,
+        "num_of_samples": 1,
+        "act_precision": 16,
+        "bias_precision": 32,
+        "weights_precision": 16,
+        "param_calibration_method": "min-max",
+        "act_calibration_method": "min-max",
+        "per_channel_quantization": false,
+        "per_row_quantization": false,
+        "per_row_quantization_bias": false,
+        "keep_weights_quantized": false
+      },
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/power_edge/power_edge.dlc",
+        "bytes": 8280,
+        "sha256": "488bb802d84fc1df98e9bcf45ce67711ac58555a345dcbde68e17eb531f7db00"
+      },
+      "inspection": {
+        "graph_name": "power_edge",
+        "inputs": [
+          "base"
+        ],
+        "outputs": [
+          "inverse"
+        ],
+        "tensors": {
+          "base": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_WRITE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.023287702351808548
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "exponent": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "tensor_type": "STATIC",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                7.629510946571827e-06
+              ],
+              "offset": [
+                -65535
+              ],
+              "axis": null
+            },
+            "static": {
+              "dtype": "uint16",
+              "shape": [
+                1
+              ],
+              "bytes": 2,
+              "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+              "values": [
+                0
+              ]
+            }
+          },
+          "inverse": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.00010432041017338634
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          }
+        },
+        "operators": [
+          {
+            "name": "actual_grid_power",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "base",
+              "exponent"
+            ],
+            "outputs": [
+              "inverse"
+            ]
+          }
+        ],
+        "converter_RmsNorm_fusion_present": false,
+        "actual_IO_contract_passed": true,
+        "physical_execution_proven": false
+      }
+    },
+    {
+      "authored": {
+        "row_patterns_codes": [
+          58263,
+          58264,
+          58519,
+          59287
+        ],
+        "pattern_repetitions": 32,
+        "input": "x",
+        "logical_shape": [
+          1,
+          128,
+          1536
+        ],
+        "operators_requested": 5,
+        "intermediates_exposed": false,
+        "changed_fusion_opportunity": false,
+        "learned_gamma_or_Gemma_weights_included": false,
+        "scope": "Exact-shape/grid square/mean/epsilon/power/multiply fragment only, not whole layer/model.",
+        "graph": "normalization_chain",
+        "active_grids": {
+          "x": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.0031224610283970833
+            ],
+            "offset": [
+              -58263
+            ],
+            "min": [
+              -181.9239501953125
+            ],
+            "max": [
+              22.7065372467041
+            ]
+          },
+          "squared": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.5050163865089417
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              33096.25
+            ]
+          },
+          "mean": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.023287702351808548
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              1526.1595458984375
+            ]
+          },
+          "denom": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.023287702351808548
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              1526.1595458984375
+            ]
+          },
+          "inverse": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.00010432041017338634
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              6.8366379737854
+            ]
+          },
+          "normalized": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.0004918143968097866
+            ],
+            "offset": [
+              -31507
+            ],
+            "min": [
+              -15.495595932006836
+            ],
+            "max": [
+              16.73546028137207
+            ]
+          }
+        },
+        "parameter_grids": {
+          "epsilon": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              1.5259021823865737e-09
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              9.999999747378752e-05
+            ]
+          },
+          "exponent": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              7.629510946571827e-06
+            ],
+            "offset": [
+              -65535
+            ],
+            "min": [
+              -0.5
+            ],
+            "max": [
+              0.0
+            ]
+          }
+        },
+        "input_bytes": 393216,
+        "input_sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7",
+        "expected_output_shapes": {
+          "normalized": [
+            1,
+            128,
+            1536
+          ]
+        },
+        "no_model_inputs_or_checkpoint_weights": true,
+        "synthetic_calibration": {
+          "samples": 1,
+          "code": 58583,
+          "float_value": 0.9991875290870667,
+          "bytes": 786432,
+          "sha256": "8679deaed4938bfa96d6372d744e246c3e3b3b39142fb7e3e41bcca10b86a6f6",
+          "LLM_or_captured_model_inputs": false,
+          "all_grids_overridden": true
+        }
+      },
+      "calibration_config": {
+        "dataset": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/normalization_chain/calibration.txt",
+        "batch_size": 1,
+        "num_of_samples": 1,
+        "act_precision": 16,
+        "bias_precision": 32,
+        "weights_precision": 16,
+        "param_calibration_method": "min-max",
+        "act_calibration_method": "min-max",
+        "per_channel_quantization": false,
+        "per_row_quantization": false,
+        "per_row_quantization_bias": false,
+        "keep_weights_quantized": false
+      },
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/normalization_chain/normalization_chain.dlc",
+        "bytes": 10376,
+        "sha256": "18873a01c554b0774bbdf13dce3f0aa9d5d92e1280405a7ce98050ef2322d99d"
+      },
+      "inspection": {
+        "graph_name": "normalization_chain",
+        "inputs": [
+          "x"
+        ],
+        "outputs": [
+          "normalized"
+        ],
+        "tensors": {
+          "x": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "APP_WRITE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.0031224610283970833
+              ],
+              "offset": [
+                -58263
+              ],
+              "axis": null
+            }
+          },
+          "squared": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "NATIVE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.5050163865089417
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "mean": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "NATIVE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.023287702351808548
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "epsilon": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "tensor_type": "STATIC",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                1.5259021823865737e-09
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            },
+            "static": {
+              "dtype": "uint16",
+              "shape": [
+                1
+              ],
+              "bytes": 2,
+              "sha256": "c5a67093d30146120703cb59950e29ab0143a4053e507612b90a4ac7013fdc6d",
+              "values": [
+                655
+              ]
+            }
+          },
+          "denom": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "NATIVE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.023287702351808548
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "exponent": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "tensor_type": "STATIC",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                7.629510946571827e-06
+              ],
+              "offset": [
+                -65535
+              ],
+              "axis": null
+            },
+            "static": {
+              "dtype": "uint16",
+              "shape": [
+                1
+              ],
+              "bytes": 2,
+              "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+              "values": [
+                0
+              ]
+            }
+          },
+          "inverse": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "NATIVE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.00010432041017338634
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "normalized": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.0004918143968097866
+              ],
+              "offset": [
+                -31507
+              ],
+              "axis": null
+            }
+          }
+        },
+        "operators": [
+          {
+            "name": "actual_grid_square",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "x",
+              "x"
+            ],
+            "outputs": [
+              "squared"
+            ]
+          },
+          {
+            "name": "actual_grid_mean",
+            "type": "Reduce",
+            "inputs": [
+              "squared"
+            ],
+            "outputs": [
+              "mean"
+            ]
+          },
+          {
+            "name": "actual_grid_add_epsilon",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "mean",
+              "epsilon"
+            ],
+            "outputs": [
+              "denom"
+            ]
+          },
+          {
+            "name": "actual_grid_power",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "denom",
+              "exponent"
+            ],
+            "outputs": [
+              "inverse"
+            ]
+          },
+          {
+            "name": "actual_grid_normalize",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "x",
+              "inverse"
+            ],
+            "outputs": [
+              "normalized"
+            ]
+          }
+        ],
+        "converter_RmsNorm_fusion_present": false,
+        "actual_IO_contract_passed": true,
+        "physical_execution_proven": false
+      }
+    },
+    {
+      "authored": {
+        "row_patterns_codes": [
+          58263,
+          58264,
+          58519,
+          59287
+        ],
+        "pattern_repetitions": 32,
+        "input": "x",
+        "logical_shape": [
+          1,
+          128,
+          1536
+        ],
+        "operators_requested": 5,
+        "intermediates_exposed": true,
+        "changed_fusion_opportunity": true,
+        "learned_gamma_or_Gemma_weights_included": false,
+        "scope": "Exact-shape/grid square/mean/epsilon/power/multiply fragment only, not whole layer/model.",
+        "graph": "normalization_exposed",
+        "active_grids": {
+          "x": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.0031224610283970833
+            ],
+            "offset": [
+              -58263
+            ],
+            "min": [
+              -181.9239501953125
+            ],
+            "max": [
+              22.7065372467041
+            ]
+          },
+          "squared": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.5050163865089417
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              33096.25
+            ]
+          },
+          "mean": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.023287702351808548
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              1526.1595458984375
+            ]
+          },
+          "denom": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.023287702351808548
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              1526.1595458984375
+            ]
+          },
+          "inverse": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.00010432041017338634
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              6.8366379737854
+            ]
+          },
+          "normalized": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              0.0004918143968097866
+            ],
+            "offset": [
+              -31507
+            ],
+            "min": [
+              -15.495595932006836
+            ],
+            "max": [
+              16.73546028137207
+            ]
+          }
+        },
+        "parameter_grids": {
+          "epsilon": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              1.5259021823865737e-09
+            ],
+            "offset": [
+              0
+            ],
+            "min": [
+              0.0
+            ],
+            "max": [
+              9.999999747378752e-05
+            ]
+          },
+          "exponent": {
+            "axis": null,
+            "bitwidths": [
+              16
+            ],
+            "scale": [
+              7.629510946571827e-06
+            ],
+            "offset": [
+              -65535
+            ],
+            "min": [
+              -0.5
+            ],
+            "max": [
+              0.0
+            ]
+          }
+        },
+        "input_bytes": 393216,
+        "input_sha256": "5ba72ac8766dd1630f634186994b15c7f379e17ad2598a5f6beb846f4c5775e7",
+        "expected_output_shapes": {
+          "normalized": [
+            1,
+            128,
+            1536
+          ],
+          "squared": [
+            1,
+            128,
+            1536
+          ],
+          "mean": [
+            1,
+            128,
+            1
+          ],
+          "denom": [
+            1,
+            128,
+            1
+          ],
+          "inverse": [
+            1,
+            128,
+            1
+          ]
+        },
+        "no_model_inputs_or_checkpoint_weights": true,
+        "synthetic_calibration": {
+          "samples": 1,
+          "code": 58583,
+          "float_value": 0.9991875290870667,
+          "bytes": 786432,
+          "sha256": "8679deaed4938bfa96d6372d744e246c3e3b3b39142fb7e3e41bcca10b86a6f6",
+          "LLM_or_captured_model_inputs": false,
+          "all_grids_overridden": true
+        }
+      },
+      "calibration_config": {
+        "dataset": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/normalization_exposed/calibration.txt",
+        "batch_size": 1,
+        "num_of_samples": 1,
+        "act_precision": 16,
+        "bias_precision": 32,
+        "weights_precision": 16,
+        "param_calibration_method": "min-max",
+        "act_calibration_method": "min-max",
+        "per_channel_quantization": false,
+        "per_row_quantization": false,
+        "per_row_quantization_bias": false,
+        "keep_weights_quantized": false
+      },
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/normalization_exposed/normalization_exposed.dlc",
+        "bytes": 10384,
+        "sha256": "d4068b6d68b804f38e1666b6276e829fdbd900447a79792afd1eb9ca68760e73"
+      },
+      "inspection": {
+        "graph_name": "normalization_exposed",
+        "inputs": [
+          "x"
+        ],
+        "outputs": [
+          "squared",
+          "mean",
+          "denom",
+          "inverse",
+          "normalized"
+        ],
+        "tensors": {
+          "x": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "APP_WRITE",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.0031224610283970833
+              ],
+              "offset": [
+                -58263
+              ],
+              "axis": null
+            }
+          },
+          "squared": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.5050163865089417
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "mean": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.023287702351808548
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "epsilon": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "tensor_type": "STATIC",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                1.5259021823865737e-09
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            },
+            "static": {
+              "dtype": "uint16",
+              "shape": [
+                1
+              ],
+              "bytes": 2,
+              "sha256": "c5a67093d30146120703cb59950e29ab0143a4053e507612b90a4ac7013fdc6d",
+              "values": [
+                655
+              ]
+            }
+          },
+          "denom": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.023287702351808548
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "exponent": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "tensor_type": "STATIC",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                7.629510946571827e-06
+              ],
+              "offset": [
+                -65535
+              ],
+              "axis": null
+            },
+            "static": {
+              "dtype": "uint16",
+              "shape": [
+                1
+              ],
+              "bytes": 2,
+              "sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+              "values": [
+                0
+              ]
+            }
+          },
+          "inverse": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.00010432041017338634
+              ],
+              "offset": [
+                0
+              ],
+              "axis": null
+            }
+          },
+          "normalized": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "APP_READ",
+            "encoding_kind": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "grid": {
+              "bitwidths": [
+                16
+              ],
+              "scale": [
+                0.0004918143968097866
+              ],
+              "offset": [
+                -31507
+              ],
+              "axis": null
+            }
+          }
+        },
+        "operators": [
+          {
+            "name": "actual_grid_square",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "x",
+              "x"
+            ],
+            "outputs": [
+              "squared"
+            ]
+          },
+          {
+            "name": "actual_grid_mean",
+            "type": "Reduce",
+            "inputs": [
+              "squared"
+            ],
+            "outputs": [
+              "mean"
+            ]
+          },
+          {
+            "name": "actual_grid_add_epsilon",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "mean",
+              "epsilon"
+            ],
+            "outputs": [
+              "denom"
+            ]
+          },
+          {
+            "name": "actual_grid_power",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "denom",
+              "exponent"
+            ],
+            "outputs": [
+              "inverse"
+            ]
+          },
+          {
+            "name": "actual_grid_normalize",
+            "type": "Eltwise_Binary",
+            "inputs": [
+              "x",
+              "inverse"
+            ],
+            "outputs": [
+              "normalized"
+            ]
+          }
+        ],
+        "converter_RmsNorm_fusion_present": false,
+        "actual_IO_contract_passed": true,
+        "physical_execution_proven": false
+      }
+    }
+  ],
+  "full_model_or_phone_inference": false,
+  "authored_tiny_calibration_may_execute": true,
+  "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+  "compiler_recipe_sha256": "36c3f95dae0cfa8f2b9da510b24cfd9a2b4278a777ba602a9ed351bc4d63225e",
+  "max_authored_graphs": 3,
+  "full_reference_or_LLM_loaded": false,
+  "seconds": 4.0007236569999804,
+  "inactive_unsupported_graph_config_key_removed": {
+    "use_high_precision_fp16_sigmoid": false,
+    "Sigmoid_ops_in_fixture": 0
+  },
+  "compiler_config": {
+    "backend": "HTP",
+    "context_custom_configs": [
+      {
+        "weight_sharing_enabled": true,
+        "file_read_memory_budget_in_mb": 0,
+        "io_memory_estimation": false,
+        "max_spill_fill_buffer_for_group": 0,
+        "group_id": 0,
+        "extended_udma": false,
+        "init_acceleration": false,
+        "lora_weight_sharing": false,
+        "lora_weight_sharing_ram_preload": false
+      }
+    ],
+    "debug": false,
+    "device_custom_configs": [
+      {
+        "id": 0,
+        "soc_id": 0,
+        "soc_model": 43,
+        "dsp_arch": "v73",
+        "pd_session": "unsigned",
+        "profiling_level": "linting",
+        "core_ids": null,
+        "core_type": 0,
+        "cores": [
+          {
+            "id": 0,
+            "perf_profile": "burst",
+            "rpc_control_latency": 100,
+            "rpc_polling_time": 9999,
+            "hmx_timeout_us": 300000,
+            "adaptive_polling_time": 0
+          }
+        ]
+      }
+    ],
+    "graph_custom_configs": [
+      {
+        "name": "power_edge",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "monolithic_lstm": false
+      },
+      {
+        "name": "normalization_chain",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "monolithic_lstm": false
+      },
+      {
+        "name": "normalization_exposed",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "monolithic_lstm": false
+      }
+    ],
+    "log_level": "warn",
+    "op_packages": null,
+    "compiler_custom_configs": null,
+    "enable_intermediate_outputs": null,
+    "set_output_tensors": null,
+    "soc_details": "chipset:SM8550",
+    "io_tensor_mem_type": "memhandle",
+    "memory_custom_config": {
+      "mem_type": "shared_buffer"
+    },
+    "data_format_config": null,
+    "group_context_config": null,
+    "backend_binary_path": null
+  },
+  "float_fallback_requested": false,
+  "synthetic_calibration_may_execute_tiny_host_graph": true,
+  "context": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-discriminator/prepare-02/power-edge-context.bin",
+    "bytes": 167936,
+    "sha256": "6cd4e825a5a55430ced91b2238ab0c060ab60b7956f49dd84c248246087c0ee4"
+  }
+}
