@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T07:38:10+00:00",
+  "updated_at": "2026-09-14T07:39:07+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "Jere resumes the saved-data reference-contract audit after the completed QNN/host score mismatch.",
-      "next": "Check encoding and operator semantics before treating the reference as ground truth or blaming QNN. Preserve results and limits; no automatic model or phone replay.",
+      "now": "Jere verified that the compact four-bit weights must use signed four-bit decoding under the documented contract. Independent checks against mapped float weights support that interpretation; treating them as plain signed eight-bit values is wrong.",
+      "next": "This is one reference-encoding check, not validation of the entire reference or proof that QNN is at fault. Next saved-data audit covers masks, output grids, casts, matrix axes, and cache behavior; no new forward run.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jere / Nik",
-      "now": "Jere continues the saved reference-contract audit. Nik fixes a focused test visual-capture defect after functional validation.",
-      "next": "No production app change, inference, deletion, or unrelated polish. The visual feature result remains incomplete.",
+      "now": "Jere audits saved reference encoding and operator details. Nik fixes the focused fixture visual-capture path.",
+      "next": "No new model or phone run. Neither audit establishes a QNN cause or a full feature visual pass.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Audit saved reference encoding and operator contract",
-      "reported_at": "2026-09-14T07:27:42+00:00",
-      "reported_by": "Pi — resumed scope/no replay",
+      "task": "Audit saved masks, grids, casts, and operator semantics",
+      "reported_at": "2026-09-14T07:39:07+00:00",
+      "reported_by": "Jere — compact-weight decoding check complete",
       "stale_after_seconds": 900
     },
     {
