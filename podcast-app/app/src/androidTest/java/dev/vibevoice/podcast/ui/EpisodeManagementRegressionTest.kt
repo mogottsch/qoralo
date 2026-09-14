@@ -173,18 +173,35 @@ class EpisodeManagementRegressionTest {
             .put("fontScale", context.resources.configuration.fontScale.toDouble()).put("densityDpi", context.resources.configuration.densityDpi)
             .put("appLastUpdateTimeMs", context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime)
         var originalAccessibilityFlags: Int? = null
+        var capturePhase = "automation-flags"
+        var windowRead = 0
         fun ownedWindow(): JSONObject {
-            val candidates = instrumentation.uiAutomation.windows.filter { it.type == AccessibilityWindowInfo.TYPE_APPLICATION && (it.isFocused || it.isActive) }
+            val diagnostics = org.json.JSONArray()
+            val windows = instrumentation.uiAutomation.windows
+            val candidates = windows.filter { it.type == AccessibilityWindowInfo.TYPE_APPLICATION && (it.isFocused || it.isActive) }
                 .mapNotNull { window ->
                     val content = window.root ?: return@mapNotNull null
                     if (content.packageName?.toString() != context.packageName) return@mapNotNull null
-                    val matches = content.findAccessibilityNodeInfosByText(marker).any { it.isVisibleToUser &&
-                        (it.text?.toString() == marker || it.contentDescription?.toString() == marker) }
+                    // Compose 1.7.6's node provider does not implement find-by-text. Walk
+                    // its actual children instead; cap work and never retain node text.
+                    val pending = ArrayDeque<android.view.accessibility.AccessibilityNodeInfo>().apply { add(content) }
+                    val seen = HashSet<android.view.accessibility.AccessibilityNodeInfo>()
+                    var matches = false
+                    while (pending.isNotEmpty() && seen.size < 512) {
+                        val node = pending.removeFirst()
+                        if (!seen.add(node)) continue
+                        if (node.isVisibleToUser && (node.text?.toString() == marker || node.contentDescription?.toString() == marker)) { matches = true; break }
+                        require(node.childCount <= 128) { "Unbounded accessibility child count" }
+                        repeat(node.childCount) { child -> node.getChild(child)?.let(pending::addLast) }
+                    }
+                    diagnostics.put(JSONObject().put("id", window.id).put("ownedPackage", true).put("focused", window.isFocused)
+                        .put("active", window.isActive).put("nodesVisited", seen.size).put("markerFound", matches))
                     if (!matches) return@mapNotNull null
                     val bounds = Rect(); window.getBoundsInScreen(bounds)
                     JSONObject().put("id", window.id).put("package", content.packageName.toString()).put("bounds", bounds.toShortString())
                         .put("focused", window.isFocused).put("active", window.isActive).put("markerVisibleInWindow", true)
                 }
+            metadata.put("windowRead${++windowRead}", JSONObject().put("totalWindows", windows.size).put("ownedCandidates", diagnostics).put("matches", candidates.size))
             require(candidates.size == 1) { "Focused fixture window ownership is unknown or ambiguous" }
             return candidates.single()
         }
@@ -199,12 +216,15 @@ class EpisodeManagementRegressionTest {
             rule.onNodeWithText(marker).assertIsDisplayed()
             val node = rule.onNode(isRoot() and hasAnyDescendant(hasText(marker)), useUnmergedTree = true)
             val before = node.fetchSemanticsNode(); val beforeId = before.id; val beforeBounds = before.boundsInRoot
+            capturePhase = "owned-window-before"
             val windowBefore = ownedWindow(); val start = SystemClock.elapsedRealtime()
+            capturePhase = "compositor-screenshot"
             val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
             try {
                 metadata.put("widthPx", bitmap.width).put("heightPx", bitmap.height)
                 image.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)); it.fd.sync() }
             } finally { bitmap.recycle() }
+            capturePhase = "owned-window-after"
             val after = node.fetchSemanticsNode(); val windowAfter = ownedWindow()
             rule.onNodeWithText(marker).assertIsDisplayed()
             val paired = beforeId == after.id && beforeBounds == after.boundsInRoot &&
@@ -215,7 +235,7 @@ class EpisodeManagementRegressionTest {
                 .put("captureStartElapsedMs", start).put("captureEndElapsedMs", SystemClock.elapsedRealtime()).put("bytes", image.length())
                 .put("sha256", MessageDigest.getInstance("SHA-256").digest(image.readBytes()).joinToString("") { "%02x".format(it) })
         } catch (error: Throwable) {
-            metadata.put("status", "capture_unavailable").put("capturePaired", false).put("errorType", error.javaClass.simpleName)
+            metadata.put("status", "capture_unavailable").put("capturePaired", false).put("errorType", error.javaClass.simpleName).put("capturePhase", capturePhase)
         } finally {
             val restored = runCatching {
                 val flags = requireNotNull(originalAccessibilityFlags)
