@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T15:21:27+00:00",
+  "updated_at": "2026-09-14T15:23:52+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "The single RPC-compatible small HTP test has started. It uses the supported shared-buffer path, the same three graphs, inputs, and fixed limits.",
-      "next": "Fresh phone, app, job, and playback checks passed. No mode sweep, extra case, or full model. Raw results and cleanup come before graph and code analysis; no conclusion yet.",
+      "now": "The RPC-compatible small HTP test finished and released the phone successfully. Raw files, cleanup, and postflight app checks were collected.",
+      "next": "Jere is checking which graphs ran, their raw codes, and the difference between the normal and instrumented chains. No claim yet about the power edge, fusion, full model, or quality; no retry.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
-      "owner": "Jere",
-      "now": "Jere is running the single RPC-compatible small HTP test under the phone lease.",
-      "next": "No graph or code result yet. No mode sweep, extra graph, full model, or retry.",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Jere released the RPC-compatible small HTP test phone window after raw collection and cleanup.",
+      "next": "No current phone work or retry. Graph and code outcomes are being checked from saved files.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is running one source-bound RPC-compatible small HTP test.",
-      "next": "No result yet. Analysis follows raw collection and phone release.",
+      "now": "Jere reviews saved graph counts, raw codes, and chain results from the released small HTP test.",
+      "next": "No power, fusion, full-model, or quality conclusion yet.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run source-bound RPC-compatible small HTP test",
-      "reported_at": "2026-09-14T15:21:27+00:00",
-      "reported_by": "Jere — actual start/no graph result",
+      "task": "Review saved HTP graph and raw-code results",
+      "reported_at": "2026-09-14T15:23:52+00:00",
+      "reported_by": "Jere — phone released/no conclusion",
       "stale_after_seconds": 900
     },
     {
