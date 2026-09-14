@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T14:57:04+00:00",
+  "updated_at": "2026-09-14T14:59:38+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "The corrected small HTP test has started. It runs the same three small graphs once each with the same inputs and safety limits; the only command change removed the conflicting legacy buffer option.",
-      "next": "Fresh phone, USB, app, job, and playback checks passed. Raw results, postflight checks, cleanup, and release come before analysis. No extra graphs, language model, reference run, or retry loop; no graph result yet.",
+      "now": "The corrected small HTP test released the phone. Its command parsed correctly, but startup failed before a confirmed graph outcome. Raw files and cleanup were collected.",
+      "next": "Jere is reviewing saved native logs. There is no further attempt or device work. A watcher result does not establish graph execution or a power-edge policy.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
-      "owner": "Jere",
-      "now": "Jere is running the corrected three-graph HTP test under the phone lease.",
-      "next": "No graph result yet. The run has fixed limits and no extra graphs or language-model work.",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Jere released the corrected small HTP test window after startup failure and raw collection.",
+      "next": "No current phone work or retry. Graph outcomes are pending saved-log review.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is running the corrected small HTP test after the local command fix.",
-      "next": "No result yet. Analysis follows raw-first cleanup and phone release.",
+      "now": "Jere reviews saved native startup logs from the corrected small HTP test.",
+      "next": "No new device work or graph/power-policy conclusion.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run corrected three-graph HTP test",
-      "reported_at": "2026-09-14T14:57:04+00:00",
-      "reported_by": "Jere — actual start/no result",
+      "task": "Review saved corrected HTP startup logs",
+      "reported_at": "2026-09-14T14:59:38+00:00",
+      "reported_by": "Jere — released/no graph result",
       "stale_after_seconds": 900
     },
     {
