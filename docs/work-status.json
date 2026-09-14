@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T08:28:01+00:00",
+  "updated_at": "2026-09-14T08:29:55+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -93,8 +93,8 @@
       "title": "Gemma QNN diagnostics",
       "status": "reviewing",
       "owner": "Jere",
-      "now": "The corrected host reference stopped as designed at its first unexpected numerical error. Five chunks completed; the sixth stopped in the power/normalization path before quantization or casting. Resources were released.",
-      "next": "There is no final corrected score vector, so no corrected QNN comparison or quality claim. Jere will audit the saved power operation’s epsilon, grid, and fusion contract only; no model or phone replay and no silent numerical repair.",
+      "now": "Jere is auditing the saved power/normalization operation that stopped the corrected reference. The partial reference and first numerical failure are retained; there is no final comparison.",
+      "next": "Trace the documented epsilon, grids, casts, and fusion rules. Determine whether zero to a negative power followed by output saturation is a valid declared quantized rule or an evaluator error. No guessed floor, clipping, or silent NaN repair; only bounded synthetic host checks if available.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere / Nik",
-      "now": "Jere is auditing the saved power/normalization operation after the guarded host reference stop. Nik still waits for stable phone visibility.",
-      "next": "No final reference vector, new model run, phone replay, QNN conclusion, or quality claim.",
+      "now": "Jere audits the saved power-operation contract and may use small synthetic host checks. Nik still waits for stable phone visibility.",
+      "next": "No full prefill or phone replay until a specific contract finding is validated. A numerical warning alone is not a model-failure claim.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Audit saved power and normalization contract",
-      "reported_at": "2026-09-14T08:28:01+00:00",
-      "reported_by": "Jere — guarded host reference stopped/no rerun",
+      "task": "Audit power operation contract and synthetic semantics",
+      "reported_at": "2026-09-14T08:29:55+00:00",
+      "reported_by": "Pi — no full model or phone replay",
       "stale_after_seconds": 900
     },
     {
