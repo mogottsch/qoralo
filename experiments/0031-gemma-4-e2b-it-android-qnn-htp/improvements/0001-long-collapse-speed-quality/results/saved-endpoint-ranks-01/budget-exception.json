@@ -1,0 +1,20 @@
+{
+  "classification": "preparation_tool_spill_exceeded_overall_output_budget",
+  "overall_new_output_limit_bytes": 1048576,
+  "overall_output_budget_met": false,
+  "phase": "saved source/metadata preparation, before bounded endpoint service",
+  "cause": "Overbroad print of policy model.lm_head.weight descriptor included full per-channel encoding arrays; tool retained truncated console output in a private spill file.",
+  "private_spill": {
+    "path": "/tmp/pi-bash-23fa864ca3738bb5.log",
+    "bytes": 18753798,
+    "sha256": "5f8f53c886f4937fea7570cf384330783b920886183cf20bbf3d3737050c5513"
+  },
+  "endpoint_vectors_or_token_text_printed_by_that_command": false,
+  "spill_published_or_copied_into_packet": false,
+  "bounded_endpoint_service_output_bytes": 9358,
+  "bounded_service_memory_CPU_time_limits_met": true,
+  "endpoint_provenance_and_statistics_invalidated_by_budget_exception": false,
+  "automatic_retry": false,
+  "historical_spill_deleted_or_rewritten": false,
+  "prevention": "Inspect only selected metadata fields/array lengths; never print complete per-channel descriptors. Account for tool-managed preparation spill as output, not only packet directories."
+}

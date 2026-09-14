@@ -1,0 +1,69 @@
+{
+  "native_original_manifest_files_verified": 32,
+  "native_guard_exit": 0,
+  "native_one_forward_no_generation": true,
+  "native_dtype": "BF16",
+  "native_exact_F32_expansion_verified": true,
+  "QNN_binding": {
+    "capture_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/legacy-logits-phone-runs/legacy-prefill-20260913T125558Z-01/raw/device/prefill-capture",
+    "capture_binding_sha256": "b0fcf4f660dafb4c88097edfc1517d34a1a015564b39a6d16b814418d78d616a",
+    "phone_collection_sha256": "7dec490647d8153d8dbba41482108466e26c137caf67f9e58d6df6b332bac8fa",
+    "actual_AS_readback": {
+      "valid_readbacks": 28,
+      "unknown_readbacks": 0,
+      "mismatches": [],
+      "matches_expected": true,
+      "no_runtime_readback_from_plan_alone": true
+    },
+    "raw_payloads": 129,
+    "raw_payload_bytes": 66060288,
+    "full_QNN_row8_logits_sha256": "7b6c6e2d755a024e59d8ac05fbe4a27e992bfa4774c2286fff85144da26bafe9",
+    "before_original_dequant_and_sampler": true,
+    "phone_released": true,
+    "model_executed_by_validation": false
+  },
+  "QNN_AR128_executions": 16,
+  "QNN_AR1_executions": 0,
+  "same_input_ID_bytes": true,
+  "input_ID_count": 1929,
+  "input_ID_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+  "vocabulary_size": 262144,
+  "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+  "vocabulary_order_basis": "Native loaded head row order + complete native-F32/export head row audit; identical archive/deployed tokenizer bytes; native contiguous last-logit output and bound QNN logical row8 ABI. No token text decoded.",
+  "source_checkpoint_sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+  "QNN_context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+  "native_softcapping_config": 30.0,
+  "QNN_logit_grid": {
+    "scale": 0.0008891067700460553,
+    "offset": -31869
+  },
+  "vectors": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-prefill-1800-01/last-logits.native.bin",
+      "bytes": 524288,
+      "sha256": "021585a71f18f3e9a071455864bde306762ff052afabc190b28f0527a535b28c"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/native-qat-reference/full-prefill-1800-01/last-logits.float32.bin",
+      "bytes": 1048576,
+      "sha256": "f2c76d883ed7c67554357d8aa9958803e288adf1e83eb6557b9c3a21d0b253ec"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/legacy-logits-phone-runs/legacy-prefill-20260913T125558Z-01/raw/device/prefill-capture/15-output-logits.raw",
+      "bytes": 524288,
+      "sha256": "7b6c6e2d755a024e59d8ac05fbe4a27e992bfa4774c2286fff85144da26bafe9"
+    }
+  ],
+  "provenance_pins": {
+    "results/native-qat-prefill-1800-01/private-originals-manifest.json": "cc1ac17f62959c278aaabcfd3c08e71c9268203997cfa8911495d3069b6ef158",
+    "results/native-qat-prefill-1800-01/result.json": "4510c1720c501f89ccb5de25d0a668c57314b164dfd0bf42af0df50a2e805218",
+    "results/same-source-head-fidelity-01/result.json": "0a2c59cb555a14be41834143e0def886dfdba8283e4fbb24b0961975dfffce0e",
+    "tools/validate_legacy_prefill_capture.py": "5896074000e806339e3925d0391b11b9879aef77c925d36ca0a2a65acb6db19c",
+    ".local/frozen-stages/paired-legacy-logits-stage-01/frozen-manifest.json": "7b61cf0a03ad93292127a7ad59e1b74ae9b61ac4e660691a0cff5a947b40486c"
+  },
+  "model_weights_reopened": false,
+  "tokenizer_loaded_or_token_text_decoded": false,
+  "same_token_history_does_not_mean_same_activations_or_math": true,
+  "route_difference": "Native mixed-INT2/4/8 BF16/SRQ CPU vs calibrated QNN DLC/HTP; upstream embedding/PLE and LUT requantization math differ. Not quantization-only attribution.",
+  "invalid_or_partial_DLC_reference_used": false
+}

@@ -1,0 +1,164 @@
+{
+  "elements": 262144,
+  "topk": [
+    {
+      "k": 5,
+      "native": {
+        "threshold": 25.125,
+        "strict_count": 4,
+        "boundary_tie_count": 1,
+        "boundary_slots": 1,
+        "tie_crosses_cutoff": false,
+        "tie_expanded_count": 5
+      },
+      "QNN_raw_codes": {
+        "threshold": 58881,
+        "strict_count": 4,
+        "boundary_tie_count": 1,
+        "boundary_slots": 1,
+        "tie_crosses_cutoff": false,
+        "tie_expanded_count": 5
+      },
+      "admissible_topk_intersection_min": 4,
+      "admissible_topk_intersection_max": 4,
+      "per_route_topk_disagreement_min": 1,
+      "per_route_topk_disagreement_max": 1,
+      "symmetric_difference_min": 2,
+      "symmetric_difference_max": 2,
+      "tie_expanded_intersection": 4,
+      "arbitrary_tie_break_used": false
+    },
+    {
+      "k": 20,
+      "native": {
+        "threshold": 19.25,
+        "strict_count": 19,
+        "boundary_tie_count": 1,
+        "boundary_slots": 1,
+        "tie_crosses_cutoff": false,
+        "tie_expanded_count": 20
+      },
+      "QNN_raw_codes": {
+        "threshold": 54428,
+        "strict_count": 19,
+        "boundary_tie_count": 1,
+        "boundary_slots": 1,
+        "tie_crosses_cutoff": false,
+        "tie_expanded_count": 20
+      },
+      "admissible_topk_intersection_min": 13,
+      "admissible_topk_intersection_max": 13,
+      "per_route_topk_disagreement_min": 7,
+      "per_route_topk_disagreement_max": 7,
+      "symmetric_difference_min": 14,
+      "symmetric_difference_max": 14,
+      "tie_expanded_intersection": 13,
+      "arbitrary_tie_break_used": false
+    },
+    {
+      "k": 128,
+      "native": {
+        "threshold": 13.1875,
+        "strict_count": 127,
+        "boundary_tie_count": 13,
+        "boundary_slots": 1,
+        "tie_crosses_cutoff": true,
+        "tie_expanded_count": 140
+      },
+      "QNN_raw_codes": {
+        "threshold": 49002,
+        "strict_count": 127,
+        "boundary_tie_count": 1,
+        "boundary_slots": 1,
+        "tie_crosses_cutoff": false,
+        "tie_expanded_count": 128
+      },
+      "admissible_topk_intersection_min": 79,
+      "admissible_topk_intersection_max": 80,
+      "per_route_topk_disagreement_min": 48,
+      "per_route_topk_disagreement_max": 49,
+      "symmetric_difference_min": 96,
+      "symmetric_difference_max": 98,
+      "tie_expanded_intersection": 82,
+      "arbitrary_tie_break_used": false
+    }
+  ],
+  "winners": {
+    "native": {
+      "winner_count": 1,
+      "winner_IDs_bounded": [
+        {
+          "id": 8291,
+          "own_rank": {
+            "min": 1,
+            "max": 1,
+            "midrank": 1.0,
+            "tie_count": 1
+          },
+          "other_route_rank": {
+            "min": 3,
+            "max": 3,
+            "midrank": 3.0,
+            "tie_count": 1
+          },
+          "winner_displacement_rank_min": 2,
+          "winner_displacement_rank_max": 2,
+          "other_route_gap_to_max": 1590.0,
+          "gap_units": "QNN_raw_code_steps"
+        }
+      ],
+      "all_winners_listed": true
+    },
+    "QNN": {
+      "winner_count": 1,
+      "winner_IDs_bounded": [
+        {
+          "id": 818,
+          "own_rank": {
+            "min": 1,
+            "max": 1,
+            "midrank": 1.0,
+            "tie_count": 1
+          },
+          "other_route_rank": {
+            "min": 5,
+            "max": 5,
+            "midrank": 5.0,
+            "tie_count": 1
+          },
+          "winner_displacement_rank_min": 4,
+          "winner_displacement_rank_max": 4,
+          "other_route_gap_to_max": 0.875,
+          "gap_units": "native_saved_F32_units"
+        }
+      ],
+      "all_winners_listed": true
+    }
+  },
+  "global_statistic": {
+    "name": "Spearman Pearson-correlation of descending average tied ranks",
+    "value": 0.8883254478291734,
+    "null_reason": null,
+    "high_global_agreement_is_not_small_decision_or_prefill_drift": true,
+    "vocabulary_tail_can_dominate": true
+  },
+  "ties": {
+    "native_BF16": {
+      "unique_scores": 2226,
+      "tied_groups": 1844,
+      "tokens_in_tied_groups": 261762,
+      "largest_tie": 3930,
+      "tied_pairs": 131617550
+    },
+    "QNN_UINT16": {
+      "unique_scores": 11309,
+      "tied_groups": 9663,
+      "tokens_in_tied_groups": 260498,
+      "largest_tie": 149,
+      "tied_pairs": 6260837
+    }
+  },
+  "rank_basis": "Native exact BF16-expanded values and QNN raw codes (strictly positive affine grid); no cross-route absolute-magnitude equivalence assumed",
+  "token_text_decoding": false,
+  "automatic_causal_or_quality_classification": false
+}
