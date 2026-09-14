@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T17:17:19+00:00",
+  "updated_at": "2026-09-14T17:19:13+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -105,8 +105,8 @@
       "title": "Gemma QNN diagnostics",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere completed and preserved the small mean-and-add audit. The mean result differs by at most one output step on half its entries; the add result is unchanged. Documentation does not define a mean-specific accuracy bound or a general minimum value rule.",
-      "next": "Jere proposes one saved-data endpoint ranking comparison between the captured QNN result and the valid native CPU result. It will only revalidate existing inputs and outputs, then compare top choices and ranks. The result would distinguish small ranking drift from broad route drift, not prove a repetition cause. No execution has started.",
+      "now": "One saved endpoint-ranking packet is authorized. It compares the valid native CPU endpoint with the captured QNN endpoint, not the earlier invalid partial reference.",
+      "next": "It will recheck the existing input, provenance, vocabulary, finite values, and data expansion, then report top choices, ties, cross-ranks, and global ranks separately. No forward, phone, model variant, or token-text decoding. Global rank agreement alone will not be called small drift or a QNN cause.",
       "reported_at": "2026-09-14T16:02:10+00:00",
       "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
@@ -136,8 +136,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere has completed the small HTP audit and is preparing one saved endpoint-ranking comparison.",
-      "next": "It uses existing captured data only, with a short bounded run to validate bindings and compute ranks. No new forward, model variant, or QNN cause claim.",
+      "now": "Jere is preparing one saved endpoint-ranking comparison with fixed checks and a short bound.",
+      "next": "No new forward, phone run, model variant, or token-text decoding. Ranking results cannot by themselves diagnose QNN, quantization, or repetition.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -173,9 +173,9 @@
     },
     {
       "name": "Jere",
-      "task": "Prepare one saved QNN-versus-CPU endpoint rank comparison",
-      "reported_at": "2026-09-14T17:17:19+00:00",
-      "reported_by": "Jere — audit complete/checkpoint proposed",
+      "task": "Run one saved endpoint rank packet",
+      "reported_at": "2026-09-14T17:19:13+00:00",
+      "reported_by": "Pi — authorized/no execution result",
       "stale_after_seconds": 900
     },
     {
