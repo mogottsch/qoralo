@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T14:48:29+00:00",
+  "updated_at": "2026-09-14T14:57:04+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Jere is freezing the exact local command fix for the small HTP test: remove the legacy shared-buffer option while keeping the DMA-buffer option. The original argument failure and zero graph executions are preserved.",
-      "next": "After command and safety tests, one corrected three-graph phone window may run only after fresh phone and app checks. It keeps the same inputs, cases, time, memory, and evidence limits. No extra graphs, full model, retry loop, or policy claim.",
+      "now": "The corrected small HTP test has started. It runs the same three small graphs once each with the same inputs and safety limits; the only command change removed the conflicting legacy buffer option.",
+      "next": "Fresh phone, USB, app, job, and playback checks passed. Raw results, postflight checks, cleanup, and release come before analysis. No extra graphs, language model, reference run, or retry loop; no graph result yet.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Jere is preparing a corrected small HTP phone window after a local command fix; no phone action is running.",
-      "next": "Fresh app and phone checks are required. The run remains three small graphs with fixed limits and raw-first cleanup.",
+      "now": "Jere is running the corrected three-graph HTP test under the phone lease.",
+      "next": "No graph result yet. The run has fixed limits and no extra graphs or language-model work.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is testing and freezing the corrected small HTP command and its safety checks.",
-      "next": "No graph execution or phone run yet. The original zero-execution argument failure remains retained.",
+      "now": "Jere is running the corrected small HTP test after the local command fix.",
+      "next": "No result yet. Analysis follows raw-first cleanup and phone release.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Test and freeze corrected small HTP command",
-      "reported_at": "2026-09-14T14:48:29+00:00",
-      "reported_by": "Pi — host-only argv fix",
+      "task": "Run corrected three-graph HTP test",
+      "reported_at": "2026-09-14T14:57:04+00:00",
+      "reported_by": "Jere — actual start/no result",
       "stale_after_seconds": 900
     },
     {
