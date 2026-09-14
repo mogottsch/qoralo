@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T08:00:55+00:00",
+  "updated_at": "2026-09-14T08:23:59+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "The saved reference has a confirmed decoding defect: declared 16-bit float transport words must be reinterpreted as binary16 values, not converted as integers. This invalidates the earlier reference comparison, not the QNN model.",
-      "next": "Jere is testing the corrected decoding across all affected saved weights and edge cases. Then one bounded host reference will use the same captured inputs and model contract. It will preserve raw vectors and stop on the first unexpected non-finite value; no phone recapture, model variant, repair, or automatic rerun.",
+      "now": "The corrected reference decoder passed its focused tests. Jere has started the single bounded host comparison using the same captured inputs and model contract; no phone is involved.",
+      "next": "The run preserves raw vectors and stops on unexpected non-finite values before integer conversion. The earlier invalid reference is retained. No automatic retry or conclusion about QNN, quality, or long output yet.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -122,10 +122,10 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere / Nik",
-      "now": "Jere is testing a corrected saved-reference decoder. Nik waits for stable phone visibility for a targeted visual test.",
-      "next": "No QNN blame or quality claim. One corrected host reference follows only after focused contract tests and a source freeze.",
+      "now": "Jere is running one corrected host reference. Nik’s focused visual validation still waits for stable phone visibility.",
+      "next": "No result yet. The corrected reference retains the same captured inputs and has no phone or automatic retry.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Test corrected 16-bit float reference decoding",
-      "reported_at": "2026-09-14T08:00:55+00:00",
-      "reported_by": "Pi — confirmed reference defect/no host run yet",
+      "task": "Run one corrected host reference comparison",
+      "reported_at": "2026-09-14T08:23:59+00:00",
+      "reported_by": "Jere — focused decoder freeze passed/host start",
       "stale_after_seconds": 900
     },
     {
