@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T07:47:38+00:00",
+  "updated_at": "2026-09-14T07:52:41+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -33,8 +33,8 @@
       "title": "Episode diagnostics & safe delete",
       "status": "preparing",
       "owner": "Nik",
-      "now": "Nik froze a focused test-only compositor screenshot correction. It authenticates the focused app window and displayed test marker before capture, keeping the exact UI checks unchanged.",
-      "next": "The prior wrong-window images and visual rejection are retained. A single non-neural recapture, safety, and display-profile check is ready after fresh phone/app checks. No production change, reinstall, real deletion, data restore, or model work.",
+      "now": "Nik’s visual recapture stopped safely after the guard and normal-profile checks passed. No screenshot was taken because Compose’s accessibility provider does not support the text-search method used for the marker.",
+      "next": "Nik will use a bounded traversal of accessibility children while retaining focused-window and visible-marker checks, with safe phase/count diagnostics. Next run is only four feature cases in two display profiles plus one guard; it will not repeat already-passed player/replay checks. No production change or blind retry.",
       "reported_at": "2026-09-13T13:08:54+00:00",
       "reported_by": "Nik — isolated integration frozen/device-fixture readiness",
       "stale_after_seconds": 900,
@@ -112,8 +112,8 @@
       "title": "Phone",
       "status": "preparing",
       "owner": "Nik",
-      "now": "Nik is ready for one focused non-neural visual recapture after fresh phone and app checks; no device action has started.",
-      "next": "No production app change, reinstall, deletion, data restore, or model call. Earlier rejected captures remain retained.",
+      "now": "Nik’s visual recapture released safely after normal-profile checks; the focused accessibility fix is being prepared.",
+      "next": "No screenshot or narrow-profile run occurred. Next run is nine targeted non-neural cases, not a repeat of unrelated player checks.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jere / Nik",
-      "now": "Jere audits saved reference details. Nik has frozen a focused test-only screenshot correction and is preparing one recapture.",
-      "next": "No device result, production change, real deletion, or model work.",
+      "now": "Jere audits saved reference details. Nik replaces an unsupported accessibility text query with bounded child traversal for test captures.",
+      "next": "No production change, device result, real deletion, model work, or blind same-command retry.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Nik",
-      "task": "Run focused non-neural visual recapture",
-      "reported_at": "2026-09-14T07:47:38+00:00",
-      "reported_by": "Nik — corrected candidate frozen/no device result",
+      "task": "Fix accessibility traversal and prepare targeted visual recapture",
+      "reported_at": "2026-09-14T07:52:41+00:00",
+      "reported_by": "Nik — concrete capture dependency found",
       "stale_after_seconds": 900
     },
     {
