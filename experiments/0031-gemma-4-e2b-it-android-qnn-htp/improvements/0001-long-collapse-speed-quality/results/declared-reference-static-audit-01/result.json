@@ -1,0 +1,28 @@
+{
+  "classification": "active_reference_contract_defect_located_and_storage_prototype_tested",
+  "BW4_sign_interpretation_supported_by_documentation_and_float_weight_checks": true,
+  "FP16_uint16_transport_numerically_cast_in_failed_reference": true,
+  "static_FP16_tensors": 30,
+  "wrong_gamma_values": 4608,
+  "affected_RmsNorm_consumers": 15,
+  "first_known_affected_operator": {
+    "index": 52,
+    "name": "rms_norm_node___413645",
+    "type": "RmsNorm",
+    "static_inputs": [
+      "node_rsqrt_9_weight",
+      "node_rsqrt_9_weight_bias"
+    ]
+  },
+  "saved_affected_operator_executions": 240,
+  "independent_IEEE_and_synthetic_path_passed": true,
+  "production_reference_modified_by_audit": false,
+  "model_or_phone_replayed_by_audit": false,
+  "dormant_quantized_Cast_generality_gap_not_active_cause": true,
+  "first_dynamic_nonfinite_tensor_location_not_saved": true,
+  "sole_cause_or_QNN_defect_claim": false,
+  "initial_metadata_failures_retained": [
+    "ONNX dims repeated field erroneously called; stopped before static comparisons",
+    "Unscoped qti import without SDK PYTHONPATH failed; documented enum values checked from QnnOpDef.h instead"
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "classification": "saved_policy_and_synthetic_operator_contract_checks",
+  "model_graph_forward_calls": 0,
+  "phone_calls": 0,
+  "actual_model_operand_evaluations": 0,
+  "reference_implementation_changed": false,
+  "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+  "topology_shape_preflight": {
+    "passed": true,
+    "issues": [],
+    "operators_checked": 6893,
+    "arithmetic": "F32 logical ops, actual stored effective-width static codes, declared per-tensor/per-axis grids, explicit binary16 boundaries. Integer output rounding nearest-even; DSP fidelity unresolved.",
+    "full_model_executed": false
+  },
+  "duplicate_output_writer_names": 0,
+  "operator_inventory": {
+    "Cast": [
+      {
+        "inputs": [
+          "Float_16"
+        ],
+        "outputs": [
+          "Float_16"
+        ],
+        "attrs": {
+          "packageName": "qti.aisw"
+        },
+        "count": 3
+      }
+    ],
+    "Convert": [
+      {
+        "inputs": [
+          "uFxp_16"
+        ],
+        "outputs": [
+          "Float_16"
+        ],
+        "attrs": {
+          "dynamic_input_data": false,
+          "dynamic_output_data": false
+        },
+        "count": 71
+      },
+      {
+        "inputs": [
+          "Float_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "dynamic_input_data": false,
+          "dynamic_output_data": false
+        },
+        "count": 19
+      }
+    ],
+    "MatMul": [
+      {
+        "inputs": [
+          "uFxp_16",
+          "uFxp_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "packageName": "qti.aisw",
+          "transpose_in0": false,
+          "transpose_in1": false
+        },
+        "count": 504
+      },
+      {
+        "inputs": [
+          "Float_16",
+          "Float_16"
+        ],
+        "outputs": [
+          "Float_16"
+        ],
+        "attrs": {
+          "packageName": "qti.aisw",
+          "transpose_in0": false,
+          "transpose_in1": false
+        },
+        "count": 56
+      }
+    ],
+    "Softmax": [
+      {
+        "inputs": [
+          "uFxp_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "axis": 3,
+          "beta": 1.0,
+          "packageName": "qti.aisw"
+        },
+        "count": 280
+      }
+    ],
+    "RmsNorm": [
+      {
+        "inputs": [
+          "uFxp_16",
+          "uFxp_16",
+          "sFxp_32"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "axes": [
+            3
+          ],
+          "epsilon": 9.999999974752427e-07,
+          "packageName": "qti.aisw"
+        },
+        "count": 295
+      },
+      {
+        "inputs": [
+          "Float_16",
+          "Float_16",
+          "Float_16"
+        ],
+        "outputs": [
+          "Float_16"
+        ],
+        "attrs": {
+          "axes": [
+            3
+          ],
+          "epsilon": 9.999999974752427e-07,
+          "packageName": "qti.aisw"
+        },
+        "count": 15
+      }
+    ],
+    "Reduce": [
+      {
+        "inputs": [
+          "uFxp_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "axes": [
+            3
+          ],
+          "keep_dims": true,
+          "packageName": "qti.aisw",
+          "reduce_type": "ReduceMean"
+        },
+        "count": 1
+      },
+      {
+        "inputs": [
+          "uFxp_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "axes": [
+            2
+          ],
+          "keep_dims": true,
+          "packageName": "qti.aisw",
+          "reduce_type": "ReduceMean"
+        },
+        "count": 176
+      }
+    ],
+    "Transpose": [
+      {
+        "inputs": [
+          "uFxp_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "packageName": "qti.aisw",
+          "perm": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        "count": 27
+      },
+      {
+        "inputs": [
+          "uFxp_16"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "packageName": "qti.aisw",
+          "perm": [
+            0,
+            1,
+            3,
+            2
+          ]
+        },
+        "count": 15
+      },
+      {
+        "inputs": [
+          "Float_16"
+        ],
+        "outputs": [
+          "Float_16"
+        ],
+        "attrs": {
+          "packageName": "qti.aisw",
+          "perm": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        "count": 3
+      }
+    ],
+    "Conv2d": [
+      {
+        "inputs": [
+          "uFxp_16",
+          "sFxp_8",
+          "sFxp_32"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "bias_op_name": "",
+          "dilation": [
+            1,
+            1
+          ],
+          "group": 1,
+          "packageName": "qti.aisw",
+          "pad_amount": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "padding_size_strategy": 5,
+          "reuse_sparse_indices": false,
+          "stride": [
+            1,
+            1
+          ]
+        },
+        "count": 521
+      }
+    ],
+    "FullyConnected": [
+      {
+        "inputs": [
+          "uFxp_16",
+          "sFxp_8"
+        ],
+        "outputs": [
+          "uFxp_16"
+        ],
+        "attrs": {
+          "bias_op_name": "bias",
+          "packageName": "qti.aisw"
+        },
+        "count": 1
+      }
+    ]
+  },
+  "synthetic_cases": [
+    {
+      "case": "attention_mask_unsigned_grid_endpoints",
+      "max_abs_error": 0.0,
+      "tolerance": 0
+    },
+    {
+      "case": "swa_attention_mask_unsigned_grid_endpoints",
+      "max_abs_error": 0.0,
+      "tolerance": 0
+    },
+    {
+      "case": "unsigned_output_grid",
+      "max_abs_error": 1.655425876379013e-07,
+      "tolerance": 2e-06
+    },
+    {
+      "case": "Convert_obeys_quantization_grid",
+      "max_abs_error": 0.0,
+      "tolerance": 0
+    },
+    {
+      "case": "FP16_rounding_ties_signed_zero_subnormal",
+      "exact_bytes": true
+    },
+    {
+      "case": "RmsNorm_axis3_gamma_beta",
+      "max_abs_error": 2.384185791015625e-07,
+      "tolerance": 5e-07
+    },
+    {
+      "case": "Softmax_axis3_beta1",
+      "max_abs_error": 2.9802322387695312e-08,
+      "tolerance": 1e-07
+    },
+    {
+      "case": "MatMul_innermost_dims_batch_broadcast_no_transposes",
+      "max_abs_error": 0.0,
+      "tolerance": 0
+    },
+    {
+      "case": "Conv1x1_NHWC_HWIO_bias",
+      "max_abs_error": 0.0,
+      "tolerance": 0
+    },
+    {
+      "case": "FullyConnected_OI_bias",
+      "max_abs_error": 0.0,
+      "tolerance": 0
+    }
+  ],
+  "contract_documents": [
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/MasterOpDef.html",
+      "sha256": "a85aa4f1a82650577ee8edcb48e0fd0a8571adba8593f3bff05e176990f15d66"
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/include/QNN/QnnOpDef.h",
+      "sha256": "50f0e9358fd002869c2b74cf38118b1d30ad34ac76a69b48bf2cdfbb1cba4444"
+    }
+  ],
+  "dormant_Cast_generality_gap": "Reference treats non-preserved Cast like Convert and would obey grids, unlike general QNN Cast. Actual three Cast nodes are Float16 identity, so this is NOT an active explanation. No code changed.",
+  "remaining_uncertainty": "Only final QNN/reference vectors and operation timing/name traces were saved; no matching intermediate activation values. These static/synthetic checks do not locate first numerical divergence or validate the full reference.",
+  "seconds": 1.8482734720000735
+}

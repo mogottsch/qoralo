@@ -1,0 +1,312 @@
+{
+  "classification": "saved_static_reference_contract_audit",
+  "model_or_operator_forward_calls": 0,
+  "phone_calls": 0,
+  "reference_implementation_changed": false,
+  "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+  "known_float_graph_sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0",
+  "known_float_data_sha256": "e156c33d176273555003039959ecb0ae0ddc8a328eceeec1e8f4a6255840e072",
+  "storage_contract": {
+    "header_path": "/home/moritz/opt/qairt/2.49.40.260810/include/QNN/QnnTypes.h",
+    "header_sha256": "4a0ba53b63b5ae8026f12cb2e9f8e4c276f3a772c09654049b01eb5f22e1b1cc",
+    "line_ranges": [
+      [
+        529,
+        563
+      ],
+      [
+        593,
+        631
+      ]
+    ],
+    "documented_rule": "For BW scale-offset and BW per-axis encodings, use low specified bits; ignore upper container bits; signed bit is the most significant effective bit (example0x0d and0xfd bothmean-3 atBW4).",
+    "actual_signed_static_encoding_groups": [
+      {
+        "encoding": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_BW_AXIS_SCALE_OFFSET",
+        "bits": [
+          4
+        ],
+        "offsets": [
+          0
+        ],
+        "tensors": 522
+      }
+    ]
+  },
+  "weights": [
+    {
+      "name": "model.lm_head.weight",
+      "encoding": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_BW_AXIS_SCALE_OFFSET",
+      "IR_datatype": "sFxp_8",
+      "container_dtype": "int8",
+      "IR_dimensions": [
+        1,
+        1,
+        1536,
+        262144
+      ],
+      "known_float_dimensions": [
+        262144,
+        1536,
+        1,
+        1
+      ],
+      "channel_axis": 3,
+      "bitwidth": 4,
+      "offsets": [
+        0
+      ],
+      "layout": "OIHW float -> HWIO DLC; canonical comparison rows=output channels",
+      "sampled_output_channels": 1024,
+      "sampled_values": 1572864,
+      "code_histogram": [
+        604417,
+        0,
+        0,
+        0,
+        433078,
+        0,
+        0,
+        0,
+        127825,
+        0,
+        0,
+        0,
+        407544,
+        0,
+        0,
+        0
+      ],
+      "raw_npy_sha256": "66dda162c4dd759ad4bef249cd5c166ecc54e9afea84f3b945993af38cb5d363",
+      "float_region": {
+        "offset": 7453343744,
+        "bytes": 1610612736,
+        "sha256": "eb7ac2b168bd4446daba2aabf0df0d3a0f7b25dfea5afbcffad375e61e4146fc"
+      },
+      "min_scale_units": -8.0,
+      "max_scale_units": 7.000000190616545,
+      "source_values_outside_signed_grid": 0,
+      "documented_codes_matching_requantized_known_float": 1572864,
+      "candidates": {
+        "documented_signed_BW4": {
+          "values": 1572864,
+          "mean_absolute_error": 0.0,
+          "max_absolute_error": 0.0,
+          "RMSE": 0.0,
+          "cosine_to_known_float_weights": 0.999999999999954,
+          "within_half_scale_fraction": 1.0,
+          "max_error_scale_units": 0.0,
+          "nonzero_sign_disagreements": 0,
+          "known_zero_values": 604417,
+          "known_zero_nonzero_decodes": 0
+        },
+        "signed_int8_container_without_BW_interpretation": {
+          "values": 1572864,
+          "mean_absolute_error": 0.035103627496805956,
+          "max_absolute_error": 0.16013874486088753,
+          "RMSE": 0.06025721373347268,
+          "cosine_to_known_float_weights": -0.5203077139581685,
+          "within_half_scale_fraction": 0.6596215565999349,
+          "max_error_scale_units": 16.000000687740762,
+          "nonzero_sign_disagreements": 535369,
+          "known_zero_values": 604417,
+          "known_zero_nonzero_decodes": 0
+        },
+        "diagnostic_unsigned_nibble_minus8": {
+          "values": 1572864,
+          "mean_absolute_error": 0.05164993194011913,
+          "max_absolute_error": 0.08006937056779861,
+          "RMSE": 0.051734860884340365,
+          "cosine_to_known_float_weights": -0.39988035381802045,
+          "within_half_scale_fraction": 0.0,
+          "max_error_scale_units": 8.0,
+          "nonzero_sign_disagreements": 840622,
+          "known_zero_values": 604417,
+          "known_zero_nonzero_decodes": 604417
+        }
+      }
+    },
+    {
+      "name": "model.model.layers.0.self_attn.q_proj_sha.0.weight",
+      "encoding": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_BW_AXIS_SCALE_OFFSET",
+      "IR_datatype": "sFxp_8",
+      "container_dtype": "int8",
+      "IR_dimensions": [
+        1,
+        1,
+        1536,
+        256
+      ],
+      "known_float_dimensions": [
+        256,
+        1536,
+        1,
+        1
+      ],
+      "channel_axis": 3,
+      "bitwidth": 4,
+      "offsets": [
+        0
+      ],
+      "layout": "OIHW float -> HWIO DLC; canonical comparison rows=output channels",
+      "sampled_output_channels": 256,
+      "sampled_values": 393216,
+      "code_histogram": [
+        55970,
+        51694,
+        42179,
+        30569,
+        19980,
+        11764,
+        6511,
+        5337,
+        2253,
+        3143,
+        6332,
+        11793,
+        20309,
+        30951,
+        42407,
+        52024
+      ],
+      "raw_npy_sha256": "22851e8259b0fc66c3273c218c39e5fd67b87461945205897247fdf646d373ac",
+      "float_region": {
+        "offset": 12582912,
+        "bytes": 1572864,
+        "sha256": "fd7b51886cab561fab10dfcc67cdf92c8bcaf95dcf9015804cfab06dfa4b8a38"
+      },
+      "min_scale_units": -8.0,
+      "max_scale_units": 7.000000119737062,
+      "source_values_outside_signed_grid": 491,
+      "documented_codes_matching_requantized_known_float": 393216,
+      "candidates": {
+        "documented_signed_BW4": {
+          "values": 393216,
+          "mean_absolute_error": 2.5771385026018834e-10,
+          "max_absolute_error": 1.4901161193847656e-08,
+          "RMSE": 1.0074399093235276e-09,
+          "cosine_to_known_float_weights": 0.9999999999999634,
+          "within_half_scale_fraction": 1.0,
+          "max_error_scale_units": 1.4638879876828464e-06,
+          "nonzero_sign_disagreements": 0,
+          "known_zero_values": 55970,
+          "known_zero_nonzero_decodes": 0
+        },
+        "signed_int8_container_without_BW_interpretation": {
+          "values": 393216,
+          "mean_absolute_error": 0.06689145817565952,
+          "max_absolute_error": 0.4728124290704727,
+          "RMSE": 0.10550711043073378,
+          "cosine_to_known_float_weights": -0.3856632851265968,
+          "within_half_scale_fraction": 0.569671630859375,
+          "max_error_scale_units": 16.000000851724188,
+          "nonzero_sign_disagreements": 169212,
+          "known_zero_values": 55970,
+          "known_zero_nonzero_decodes": 0
+        },
+        "diagnostic_unsigned_nibble_minus8": {
+          "values": 393216,
+          "mean_absolute_error": 0.0777541031641628,
+          "max_absolute_error": 0.23640620708465576,
+          "RMSE": 0.08039474817828104,
+          "cosine_to_known_float_weights": -0.5723389658711926,
+          "within_half_scale_fraction": 0.0,
+          "max_error_scale_units": 8.000000356012707,
+          "nonzero_sign_disagreements": 334993,
+          "known_zero_values": 55970,
+          "known_zero_nonzero_decodes": 55970
+        }
+      }
+    },
+    {
+      "name": "val_42",
+      "encoding": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_BW_AXIS_SCALE_OFFSET",
+      "IR_datatype": "sFxp_8",
+      "container_dtype": "int8",
+      "IR_dimensions": [
+        8960,
+        1536
+      ],
+      "known_float_dimensions": [
+        1536,
+        8960
+      ],
+      "channel_axis": 0,
+      "bitwidth": 4,
+      "offsets": [
+        0
+      ],
+      "layout": "known val_42 transpose -> FullyConnected OI rows",
+      "sampled_output_channels": 1024,
+      "sampled_values": 1572864,
+      "code_histogram": [
+        666704,
+        372241,
+        71545,
+        6702,
+        730,
+        226,
+        85,
+        132,
+        73,
+        80,
+        97,
+        182,
+        711,
+        7026,
+        72639,
+        373691
+      ],
+      "raw_npy_sha256": "d73dbc0825bb39bbbec52d831657869f75f9fda504d9b0a27f078043b7106d17",
+      "float_region": {
+        "offset": 9063956480,
+        "bytes": 55050240,
+        "sha256": "1efef73716c1e82283d199c46a17ef60889372f4a88b5f1a175b9f8ae536db50"
+      },
+      "min_scale_units": -8.0,
+      "max_scale_units": 7.000000085199479,
+      "source_values_outside_signed_grid": 146,
+      "documented_codes_matching_requantized_known_float": 1572863,
+      "candidates": {
+        "documented_signed_BW4": {
+          "values": 1572864,
+          "mean_absolute_error": 0.00017470115908750175,
+          "max_absolute_error": 0.001700439490377903,
+          "RMSE": 0.000202106904042911,
+          "cosine_to_known_float_weights": 0.9548973873366334,
+          "within_half_scale_fraction": 0.9999421437581381,
+          "max_error_scale_units": 2.479908577265097,
+          "nonzero_sign_disagreements": 0,
+          "known_zero_values": 23532,
+          "known_zero_nonzero_decodes": 0
+        },
+        "signed_int8_container_without_BW_interpretation": {
+          "values": 1572864,
+          "mean_absolute_error": 0.003325574166096431,
+          "max_absolute_error": 0.015168522484600544,
+          "RMSE": 0.005966898778571564,
+          "cosine_to_known_float_weights": -0.5583511469928667,
+          "within_half_scale_fraction": 0.7109966278076172,
+          "max_error_scale_units": 17.62680825906623,
+          "nonzero_sign_disagreements": 454499,
+          "known_zero_values": 23532,
+          "known_zero_nonzero_decodes": 0
+        },
+        "diagnostic_unsigned_nibble_minus8": {
+          "values": 1572864,
+          "mean_absolute_error": 0.005544935747026007,
+          "max_absolute_error": 0.007815220393240452,
+          "RMSE": 0.005554903675776126,
+          "cosine_to_known_float_weights": -0.6029310474629581,
+          "within_half_scale_fraction": 0.0,
+          "max_error_scale_units": 10.479908747044355,
+          "nonzero_sign_disagreements": 1227479,
+          "known_zero_values": 23532,
+          "known_zero_nonzero_decodes": 23532
+        }
+      }
+    }
+  ],
+  "seconds": 89.25753103499983,
+  "finding_scope": "Storage interpretation checked against the documented ACTUAL BW encoding and known float weights, not fitted to QNN logits. This does not validate all graph operator/cache semantics."
+}
