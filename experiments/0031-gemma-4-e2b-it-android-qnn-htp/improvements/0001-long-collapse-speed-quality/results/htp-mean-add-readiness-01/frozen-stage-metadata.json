@@ -1,0 +1,426 @@
+{
+  "Power_graph_included": false,
+  "backend_id": 6,
+  "classification": "frozen_two_single_output_HTP_mean_add_controls",
+  "context_sha256": "7671cb643fc86d9a54e933de4f11889cc5204cb9616cb683eccb8782ae1badfc",
+  "dsp_arch": "v73",
+  "execution_limits": {
+    "address_space_bytes": 12884901888,
+    "evidence_poll_budget_bytes": 16777216,
+    "last_FS_SIZE_bytes": 8388608,
+    "process_seconds_each": 90
+  },
+  "expected_graph_order": [
+    "mean_edge",
+    "epsilon_add"
+  ],
+  "expected_output_bytes": 512,
+  "files": {
+    "bin/qnn-net-run": {
+      "bytes": 5254464,
+      "mode": "0o555",
+      "sha256": "7b0b806033bb2bd074c233632eb0f06f34c5f5f10040c5a363e8720dd60fd8e9"
+    },
+    "inputs/epsilon_add.uint16le": {
+      "bytes": 256,
+      "mode": "0o400",
+      "sha256": "5ff936a2c2da774eb7e02baf4c639b1b8d3957b8566dc9a2244be1718fbdc81f"
+    },
+    "inputs/mean_edge.uint16le": {
+      "bytes": 393216,
+      "mode": "0o400",
+      "sha256": "3d4101512bcfa6aa0a5d49dc1e55851529c7c4edf87a99648f5174e6eb725b4c"
+    },
+    "lib/libQnnHtp.so": {
+      "bytes": 3786400,
+      "mode": "0o400",
+      "sha256": "4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb"
+    },
+    "lib/libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "mode": "0o400",
+      "sha256": "e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8"
+    },
+    "lib/libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "mode": "0o400",
+      "sha256": "7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0"
+    },
+    "lib/libQnnSystem.so": {
+      "bytes": 4072160,
+      "mode": "0o400",
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "mean-add-context.bin": {
+      "bytes": 74776,
+      "mode": "0o400",
+      "sha256": "7671cb643fc86d9a54e933de4f11889cc5204cb9616cb683eccb8782ae1badfc"
+    }
+  },
+  "full_LLM_or_reference": false,
+  "graphs": [
+    {
+      "DLC_single_operator": {
+        "HTP_execution_or_rounding_policy_proven": false,
+        "attrs": {
+          "axes": [
+            2
+          ],
+          "keep_dims": true,
+          "reduce_type": "ReduceMean"
+        },
+        "name": "mean_edge",
+        "operator_name": "isolated_actual_grid_mean",
+        "operator_type": "Reduce",
+        "passed": true,
+        "tensors": {
+          "x": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "grid": {
+              "bitwidth": 16,
+              "offset": 0,
+              "scale": 0.5050163865089417
+            },
+            "tensor_type": "APP_WRITE"
+          },
+          "y": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "grid": {
+              "bitwidth": 16,
+              "offset": 0,
+              "scale": 0.023287702351808548
+            },
+            "tensor_type": "APP_READ"
+          }
+        }
+      },
+      "authored": {
+        "all_encodings_overridden": true,
+        "expected_attributes": {
+          "axes": [
+            2
+          ],
+          "keep_dims": true,
+          "reduce_type": "ReduceMean"
+        },
+        "expected_codes_are_comparison_not_HTP_policy_assertion": true,
+        "expected_operator_type": "Reduce",
+        "graph": "mean_edge",
+        "input_bytes": 393216,
+        "input_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "max": [
+            33096.25
+          ],
+          "min": [
+            0.0
+          ],
+          "offset": [
+            0
+          ],
+          "scale": [
+            0.5050163865089417
+          ]
+        },
+        "input_name": "x",
+        "input_sha256": "3d4101512bcfa6aa0a5d49dc1e55851529c7c4edf87a99648f5174e6eb725b4c",
+        "input_shape": [
+          1,
+          128,
+          1536
+        ],
+        "inter_operator_chain_fusion_not_present_in_authored_graph": true,
+        "literal_float32_nearest_even_expected_codes": [
+          0,
+          0,
+          22,
+          434
+        ],
+        "no_Power_no_learned_weights_no_model_inputs": true,
+        "output_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "max": [
+            1526.1595458984375
+          ],
+          "min": [
+            0.0
+          ],
+          "offset": [
+            0
+          ],
+          "scale": [
+            0.023287702351808548
+          ]
+        },
+        "output_name": "y",
+        "output_shape": [
+          1,
+          128,
+          1
+        ],
+        "repeats_each": 32,
+        "row_patterns": [
+          "all_zero",
+          "one_code1_other1535zero",
+          "all_code1",
+          "all_code20"
+        ],
+        "single_output_eliminates_same_graph_multi_output_file_alias_question": true,
+        "synthetic_calibration_samples": 1
+      },
+      "inputs": {
+        "x": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 1,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "x",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.5050163865089417
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "name": "mean_edge",
+      "outputs": {
+        "y": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 2,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "y",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      }
+    },
+    {
+      "DLC_single_operator": {
+        "HTP_execution_or_rounding_policy_proven": false,
+        "attrs": {
+          "operation": 0
+        },
+        "name": "epsilon_add",
+        "operator_name": "isolated_actual_grid_epsilon_add",
+        "operator_type": "Eltwise_Binary",
+        "passed": true,
+        "tensors": {
+          "epsilon": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "grid": {
+              "bitwidth": 16,
+              "offset": 0,
+              "scale": 1.5259021823865737e-09
+            },
+            "raw_scalar": [
+              655
+            ],
+            "tensor_type": "STATIC"
+          },
+          "x": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "grid": {
+              "bitwidth": 16,
+              "offset": 0,
+              "scale": 0.023287702351808548
+            },
+            "tensor_type": "APP_WRITE"
+          },
+          "y": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "grid": {
+              "bitwidth": 16,
+              "offset": 0,
+              "scale": 0.023287702351808548
+            },
+            "tensor_type": "APP_READ"
+          }
+        }
+      },
+      "authored": {
+        "all_encodings_overridden": true,
+        "expected_attributes": {
+          "operation": 0
+        },
+        "expected_codes_are_comparison_not_HTP_policy_assertion": true,
+        "expected_operator_type": "Eltwise_Binary",
+        "graph": "epsilon_add",
+        "input_bytes": 256,
+        "input_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "max": [
+            1526.1595458984375
+          ],
+          "min": [
+            0.0
+          ],
+          "offset": [
+            0
+          ],
+          "scale": [
+            0.023287702351808548
+          ]
+        },
+        "input_name": "x",
+        "input_sha256": "5ff936a2c2da774eb7e02baf4c639b1b8d3957b8566dc9a2244be1718fbdc81f",
+        "input_shape": [
+          1,
+          128,
+          1
+        ],
+        "inter_operator_chain_fusion_not_present_in_authored_graph": true,
+        "literal_float32_nearest_even_expected_codes": [
+          0,
+          1,
+          22,
+          434
+        ],
+        "no_Power_no_learned_weights_no_model_inputs": true,
+        "output_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "max": [
+            1526.1595458984375
+          ],
+          "min": [
+            0.0
+          ],
+          "offset": [
+            0
+          ],
+          "scale": [
+            0.023287702351808548
+          ]
+        },
+        "output_name": "y",
+        "output_shape": [
+          1,
+          128,
+          1
+        ],
+        "repeats_each": 32,
+        "row_patterns": [
+          "code0",
+          "code1",
+          "code22",
+          "code434"
+        ],
+        "single_output_eliminates_same_graph_multi_output_file_alias_question": true,
+        "synthetic_calibration_samples": 1
+      },
+      "inputs": {
+        "x": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 4,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "x",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "name": "epsilon_add",
+      "outputs": {
+        "y": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 6,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "y",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      }
+    }
+  ],
+  "learned_weights_or_actual_model_inputs": false,
+  "payload_bytes": 26212392,
+  "phone_permission_granted": false,
+  "scope": "Single-output isolated same-grid Mean and epsilon-Add only; no chain/Power repeat or rule fitted to QNN model logits",
+  "soc_model": 43,
+  "stage_id": "htp-mean-add-stage-01"
+}

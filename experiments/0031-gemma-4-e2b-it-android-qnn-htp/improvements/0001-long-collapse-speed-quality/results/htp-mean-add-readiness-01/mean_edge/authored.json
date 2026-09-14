@@ -1,0 +1,80 @@
+{
+  "graph": "mean_edge",
+  "input_name": "x",
+  "input_shape": [
+    1,
+    128,
+    1536
+  ],
+  "input_grid": {
+    "axis": null,
+    "bitwidths": [
+      16
+    ],
+    "scale": [
+      0.5050163865089417
+    ],
+    "offset": [
+      0
+    ],
+    "min": [
+      0.0
+    ],
+    "max": [
+      33096.25
+    ]
+  },
+  "output_name": "y",
+  "output_shape": [
+    1,
+    128,
+    1
+  ],
+  "output_grid": {
+    "axis": null,
+    "bitwidths": [
+      16
+    ],
+    "scale": [
+      0.023287702351808548
+    ],
+    "offset": [
+      0
+    ],
+    "min": [
+      0.0
+    ],
+    "max": [
+      1526.1595458984375
+    ]
+  },
+  "expected_operator_type": "Reduce",
+  "expected_attributes": {
+    "axes": [
+      2
+    ],
+    "keep_dims": true,
+    "reduce_type": "ReduceMean"
+  },
+  "row_patterns": [
+    "all_zero",
+    "one_code1_other1535zero",
+    "all_code1",
+    "all_code20"
+  ],
+  "repeats_each": 32,
+  "literal_float32_nearest_even_expected_codes": [
+    0,
+    0,
+    22,
+    434
+  ],
+  "expected_codes_are_comparison_not_HTP_policy_assertion": true,
+  "input_bytes": 393216,
+  "input_sha256": "3d4101512bcfa6aa0a5d49dc1e55851529c7c4edf87a99648f5174e6eb725b4c",
+  "single_output_eliminates_same_graph_multi_output_file_alias_question": true,
+  "inter_operator_chain_fusion_not_present_in_authored_graph": true,
+  "no_Power_no_learned_weights_no_model_inputs": true,
+  "synthetic_calibration_samples": 1,
+  "all_encodings_overridden": true
+}

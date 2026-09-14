@@ -1,0 +1,76 @@
+{
+  "graph": "epsilon_add",
+  "input_name": "x",
+  "input_shape": [
+    1,
+    128,
+    1
+  ],
+  "input_grid": {
+    "axis": null,
+    "bitwidths": [
+      16
+    ],
+    "scale": [
+      0.023287702351808548
+    ],
+    "offset": [
+      0
+    ],
+    "min": [
+      0.0
+    ],
+    "max": [
+      1526.1595458984375
+    ]
+  },
+  "output_name": "y",
+  "output_shape": [
+    1,
+    128,
+    1
+  ],
+  "output_grid": {
+    "axis": null,
+    "bitwidths": [
+      16
+    ],
+    "scale": [
+      0.023287702351808548
+    ],
+    "offset": [
+      0
+    ],
+    "min": [
+      0.0
+    ],
+    "max": [
+      1526.1595458984375
+    ]
+  },
+  "expected_operator_type": "Eltwise_Binary",
+  "expected_attributes": {
+    "operation": 0
+  },
+  "row_patterns": [
+    "code0",
+    "code1",
+    "code22",
+    "code434"
+  ],
+  "repeats_each": 32,
+  "literal_float32_nearest_even_expected_codes": [
+    0,
+    1,
+    22,
+    434
+  ],
+  "expected_codes_are_comparison_not_HTP_policy_assertion": true,
+  "input_bytes": 256,
+  "input_sha256": "5ff936a2c2da774eb7e02baf4c639b1b8d3957b8566dc9a2244be1718fbdc81f",
+  "single_output_eliminates_same_graph_multi_output_file_alias_question": true,
+  "inter_operator_chain_fusion_not_present_in_authored_graph": true,
+  "no_Power_no_learned_weights_no_model_inputs": true,
+  "synthetic_calibration_samples": 1,
+  "all_encodings_overridden": true
+}

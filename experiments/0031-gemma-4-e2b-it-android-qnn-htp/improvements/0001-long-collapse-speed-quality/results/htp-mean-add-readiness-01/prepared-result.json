@@ -1,0 +1,373 @@
+{
+  "classification": "two_same_grid_single_output_HTP_controls_compiled",
+  "full_model_reference_or_phone_execution": false,
+  "authored_tiny_calibration_may_execute": true,
+  "graphs": [
+    {
+      "authored": {
+        "graph": "mean_edge",
+        "input_name": "x",
+        "input_shape": [
+          1,
+          128,
+          1536
+        ],
+        "input_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "scale": [
+            0.5050163865089417
+          ],
+          "offset": [
+            0
+          ],
+          "min": [
+            0.0
+          ],
+          "max": [
+            33096.25
+          ]
+        },
+        "output_name": "y",
+        "output_shape": [
+          1,
+          128,
+          1
+        ],
+        "output_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "scale": [
+            0.023287702351808548
+          ],
+          "offset": [
+            0
+          ],
+          "min": [
+            0.0
+          ],
+          "max": [
+            1526.1595458984375
+          ]
+        },
+        "expected_operator_type": "Reduce",
+        "expected_attributes": {
+          "axes": [
+            2
+          ],
+          "keep_dims": true,
+          "reduce_type": "ReduceMean"
+        },
+        "row_patterns": [
+          "all_zero",
+          "one_code1_other1535zero",
+          "all_code1",
+          "all_code20"
+        ],
+        "repeats_each": 32,
+        "literal_float32_nearest_even_expected_codes": [
+          0,
+          0,
+          22,
+          434
+        ],
+        "expected_codes_are_comparison_not_HTP_policy_assertion": true,
+        "input_bytes": 393216,
+        "input_sha256": "3d4101512bcfa6aa0a5d49dc1e55851529c7c4edf87a99648f5174e6eb725b4c",
+        "single_output_eliminates_same_graph_multi_output_file_alias_question": true,
+        "inter_operator_chain_fusion_not_present_in_authored_graph": true,
+        "no_Power_no_learned_weights_no_model_inputs": true,
+        "synthetic_calibration_samples": 1,
+        "all_encodings_overridden": true
+      },
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-mean-add-controls/prepare-01/mean_edge/mean_edge.dlc",
+        "bytes": 8360,
+        "sha256": "01cb546b8a7713fbf331472ce15f74730a6ca4e6f141a3456578237fcfd90a24"
+      },
+      "inspection": {
+        "name": "mean_edge",
+        "operator_name": "isolated_actual_grid_mean",
+        "operator_type": "Reduce",
+        "attrs": {
+          "axes": [
+            2
+          ],
+          "keep_dims": true,
+          "reduce_type": "ReduceMean"
+        },
+        "tensors": {
+          "x": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1536
+            ],
+            "tensor_type": "APP_WRITE",
+            "grid": {
+              "scale": 0.5050163865089417,
+              "offset": 0,
+              "bitwidth": 16
+            }
+          },
+          "y": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_READ",
+            "grid": {
+              "scale": 0.023287702351808548,
+              "offset": 0,
+              "bitwidth": 16
+            }
+          }
+        },
+        "passed": true,
+        "HTP_execution_or_rounding_policy_proven": false
+      }
+    },
+    {
+      "authored": {
+        "graph": "epsilon_add",
+        "input_name": "x",
+        "input_shape": [
+          1,
+          128,
+          1
+        ],
+        "input_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "scale": [
+            0.023287702351808548
+          ],
+          "offset": [
+            0
+          ],
+          "min": [
+            0.0
+          ],
+          "max": [
+            1526.1595458984375
+          ]
+        },
+        "output_name": "y",
+        "output_shape": [
+          1,
+          128,
+          1
+        ],
+        "output_grid": {
+          "axis": null,
+          "bitwidths": [
+            16
+          ],
+          "scale": [
+            0.023287702351808548
+          ],
+          "offset": [
+            0
+          ],
+          "min": [
+            0.0
+          ],
+          "max": [
+            1526.1595458984375
+          ]
+        },
+        "expected_operator_type": "Eltwise_Binary",
+        "expected_attributes": {
+          "operation": 0
+        },
+        "row_patterns": [
+          "code0",
+          "code1",
+          "code22",
+          "code434"
+        ],
+        "repeats_each": 32,
+        "literal_float32_nearest_even_expected_codes": [
+          0,
+          1,
+          22,
+          434
+        ],
+        "expected_codes_are_comparison_not_HTP_policy_assertion": true,
+        "input_bytes": 256,
+        "input_sha256": "5ff936a2c2da774eb7e02baf4c639b1b8d3957b8566dc9a2244be1718fbdc81f",
+        "single_output_eliminates_same_graph_multi_output_file_alias_question": true,
+        "inter_operator_chain_fusion_not_present_in_authored_graph": true,
+        "no_Power_no_learned_weights_no_model_inputs": true,
+        "synthetic_calibration_samples": 1,
+        "all_encodings_overridden": true
+      },
+      "dlc": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-mean-add-controls/prepare-01/epsilon_add/epsilon_add.dlc",
+        "bytes": 8248,
+        "sha256": "d7f434b555611a368cb29d19d20f0efecf32e980e45f695c57372614d18c04e2"
+      },
+      "inspection": {
+        "name": "epsilon_add",
+        "operator_name": "isolated_actual_grid_epsilon_add",
+        "operator_type": "Eltwise_Binary",
+        "attrs": {
+          "operation": 0
+        },
+        "tensors": {
+          "x": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_WRITE",
+            "grid": {
+              "scale": 0.023287702351808548,
+              "offset": 0,
+              "bitwidth": 16
+            }
+          },
+          "epsilon": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1
+            ],
+            "tensor_type": "STATIC",
+            "grid": {
+              "scale": 1.5259021823865737e-09,
+              "offset": 0,
+              "bitwidth": 16
+            },
+            "raw_scalar": [
+              655
+            ]
+          },
+          "y": {
+            "datatype": "uFxp_16",
+            "dimensions": [
+              1,
+              128,
+              1
+            ],
+            "tensor_type": "APP_READ",
+            "grid": {
+              "scale": 0.023287702351808548,
+              "offset": 0,
+              "bitwidth": 16
+            }
+          }
+        },
+        "passed": true,
+        "HTP_execution_or_rounding_policy_proven": false
+      }
+    }
+  ],
+  "Power_graph_included": false,
+  "seconds": 5.331804723999085,
+  "compiler_config": {
+    "backend": "HTP",
+    "context_custom_configs": [
+      {
+        "weight_sharing_enabled": true,
+        "file_read_memory_budget_in_mb": 0,
+        "io_memory_estimation": false,
+        "max_spill_fill_buffer_for_group": 0,
+        "group_id": 0,
+        "extended_udma": false,
+        "init_acceleration": false,
+        "lora_weight_sharing": false,
+        "lora_weight_sharing_ram_preload": false
+      }
+    ],
+    "debug": false,
+    "device_custom_configs": [
+      {
+        "id": 0,
+        "soc_id": 0,
+        "soc_model": 43,
+        "dsp_arch": "v73",
+        "pd_session": "unsigned",
+        "profiling_level": "linting",
+        "core_ids": null,
+        "core_type": 0,
+        "cores": [
+          {
+            "id": 0,
+            "perf_profile": "burst",
+            "rpc_control_latency": 100,
+            "rpc_polling_time": 9999,
+            "hmx_timeout_us": 300000,
+            "adaptive_polling_time": 0
+          }
+        ]
+      }
+    ],
+    "graph_custom_configs": [
+      {
+        "name": "mean_edge",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "monolithic_lstm": false
+      },
+      {
+        "name": "epsilon_add",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "monolithic_lstm": false
+      }
+    ],
+    "log_level": "warn",
+    "op_packages": null,
+    "compiler_custom_configs": null,
+    "enable_intermediate_outputs": null,
+    "set_output_tensors": null,
+    "soc_details": "chipset:SM8550",
+    "io_tensor_mem_type": "memhandle",
+    "memory_custom_config": {
+      "mem_type": "shared_buffer"
+    },
+    "data_format_config": null,
+    "group_context_config": null,
+    "backend_binary_path": null
+  },
+  "context": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-mean-add-controls/prepare-01/mean-add-context.bin",
+    "bytes": 74776,
+    "sha256": "7671cb643fc86d9a54e933de4f11889cc5204cb9616cb683eccb8782ae1badfc"
+  },
+  "context_IO_verified": true,
+  "phone_executed": false
+}
