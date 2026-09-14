@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T16:42:25+00:00",
+  "updated_at": "2026-09-14T16:44:43+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Jere froze two small HTP controls: one mean operation and one epsilon-add operation, using the same saved grids and values. The earlier chain results remain retained.",
-      "next": "One phone window is granted, but has not reported a start. Each control runs once after fresh phone, app, USB, job, playback, and resource checks. Results are limited to these small operators and grids; no power/chain/full-model/reference run, policy fit, or retry.",
+      "now": "Jere has started the one two-control HTP test. It runs only the mean and epsilon-add operations once each under the same phone lease and fixed limits.",
+      "next": "Fresh phone, app, USB, job, and playback checks passed. No power, chain, language model, reference, or retry. Raw files, postflight, cleanup, and release come before analysis; no output result yet.",
       "reported_at": "2026-09-14T16:02:10+00:00",
       "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Jere has one two-control HTP phone window granted; actual start is not reported.",
-      "next": "Fresh phone and app checks are required. The two small controls run once each, with raw collection, postflight, cleanup, and release before analysis.",
+      "now": "Jere is running the two-control HTP test under one phone lease.",
+      "next": "No output result yet. No power, chain, language-model, reference, or retry.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current small HTP chain preparation",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere has frozen two small HTP controls and is ready for one phone window.",
-      "next": "No phone execution yet. Results will remain limited to the two operators and their saved grids.",
+      "now": "Jere is running one small HTP mean-and-add test window.",
+      "next": "No result yet. Analysis follows raw collection and phone release.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run granted two-control HTP test window",
-      "reported_at": "2026-09-14T16:42:25+00:00",
-      "reported_by": "Pi — frozen controls/granted/no start",
+      "task": "Run one two-control HTP test window",
+      "reported_at": "2026-09-14T16:44:43+00:00",
+      "reported_by": "Jere — actual start/no output result",
       "stale_after_seconds": 900
     },
     {
