@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T14:40:53+00:00",
+  "updated_at": "2026-09-14T14:43:59+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "One small HTP test window is granted now, but has not reported a start. It will run the three prepared graphs once each under fresh phone, USB, app, job, playback, ownership, and resource checks.",
-      "next": "It has a short process and fixed virtual-memory/file/evidence limits, with no language model, CPU fallback, or extra cases. Keep raw results and postflight/cleanup before analysis. Any result is limited to these small graphs, not a full model or quality claim.",
+      "now": "Jere has started the one small HTP edge-and-fusion test. It runs the three prepared graphs once under the fixed short process, memory, file, and evidence limits.",
+      "next": "Fresh app, USB, job, playback, and phone-lock checks passed. No language model, CPU fallback, or extra cases. Raw results, postflight checks, cleanup, and release come before analysis; no retry.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Phone lock is free and Jere has one small HTP test window; actual start is not reported.",
-      "next": "Fresh checks are required. No app change, restore, extra case, CPU fallback, or retry.",
+      "now": "Jere is running the one small HTP edge test under the phone lease.",
+      "next": "No graph result yet. No language model, CPU fallback, extra cases, or retry.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is ready to run one small HTP edge-and-fusion test window.",
-      "next": "No current run result. Any result remains limited to the three small graphs, not a full-model or quality conclusion.",
+      "now": "Jere is running one small HTP edge-and-fusion test.",
+      "next": "No result yet. Results will remain limited to the three small graphs.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run granted tiny HTP edge test",
-      "reported_at": "2026-09-14T14:40:53+00:00",
-      "reported_by": "Pi — granted/no start result",
+      "task": "Run one bounded tiny HTP edge test",
+      "reported_at": "2026-09-14T14:43:59+00:00",
+      "reported_by": "Jere — actual start/no graph result",
       "stale_after_seconds": 900
     },
     {
