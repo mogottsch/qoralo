@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T15:26:29+00:00",
+  "updated_at": "2026-09-14T15:28:49+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "reviewing",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Saved results show that only the isolated power graph ran once; the two normalization-chain graphs did not run. In this small HTP case, zero raised to a negative half-power produced the top unsigned-16 output code, while finite controls matched the prepared formulas.",
-      "next": "This is a valid but partial edge result, not a normalization-fusion, full-model, or quality policy. Jere will check the tool’s multi-graph scheduling locally, then prepare a way to run only the two missing chain cases without repeating the power case.",
+      "now": "The isolated HTP power result is retained as one valid edge observation. Jere is preparing a small scheduling fix to run only the two missing normalization-chain graphs.",
+      "next": "Use explicit named graph invocations with one input and one execution each, after checking the tool’s supported command behavior. Do not repeat the power graph or assume a global count applies per graph. One later phone window may run each chain once; no full reference, policy, or automatic extra case.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "unassigned",
-      "owner": "Pi",
-      "now": "The small HTP test released after one isolated power-graph execution; the chain cases remain unexecuted.",
-      "next": "No additional device call or replay. Jere will first check multi-graph scheduling locally.",
+      "status": "preparing",
+      "owner": "Jere",
+      "now": "Jere is preparing a later phone window for the two missing HTP chain graphs only.",
+      "next": "No current device run. The power graph will not repeat; each chain would run once with existing checks and limits.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is checking the HTP tool’s multi-graph scheduling after one isolated power test completed.",
-      "next": "The partial power result does not establish a chain, full-model, or quality policy. No additional device call yet.",
+      "now": "Jere is testing the HTP tool’s graph selection and execution-count behavior for two missing chain cases.",
+      "next": "No full reference, power-policy adoption, or extra graph. A phone test follows only after the command is frozen.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Check HTP multi-graph scheduling and prepare missing chains",
-      "reported_at": "2026-09-14T15:26:29+00:00",
-      "reported_by": "Jere — one partial graph result",
+      "task": "Freeze isolated HTP chain graph selection and counts",
+      "reported_at": "2026-09-14T15:28:49+00:00",
+      "reported_by": "Pi — no phone run/power repeat",
       "stale_after_seconds": 900
     },
     {
