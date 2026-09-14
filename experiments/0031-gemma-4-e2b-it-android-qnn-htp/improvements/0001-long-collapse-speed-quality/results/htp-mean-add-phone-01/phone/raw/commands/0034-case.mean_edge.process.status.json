@@ -1,0 +1,17 @@
+{
+  "operation": "case.mean_edge.process.status",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "if [ -f /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/evidence/mean_edge.watchdog-timeout.txt ]; then printf \"TIMEOUT\\n\"; elif [ -f /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/evidence/mean_edge.exit-code.txt ]; then printf \"EXIT \"; cat /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/evidence/mean_edge.exit-code.txt; else printf \"RUNNING\\n\"; fi"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0034-case.mean_edge.process.status.stdout",
+  "stderr": "raw/commands/0034-case.mean_edge.process.status.stderr",
+  "code": 0,
+  "timed_out": false
+}

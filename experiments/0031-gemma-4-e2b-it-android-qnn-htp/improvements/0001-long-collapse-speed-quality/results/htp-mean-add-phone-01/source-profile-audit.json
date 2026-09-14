@@ -1,0 +1,102 @@
+{
+  "scope": "Saved only; no new graph/model/phone execution",
+  "sources": [
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/MasterOpDef.html",
+      "sha256": "a85aa4f1a82650577ee8edcb48e0fd0a8571adba8593f3bff05e176990f15d66",
+      "anchor": "reducemean",
+      "lines": [
+        12391,
+        12400
+      ],
+      "scoped_reading": "Mean over axes, keep-dims semantic definition; no backend-specific accumulator or fixed-point rounding description here."
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/MasterOpDef.html",
+      "sha256": "a85aa4f1a82650577ee8edcb48e0fd0a8571adba8593f3bff05e176990f15d66",
+      "anchor": "elementwiseadd",
+      "lines": [
+        3747,
+        3755
+      ],
+      "scoped_reading": "Element-wise sum semantic definition."
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/HtpOpDefSupplement.html",
+      "sha256": "4feb1276a82a3f9ca29cf67b99fb02b3d1800b6a96b0d7c78196976ad525fbd8",
+      "anchor": "reducemean",
+      "lines": [
+        19142,
+        19261
+      ],
+      "scoped_reading": "UF16\u2192UF16 INT16 support, rank at most5 and updateable quantization; no per-output error bound or minimum-one rule in this section."
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/general/quantization.html",
+      "sha256": "bd7ee279cff636f52d53fe8db7381945366ddf232e99121952e729eedc269003",
+      "anchor": "id2",
+      "lines": [
+        267,
+        303
+      ],
+      "scoped_reading": "Converter quantization concepts use nearest-integer scale/offset mapping and exact representability of zero; not an instruction-level HTP ReduceMean guarantee."
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/general/quantization.html",
+      "sha256": "bd7ee279cff636f52d53fe8db7381945366ddf232e99121952e729eedc269003",
+      "anchor": "quantization-impacts",
+      "lines": [
+        646,
+        650
+      ],
+      "scoped_reading": "Quantized models/runtimes may affect accuracy and some models may yield incorrect results; no ReduceMean numerical error tolerance supplied here."
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/general/htp/htp_backend.html",
+      "sha256": "af05ba822083183d8b9d39ce41e6fda5dd88d8b7e143dd3192b26364db605b6a",
+      "anchor": "qnn-htp-precision",
+      "lines": [
+        1741,
+        1767
+      ],
+      "scoped_reading": "Documents float32\u2192float16 execution and floating-model associativity differences across SoCs. These are not evidence that the isolated UF16 Mean uses FP16 accumulation."
+    }
+  ],
+  "compiled_contract": {
+    "backend_id": 6,
+    "soc_model": 43,
+    "dsp_arch": "v73",
+    "all_IO": "UFIXED_POINT_16, not Float16 transport",
+    "single_operator_each": true,
+    "compiler_optimization_type": 3,
+    "fp16_relaxed_precision": 0,
+    "actual_internal_accumulator_precision_known": false
+  },
+  "profiles": {
+    "mean_edge": {
+      "execution_count": 1,
+      "HVX_threads_reported": 4,
+      "RPC_execute_us": 3817,
+      "accelerator_execute_us": 3048
+    },
+    "epsilon_add": {
+      "execution_count": 1,
+      "HVX_threads_reported": 4,
+      "RPC_execute_us": 3795,
+      "accelerator_execute_us": 2982
+    }
+  },
+  "profile_scope": "basic; average/min/max are views of one execution each, not three inferences",
+  "actual_kernel_symbol_or_reduction_rescale_instruction_captured": false,
+  "HVX_thread_count_is_not_kernel_or_internal_arithmetic_identity": true,
+  "documented_one_code_HTP_ReduceMean_error_bound_found_in_reviewed_sections": false,
+  "universal_floor_inferred": false,
+  "buffer_materialization_mechanisms_completely_excluded": false,
+  "unresolved": [
+    "Exact internal accumulator/rescale/rounding scheme",
+    "Generality beyond the frozen grids, shapes and input patterns",
+    "Actual full-Gemma intermediate zero rows and numerical impact on endpoint/decoding",
+    "Original long-output repetition cause"
+  ],
+  "next_direction": "Compare already-saved real QNN/native-QAT endpoint ranks; do not continue fitting a DSP emulator."
+}

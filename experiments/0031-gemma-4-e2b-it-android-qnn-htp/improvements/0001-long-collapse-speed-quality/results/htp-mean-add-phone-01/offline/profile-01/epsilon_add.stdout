@@ -1,0 +1,79 @@
+Input Log File Location: /home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-mean-add-phone-runs/mean-add-20260914T164350Z-01/raw/device/epsilon_add/outputs/qnn-profiling-data_0.log
+Log File Created: Mon Sep 14 17:43:57 2026
+Time Scale: 1e-06
+Epoch Timestamp: 1789404237183514 Steady Clock Timestamp: 1018627765390
+Generated using: 
+qnn-profile-viewer: v2.49.40.260810104044
+qnn-net-run: v2.49.40.260810104044
+Backend: v2.49.40.260810104044
+
+Qnn Init/Prepare/Finalize/De-Init/Execute/Lib-Load Statistics:
+------------------------------------------------------------
+Init Stats:
+-----------
+    NetRun: 25069 us
+    Backend (RPC (load binary) time): 11635 us
+    Backend (QNN accelerator (load binary) time): 11095 us
+    Backend (Accelerator (load binary) time): 9126 us
+    Backend (Accelerator (load binary) time): 1296 us
+    Backend (QNN (load binary) time): 24964 us
+
+Compose Graphs Stats:
+--------------
+    NetRun: 0 us
+
+Finalize Stats:
+---------------
+
+De-Init Stats:
+--------------
+    NetRun: 38391 us
+    Backend (RPC (deinit) time): 4198 us
+    Backend (QNN Accelerator (deinit) time): 3519 us
+    Backend (Accelerator (deinit) time): 470 us
+    Backend (Accelerator (deinit) time): 2990 us
+    Backend (QNN (deinit) time): 37954 us
+
+Execute Stats (Overall):
+------------------------
+    NetRun IPS (includes IO and misc. time): 153.5391 inf/sec 
+
+Execute Stats (Average):
+------------------------
+Total Inference Time: 
+---------------------
+Graph 0 (epsilon_add):
+    NetRun: 4023 us
+    Backend (Number of HVX threads used): 4 count
+    Backend (RPC (execute) time): 3795 us
+    Backend (QNN accelerator (execute) time): 3067 us
+    Backend (Accelerator (execute) time): 2982 us
+    Backend (Accelerator (execute excluding wait) time): 426 us
+    Backend (QNN (execute) time): 3942 us
+
+Execute Stats (Min):
+------------------------
+Total Inference Time: 
+---------------------
+Graph 0 (epsilon_add):
+    NetRun: 4023 us
+    Backend (Number of HVX threads used): 4 count
+    Backend (RPC (execute) time): 3795 us
+    Backend (QNN accelerator (execute) time): 3067 us
+    Backend (Accelerator (execute) time): 2982 us
+    Backend (Accelerator (execute excluding wait) time): 426 us
+    Backend (QNN (execute) time): 3942 us
+
+Execute Stats (Max):
+------------------------
+Total Inference Time: 
+---------------------
+Graph 0 (epsilon_add):
+    NetRun: 4023 us
+    Backend (Number of HVX threads used): 4 count
+    Backend (RPC (execute) time): 3795 us
+    Backend (QNN accelerator (execute) time): 3067 us
+    Backend (Accelerator (execute) time): 2982 us
+    Backend (Accelerator (execute excluding wait) time): 426 us
+    Backend (QNN (execute) time): 3942 us
+

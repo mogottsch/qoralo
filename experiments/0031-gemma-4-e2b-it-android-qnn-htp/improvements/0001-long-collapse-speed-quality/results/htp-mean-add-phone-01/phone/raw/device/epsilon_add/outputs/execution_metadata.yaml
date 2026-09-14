@@ -1,0 +1,28 @@
+---
+timestamp: 1018627986097
+command: /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/bin/qnn-net-run --backend /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/lib/libQnnHtp.so --retrieve_context /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/mean-add-context.bin --input_list __,/data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/evidence/epsilon_add.inputlist --output_dir /data/local/tmp/vibevoice-0031-htp-mean-add-mean-add-20260914T164350Z-01/evidence/epsilon_add/outputs --num_inferences 1 --use_native_input_files --use_native_output_files --shared_buffer --profiling_level basic --log_level info
+execution_mode: synchronous
+inferences_completed: 1
+graphs:
+  - graph_name: mean_edge
+    input_tensors:
+    - tensor_name: x
+      id: 1
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1536]
+    output_tensors:
+    - tensor_name: y
+      id: 2
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+  - graph_name: epsilon_add
+    input_tensors:
+    - tensor_name: x
+      id: 4
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+    output_tensors:
+    - tensor_name: y
+      id: 6
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]

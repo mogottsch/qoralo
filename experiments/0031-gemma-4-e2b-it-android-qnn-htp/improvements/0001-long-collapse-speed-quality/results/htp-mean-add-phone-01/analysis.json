@@ -1,0 +1,391 @@
+{
+  "classification": "valid_isolated_HTP_Mean_Add_controls",
+  "run_id": "mean-add-20260914T164350Z-01",
+  "collection_sha256": "52d5e5a18765636eb0f8e85b98a0ef5f6017182f1c02371930e9f8e95bc7dbb6",
+  "grant_sha256": "1d0178f5be85ca5bcf720f2d1734508c881e26cb382d23aaf560ccae72026f26",
+  "stage_digest": "f860ed18df22270801551be16499ecb9c2a3f10351f4b84d2da3c5bba7bc60b2",
+  "context_sha256": "7671cb643fc86d9a54e933de4f11889cc5204cb9616cb683eccb8782ae1badfc",
+  "cases": [
+    {
+      "case": "mean_edge",
+      "executions": 1,
+      "raw_bytes": 256,
+      "raw_sha256": "9bcb2e46917d0b6df8e3aa7750fe69584f43942ee351bd7cb4c39f9afcacc268",
+      "raw_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-mean-add-phone-runs/mean-add-20260914T164350Z-01/raw/device/mean_edge/outputs/mean_edge/Result_0/y_native.raw",
+      "input_sha256": "3d4101512bcfa6aa0a5d49dc1e55851529c7c4edf87a99648f5174e6eb725b4c",
+      "execution_metadata_sha256": "660a27fe170953a6d3cc9697b665d7fb436a876a2af0c946b1d7ac839dc0d95b",
+      "limits_sha256": "294ead03986479333b8b394156488a0b026b2de270798a4ebaf91462e44911c7",
+      "compiled_input_descriptor": {
+        "x": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1536
+          ],
+          "id": 1,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "x",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.5050163865089417
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "compiled_output_descriptor": {
+        "y": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 2,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "y",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      },
+      "comparison": {
+        "all_words_checked": 128,
+        "different_codes": 64,
+        "maximum_absolute_code_error": 1,
+        "expected_patterns": [
+          0,
+          0,
+          22,
+          434
+        ],
+        "observed_codes_per_pattern": [
+          [
+            1
+          ],
+          [
+            1
+          ],
+          [
+            22
+          ],
+          [
+            434
+          ]
+        ],
+        "generalized_rounding_floor_or_policy_inferred": false
+      },
+      "exact_rescale_errors": {
+        "arithmetic": "Exact rational use of compiled IEEE scale values; ties-to-even finite comparison, not hardware-law assertion",
+        "input_scale": 0.5050163865089417,
+        "output_scale": 0.023287702351808548,
+        "rescale_ratio_exact": "135564304/6251245",
+        "rescale_ratio": 21.685968795016034,
+        "patterns": [
+          {
+            "pattern": "all_zero",
+            "ideal_real_exact": "0",
+            "ideal_real": 0.0,
+            "ideal_output_code_coordinate_exact": "0",
+            "ideal_output_code_coordinate": 0.0,
+            "nearest_even_code": 0,
+            "observed_codes": [
+              1
+            ],
+            "code_error_vs_nearest": [
+              1
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "6251245/268435456"
+            ],
+            "decoded_error_vs_ideal": [
+              0.023287702351808548
+            ],
+            "error_in_output_steps": [
+              1.0
+            ]
+          },
+          {
+            "pattern": "one_code1_other1535zero",
+            "ideal_real_exact": "8472769/25769803776",
+            "ideal_real": 0.0003287867099667589,
+            "ideal_output_code_coordinate_exact": "8472769/600119520",
+            "ideal_output_code_coordinate": 0.014118469267588562,
+            "nearest_even_code": 0,
+            "observed_codes": [
+              1
+            ],
+            "code_error_vs_nearest": [
+              1
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "591646751/25769803776"
+            ],
+            "decoded_error_vs_ideal": [
+              0.022958915641841788
+            ],
+            "error_in_output_steps": [
+              0.9858815307324115
+            ]
+          },
+          {
+            "pattern": "all_code1",
+            "ideal_real_exact": "8472769/16777216",
+            "ideal_real": 0.5050163865089417,
+            "ideal_output_code_coordinate_exact": "135564304/6251245",
+            "ideal_output_code_coordinate": 21.685968795016034,
+            "nearest_even_code": 22,
+            "observed_codes": [
+              22
+            ],
+            "code_error_vs_nearest": [
+              0
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "981543/134217728"
+            ],
+            "decoded_error_vs_ideal": [
+              0.007313065230846405
+            ],
+            "error_in_output_steps": [
+              0.3140312049839672
+            ]
+          },
+          {
+            "pattern": "all_code20",
+            "ideal_real_exact": "42363845/4194304",
+            "ideal_real": 10.100327730178833,
+            "ideal_output_code_coordinate_exact": "542257216/1250249",
+            "ideal_output_code_coordinate": 433.71937590032064,
+            "nearest_even_code": 434,
+            "observed_codes": [
+              434
+            ],
+            "code_error_vs_nearest": [
+              0
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "877125/134217728"
+            ],
+            "decoded_error_vs_ideal": [
+              0.006535090506076813
+            ],
+            "error_in_output_steps": [
+              0.2806240996793439
+            ]
+          }
+        ]
+      },
+      "named_descriptor_bindings_verified": true,
+      "single_output_graph": true
+    },
+    {
+      "case": "epsilon_add",
+      "executions": 1,
+      "raw_bytes": 256,
+      "raw_sha256": "5ff936a2c2da774eb7e02baf4c639b1b8d3957b8566dc9a2244be1718fbdc81f",
+      "raw_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-mean-add-phone-runs/mean-add-20260914T164350Z-01/raw/device/epsilon_add/outputs/epsilon_add/Result_0/y_native.raw",
+      "input_sha256": "5ff936a2c2da774eb7e02baf4c639b1b8d3957b8566dc9a2244be1718fbdc81f",
+      "execution_metadata_sha256": "33bea7559061cddadc6066cbf1dca9e59ba8ef84a47593a0d58a36ade274bc31",
+      "limits_sha256": "294ead03986479333b8b394156488a0b026b2de270798a4ebaf91462e44911c7",
+      "compiled_input_descriptor": {
+        "x": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 4,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "x",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_WRITE"
+        }
+      },
+      "compiled_output_descriptor": {
+        "y": {
+          "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+          "dataType": "QNN_DATATYPE_UFIXED_POINT_16",
+          "dimensions": [
+            1,
+            128,
+            1
+          ],
+          "id": 6,
+          "memType": "QNN_TENSORMEMTYPE_MEMHANDLE",
+          "name": "y",
+          "quantizeParams": {
+            "definition": "QNN_DEFINITION_DEFINED",
+            "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_SCALE_OFFSET",
+            "scaleOffset": {
+              "offset": 0,
+              "scale": 0.023287702351808548
+            }
+          },
+          "rank": 3,
+          "type": "QNN_TENSOR_TYPE_APP_READ"
+        }
+      },
+      "comparison": {
+        "all_words_checked": 128,
+        "different_codes": 0,
+        "maximum_absolute_code_error": 0,
+        "expected_patterns": [
+          0,
+          1,
+          22,
+          434
+        ],
+        "observed_codes_per_pattern": [
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [
+            22
+          ],
+          [
+            434
+          ]
+        ],
+        "generalized_rounding_floor_or_policy_inferred": false
+      },
+      "exact_rescale_errors": {
+        "arithmetic": "Exact rational use of compiled IEEE scale values; ties-to-even finite comparison, not hardware-law assertion",
+        "input_scale": 0.023287702351808548,
+        "output_scale": 0.023287702351808548,
+        "rescale_ratio_exact": "1",
+        "rescale_ratio": 1.0,
+        "patterns": [
+          {
+            "pattern": "code0",
+            "ideal_real_exact": "9002388775/9007199254740992",
+            "ideal_real": 9.994659294632058e-07,
+            "ideal_output_code_coordinate_exact": "1800477755/41951395053568",
+            "ideal_output_code_coordinate": 4.2918185502555006e-05,
+            "nearest_even_code": 0,
+            "observed_codes": [
+              0
+            ],
+            "code_error_vs_nearest": [
+              0
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "-9002388775/9007199254740992"
+            ],
+            "decoded_error_vs_ideal": [
+              -9.994659294632058e-07
+            ],
+            "error_in_output_steps": [
+              -4.2918185502555006e-05
+            ]
+          },
+          {
+            "pattern": "code1",
+            "ideal_real_exact": "209765977656615/9007199254740992",
+            "ideal_real": 0.02328870181773801,
+            "ideal_output_code_coordinate_exact": "41953195531323/41951395053568",
+            "ideal_output_code_coordinate": 1.0000429181855026,
+            "nearest_even_code": 1,
+            "observed_codes": [
+              1
+            ],
+            "code_error_vs_nearest": [
+              0
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "-9002388775/9007199254740992"
+            ],
+            "decoded_error_vs_ideal": [
+              -9.994659294632058e-07
+            ],
+            "error_in_output_steps": [
+              -4.2918185502555006e-05
+            ]
+          },
+          {
+            "pattern": "code22",
+            "ideal_real_exact": "4614662458281255/9007199254740992",
+            "ideal_real": 0.5123304512057175,
+            "ideal_output_code_coordinate_exact": "922932491656251/41951395053568",
+            "ideal_output_code_coordinate": 22.000042918185503,
+            "nearest_even_code": 22,
+            "observed_codes": [
+              22
+            ],
+            "code_error_vs_nearest": [
+              0
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "-9002388775/9007199254740992"
+            ],
+            "decoded_error_vs_ideal": [
+              -9.994659294632058e-07
+            ],
+            "error_in_output_steps": [
+              -4.2918185502555006e-05
+            ]
+          },
+          {
+            "pattern": "code434",
+            "ideal_real_exact": "91034536268631335/9007199254740992",
+            "ideal_real": 10.106863820150839,
+            "ideal_output_code_coordinate_exact": "18206907253726267/41951395053568",
+            "ideal_output_code_coordinate": 434.0000429181855,
+            "nearest_even_code": 434,
+            "observed_codes": [
+              434
+            ],
+            "code_error_vs_nearest": [
+              0
+            ],
+            "decoded_error_vs_ideal_exact": [
+              "-9002388775/9007199254740992"
+            ],
+            "decoded_error_vs_ideal": [
+              -9.994659294632058e-07
+            ],
+            "error_in_output_steps": [
+              -4.2918185502555006e-05
+            ]
+          }
+        ]
+      },
+      "named_descriptor_bindings_verified": true,
+      "single_output_graph": true
+    }
+  ],
+  "total_raw_bytes": 512,
+  "mean_low_code_one_observed_without_Add_Power_or_multi_output_chain": true,
+  "epsilon_add_frozen_codes_unchanged": true,
+  "general_mean_floor_rounding_law_or_reference_patch_adopted": false,
+  "QNN_model_defect_or_repetition_rootcause_claim": false,
+  "model_or_phone_executed_by_analysis": false,
+  "scope": "Only these operators/grids/shapes/inputs/runtime. Does not exclude all implementation or materialization mechanisms or justify a full-model policy."
+}
