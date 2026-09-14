@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T14:45:35+00:00",
+  "updated_at": "2026-09-14T14:47:12+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "reviewing",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "The small HTP test has released the phone. Its runner ended nonzero, but raw files, cleanup, and postflight app checks were collected.",
-      "next": "Jere is reviewing saved startup and graph records to learn which, if any, graphs ran. A watcher exit code is not proof of native success. No retry.",
+      "now": "The small HTP test stopped at command argument validation, before any graph output or execution. The runner rejected two mutually exclusive memory options; cleanup, phone release, and app checks succeeded.",
+      "next": "Jere will make a narrow host-only command correction: remove the legacy shared-buffer option while retaining the explicit DMA-buffer option. Freeze and test the corrected command before any separately scheduled retry. No language-model, reference, or HTP-policy conclusion.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -112,8 +112,8 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "Jere released the small HTP test phone window after raw collection and cleanup.",
-      "next": "Graph outcomes are being checked from saved records. No retry or current phone work.",
+      "now": "The small HTP test released the phone after an argument-validation stop before graph execution.",
+      "next": "No retry or additional device work is scheduled. Jere is fixing and testing the command locally.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere reviews saved graph-startup records after the small HTP test released the phone.",
-      "next": "No graph outcome yet. A watcher result is not native execution proof, and no retry is planned.",
+      "now": "Jere is making a small local command correction for the HTP test after an argument-validation stop.",
+      "next": "No graph execution, language-model work, reference change, or HTP-policy conclusion.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Review saved tiny HTP graph outcomes",
-      "reported_at": "2026-09-14T14:45:35+00:00",
-      "reported_by": "Jere — released/no graph outcome yet",
+      "task": "Freeze and test corrected small HTP command",
+      "reported_at": "2026-09-14T14:47:12+00:00",
+      "reported_by": "Jere — no graph execution/no retry scheduled",
       "stale_after_seconds": 900
     },
     {
