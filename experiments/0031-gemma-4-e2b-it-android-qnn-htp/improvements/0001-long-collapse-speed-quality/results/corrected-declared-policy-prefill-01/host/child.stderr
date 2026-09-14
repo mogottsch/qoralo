@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/declared_dlc_reference_fp16.py", line 106, in call
+    return function(*args,**kwargs)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/declared_dlc_reference_fp16.py", line 100, in logical_op
+    # Trap hidden NumPy floating failures too (e.g. RMS square overflow), not
+FloatingPointError: divide by zero encountered in power
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/run_corrected_paired_prefill_host.py", line 61, in <module>
+    raise SystemExit(module.main())
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/run_corrected_paired_prefill_host.py", line 69, in main
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/run_corrected_paired_prefill_host.py", line 126, in main
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/run_corrected_paired_prefill_host.py", line 54, in internal
+    return parent_internal(root,compute)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/run_corrected_paired_prefill_host.py", line 61, in internal
+    raise SystemExit(module.main())
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/run_corrected_paired_prefill_host.py", line 81, in internal
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/matched_prefill_inputs.py", line 231, in run_reference_prefill
+    outputs=ref.run_encoded(values,allow_full_model=True,authorization_id=authorization_id,wall_seconds=wall_seconds-(time.monotonic()-start),on_event=event)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/declared_dlc_reference_fp16.py", line 249, in run_encoded
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/declared_dlc_reference_fp16.py", line 110, in call
+    observer.floating_error(error,phase,spec.get('name') if isinstance(spec,dict) else None)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/declared_dlc_reference_fp16.py", line 57, in floating_error
+    self.record({**self.context,'phase':phase,'tensor':str(tensor)[:512] if tensor is not None else None,'source':'numpy floating-point trap; failed expression is not recomputed','reason':str(error)[:512],'arithmetic_repaired_or_clipped_by_observer':False})
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/declared_dlc_reference_fp16.py", line 54, in record
+    raise NonFiniteIntermediate('first unexpected nonfinite '+json.dumps(self.first,sort_keys=True))
+declared_dlc_reference_fp16.NonFiniteIntermediate: first unexpected nonfinite {"arithmetic_repaired_or_clipped_by_observer": false, "chunk": 5, "operator_index": 6294, "operator_name": "node_pow_606", "phase": "logical_op", "reason": "divide by zero encountered in power", "source": "numpy floating-point trap; failed expression is not recomputed", "tensor": null}

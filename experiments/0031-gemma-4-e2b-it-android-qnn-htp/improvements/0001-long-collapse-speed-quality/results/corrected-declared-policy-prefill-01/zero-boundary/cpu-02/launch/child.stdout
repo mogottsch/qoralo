@@ -1,0 +1,330 @@
+{
+  "classification": "saved_normalization_zero_edge_and_synthetic_operator_audit",
+  "model_prefill_replays": 0,
+  "phone_calls": 0,
+  "reference_implementation_changed": false,
+  "policy_sha256": "7fffebe9208bc5e2b92d80ed6ed01b7b57263e8f23d188188588682754c18b59",
+  "recorded_failure": {
+    "chunk": 5,
+    "operator_index": 6294,
+    "name": "node_pow_606"
+  },
+  "chain": [
+    {
+      "index": 6291,
+      "name": "node_pow_605",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "opt/conv2d_475/simplify//Reshape_out",
+        "opt/conv2d_475/simplify//Reshape_out"
+      ],
+      "outputs": [
+        "pow_605"
+      ],
+      "attrs": {
+        "operation": 13,
+        "packageName": "qti.aisw"
+      }
+    },
+    {
+      "index": 6292,
+      "name": "node_mean_445",
+      "type": "Reduce",
+      "inputs": [
+        "pow_605"
+      ],
+      "outputs": [
+        "mean_445"
+      ],
+      "attrs": {
+        "axes": [
+          2
+        ],
+        "keep_dims": true,
+        "packageName": "qti.aisw",
+        "reduce_type": "ReduceMean"
+      }
+    },
+    {
+      "index": 6293,
+      "name": "node_add_27410",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "mean_445",
+        "val_54"
+      ],
+      "outputs": [
+        "add_27410"
+      ],
+      "attrs": {
+        "operation": 0,
+        "packageName": "qti.aisw"
+      }
+    },
+    {
+      "index": 6294,
+      "name": "node_pow_606",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "add_27410",
+        "val_55"
+      ],
+      "outputs": [
+        "pow_606"
+      ],
+      "attrs": {
+        "operation": 16,
+        "packageName": "qti.aisw"
+      }
+    },
+    {
+      "index": 6295,
+      "name": "node_mul_32740",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "opt/conv2d_475/simplify//Reshape_out",
+        "pow_606"
+      ],
+      "outputs": [
+        "mul_32740"
+      ],
+      "attrs": {
+        "operation": 13,
+        "packageName": "qti.aisw"
+      }
+    },
+    {
+      "index": 6296,
+      "name": "node_type_as_159",
+      "type": "Eltwise_Binary",
+      "inputs": [
+        "mul_32740",
+        "model.model.layers.31.post_feedforward_layernorm.weight"
+      ],
+      "outputs": [
+        "type_as_159"
+      ],
+      "attrs": {
+        "operation": 13,
+        "packageName": "qti.aisw"
+      }
+    }
+  ],
+  "epsilon": {
+    "raw": [
+      655
+    ],
+    "decoded": 9.994658967116266e-07,
+    "raw_npy_sha256": "71aa4dc42683590bf13b26e4d8f109a6c71de7b336e301acb95e2d0bb3645b76"
+  },
+  "exponent": {
+    "raw": [
+      0
+    ],
+    "decoded": -0.5,
+    "raw_npy_sha256": "7ee9a0960b21ad2ec6176431777ecaf815926071367426712e3e6f9d95e21ed9"
+  },
+  "mean_and_add_grid": {
+    "axis": null,
+    "bitwidths": [
+      16
+    ],
+    "scale": [
+      0.023287702351808548
+    ],
+    "offset": [
+      0
+    ],
+    "min": [
+      0.0
+    ],
+    "max": [
+      1526.1595458984375
+    ]
+  },
+  "power_output_grid": {
+    "axis": null,
+    "bitwidths": [
+      16
+    ],
+    "scale": [
+      0.00010432041017338634
+    ],
+    "offset": [
+      0
+    ],
+    "min": [
+      0.0
+    ],
+    "max": [
+      6.8366379737854
+    ]
+  },
+  "same_grid_enumeration": {
+    "all_representable_mean_codes_tested": 65536,
+    "codes_changed_by_epsilon": 0,
+    "zero_mean_after_add_code": 0,
+    "epsilon_in_output_grid_steps": 4.291818549972959e-05,
+    "half_output_grid_step": 0.011643851175904274
+  },
+  "IEEE_portable_zero_power_result": "+Inf (pole), not NaN",
+  "hypothetical_positive_infinity_output_saturation_code": 65535,
+  "saturation_is_NOT_yet_a_generalized_reference_repair": true,
+  "actual_zero_row_index_or_upstream_values_saved": false,
+  "QNN_compiler_fusion_or_HTP_edge_behavior_established": false,
+  "scope": "Static scalar/grid and synthetic zero case only. CPU backend observations, if obtained, are not HTP equivalence.",
+  "CPU_fixture": {
+    "compile_exit": 0,
+    "model_prefill_executed": false,
+    "phone_or_HTP_used": false,
+    "full_scalar_case_count": 4,
+    "source_sha256": "7e36556f18ac8d2d3d60180e6211484998fe61eb615b5e98da318d37e3b7189e",
+    "QnnCpu_sha256": "4dfbfd9dba654aac723bedd003a216e5278b8b0c7c4865ebb3df7fe8ee410561",
+    "headers": {
+      "QnnTypes.h": "4a0ba53b63b5ae8026f12cb2e9f8e4c276f3a772c09654049b01eb5f22e1b1cc",
+      "QnnInterface.h": "1180370397ab6b98291d9de57611bea37941599d0d6e8cd71566ece8f30934a7",
+      "QnnOpDef.h": "50f0e9358fd002869c2b74cf38118b1d30ad34ac76a69b48bf2cdfbb1cba4444"
+    },
+    "existing_host_compatibility_alias": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/host-libs/libunwind.so.1",
+      "resolved": "/usr/lib/libunwind.so.8.2.0",
+      "sha256": "7b6dc90a7732b5633d622ce0b78e1ebee75e3c1dd7b7ce1f56d60c3fc60a22e7",
+      "new_library_or_alias_installed": false
+    },
+    "host_CXX_dependencies": {
+      "/usr/lib/libc++.so.1": "27b94fb243c675fd3cf5614229dd2c59be321a39e473809220975ceb62c8bfc5",
+      "/usr/lib/libc++abi.so.1": "e55469536799cd64a4d9e0f0201d1d770c435f45d04fef314f16487461d63bf1"
+    },
+    "harness_exit": 0,
+    "records": [
+      {
+        "case": "harness",
+        "event": "api",
+        "stage": "providers",
+        "status": 0
+      },
+      {
+        "case": "harness",
+        "event": "provider",
+        "backend_id": 3,
+        "core_major": 2,
+        "core_minor": 38
+      },
+      {
+        "case": "harness",
+        "event": "api",
+        "stage": "backendCreate",
+        "status": 0
+      },
+      {
+        "case": "direct_UF16_Power",
+        "event": "api",
+        "stage": "contextCreate",
+        "status": 0
+      },
+      {
+        "case": "direct_UF16_Power",
+        "event": "api",
+        "stage": "graphCreate",
+        "status": 0
+      },
+      {
+        "case": "direct_UF16_Power",
+        "event": "api",
+        "stage": "createInput",
+        "status": 7004
+      },
+      {
+        "case": "direct_UF16_Power",
+        "event": "api",
+        "stage": "contextFree",
+        "status": 0
+      },
+      {
+        "case": "F32_Power",
+        "event": "api",
+        "stage": "contextCreate",
+        "status": 0
+      },
+      {
+        "case": "F32_Power",
+        "event": "api",
+        "stage": "graphCreate",
+        "status": 0
+      },
+      {
+        "case": "F32_Power",
+        "event": "api",
+        "stage": "createInput",
+        "status": 7004
+      },
+      {
+        "case": "F32_Power",
+        "event": "api",
+        "stage": "contextFree",
+        "status": 0
+      },
+      {
+        "case": "F32_Power_then_Convert",
+        "event": "api",
+        "stage": "contextCreate",
+        "status": 0
+      },
+      {
+        "case": "F32_Power_then_Convert",
+        "event": "api",
+        "stage": "graphCreate",
+        "status": 0
+      },
+      {
+        "case": "F32_Power_then_Convert",
+        "event": "api",
+        "stage": "createInput",
+        "status": 7004
+      },
+      {
+        "case": "F32_Power_then_Convert",
+        "event": "api",
+        "stage": "contextFree",
+        "status": 0
+      },
+      {
+        "case": "F32_specials_Convert",
+        "event": "api",
+        "stage": "contextCreate",
+        "status": 0
+      },
+      {
+        "case": "F32_specials_Convert",
+        "event": "api",
+        "stage": "graphCreate",
+        "status": 0
+      },
+      {
+        "case": "F32_specials_Convert",
+        "event": "api",
+        "stage": "createInput",
+        "status": 7004
+      },
+      {
+        "case": "F32_specials_Convert",
+        "event": "api",
+        "stage": "contextFree",
+        "status": 0
+      },
+      {
+        "case": "harness",
+        "event": "api",
+        "stage": "backendFree",
+        "status": 0
+      },
+      {
+        "event": "harness_complete",
+        "successful_cases": 0,
+        "cases": 4,
+        "full_model_or_phone_executed": false
+      }
+    ],
+    "successful_graph_executions": 0
+  }
+}

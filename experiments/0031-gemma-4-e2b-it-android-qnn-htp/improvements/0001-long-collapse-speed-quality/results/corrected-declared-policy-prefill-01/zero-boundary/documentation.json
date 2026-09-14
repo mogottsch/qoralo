@@ -1,0 +1,20 @@
+{
+  "sources": {
+    "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/MasterOpDef.html": "a85aa4f1a82650577ee8edcb48e0fd0a8571adba8593f3bff05e176990f15d66",
+    "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/CpuOpDefSupplement.html": "31a55d12243546320e51437828e2fade63b001d477990d14fced4355bdea5178",
+    "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/OpDef/HtpOpDefSupplement.html": "4feb1276a82a3f9ca29cf67b99fb02b3d1800b6a96b0d7c78196976ad525fbd8",
+    "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/general/quantization.html": "bd7ee279cff636f52d53fe8db7381945366ddf232e99121952e729eedc269003"
+  },
+  "reviewed_contracts": [
+    "Power=base^exponent; reviewed section has no explicit zero-negative quantized-edge rule",
+    "CPU Power lists Float32 and UF8, not exact UF16 fixture",
+    "HTP Power lists UF16 base/exponent/output support",
+    "Convert obeys quantization params; generic quantization formula clamps numeric range; reviewed sections did not specify Inf/NaN result mapping"
+  ],
+  "CPU_exact_UF16_Power_rejection": {
+    "code": 3110,
+    "symbol": "QNN_OP_PACKAGE_ERROR_VALIDATION_FAILURE"
+  },
+  "CPU_Inf_to_UF16_returned_zero_not_max": "Observed host CPU behavior; not HTP equivalence or permission for NaN repair",
+  "next_checkpoint": "Separately authorized host-only tiny HTP edge/fusion bundle preparation; no device execution grant yet"
+}

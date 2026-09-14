@@ -1,0 +1,114 @@
+{
+  "phone_binding": {
+    "capture_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/legacy-logits-phone-runs/legacy-prefill-20260913T125558Z-01/raw/device/prefill-capture",
+    "capture_binding_sha256": "b0fcf4f660dafb4c88097edfc1517d34a1a015564b39a6d16b814418d78d616a",
+    "phone_collection_sha256": "7dec490647d8153d8dbba41482108466e26c137caf67f9e58d6df6b332bac8fa",
+    "actual_AS_readback": {
+      "valid_readbacks": 28,
+      "unknown_readbacks": 0,
+      "mismatches": [],
+      "matches_expected": true,
+      "no_runtime_readback_from_plan_alone": true
+    },
+    "raw_payloads": 129,
+    "raw_payload_bytes": 66060288,
+    "full_QNN_row8_logits_sha256": "7b6c6e2d755a024e59d8ac05fbe4a27e992bfa4774c2286fff85144da26bafe9",
+    "before_original_dequant_and_sampler": true,
+    "phone_released": true,
+    "model_executed_by_validation": false
+  },
+  "host_root": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/corrected-legacy-prefill-host-runs/corrected-ref-20260914T082259Z-01",
+  "reference_version": "storage_corrected",
+  "first_unexpected_nonfinite": {
+    "chunk": 5,
+    "operator_index": 6294,
+    "operator_name": "node_pow_606",
+    "phase": "logical_op",
+    "tensor": null,
+    "source": "numpy floating-point trap; failed expression is not recomputed",
+    "reason": "divide by zero encountered in power",
+    "arithmetic_repaired_or_clipped_by_observer": false
+  },
+  "numerical_warning_markers": [],
+  "guard": {
+    "compute_child_launched": true,
+    "memory_lock_admission": false,
+    "actual_child_exit": 1,
+    "child_reaped": true,
+    "stop_reason": null,
+    "seconds": 164.2922460130003,
+    "raw_retained": true,
+    "full_prefill_started": true
+  },
+  "service": {
+    "actual_service_exit": 1
+  },
+  "reference_capture": null,
+  "progress": {
+    "completed_chunks": 5,
+    "seconds": 141.8291125600008
+  },
+  "trace": {
+    "begin": 40760,
+    "end": 40759,
+    "malformed_lines": 0,
+    "sequence_anomalies": 0,
+    "by_chunk": {
+      "0": {
+        "begin": 6893,
+        "end": 6893
+      },
+      "1": {
+        "begin": 6893,
+        "end": 6893
+      },
+      "2": {
+        "begin": 6893,
+        "end": 6893
+      },
+      "3": {
+        "begin": 6893,
+        "end": 6893
+      },
+      "4": {
+        "begin": 6893,
+        "end": 6893
+      },
+      "5": {
+        "begin": 6295,
+        "end": 6294
+      }
+    },
+    "last_begin": {
+      "event": "begin",
+      "index": 6294,
+      "name": "node_pow_606",
+      "seconds": 14.328158627999983,
+      "chunk": 5
+    },
+    "last_end": {
+      "event": "end",
+      "index": 6293,
+      "seconds": 14.328126150999196,
+      "chunk": 5
+    },
+    "available": true,
+    "open_operations": [
+      {
+        "event": "begin",
+        "index": 6294,
+        "name": "node_pow_606",
+        "seconds": 14.328158627999983,
+        "chunk": 5
+      }
+    ],
+    "open_operation_count": 1,
+    "raw_sha256": "b12bdb50326893b80e4d37f1d3f12848d50350b62888d482e4707e2ca387d904"
+  },
+  "comparison": null,
+  "classification": "incomplete_or_unvalidated_reference_preserved",
+  "model_or_phone_executed_by_analysis": false,
+  "DSP_bit_exact_claim": false,
+  "long_generation_quality_claim": false,
+  "sole_AS_cause_claim": false
+}

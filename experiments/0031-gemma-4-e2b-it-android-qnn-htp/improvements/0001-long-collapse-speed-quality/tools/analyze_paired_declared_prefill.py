@@ -61,22 +61,31 @@ def trace_summary(path):
     result.update(available=True,open_operations=list(opened.values())[:20],open_operation_count=len(opened),raw_sha256=sha(path));return result
 
 
-def analyze(host_root,out):
+def analyze(host_root,out,*,corrected=False):
     host_root=Path(host_root).resolve();out=Path(out).resolve()
-    if not host_root.is_relative_to(TRACK/'.local/legacy-prefill-host-runs'):raise ValueError('owned saved host root required')
+    expected_root=TRACK/('.local/corrected-legacy-prefill-host-runs' if corrected else '.local/legacy-prefill-host-runs')
+    if not host_root.is_relative_to(expected_root):raise ValueError('owned saved host root for the explicit reference version required')
     if not out.is_relative_to(TRACK/'.local/paired-prefill-comparison'):raise ValueError('fresh owned saved-analysis root required')
     from validate_legacy_prefill_capture import validate,specification
     spec=specification();phone=validate(spec['phone_collection']);native=host_root/'native'
     def optional(path):return json.loads(path.read_text()) if path.exists() else None
     guard=optional(host_root/'guard-result.json');service=optional(host_root/'service-exit.json');capture=optional(native/'capture.json');progress=optional(native/'progress.json');grant=optional(host_root/'grant.json')
-    if not grant or grant['grant_id']!=spec['host_grant_id'] or grant['phone_collection_sha256']!=spec['phone_collection_sha256']:raise ValueError('wrong source/capture grant')
-    result={'phone_binding':phone,'host_root':str(host_root),'guard':guard,'service':service,'reference_capture':capture,'progress':progress,'trace':trace_summary(native/'operations.jsonl'),'comparison':None,'classification':'incomplete_or_unvalidated_reference_preserved','model_or_phone_executed_by_analysis':False,'DSP_bit_exact_claim':False,'long_generation_quality_claim':False,'sole_AS_cause_claim':False}
-    if capture and capture.get('complete') and capture.get('AR128_executions')==16 and capture.get('input_tokens')==1929 and progress and progress.get('completed_chunks')==16:
+    expected_grant=spec['host_grant_id']
+    if corrected:
+        from run_corrected_paired_prefill_host import CORRECTED_GRANT,CORRECTED_REFERENCE_SHA
+        expected_grant=CORRECTED_GRANT
+        if not grant or grant.get('host_source_bindings',{}).get(str(TRACK/'tools/declared_dlc_reference_fp16.py'))!=CORRECTED_REFERENCE_SHA:raise ValueError('corrected reference source binding missing')
+    if not grant or grant['grant_id']!=expected_grant or grant['phone_collection_sha256']!=spec['phone_collection_sha256']:raise ValueError('wrong source/capture grant')
+    nonfinite=optional(native/'nonfinite-first.json')
+    stderr=(host_root/'child.stderr').read_text(errors='replace') if (host_root/'child.stderr').exists() else ''
+    warnings=[line for line in stderr.splitlines() if 'RuntimeWarning:' in line or 'REFERENCE_NONFINITE' in line]
+    result={'phone_binding':phone,'host_root':str(host_root),'reference_version':'storage_corrected' if corrected else 'original_INVALID_REFERENCE','first_unexpected_nonfinite':nonfinite,'numerical_warning_markers':warnings,'guard':guard,'service':service,'reference_capture':capture,'progress':progress,'trace':trace_summary(native/'operations.jsonl'),'comparison':None,'classification':'incomplete_or_unvalidated_reference_preserved','model_or_phone_executed_by_analysis':False,'DSP_bit_exact_claim':False,'long_generation_quality_claim':False,'sole_AS_cause_claim':False}
+    if nonfinite is None and capture and capture.get('complete') and capture.get('AR128_executions')==16 and capture.get('input_tokens')==1929 and progress and progress.get('completed_chunks')==16:
         result['comparison']=inspect_vectors(Path(phone['capture_dir'])/'15-output-logits.raw',native/'last-logits.uint16le',native/'last-logits.float32le',spec['raw_QNN_logits_sha256'],capture['raw_sha256'],capture['float32_sha256'])
-        result['classification']='complete_declared_policy_prefill_vector_comparison'
+        result['classification']='complete_storage_corrected_prefill_vector_comparison' if corrected else 'complete_but_INVALID_original_reference_comparison'
         result['control_exit_caveat']=None if guard and guard.get('actual_child_exit')==0 and not guard.get('guard_error') and not guard.get('stop_reason') and service and service.get('actual_service_exit')==0 else 'complete hash-bound vectors exist; retain missing/nonzero controller/guard/service observations separately'
     out.mkdir(parents=True,exist_ok=False);(out/'analysis.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'classification':result['classification'],'analysis_sha256':sha(out/'analysis.json'),'comparison':result['comparison']},indent=2));return result
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--host-root',type=Path,required=True);p.add_argument('--output-dir',type=Path,required=True);a=p.parse_args();analyze(a.host_root,a.output_dir)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--host-root',type=Path,required=True);p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--corrected',action='store_true');a=p.parse_args();analyze(a.host_root,a.output_dir,corrected=a.corrected)

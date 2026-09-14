@@ -43,6 +43,15 @@ class PairedVectorAnalysisTests(unittest.TestCase):
             q.write_bytes(b'partial')
             with self.assertRaises(ValueError):m.inspect_vectors(q,r,f,m.sha(q),m.sha(r),m.sha(f))
 
+    def test_corrected_partial_run_has_no_final_comparison(self):
+        path=TRACK/'.local/paired-prefill-comparison/corrected-01/analysis.json'
+        if not path.exists():self.skipTest('private corrected analysis unavailable')
+        x=json.loads(path.read_text());self.assertEqual(x['reference_version'],'storage_corrected')
+        self.assertIsNone(x['comparison']);self.assertIsNone(x['reference_capture'])
+        self.assertEqual(x['first_unexpected_nonfinite']['operator_index'],6294)
+        self.assertEqual(x['first_unexpected_nonfinite']['chunk'],5)
+        self.assertEqual(x['trace']['open_operation_count'],1)
+
     def test_partial_trace_preserved_without_inventing_completion(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp)/'trace';p.write_text('\n'.join([json.dumps({'event':'begin','chunk':0,'index':0,'name':'a'}),json.dumps({'event':'end','chunk':0,'index':0}),json.dumps({'event':'begin','chunk':0,'index':1,'name':'b'}),'incomplete'])+'\n')
