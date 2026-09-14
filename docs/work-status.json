@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T17:16:26+00:00",
+  "updated_at": "2026-09-14T17:17:19+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -103,10 +103,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "reviewing",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "The low nonzero mean code is now localized to the isolated mean operation; the add operation matches its literal formula. This is retained as a small shape-and-backend-specific observation, not a general rule or QNN defect.",
-      "next": "Jere will audit saved finite-code errors, rescaling and rounding against the compiled grids, plus recorded kernel/precision metadata. Then propose one discriminating fidelity/repetition checkpoint with predictions and a stop rule, or state what remains empirical. No numerical patch, full reference, or phone run.",
+      "now": "Jere completed and preserved the small mean-and-add audit. The mean result differs by at most one output step on half its entries; the add result is unchanged. Documentation does not define a mean-specific accuracy bound or a general minimum value rule.",
+      "next": "Jere proposes one saved-data endpoint ranking comparison between the captured QNN result and the valid native CPU result. It will only revalidate existing inputs and outputs, then compare top choices and ranks. The result would distinguish small ranking drift from broad route drift, not prove a repetition cause. No execution has started.",
       "reported_at": "2026-09-14T16:02:10+00:00",
       "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
@@ -136,8 +136,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere continues the independent saved-reference audit. The observed app generation issue remains blocked with no additional work assigned.",
-      "next": "No TTS failure, feature-regression, or schema-fix conclusion. Private failed-job evidence remains retained.",
+      "now": "Jere has completed the small HTP audit and is preparing one saved endpoint-ranking comparison.",
+      "next": "It uses existing captured data only, with a short bounded run to validate bindings and compute ranks. No new forward, model variant, or QNN cause claim.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -173,9 +173,9 @@
     },
     {
       "name": "Jere",
-      "task": "Audit saved rounding and precision evidence; propose one checkpoint",
-      "reported_at": "2026-09-14T16:52:35+00:00",
-      "reported_by": "Pi — no numerical patch/replay",
+      "task": "Prepare one saved QNN-versus-CPU endpoint rank comparison",
+      "reported_at": "2026-09-14T17:17:19+00:00",
+      "reported_by": "Jere — audit complete/checkpoint proposed",
       "stale_after_seconds": 900
     },
     {
