@@ -22,6 +22,7 @@ import dev.vibevoice.podcast.runtime.SourceMaterial
 import dev.vibevoice.podcast.runtime.TtsEngine
 import dev.vibevoice.podcast.runtime.WavInspector
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.async
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -59,6 +60,17 @@ class GenerationCoordinatorTest {
         assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(episode).phase)
         assertEquals(listOf("chapter-1", "chapter-2"), llm.chapterRequests)
         assertEquals(2, repository.activeRevision(episode).second.size)
+    }
+
+    @Test fun duplicateCompletedCommandNeverOverwritesMetricsOrRunsAgain() = runTest {
+        val (episode, job) = queuedScript(review = true)
+        val llm = FakeLlm(); val coordinator = coordinator(llm = llm)
+        coordinator.generateScript(episode, job) {}
+        val file = artifacts.resolveEpisodeFile("$episode/diagnostics/$job.json")
+        val original = file.readText()
+        try { coordinator.generateScript(episode, job) {}; fail("already complete") }
+        catch (_: IllegalArgumentException) { }
+        assertEquals(original, file.readText()); assertEquals(2, llm.chapterRequests.size)
     }
 
     @Test fun savedWrongWholeEpisodeReturnStaysRejectedBeforeSecondChapterOrCommit() = runTest {
@@ -115,6 +127,48 @@ class GenerationCoordinatorTest {
         repository.failJob(episode, audioJob, "injected render failure", "render:chapter-2")
         assertEquals(EpisodePhase.FAILED, repository.episode(episode).phase)
         assertTrue(artifacts.finalGenerationDir(episode, audioJob).notExists())
+    }
+
+    @Test fun deletionWaitsThroughBlockedRenderAndTeardownWithoutPublishingOrRetry() = runTest {
+        val (episode, scriptJob) = queuedScript(review = true)
+        coordinator(llm = FakeLlm()).generateScript(episode, scriptJob) {}
+        val job = repository.lockAndQueueAudio(episode)
+        val entered = java.util.concurrent.CountDownLatch(1)
+        val renderReturns = java.util.concurrent.CountDownLatch(1)
+        val closing = java.util.concurrent.CountDownLatch(1)
+        val teardownReturns = java.util.concurrent.CountDownLatch(1)
+        val fake = FakeTts()
+        val blocked = object : TtsEngine by fake {
+            override suspend fun renderChapter(chapter: FrozenChapter, output: File, onProgress: suspend (dev.vibevoice.podcast.runtime.TtsSegmentProgress) -> Unit): AudioMetadata = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                entered.countDown()
+                check(renderReturns.await(8, java.util.concurrent.TimeUnit.SECONDS))
+                fake.renderChapter(chapter, output, onProgress)
+            }
+            override fun close() { closing.countDown(); check(teardownReturns.await(8, java.util.concurrent.TimeUnit.SECONDS)) }
+        }
+        val task = async(kotlinx.coroutines.Dispatchers.Default) { coordinator(tts = blocked).generateAudio(episode, job) {} }
+        try {
+            assertTrue(entered.await(5, java.util.concurrent.TimeUnit.SECONDS))
+            repository.requestEpisodeDeletion(episode)
+            repository.reapEpisodeDeletions()
+            assertNotNull(database.podcastDao().episode(episode))
+            assertEquals(1, database.podcastDao().activeJobCount())
+            // Real monotonic delay lets the independent cancellation watcher observe the marker.
+            Thread.sleep(400)
+            renderReturns.countDown()
+            assertTrue(closing.await(5, java.util.concurrent.TimeUnit.SECONDS))
+            repository.reapEpisodeDeletions()
+            assertNotNull(database.podcastDao().episode(episode))
+            assertTrue(File(artifacts.episodesRoot, episode).isDirectory)
+            teardownReturns.countDown()
+            task.join()
+            assertTrue(task.isCancelled)
+            repository.reapEpisodeDeletions()
+            assertNull(database.podcastDao().episode(episode))
+            assertNull(database.podcastDao().job(job))
+            assertTrue(database.podcastDao().queuedJobs().isEmpty())
+            assertTrue(File(artifacts.episodesRoot, episode).notExists())
+        } finally { renderReturns.countDown(); teardownReturns.countDown(); task.cancel(); task.join() }
     }
 
     private suspend fun queuedScript(review: Boolean): Pair<String, String> {

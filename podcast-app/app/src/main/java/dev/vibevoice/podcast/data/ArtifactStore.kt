@@ -16,6 +16,8 @@ class ArtifactStore(
 ) {
     constructor(context: Context) : this(File(context.filesDir, "episodes"), File(context.noBackupFilesDir, "model-packs"))
 
+    val episodeLeases = dev.vibevoice.podcast.episode.EpisodeFileLeases(episodesRoot)
+
     fun writeSource(episodeId: String, sourceId: String, input: InputStream): StoredText {
         val bytes = ByteArrayOutputStream().use { output ->
             val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
@@ -67,10 +69,16 @@ class ArtifactStore(
     fun modelPackRoot(routeDirectory: String): File = File(modelPacksRoot, "$routeDirectory/current")
 
     fun writeAtomically(destination: File, bytes: ByteArray) {
-        destination.parentFile?.mkdirs()
-        val temp = File(destination.parentFile, ".${destination.name}.tmp")
-        temp.outputStream().use { output -> output.write(bytes); output.fdSync() }
-        Files.move(temp.toPath(), destination.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+        val relative = destination.canonicalFile.relativeTo(episodesRoot.canonicalFile)
+        require(relative.toPath().nameCount >= 2 && !relative.path.startsWith(".."))
+        episodeLeases.acquire(relative.toPath().getName(0).toString()).use {
+            destination.parentFile?.mkdirs()
+            val temp = File(destination.parentFile, ".${destination.name}.${java.util.UUID.randomUUID()}.tmp")
+            try {
+                temp.outputStream().use { output -> output.write(bytes); output.fdSync() }
+                Files.move(temp.toPath(), destination.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+            } finally { temp.delete() }
+        }
     }
 
     fun sha256(file: File): String {

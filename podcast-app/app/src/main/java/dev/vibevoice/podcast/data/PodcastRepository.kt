@@ -32,7 +32,7 @@ class PodcastRepository(
             dev.vibevoice.podcast.runtime.SupertonicTextCapacity.textLengthForManifest(dev.vibevoice.podcast.BuildConfig.SUPERTONIC_MANIFEST_SHA256))
 
     fun observeEpisodes(): Flow<List<EpisodeEntity>> = dao.observeEpisodes()
-    fun observeEpisode(id: String): Flow<EpisodeEntity?> = dao.observeEpisode(id)
+    fun observeEpisode(id: String): Flow<EpisodeEntity?> = dao.observeEpisode(id).map { it?.takeUnless { artifacts.episodeLeases.isDeleted(id) } }
     fun observeSources(id: String): Flow<List<EpisodeSourceEntity>> = dao.observeSources(id)
     fun observeChapters(id: String): Flow<List<ChapterEntity>> = dao.observeActiveChapters(id)
     fun observeMessages(id: String): Flow<List<AgentMessageEntity>> = dao.observeMessages(id)
@@ -46,6 +46,57 @@ class PodcastRepository(
     }
     fun observeLibraryPlayback(): Flow<List<PlaybackStateEntity>> = dao.observeLibraryPlayback()
     fun observeLibraryChapterCounts(): Flow<List<EpisodeChapterCount>> = dao.observeLibraryChapterCounts()
+
+    fun acquireEpisodeFiles(id: String): java.io.Closeable = artifacts.episodeLeases.acquire(id)
+    fun deletionRequested(id: String): Boolean = artifacts.episodeLeases.isDeleted(id)
+
+    /** Immutable ID from the confirmation, never the current navigation selection. */
+    suspend fun requestEpisodeDeletion(id: String) = database.withTransaction {
+        val episode = dao.episode(id) ?: return@withTransaction
+        artifacts.episodeLeases.tombstone(id)
+        markDeleting(episode)
+    }
+
+    private suspend fun markDeleting(episode: EpisodeEntity) {
+        if (episode.phase != "DELETING") dao.updateEpisode(episode.copy(phase = "DELETING", updatedAtEpochMs = clock()))
+        // Running work keeps the global admission slot until its OS lease is gone. No next model
+        // can be dispatched while a cancelled native worker is still unwinding.
+        dao.episodeJobs(episode.id).filter { it.status == JobStatus.QUEUED }.forEach {
+            dao.updateJob(it.copy(status = JobStatus.FAILED, statusText = "Episode deleted", failureStage = "episode_deletion",
+                terminalAtEpochMs = clock(), updatedAtEpochMs = clock()))
+        }
+    }
+
+    /** Restartable, idempotent cleanup. Files first, then cascading rows, tombstone retained.
+     * A crash anywhere leaves an irreversible request that the next launch can finish.
+     */
+    suspend fun reapEpisodeDeletions() {
+        for (id in artifacts.episodeLeases.tombstonedIds()) {
+            try {
+                if (dao.episode(id) == null) continue
+                database.withTransaction { markDeleting(dao.episode(id) ?: return@withTransaction) }
+                val lease = artifacts.episodeLeases.tryCleanupLease(id) ?: continue
+                lease.use {
+                    database.withTransaction {
+                        // A source referenced by a different episode is shared, even if its stored
+                        // path is under this ID. Keep those bytes; never touch model/shared roots.
+                        val preserved = dao.foreignSourcePaths(id, "$id/").map {
+                            artifacts.resolveEpisodeFile(it).toPath().toAbsolutePath().normalize()
+                        }.toSet()
+                        artifacts.episodeLeases.removeOwnedFiles(id, preserved)
+                        dao.deleteEpisodeRows(id)
+                    }
+                    synchronized(streamReaders) { streamReaders.keys.removeAll { it.episodeId == id } }
+                }
+            } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+            catch (_: Exception) { /* Keep DELETING + marker. Retry locally; never broaden deletion. */ }
+        }
+    }
+
+    suspend fun episodeDiagnostics(id: String): List<Pair<GenerationJobEntity, org.json.JSONObject?>> {
+        requireEpisode(id)
+        return dao.episodeJobs(id).map { it to dev.vibevoice.podcast.episode.EpisodeMetrics.read(artifacts, id, it.id) }
+    }
 
     suspend fun createEpisode(): String {
         val id = UUID.randomUUID().toString()
@@ -401,6 +452,7 @@ class PodcastRepository(
     }
 
     suspend fun failJob(episodeId: String, jobId: String, message: String, stage: String? = null): Boolean = database.withTransaction {
+        if (deletionRequested(episodeId)) return@withTransaction false
         val job = requireJob(jobId)
         require(job.episodeId == episodeId) { "Failure command is cross-wired" }
         if (job.status != JobStatus.RUNNING) return@withTransaction false
@@ -426,9 +478,17 @@ class PodcastRepository(
     suspend fun abortOwnedAudio(binding: dev.vibevoice.podcast.runtime.AudioAttemptBinding, reason: String): Boolean = database.withTransaction {
         val job=dao.latestJob(binding.episodeId) ?: return@withTransaction false
         val episode=dao.episode(binding.episodeId) ?: return@withTransaction false
+        val deleting = episode.phase == "DELETING" && deletionRequested(binding.episodeId)
         if(job.id!=binding.jobId || job.status!=JobStatus.RUNNING || job.kind!=JobKind.AUDIO || dao.activeJobCount()!=1 ||
-            episode.phase!=EpisodePhase.GENERATING_AUDIO || audioBinding(binding.episodeId,binding.jobId)!=binding) return@withTransaction false
-        failJob(binding.episodeId,binding.jobId,"Owned validation stopped: $reason. Completed audio is retained; no retry was queued.","owned_resource_guard")
+            (episode.phase!=EpisodePhase.GENERATING_AUDIO && !deleting) || audioBinding(binding.episodeId,binding.jobId)!=binding) return@withTransaction false
+        if (deleting) {
+            // A tombstone must not disable the already-authenticated resource guard while native
+            // teardown is blocked. Retain DELETING, and persist only this exact worker's failure.
+            val now = clock()
+            dao.updateJob(job.copy(status = JobStatus.FAILED, statusText = "Episode deleted", failureStage = "owned_resource_guard",
+                errorMessage = "Owned validation stopped during deletion", terminalAtEpochMs = now, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
+            true
+        } else failJob(binding.episodeId,binding.jobId,"Owned validation stopped: $reason. Completed audio is retained; no retry was queued.","owned_resource_guard")
     }
 
     /** Explicit user action for drafts hidden by older failed-edit handling. Never retries the edit. */
@@ -454,10 +514,11 @@ class PodcastRepository(
         dao.updateEpisode(episode.copy(phase = EpisodePhase.SCRIPT_DRAFT, updatedAtEpochMs = clock()))
     }
 
-    suspend fun runningJobs(): List<GenerationJobEntity> = dao.runningJobs()
-    suspend fun queuedJobs(): List<GenerationJobEntity> = dao.queuedJobs()
+    suspend fun runningJobs(): List<GenerationJobEntity> = dao.runningJobs().filterNot { deletionRequested(it.episodeId) }
+    suspend fun queuedJobs(): List<GenerationJobEntity> = dao.queuedJobs().filterNot { deletionRequested(it.episodeId) }
 
     suspend fun markQueuedDispatchAttempt(episodeId: String, jobId: String): GenerationJobEntity? = database.withTransaction {
+        if (deletionRequested(episodeId)) return@withTransaction null
         val job = requireJob(jobId)
         require(job.episodeId == episodeId) { "Dispatch command is cross-wired" }
         if (job.status != JobStatus.QUEUED) return@withTransaction null
@@ -467,6 +528,7 @@ class PodcastRepository(
     }
 
     suspend fun failQueuedJob(episodeId: String, jobId: String, message: String, stage: String = "service_dispatch"): Boolean = database.withTransaction {
+        if (deletionRequested(episodeId)) return@withTransaction false
         val job = requireJob(jobId)
         require(job.episodeId == episodeId) { "Queued failure command is cross-wired" }
         if (job.status != JobStatus.QUEUED) return@withTransaction false
@@ -667,7 +729,10 @@ class PodcastRepository(
 
     private fun validateScript(title: String, chapters: List<ChapterDraft>) = validateCompleteScript(title, chapters)
 
-    private suspend fun requireEpisode(id: String) = dao.episode(id) ?: error("Episode not found")
+    private suspend fun requireEpisode(id: String): EpisodeEntity {
+        artifacts.episodeLeases.requireLive(id)
+        return dao.episode(id) ?: error("Episode not found")
+    }
     private suspend fun requireJob(id: String) = dao.job(id) ?: error("Generation job not found")
     private fun newJob(episodeId: String, kind: String, revisionId: String?, text: String): GenerationJobEntity {
         val now = clock()

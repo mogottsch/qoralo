@@ -128,7 +128,7 @@ class LiveCollectorRegressionTest {
             val initial = io { withTimeout(15_000) { repository.observeAudioAvailability(episodeId, jobId).filterNotNull().first() } }
             require(initial.chunks.size == 1 && initial.state == AudioAvailabilityState.GENERATING)
             rule.setContent {
-                val currentHost = remember { PlaybackHost(isolatedContext) }
+                val currentHost = remember { PlaybackHost(isolatedContext, repository::acquireEpisodeFiles) }
                 host = currentHost
                 PlaybackHostEffects(currentHost, repository)
                 VibeVoiceTheme {

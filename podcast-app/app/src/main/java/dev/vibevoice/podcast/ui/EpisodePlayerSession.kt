@@ -30,6 +30,8 @@ class EpisodePlayerSession(
     private var timeline = ProgressiveTimeline(initialStream?.chunks ?: emptyList())
     private var internalPauseEvents = 0
     private var closed = false
+    private val releaseState = dev.vibevoice.podcast.episode.PlaybackRelease()
+    val isReleased: Boolean get() = releaseState.released
     private var interacted = false
     private var restored = saved != null
     var availableChunks by mutableStateOf(initialStream?.chunks ?: emptyList())
@@ -184,25 +186,30 @@ class EpisodePlayerSession(
         intent.stop(reason);syncIntent();player.pause();positionMs=absolute();persistNow()
     }
     fun seek(target: Long) {
+        if (closed) return
         markInteraction();intent.seek();seekInternal(target.coerceIn(0,durationMs.coerceAtLeast(0)));syncIntent();persistNow()
     }
     fun adjacentChapter(position: Long,delta: Int): Long? = if(liveBinding==null) null else timeline.adjacentChapter(position,delta)
     fun currentChapterPosition(position: Long): Int? = if(liveBinding==null) null else timeline.chapterStarts().lastOrNull { position>=it.second }?.first ?: timeline.chunks.firstOrNull()?.chapterPosition
     fun cycleSleepTimer() {
+        if (closed) return
         sleepMinutes = when { sleepMinutes == null -> 15; requireNotNull(sleepMinutes) <= 15 -> 30; else -> null }
         sleepDeadlineElapsedMs = sleepMinutes?.let { android.os.SystemClock.elapsedRealtime() + it * 60_000L }
     }
     fun restoreSleepDeadline(deadlineElapsedMs: Long?) {
+        if (closed) return
         sleepDeadlineElapsedMs=deadlineElapsedMs
         sleepMinutes=deadlineElapsedMs?.let { ((it-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+59_999L).div(60_000L).toInt() }
         tick()
     }
-    fun changeSpeed(value: Float) { markInteraction();speed=value;player.setPlaybackSpeed(value);persistNow() }
-    fun showTranscript(value: Boolean) { markInteraction();transcript=value;persistNow() }
-    fun checkpoint() { if(restored) persistNow() }
+    fun changeSpeed(value: Float) { if(closed) return;markInteraction();speed=value;player.setPlaybackSpeed(value);persistNow() }
+    fun showTranscript(value: Boolean) { if(closed) return;markInteraction();transcript=value;persistNow() }
+    fun checkpoint() { if(!closed && restored) persistNow() }
     fun close() {
-        if (closed) return
-        closed=true
-        intent.stop(PlaybackStopReason.CLOSED);syncIntent();isPlaying=false;persistNow();player.removeListener(listener);player.release()
+        check(android.os.Looper.myLooper() == player.applicationLooper) { "Player release requires its application looper" }
+        if (releaseState.released) return
+        closed=true // Reject new controls, but a failed release must remain retryable.
+        intent.stop(PlaybackStopReason.CLOSED);syncIntent();isPlaying=false
+        releaseState.close(checkpoint = ::persistNow, release = { player.removeListener(listener);player.pause();player.release() })
     }
 }

@@ -54,6 +54,7 @@ fun LibraryScreen(
     onSettings: () -> Unit,
     playbackStates: List<PlaybackStateEntity> = emptyList(),
     chapterCounts: Map<String, Int> = emptyMap(),
+    episodeActions: @Composable (EpisodeEntity) -> Unit = {},
 ) {
     val ready = episodes.filter { it.phase == EpisodePhase.FROZEN_READY }
     val resume = playbackStates.sortedByDescending { it.updatedAtEpochMs }.firstOrNull { state ->
@@ -107,14 +108,14 @@ fun LibraryScreen(
                         }
                     }
                 }
-                if (hero != null) item { ContinueCard(hero, playbackStates.firstOrNull { it.episodeId == hero.id }, chapterCounts[hero.id], onOpen) }
+                if (hero != null) item { ContinueCard(hero, playbackStates.firstOrNull { it.episodeId == hero.id }, chapterCounts[hero.id], onOpen, episodeActions) }
                 if (unfinished.isNotEmpty()) {
                     item { Text("Continue creating", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
-                    items(unfinished, key = { it.id }) { EpisodeStatusRow(it, onOpen) }
+                    items(unfinished, key = { it.id }) { EpisodeStatusRow(it, onOpen, episodeActions) }
                 }
                 if (recent.isNotEmpty()) {
                     item { Text("Recent episodes", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
-                    items(recent, key = { it.id }) { EpisodeRow(it, chapterCounts[it.id], onOpen) }
+                    items(recent, key = { it.id }) { EpisodeRow(it, chapterCounts[it.id], onOpen, episodeActions) }
                 }
                 if (episodes.isEmpty()) item { EmptyLibrary(onNew) }
             }
@@ -123,7 +124,7 @@ fun LibraryScreen(
 }
 
 @Composable
-private fun ContinueCard(episode: EpisodeEntity, playback: PlaybackStateEntity?, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit) {
+private fun ContinueCard(episode: EpisodeEntity, playback: PlaybackStateEntity?, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit, actions: @Composable (EpisodeEntity) -> Unit) {
     val position = playback?.positionMs?.coerceIn(0, episode.durationMs ?: Long.MAX_VALUE) ?: 0L
     val finished = episode.durationMs?.let { it > 0 && position >= it } ?: false
     val stacked = LocalDensity.current.fontScale >= 1.4f || LocalConfiguration.current.screenWidthDp < 360
@@ -135,19 +136,19 @@ private fun ContinueCard(episode: EpisodeEntity, playback: PlaybackStateEntity?,
         if (stacked) {
             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 VibeArtwork(Modifier.fillMaxWidth().height(72.dp), compact = true)
-                ContinueDetails(episode, position, finished, chapterCount)
+                ContinueDetails(episode, position, finished, chapterCount, actions)
             }
         } else {
             Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 VibeArtwork(Modifier.size(width = 116.dp, height = 148.dp), compact = true)
-                ContinueDetails(episode, position, finished, chapterCount, Modifier.weight(1f))
+                ContinueDetails(episode, position, finished, chapterCount, actions, Modifier.weight(1f))
             }
         }
     }
 }
 
 @Composable
-private fun ContinueDetails(episode: EpisodeEntity, position: Long, finished: Boolean, chapterCount: Int?, modifier: Modifier = Modifier) {
+private fun ContinueDetails(episode: EpisodeEntity, position: Long, finished: Boolean, chapterCount: Int?, actions: @Composable (EpisodeEntity) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(if (finished) "FINISHED" else if (position > 0) "CONTINUE LISTENING" else "READY TO LISTEN", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
         Text(episode.title, style = MaterialTheme.typography.titleLarge, maxLines = 3, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
@@ -159,12 +160,13 @@ private fun ContinueDetails(episode: EpisodeEntity, position: Long, finished: Bo
             Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp)) {
                 Box(contentAlignment = Alignment.Center) { Icon(Icons.Default.PlayArrow, "Play ${episode.title}", tint = MaterialTheme.colorScheme.onPrimary) }
             }
+            actions(episode)
         }
     }
 }
 
 @Composable
-private fun EpisodeRow(episode: EpisodeEntity, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit) {
+private fun EpisodeRow(episode: EpisodeEntity, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit, actions: @Composable (EpisodeEntity) -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow,
         shape = RoundedCornerShape(20.dp),
@@ -177,12 +179,13 @@ private fun EpisodeRow(episode: EpisodeEntity, chapterCount: Int?, onOpen: (Epis
                 Text(listOfNotNull(chapterCount?.takeIf { it > 0 }?.let { "$it chapters" }, episode.durationMs?.let(::formatDuration)).joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             IconButton(onClick = { onOpen(episode) }) { Icon(Icons.Default.PlayArrow, "Play") }
+            actions(episode)
         }
     }
 }
 
 @Composable
-private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit) {
+private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit, actions: @Composable (EpisodeEntity) -> Unit) {
     val status = when (episode.phase) {
         EpisodePhase.SOURCES -> "Add sources"
         EpisodePhase.INSTRUCTIONS -> "Add instructions"
@@ -191,12 +194,13 @@ private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> 
         EpisodePhase.LOCKED -> "Waiting to create audio"
         EpisodePhase.GENERATING_AUDIO -> "Creating audio"
         EpisodePhase.FAILED -> "Generation stopped"
+        "DELETING" -> "Deleting when files are released"
         else -> episode.phase.lowercase().replace('_', ' ')
     }
     Surface(
         color = if (episode.phase == EpisodePhase.FAILED) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerLow,
         shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.fillMaxWidth().clickable { onOpen(episode) },
+        modifier = Modifier.fillMaxWidth().clickable(enabled = episode.phase != "DELETING") { onOpen(episode) },
     ) {
         Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             VibeArtwork(Modifier.size(56.dp), compact = true)
@@ -204,7 +208,8 @@ private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> 
                 Text(episode.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Text("›", style = MaterialTheme.typography.titleLarge)
+            actions(episode)
+            if (episode.phase != "DELETING") Text("›", style = MaterialTheme.typography.titleLarge)
         }
     }
 }

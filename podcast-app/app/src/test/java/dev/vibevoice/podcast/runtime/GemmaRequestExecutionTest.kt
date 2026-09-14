@@ -49,9 +49,11 @@ class GemmaRequestExecutionTest {
     @Test fun cancellationRetainsOriginalCauseAndSuppressedCloseWithoutRetry() {
         val cancelled = CancellationException(secret); val close = IOException("close $secret")
         val conversation = Conversation(close); var sends = 0
-        val result = failure { executeGemmaRequest("chapter", { conversation }, { sends++; throw cancelled }) }
-        assertSame(cancelled, result.cause); assertSame(close, cancelled.suppressed.single())
-        assertEquals(GemmaFailurePhase.SEND, result.failurePhase); assertEquals(1, sends)
+        val result = assertThrows(CancellationException::class.java) {
+            executeGemmaRequest("chapter", { conversation }, { sends++; throw cancelled })
+        }
+        assertSame(cancelled, result); assertSame(close, cancelled.suppressed.single())
+        assertEquals(1, sends); assertEquals(1, conversation.closed)
         assertFalse(generationFailureMessage(result).contains(secret))
     }
     @Test fun missingObjectAndTruncatedObjectRemainExtractionFailuresWithoutRepair() {
