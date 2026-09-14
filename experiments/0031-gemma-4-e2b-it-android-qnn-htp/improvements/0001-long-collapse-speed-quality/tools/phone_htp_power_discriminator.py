@@ -43,7 +43,7 @@ def verify_stage(stage,digest):
 
 
 def argv(remote):
-    return [remote+'/bin/qnn-net-run','--backend',remote+'/lib/libQnnHtp.so','--retrieve_context',remote+'/power-edge-context.bin','--input_list',','.join(remote+'/evidence/'+g+'.inputlist' for g in GRAPHS),'--output_dir',remote+'/evidence/outputs','--num_inferences','1','--use_native_input_files','--use_native_output_files','--io_tensor_mem_handle_type','dma_buf','--profiling_level','basic','--log_level','info']
+    return [remote+'/bin/qnn-net-run','--backend',remote+'/lib/libQnnHtp.so','--retrieve_context',remote+'/power-edge-context.bin','--input_list',','.join(remote+'/evidence/'+g+'.inputlist' for g in GRAPHS),'--output_dir',remote+'/evidence/outputs','--num_inferences','1','--use_native_input_files','--use_native_output_files','--shared_buffer','--profiling_level','basic','--log_level','info']
 
 
 def common(remote):

@@ -21,8 +21,8 @@ class HTPPowerDiscriminatorTests(unittest.TestCase):
         self.assertFalse(plan['long_script']);self.assertFalse(plan['CPU_fallback_available_in_bundle'])
         self.assertEqual(plan['phone_address_space_limit_bytes'],12884901888)
         self.assertIn('libQnnHtp_sha256',r);self.assertNotIn('libGenie_sha256',r)
-        args=p.argv('/data/local/tmp/SYNTHETIC');self.assertEqual(len(args),19)
-        self.assertNotIn('--shared_buffer',args);self.assertEqual(args[args.index('--io_tensor_mem_handle_type')+1],'dma_buf')
+        args=p.argv('/data/local/tmp/SYNTHETIC');self.assertEqual(len(args),18)
+        self.assertIn('--shared_buffer',args);self.assertNotIn('--io_tensor_mem_handle_type',args);self.assertNotIn('dma_buf',args)
 
     def test_real_host_parser_rejects_old_mutual_flags_before_backend(self):
         root=TRACK/'.local/htp-power-argv/parse-01'
@@ -32,6 +32,15 @@ class HTPPowerDiscriminatorTests(unittest.TestCase):
         self.assertFalse(new['mutual_exclusion_error']);self.assertEqual(new['argv_fields'],19)
         self.assertIn('Unable to load backend',(root/'corrected-DMA-only.stdout').read_text())
         self.assertTrue(r['backend_context_inputs_deliberately_nonexistent']);self.assertFalse(r['model_or_phone_executed'])
+
+    def test_legacy_shared_buffer_actual_runner_admission_without_graph(self):
+        root=TRACK/'.local/htp-rpc-invocation/probe-01'
+        if not (root/'result.json').exists():self.skipTest('retained source-bound runner probe unavailable')
+        r=json.loads((root/'result.json').read_text());cmd=json.loads((root/'command.json').read_text())['argv']
+        self.assertEqual(r['argv_fields'],18);self.assertIn('--shared_buffer',cmd);self.assertNotIn('--io_tensor_mem_handle_type',cmd)
+        self.assertIn('Inferences will run in sync mode',(root/'stdout').read_text())
+        self.assertIn('Failed to open input file',(root/'stdout').read_text())
+        self.assertNotIn('does not support property',(root/'stderr').read_text());self.assertTrue(r['context_deliberately_missing']);self.assertFalse(r['full_model_or_phone_executed'])
 
     def test_frozen_payload_and_compiled_raw_IO_sizes(self):
         manifest=p.verify_stage(p.STAGE,p.DIGEST)
@@ -72,7 +81,8 @@ class HTPPowerDiscriminatorTests(unittest.TestCase):
                 text=p.common(remote).replace('/proc/',str(root/'proc')+'/')+'\nrole_matches model 501 10501\n'
                 return subprocess.run(['/bin/sh','-c',text],capture_output=True).returncode
             self.assertEqual(check(args),0);self.assertNotEqual(check(args+['']),0)
-            old=args.copy();old.insert(old.index('--io_tensor_mem_handle_type'),'--shared_buffer');self.assertNotEqual(check(old),0)
+            old=args.copy();old.remove('--shared_buffer');old.extend(['--io_tensor_mem_handle_type','dma_buf']);self.assertNotEqual(check(old),0)
+            self.assertNotEqual(check(args+['--io_tensor_mem_handle_type','dma_buf']),0)
             bad=args.copy();bad[bad.index('--num_inferences')+1]='2';self.assertNotEqual(check(bad),0)
 
     def exercise(self,mode='normal',capture_failure=False,postflight_failure=False,bad_argv=False):

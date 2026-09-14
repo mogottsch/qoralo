@@ -1,0 +1,33 @@
+{
+  "selected_single_candidate": "--shared_buffer alone; no generic DMA_BUF option",
+  "expected_path": "HTP shared buffer via FastRPC rpcmem allocation/file descriptors and QNN_MEM_TYPE_ION registration",
+  "actual_runner_evidence": "SameSDK host qnn-net-run with real HTP backend accepts this singleflag and passes initialization to deliberately missing input lists; no graph/context execution",
+  "official_help_evidence": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-phone-runs/htp-power-20260914T144241Z-01/raw/device/runner.stderr",
+  "help_prior_saved_source": "../htp-power-discriminator-phone-01/phone/raw/device/runner.stderr",
+  "documentation": {
+    "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/QNN/general/htp/htp_shared_buffer_tutorial.html",
+    "sha256": "bae7606b77967a5074c5fd615e78aa4e02f71c4efdef12c9355aee6390d07b38",
+    "contract": "HTP shared-buffer tutorial documents QNN_MEM_TYPE_ION with FastRPC supported; non-RPC unsupported"
+  },
+  "SDK_shared_buffer_sample": {
+    "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/QNN/SampleApp/SampleAppSharedBuffer/src/Utils/IOTensor.cpp",
+    "sha256": "ec36f84b8f89113b3a472de6cccc4b434760e810b239175c97013c20d85c5309",
+    "lines": [
+      417,
+      459
+    ],
+    "contract": "m_useSharedBuffer -> rpcmem_to_fd -> QNN_MEM_TYPE_ION -> memRegister"
+  },
+  "property_header": {
+    "path": "/home/moritz/opt/qairt/2.49.40.260810/include/QNN/QnnProperty.h",
+    "sha256": "7a770c7ab42bbc1e3a6e02b8789e56bb128cb6ec97c84568af5f5b934b512aa3",
+    "lines": [
+      769,
+      783
+    ]
+  },
+  "sample_source_is_not_stripped_binary_equivalence_proof": true,
+  "Genie_source_alone_used_as_authority": false,
+  "actual_Android_registration_success_proven": false,
+  "no_mode_sweep_or_new_dependencies": true
+}
