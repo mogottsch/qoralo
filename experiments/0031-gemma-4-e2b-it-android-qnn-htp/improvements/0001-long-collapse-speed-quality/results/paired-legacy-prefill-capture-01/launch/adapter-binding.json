@@ -1,0 +1,95 @@
+{
+  "base_AS12_controller_sha256": "2ab2535a204ca489bb54a661917a785077aa34ebcc6bc5710b98f1f2b4017961",
+  "prior_adapter": {
+    "baseline_mapping_controller_sha256": "3301a51d11e67c9ad1ae5173faacfbb7b2d4d3b1cbcf46f8d65fd6bdc71ef384",
+    "baseline_adapter": {
+      "base_sha256": "09dc8a35409f282e1ee3048fc16d94102105f1cf63f34873aaeaf14b5b6049b4",
+      "adapter_sha256": "7c4f65077e837b005e37ecb79389f6f0d49f718484c05e310c8cbeb0996feb83",
+      "changes": [
+        [
+          "paired-prefill-capture-stage-01",
+          "paired-mapping-observer-stage-01"
+        ],
+        [
+          "b99056c1faa1e25823fd9bcda2a0968a0445cb93458dc1069e7d269eb9c54953",
+          "807980c106a59584752ce52abece89dd50062c827505fb2136ae0c950ca7206e"
+        ],
+        [
+          "3a61a7ea888e39b54999c25b0644ff068733c343cb693e5eafee9be4538dccc2",
+          "ee2b10d89d9fec2442bdf6cfd6a1e369eb525ec1c0d091acd2ee19bcb00ba099"
+        ],
+        [
+          ".local/paired-prefill-phone-runs",
+          ".local/mapping-stage-phone-runs"
+        ],
+        [
+          "/data/local/tmp/vibevoice-0031-paired-",
+          "/data/local/tmp/vibevoice-0031-mapping-"
+        ]
+      ],
+      "AS_model_caps_cleanup_budgets_changed": false,
+      "actual_finish_remote_postflight_hook": true,
+      "phone_or_model_executed": false
+    },
+    "adapter_sha256": "040d30976890c5bd9d677155ae2a9bc1b3571721981834cff082a06d389ca0c3",
+    "changes": [
+      [
+        "ulimit -v 8388608",
+        "ulimit -v 12582912"
+      ],
+      [
+        "'address_space_limit_bytes':8*1024**3",
+        "'address_space_limit_bytes':12*1024**3"
+      ],
+      [
+        "phone_address_space_limit_bytes=8*1024**3",
+        "phone_address_space_limit_bytes=12*1024**3"
+      ],
+      [
+        ".local/mapping-stage-phone-runs",
+        ".local/mapping-as12-phone-runs"
+      ],
+      [
+        "/data/local/tmp/vibevoice-0031-mapping-",
+        "/data/local/tmp/vibevoice-0031-mapping-as12-"
+      ]
+    ],
+    "AS_limit_before_bytes": 8589934592,
+    "AS_limit_after_bytes": 12884901888,
+    "RAM_budget_changed": false,
+    "observer_model_LUT_input_token_time_capture_limits_changed": false,
+    "actual_RLIMIT_readback_expected": {
+      "AS_soft": 12884901888,
+      "AS_hard": 12884901888,
+      "rlimit_valid": 1
+    },
+    "new_phone_or_model_execution_authorized_by_preparation": false,
+    "sweep_or_automatic_retry": false
+  },
+  "adapter_sha256": "cbdeeb54887974c47f62555442d0a3d40dbf16c8f890046e4b1dcb40dccf40b7",
+  "changes": [
+    [
+      "paired-mapping-observer-stage-01",
+      "paired-legacy-logits-stage-01"
+    ],
+    [
+      "807980c106a59584752ce52abece89dd50062c827505fb2136ae0c950ca7206e",
+      "7b61cf0a03ad93292127a7ad59e1b74ae9b61ac4e660691a0cff5a947b40486c"
+    ],
+    [
+      "ee2b10d89d9fec2442bdf6cfd6a1e369eb525ec1c0d091acd2ee19bcb00ba099",
+      "e2b554ca4e216f1df77c3c331b3f1295584cf030c7120cccc3b15bbce3a1e1ed"
+    ],
+    [
+      ".local/mapping-as12-phone-runs",
+      ".local/legacy-logits-phone-runs"
+    ],
+    [
+      "/data/local/tmp/vibevoice-0031-mapping-as12-",
+      "/data/local/tmp/vibevoice-0031-legacy-logits-"
+    ]
+  ],
+  "AS12_model_LUT_input_caps_time_capture_cleanup_changed": false,
+  "actual_AS_soft_hard_readback_required": 12884901888,
+  "new_phone_or_model_permission_granted": false
+}

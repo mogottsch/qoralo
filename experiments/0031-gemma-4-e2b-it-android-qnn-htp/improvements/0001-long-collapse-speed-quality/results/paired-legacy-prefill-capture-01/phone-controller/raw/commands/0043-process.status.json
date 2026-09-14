@@ -1,0 +1,17 @@
+{
+  "operation": "process.status",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "if [ -f /data/local/tmp/vibevoice-0031-legacy-logits-legacy-prefill-20260913T125558Z-01/evidence/watchdog-timeout.txt ]; then printf \"TIMEOUT\\n\"; elif [ -f /data/local/tmp/vibevoice-0031-legacy-logits-legacy-prefill-20260913T125558Z-01/evidence/exit-code.txt ]; then printf \"EXIT \"; cat /data/local/tmp/vibevoice-0031-legacy-logits-legacy-prefill-20260913T125558Z-01/evidence/exit-code.txt; else printf \"RUNNING\\n\"; fi"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0043-process.status.stdout",
+  "stderr": "raw/commands/0043-process.status.stderr",
+  "code": 0,
+  "timed_out": false
+}

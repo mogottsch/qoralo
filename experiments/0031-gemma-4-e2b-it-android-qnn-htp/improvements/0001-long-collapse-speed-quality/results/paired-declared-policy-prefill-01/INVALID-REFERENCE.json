@@ -1,0 +1,16 @@
+{
+  "status": "INVALID_REFERENCE",
+  "scope": "Additive interpretation notice; original vectors, comparison, source and execution receipts are unchanged.",
+  "reason": "The original reference numerically cast uint16 transport words for 30 declared Float16 static tensors. Fifteen RMS gamma arrays containing binary16 0x3c00 (1.0) became 15360.0.",
+  "first_known_affected_operator": {"index": 52, "name": "rms_norm_node___413645"},
+  "affected_RmsNorm_consumers": 15,
+  "affected_operator_begins_in_saved_run": 240,
+  "wrong_static_gamma_values": 4608,
+  "original_reference_source_sha256": "06f108e24d5370d94e57b24cb8e285106deeef8be0d03d9f29b28187b4cd2045",
+  "finite_final_codes_validated_intermediates": false,
+  "saved_warnings_preserved": ["overflow encountered in cast", "invalid value encountered in matmul", "invalid value encountered in cast", "divide by zero encountered in power"],
+  "QNN_or_model_defect_established": false,
+  "sole_cause_of_every_difference_established": false,
+  "corrected_full_run_agreement_established_by_this_notice": false,
+  "details": "../declared-reference-static-audit-01/README.md"
+}

@@ -1,0 +1,84 @@
+{
+  "classification": "complete_corrected_PLE_legacy_prefill_capture",
+  "run_id": "legacy-prefill-20260913T125558Z-01",
+  "actual_native_exit": 0,
+  "actual_controller_exit": 0,
+  "AR128_status0": 16,
+  "AR1": 0,
+  "actual_input_tokens": 1929,
+  "actual_input_IDs_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+  "capture": {
+    "capture_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/legacy-logits-phone-runs/legacy-prefill-20260913T125558Z-01/raw/device/prefill-capture",
+    "capture_binding_sha256": "b0fcf4f660dafb4c88097edfc1517d34a1a015564b39a6d16b814418d78d616a",
+    "phone_collection_sha256": "7dec490647d8153d8dbba41482108466e26c137caf67f9e58d6df6b332bac8fa",
+    "actual_AS_readback": {
+      "valid_readbacks": 28,
+      "unknown_readbacks": 0,
+      "mismatches": [],
+      "matches_expected": true,
+      "no_runtime_readback_from_plan_alone": true
+    },
+    "raw_payloads": 129,
+    "raw_payload_bytes": 66060288,
+    "full_QNN_row8_logits_sha256": "7b6c6e2d755a024e59d8ac05fbe4a27e992bfa4774c2286fff85144da26bafe9",
+    "before_original_dequant_and_sampler": true,
+    "phone_released": true,
+    "model_executed_by_validation": false
+  },
+  "final_logit_metadata": {
+    "variant": 128,
+    "context": 4096,
+    "n_past": 1920,
+    "n_process": 9,
+    "final_valid_row": 8,
+    "shape": [
+      1,
+      1,
+      262144
+    ],
+    "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+    "scale": 0.0008891067700460553,
+    "offset": -31869,
+    "before_sampler_access": true,
+    "cache_tensor": false,
+    "before_original_dequantization": true,
+    "row_view_already_offset": true,
+    "source_path": "PLE_legacy_getDequantLogits",
+    "phase": "output",
+    "step": 15,
+    "name": "logits",
+    "file": "15-output-logits.raw",
+    "bytes": 524288,
+    "event": "complete",
+    "monotonic_ns": 956802043179221,
+    "total_payload_bytes": 66060288,
+    "completed_payloads": 129
+  },
+  "genuine_selected_ID_ordinal0": 818,
+  "preflight_APKs": {
+    "dev.vibevoice.podcast.internal": "119e0f92640f258374065c134c14af22ba0131e3e866df17842e7d974f613c34",
+    "dev.vibevoice.podcast.internal.test": "7ae210bf1e03db73f53cd298fcd17b7fe7da5cb06a69f0afdeb775e12f27d4d8"
+  },
+  "postflight_APKs": {
+    "dev.vibevoice.podcast.internal": "119e0f92640f258374065c134c14af22ba0131e3e866df17842e7d974f613c34",
+    "dev.vibevoice.podcast.internal.test": "7ae210bf1e03db73f53cd298fcd17b7fe7da5cb06a69f0afdeb775e12f27d4d8"
+  },
+  "postflight_verified": true,
+  "adb_commands_under_lease": 67,
+  "raw_pull_completed": true,
+  "cleanup": "verified_absent",
+  "process_cleanup": {
+    "all_absent": true,
+    "basis": "fresh scoped PID/starttime probes; no name-wide kill"
+  },
+  "phone_lock_released": true,
+  "signal_operations": 0,
+  "maximum_recorded_kernel_VmPeak": 8694972416,
+  "maximum_sampled_RSS": 205795328,
+  "minimum_sampled_MemAvailable": 2813534208,
+  "profile_generated_token_count_not_relabelled": 0,
+  "new_device_calls_for_analysis": 0,
+  "automatic_retry": false,
+  "long_generation_quality_claim": false,
+  "sole_AS_cause_claim": false
+}
