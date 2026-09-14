@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T16:10:56+00:00",
+  "updated_at": "2026-09-14T16:19:48+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "reviewing",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is checking the saved small-chain data and source bindings: raw code patterns, grids, exposed tensor names, and output buffers. The matching denominator outputs may be one shared buffer rather than two independent observations.",
-      "next": "Locate where the literal reference expects zero while the real chain yields one. If bindings and documentation still leave this unresolved, prepare at most two small controls for the mean and epsilon-add steps. No power repeat, full-model reference, policy fitting, clamp, or NaN repair.",
+      "now": "The saved chain binding audit passed at the logical input/output level. The instrumented values have distinct names and identities, but their native output-buffer addresses were not saved, so matching values do not prove aliasing or separate behavior.",
+      "next": "The literal saved reference expects zero for low inputs while the observed chain reports one; documentation does not explain it. Jere is preparing at most two small, one-output host controls for the mean and epsilon-add operations. No power repeat, reference rerun, guessed floor, clamp, or policy fit.",
       "reported_at": "2026-09-14T16:02:10+00:00",
       "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere audits saved chain bindings and the difference between the literal reference and the real chain.",
-      "next": "At most two small controls may follow if needed. No power repeat, full model, policy fitting, or numerical repair.",
+      "now": "Jere is preparing two small host-only controls for the mean and epsilon-add steps after the binding audit passed.",
+      "next": "No power repeat or full-model run. The controls cannot establish an alias or numerical policy by themselves.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Audit chain binding and literal-versus-observed denominator",
-      "reported_at": "2026-09-14T16:10:56+00:00",
-      "reported_by": "Pi — saved/source audit/no control run yet",
+      "task": "Prepare tiny mean and epsilon-add host controls",
+      "reported_at": "2026-09-14T16:19:48+00:00",
+      "reported_by": "Jere — binding audit pass/no control result",
       "stale_after_seconds": 900
     },
     {
