@@ -1,0 +1,17 @@
+{
+  "operation": "case.normalization_chain.current_job_quiescence",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "\ncommand -v pidof >/dev/null || exit 45\nfor process in dev.vibevoice.podcast.internal:generation dev.vibevoice.podcast.internal.test; do\n  value=$(pidof \"$process\" 2>/dev/null)\n  code=$?\n  [ \"$code\" = 0 ] || [ \"$code\" = 1 ] || exit 46\n  printf 'PID\\t%s\\t%s\\n' \"$process\" \"$value\"\ndone\n"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0028-case.normalization_chain.current_job_quiescence.stdout",
+  "stderr": "raw/commands/0028-case.normalization_chain.current_job_quiescence.stderr",
+  "code": 0,
+  "timed_out": false
+}

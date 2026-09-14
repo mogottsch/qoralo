@@ -1,0 +1,17 @@
+{
+  "operation": "case.normalization_chain.actual_user_job_playback_v2",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "main=$(pidof dev.vibevoice.podcast.internal 2>/dev/null); status=$?\n[ \"$status\" = 0 ] || [ \"$status\" = 1 ] || { printf 'PLAYBACK_GUARD_V2 main=unknown verdict=unknown\\n'; exit 51; }\nif [ -z \"$main\" ]; then printf 'PLAYBACK_GUARD_V2 main=absent verdict=quiescent\\n'; exit 0; fi\nuid=$({ cmd package list packages -U dev.vibevoice.podcast.internal 2>/dev/null; status=$?; printf '\\nGEMMA_UID_SOURCE_EXIT %s\\n' \"$status\"; } | awk '\n/^GEMMA_UID_SOURCE_EXIT [0-9]+$/ { status=$2+0; markers++; next }\n$1==\"package:dev.vibevoice.podcast.internal\" { value=$2;sub(/^uid:/,\"\",value);count++ }\nEND { if(markers==1 && status==0 && count==1 && value ~ /^[0-9]+$/) print value; else print \"UNKNOWN\" }\n')\ncase \"$uid\" in ''|*[!0-9]*) printf 'PLAYBACK_GUARD_V2 uid=unknown verdict=unknown\\n'; exit 52;; esac\n# Stream the source directly. Only its small exit-status marker is a printf argument.\n{ dumpsys audio 2>/dev/null; status=$?; printf '\\nGEMMA_AUDIO_SOURCE_EXIT %s\\n' \"$status\"; } | awk -v target_uid=\"$uid\" '\nBEGIN { monitor=0; section=0; in_players=0; parse_error=0; upstream=-1; markers=0; own_active=0; own_inactive=0 }\n/^GEMMA_AUDIO_SOURCE_EXIT [0-9]+$/ { upstream=$2+0; markers++; in_players=0; next }\n{\n line=tolower($0)\n if (line ~ /playbackactivitymonitor/) { monitor=1; next }\n if (monitor && line ~ /^[[:space:]]*players:[[:space:]]*$/) {\n   if (section) parse_error=1\n   section=1; in_players=1; next\n }\n if (!in_players) next\n if (line ~ /^[[:space:]]*$/) { in_players=0; next }\n if (line ~ /^[[:space:]]*none[[:space:]]*$/) next\n # A new section header ends the current-player list. Never inspect event history.\n if (line ~ /^[[:space:]]*[^:]+:[[:space:]]*$/) { in_players=0; next }\n if (!match(line, /(u|uid)\\/pid:[[:space:]]*[0-9]+\\/[0-9]+/)) { parse_error=1; next }\n identity=substr(line,RSTART,RLENGTH);sub(/^.*pid:[[:space:]]*/,\"\",identity);split(identity,parts,\"/\"); owner=parts[1]\n if (!match(line, /state:[[:space:]]*[a-z_-]+/)) { parse_error=1; next }\n state=substr(line,RSTART,RLENGTH);sub(/^state:[[:space:]]*/,\"\",state)\n if (state!=\"started\" && state!=\"starting\" && state!=\"paused\" && state!=\"stopped\" && state!=\"released\" && state!=\"idle\") { parse_error=1; next }\n if (owner==target_uid) {\n   if (state==\"started\" || state==\"starting\") own_active++\n   else own_inactive++\n }\n}\nEND {\n parse=\"ok\";verdict=\"quiescent\";code=0\n if (markers!=1) { parse=\"source_status_missing_or_duplicate\";verdict=\"unknown\";code=54 }\n else if (upstream!=0) { parse=\"upstream_error\";verdict=\"unknown\";code=54 }\n else if (!monitor || !section) { parse=\"missing_monitor_or_section\";verdict=\"unknown\";code=54 }\n else if (parse_error) { parse=\"malformed_player\";verdict=\"unknown\";code=54 }\n else if (own_active) { verdict=\"active\";code=55 }\n printf \"PLAYBACK_GUARD_V2 upstream=%d parse=%s own_active=%d own_inactive=%d verdict=%s\\n\",upstream,parse,own_active,own_inactive,verdict\n exit code\n}\n'\n"
+  ],
+  "timeout_seconds": 30,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0029-case.normalization_chain.actual_user_job_playback_v2.stdout",
+  "stderr": "raw/commands/0029-case.normalization_chain.actual_user_job_playback_v2.stderr",
+  "code": 0,
+  "timed_out": false
+}
