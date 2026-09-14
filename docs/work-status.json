@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T08:47:33+00:00",
+  "updated_at": "2026-09-14T13:58:37+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -31,10 +31,10 @@
     {
       "id": "app-hidden-diagnostics",
       "title": "Episode diagnostics & safe delete",
-      "status": "blocked",
+      "status": "preparing",
       "owner": "Nik",
-      "now": "Nik’s final targeted visual test stopped before any device action because the phone was not found on the first connection check.",
-      "next": "The focused accessibility fix is frozen and the host tests pass. Last installed app information is historical only. Wait for stable phone reconnection, then use fresh checks; no retry loop or feature-pass claim.",
+      "now": "Phone reconnection reported. Nik resumes the focused non-neural visual and feature validation with the corrected test-only candidate.",
+      "next": "Fresh phone lock, connection, app, user-data, audio, settings, and resource checks must pass first. The production app stays unchanged and only the test app changes. No real deletion or model work; no validation result yet.",
       "reported_at": "2026-09-13T13:08:54+00:00",
       "reported_by": "Nik — isolated integration frozen/device-fixture readiness",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Nik → Jere",
-      "now": "Nik’s focused visual validation has priority once the phone is stable. Jere is only preparing a tiny HTP test bundle.",
-      "next": "No phone or full-model run. Jere needs a frozen physical-ready bundle and stable USB after Nik’s window.",
+      "now": "Phone reconnection reported. Nik has priority for the focused non-neural capture and feature validation; actual start unreported.",
+      "next": "Do not infer current identity or sustained stability. Jere’s tiny HTP test remains host-only until after Nik and a stable phone window.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere / Nik",
-      "now": "Jere prepares a small HTP edge and normalization-chain test. Nik’s focused visual validation still waits for stable phone visibility.",
-      "next": "No full reference, model run, policy change, or numerical repair. The test keeps cases and graphs small with explicit controls and cleanup.",
+      "now": "Nik resumes focused non-neural validation after reported reconnection. Jere prepares a small HTP edge test.",
+      "next": "No phone result, user deletion, model run, or policy change yet.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Nik",
-      "task": "Await stable phone visibility for targeted visual capture",
-      "reported_at": "2026-09-14T07:57:21+00:00",
-      "reported_by": "Nik — device absent/no mutation",
+      "task": "Resume focused non-neural visual validation",
+      "reported_at": "2026-09-14T13:58:37+00:00",
+      "reported_by": "Pi — reconnection reported/no start result",
       "stale_after_seconds": 900
     },
     {
