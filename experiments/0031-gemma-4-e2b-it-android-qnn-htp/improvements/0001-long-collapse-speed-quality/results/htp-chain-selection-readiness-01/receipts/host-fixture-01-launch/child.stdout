@@ -1,0 +1,62 @@
+reEvalMacsParams: Re-evaluated graph statistics after IrOptimizer optimization passes:
+reEvalMacsParams: Total MACs: 1
+reEvalMacsParams: Total Params Count: 0
+reEvalMacsParams: Re-evaluated graph statistics after IrOptimizer optimization passes:
+reEvalMacsParams: Total MACs: 1
+reEvalMacsParams: Total Params Count: 0
+reEvalMacsParams: Re-evaluated graph statistics after IrOptimizer optimization passes:
+reEvalMacsParams: Total MACs: 1
+reEvalMacsParams: Total Params Count: 0
+{
+  "classification": "actual_host_qnn_net_run_named_selection_passed",
+  "graphs_loaded_each": 3,
+  "selected_graph_invocations": [
+    {
+      "selected_graph": "selection_chain",
+      "runner_exit": 0,
+      "raw_files": [
+        "selection_chain/Result_0/sum.raw"
+      ],
+      "inferences_completed": 1,
+      "expected_value": 11.0,
+      "actual_value": 11.0,
+      "output_sha256": "aad5869a75fac25feb7a1947636f1b74a3908f9b8f47100aa43638ec958d24f9",
+      "Power_executed": false
+    },
+    {
+      "selected_graph": "selection_exposed",
+      "runner_exit": 0,
+      "raw_files": [
+        "selection_exposed/Result_0/sum.raw"
+      ],
+      "inferences_completed": 1,
+      "expected_value": 101.0,
+      "actual_value": 101.0,
+      "output_sha256": "91c60d05cdcc7262addab57b3ca0cf40b10310df9495660ffb5e16fceddb61ae",
+      "Power_executed": false
+    }
+  ],
+  "selection_contract": "three input-list positions; __ skips unselected graph; selected list has one row and num_inferences1; separate invocations",
+  "same_runner_version_family": "v2.49.40.260810104044",
+  "host_runner_sha256": "90350e3a8d6cc3976a88e443a1a4f25b9fc98531cfee5cbfd4c7dd9bb9f41bce",
+  "CPU_backend_sha256": "4dfbfd9dba654aac723bedd003a216e5278b8b0c7c4865ebb3df7fe8ee410561",
+  "model_DLC_loader_sha256": "000f31a66e5d3a7f4482297b7ebe6e2c8fc385b544ab4da24febddef1f9a3dc7",
+  "authored_DLC_bindings": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-chain-selection/host-fixture-01/selection_power/selection_power.dlc",
+      "sha256": "cff632d6c0c1a84119c6a2bf84427016542a1047ff4559963438ea6324ff5b3d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-chain-selection/host-fixture-01/selection_chain/selection_chain.dlc",
+      "sha256": "20dc10664db5213070bf4596732233b7cd14fc5a75f9b591b59fece9e11f96b8"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-chain-selection/host-fixture-01/selection_exposed/selection_exposed.dlc",
+      "sha256": "ac7144ef2382a89c5cc91fe8d7df23e7e757043b617b858ee0059e77d14eb04b"
+    }
+  ],
+  "full_model_or_phone_executed": false,
+  "actual_HTP_pole_or_memory_policy_tested": false,
+  "Android_binary_source_equivalence_assumed": false,
+  "seconds": 1.5043108059999213
+}
