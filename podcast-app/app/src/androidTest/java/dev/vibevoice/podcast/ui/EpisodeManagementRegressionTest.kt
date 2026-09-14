@@ -19,6 +19,12 @@ import org.junit.runner.RunWith
 import java.io.File
 import java.io.RandomAccessFile
 import java.util.UUID
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.os.SystemClock
+import androidx.compose.ui.graphics.asAndroidBitmap
+import org.json.JSONObject
+import java.security.MessageDigest
 
 /** New owned cache fixtures + in-memory database only. No real user rows, models or inference. */
 @RunWith(AndroidJUnit4::class)
@@ -49,8 +55,10 @@ class EpisodeManagementRegressionTest {
             } }
         } }
         rule.onNodeWithContentDescription("Episode actions: Owned draft A").performClick()
+        captureOwnedRoot("owned-overflow", "Episode details")
         rule.onNodeWithText("Delete episode").performClick()
         rule.onNodeWithText("Delete episode?").assertIsDisplayed()
+        captureOwnedRoot("owned-delete-confirmation", "Delete episode?")
         assertNotNull(runBlocking { db.podcastDao().episode(a) })
         rule.onNodeWithText("Keep episode").performClick()
         assertNotNull(runBlocking { db.podcastDao().episode(a) })
@@ -132,10 +140,61 @@ class EpisodeManagementRegressionTest {
         }
         val attempts = runBlocking { repo.episodeDiagnostics(id) }
         rule.setContent { VibeVoiceTheme { EpisodeDiagnosticsScreen("Owned diagnostics fixture", attempts, null, {}) } }
-        rule.onNodeWithText("Measurements were not recorded for this attempt. Existing history is kept without replaying generation.").performScrollTo().assertIsDisplayed()
+        val missing = "Measurements were not recorded for this attempt. Existing history is kept without replaying generation."
+        // A lazy item below a large-font header does not exist in the semantics tree yet.
+        // Search by scrolling the container; retain the identical visible-text assertion.
+        rule.onNode(hasScrollAction()).performScrollToNode(hasText(missing))
+        rule.onNodeWithText(missing).assertIsDisplayed()
+        captureOwnedRoot("owned-historical-unavailable", "Episode details")
         assertNull(attempts.single().second)
         assertTrue(runBlocking { repo.runningJobs() }.isEmpty()); assertTrue(runBlocking { repo.queuedJobs() }.isEmpty())
     }
+    /** Capture only the known synthetic Compose root/window, not an unrelated device screen.
+     * Before/after root identity, geometry and displayed marker bind the image to this fixture.
+     * Capture failures are retained separately; the controller/visual review must not call them a pass.
+     */
+    private fun captureOwnedRoot(state: String, marker: String) {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val args = InstrumentationRegistry.getArguments()
+        val run = args.getString("diagnosticRun") ?: return
+        val profile = args.getString("profile") ?: return
+        require(listOf(run, profile).all { Regex("[A-Za-z0-9_-]{1,96}").matches(it) })
+        require(state in setOf("owned-overflow", "owned-delete-confirmation", "owned-historical-unavailable"))
+        val context = instrumentation.targetContext
+        val root = File(context.filesDir, "episode-management-captures/$run/$profile").apply { require(isDirectory || mkdirs()) }
+        val image = File(root, "$state.png"); val receipt = File(root, "$state.json")
+        require(!image.exists() && !receipt.exists())
+        val metadata = JSONObject().put("schemaVersion", 1).put("diagnosticRun", run).put("profile", profile).put("state", state)
+            .put("captureScope", "owned synthetic Compose root via PixelCopy/view capture; not arbitrary device screenshot")
+            .put("newCacheAndInMemoryFixtureOnly", true).put("modelCalls", 0).put("userEpisodeDeletion", false)
+            .put("appApkSha256", args.getString("appApkSha256")).put("testApkSha256", args.getString("testApkSha256"))
+            .put("fontScale", context.resources.configuration.fontScale.toDouble()).put("densityDpi", context.resources.configuration.densityDpi)
+            .put("appLastUpdateTimeMs", context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime)
+        try {
+            rule.waitForIdle()
+            rule.onNodeWithText(marker).assertIsDisplayed()
+            val node = rule.onNode(isRoot() and hasAnyDescendant(hasText(marker)), useUnmergedTree = true)
+            val before = node.fetchSemanticsNode(); val beforeId = before.id; val beforeBounds = before.boundsInRoot
+            val start = SystemClock.elapsedRealtime()
+            val bitmap = node.captureToImage().asAndroidBitmap()
+            try {
+                metadata.put("widthPx", bitmap.width).put("heightPx", bitmap.height)
+                image.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)); it.fd.sync() }
+            } finally { bitmap.recycle() }
+            val after = node.fetchSemanticsNode()
+            rule.onNodeWithText(marker).assertIsDisplayed()
+            val paired = beforeId == after.id && beforeBounds == after.boundsInRoot
+            metadata.put("status", if (paired) "paired_owned_root" else "unpaired_root_changed").put("capturePaired", paired)
+                .put("rootIdBefore", beforeId).put("rootIdAfter", after.id).put("boundsBefore", beforeBounds.toString()).put("boundsAfter", after.boundsInRoot.toString())
+                .put("captureStartElapsedMs", start).put("captureEndElapsedMs", SystemClock.elapsedRealtime()).put("bytes", image.length())
+                .put("sha256", MessageDigest.getInstance("SHA-256").digest(image.readBytes()).joinToString("") { "%02x".format(it) })
+        } catch (error: Throwable) {
+            metadata.put("status", "capture_unavailable").put("capturePaired", false).put("errorType", error.javaClass.simpleName)
+        }
+        receipt.writeText(metadata.toString(2))
+        instrumentation.sendStatus(0, Bundle().apply { putString("episodeManagementCapture", receipt.absolutePath) })
+    }
+
     private fun wave(file: File) = RandomAccessFile(file, "rw").use { out ->
         fun u16(v: Int) { out.write(v and 255); out.write(v ushr 8 and 255) }
         fun u32(v: Int) { u16(v and 65535); u16(v ushr 16 and 65535) }
