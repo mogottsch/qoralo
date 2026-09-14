@@ -1,0 +1,17 @@
+{
+  "operation": "pid.wrapper.probe",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "if [ ! -d /proc/19144 ]; then printf \"ABSENT\\n\"; else rc=0; st=$(cat /proc/19144/stat) || rc=1; tail=${st##*) }; state=${tail%% *}; printf \"%s\\n\\nEXE\\n\" \"$st\"; if [ \"$state\" = Z ]; then printf \"CMD\\n\"; else readlink /proc/19144/exe || rc=1; printf \"CMD\\n\"; cat /proc/19144/cmdline || rc=1; fi; if [ ! -d /proc/19144 ]; then printf \"\\nABSENT_AFTER_PROBE\\n\"; elif [ \"$rc\" != 0 ]; then exit 1; fi; fi"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0044-pid.wrapper.probe.stdout",
+  "stderr": "raw/commands/0044-pid.wrapper.probe.stderr",
+  "code": 0,
+  "timed_out": false
+}
