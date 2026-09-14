@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T16:44:43+00:00",
+  "updated_at": "2026-09-14T16:47:16+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "Jere has started the one two-control HTP test. It runs only the mean and epsilon-add operations once each under the same phone lease and fixed limits.",
-      "next": "Fresh phone, app, USB, job, and playback checks passed. No power, chain, language model, reference, or retry. Raw files, postflight, cleanup, and release come before analysis; no output result yet.",
+      "now": "The two-control HTP test finished and released the phone. Both native processes completed; raw files, cleanup, and postflight app checks were collected.",
+      "next": "Jere is checking that each operation ran once and that its raw output codes match the prepared formulas. No power, chain, or reference replay and no conclusion yet.",
       "reported_at": "2026-09-14T16:02:10+00:00",
       "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
-      "owner": "Jere",
-      "now": "Jere is running the two-control HTP test under one phone lease.",
-      "next": "No output result yet. No power, chain, language-model, reference, or retry.",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Jere released the HTP mean-and-add test phone window after raw collection and cleanup.",
+      "next": "No current phone work. Each operation’s count and raw output codes are being checked from saved files.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current small HTP chain preparation",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is running one small HTP mean-and-add test window.",
-      "next": "No result yet. Analysis follows raw collection and phone release.",
+      "now": "Jere validates saved execution counts and raw codes from the released HTP mean-and-add test.",
+      "next": "No power, chain, reference replay, or numerical policy conclusion yet.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run one two-control HTP test window",
-      "reported_at": "2026-09-14T16:44:43+00:00",
-      "reported_by": "Jere — actual start/no output result",
+      "task": "Validate saved HTP mean-and-add outputs",
+      "reported_at": "2026-09-14T16:47:16+00:00",
+      "reported_by": "Jere — phone released/outputs pending",
       "stale_after_seconds": 900
     },
     {
