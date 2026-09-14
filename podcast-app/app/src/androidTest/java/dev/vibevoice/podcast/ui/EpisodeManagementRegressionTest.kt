@@ -215,9 +215,21 @@ class EpisodeManagementRegressionTest {
             SystemClock.sleep(100) // Bounded compositor settle; no production timing measurement.
             rule.onNodeWithText(marker).assertIsDisplayed()
             val node = rule.onNode(isRoot() and hasAnyDescendant(hasText(marker)), useUnmergedTree = true)
+            capturePhase = "owned-window-settle"
+            val settleStart = SystemClock.elapsedRealtime()
+            val windowKeys = listOf("id", "package", "bounds", "focused", "active")
+            var windowBefore = ownedWindow()
+            var stableSince = SystemClock.elapsedRealtime()
+            while (SystemClock.elapsedRealtime() - stableSince < 400) {
+                require(SystemClock.elapsedRealtime() - settleStart < 2500) { "Owned window did not settle within capture bound" }
+                SystemClock.sleep(100)
+                val observed = ownedWindow()
+                if (windowKeys.any { windowBefore.get(it) != observed.get(it) }) stableSince = SystemClock.elapsedRealtime()
+                windowBefore = observed
+            }
+            metadata.put("windowSettleMs", SystemClock.elapsedRealtime() - settleStart).put("stableWindowMinimumMs", 400)
             val before = node.fetchSemanticsNode(); val beforeId = before.id; val beforeBounds = before.boundsInRoot
-            capturePhase = "owned-window-before"
-            val windowBefore = ownedWindow(); val start = SystemClock.elapsedRealtime()
+            val start = SystemClock.elapsedRealtime()
             capturePhase = "compositor-screenshot"
             val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
             try {
