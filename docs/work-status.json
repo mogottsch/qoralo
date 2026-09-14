@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T16:06:55+00:00",
+  "updated_at": "2026-09-14T16:10:56+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -93,8 +93,8 @@
       "title": "Gemma QNN diagnostics",
       "status": "reviewing",
       "owner": "Jere",
-      "now": "Both missing small HTP normalization-chain cases ran once and produced identical final output codes. The already valid isolated power case was not repeated.",
-      "next": "The instrumented chain shows that its effective denominator is nonzero even for the zero control, unlike a literal standalone power input. This helps describe this chain, but does not prove fusion is absent or identify an internal kernel. No new numerical policy, full reference, or rerun is adopted.",
+      "now": "Jere is checking the saved small-chain data and source bindings: raw code patterns, grids, exposed tensor names, and output buffers. The matching denominator outputs may be one shared buffer rather than two independent observations.",
+      "next": "Locate where the literal reference expects zero while the real chain yields one. If bindings and documentation still leave this unresolved, prepare at most two small controls for the mean and epsilon-add steps. No power repeat, full-model reference, policy fitting, clamp, or NaN repair.",
       "reported_at": "2026-09-14T16:02:10+00:00",
       "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is packaging and interpreting the valid small HTP chain results.",
-      "next": "The result is limited to the instrumented small chains. No fusion, full-model, quality, or new numerical-policy claim.",
+      "now": "Jere audits saved chain bindings and the difference between the literal reference and the real chain.",
+      "next": "At most two small controls may follow if needed. No power repeat, full model, policy fitting, or numerical repair.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Package and interpret small HTP chain results",
-      "reported_at": "2026-09-14T16:06:55+00:00",
-      "reported_by": "Jere — valid chain outputs/qualified limits",
+      "task": "Audit chain binding and literal-versus-observed denominator",
+      "reported_at": "2026-09-14T16:10:56+00:00",
+      "reported_by": "Pi — saved/source audit/no control run yet",
       "stale_after_seconds": 900
     },
     {
