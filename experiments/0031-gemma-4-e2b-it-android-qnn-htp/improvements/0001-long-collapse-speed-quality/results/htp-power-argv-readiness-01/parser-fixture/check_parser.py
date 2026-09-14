@@ -1,0 +1,9 @@
+from pathlib import Path
+import sys,subprocess,json
+track=Path('/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality');root=Path('/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/htp-power-argv/parse-01');sys.path.insert(0,str(track/'tools'));from phone_htp_power_discriminator import argv
+sdk=Path('/home/moritz/opt/qairt/2.49.40.260810');base=argv(str(root/'ABSENT'));base[0]=str(sdk/'bin/x86_64-linux-clang/qnn-net-run');old=base.copy();old.insert(old.index('--io_tensor_mem_handle_type'),'--shared_buffer')
+results={}
+for name,args in [('old-mutually-exclusive',old),('corrected-DMA-only',base)]:
+ env={'PATH':'/usr/bin:/bin','HOME':str(root),'LD_LIBRARY_PATH':str(track.parents[1]/'.local/host-libs')+':'+str(sdk/'lib/x86_64-linux-clang')};p=subprocess.run(args,env=env,capture_output=True,timeout=15);(root/(name+'.stdout')).write_bytes(p.stdout);(root/(name+'.stderr')).write_bytes(p.stderr);(root/(name+'.argv.json')).write_text(json.dumps(args,indent=2)+'\n');text=(p.stdout+p.stderr).decode(errors='replace');results[name]={'exit':p.returncode,'argv_fields':len(args),'mutual_exclusion_error':'--shared_buffer and --io_tensor_mem_handle_type are mutually exclusive' in text,'intentionally_missing_backend':str(root/'ABSENT/lib/libQnnHtp.so')}
+assert results['old-mutually-exclusive']['mutual_exclusion_error'];assert not results['corrected-DMA-only']['mutual_exclusion_error'];assert results['corrected-DMA-only']['exit']!=0
+(root/'result.json').write_text(json.dumps({'cases':results,'backend_context_inputs_deliberately_nonexistent':True,'model_or_phone_executed':False,'Android_parser_replay_performed':False},indent=2)+'\n');print(json.dumps(results))
