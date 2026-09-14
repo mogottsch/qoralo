@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T15:44:03+00:00",
+  "updated_at": "2026-09-14T16:02:10+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,12 +91,12 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Jere is preparing a small scheduling fix to run only the two missing normalization-chain graphs. The earlier one-graph power result is retained separately.",
-      "next": "Use explicit named graph invocations with one input and one execution each. Do not repeat the power graph or assume a global count applies per graph. No phone run or conclusion yet.",
-      "reported_at": "2026-09-14T15:28:49+00:00",
-      "reported_by": "Jere — current two-chain selection/count preparation",
+      "now": "Jere has started one small HTP window for the two missing normalization-chain cases. Each graph runs once in its own guarded step; the already valid isolated power case is explicitly skipped.",
+      "next": "The first case must clean up and pass a fresh job check before the second. Raw results and postflight checks come before analysis. No full reference, extra case, power repeat, or retry; no graph result yet.",
+      "reported_at": "2026-09-14T16:02:10+00:00",
+      "reported_by": "Jere — actual two-chain HTP window start",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "No phone run is active. Jere is preparing a later window for the two missing HTP chain graphs only.",
-      "next": "The power graph will not repeat. Each chain would run once with existing checks and limits.",
+      "now": "Jere is running the two missing small HTP chain cases under one phone lease; the power case is skipped.",
+      "next": "Each case is bounded separately and cleans up before the next. No graph result, full model, extra case, or retry.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current small HTP chain preparation",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is testing graph selection and execution-count behavior for the two missing chain cases.",
-      "next": "No full reference, power-policy adoption, or extra graph. A phone test follows only after the command is frozen.",
+      "now": "Jere is running the two missing small HTP chain tests after freezing their explicit selection.",
+      "next": "No result yet. The power case will not repeat and no full reference is running.",
       "reported_at": "2026-09-14T15:28:49+00:00",
       "reported_by": "Jere — current host scheduling preparation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Freeze isolated HTP chain graph selection and counts",
-      "reported_at": "2026-09-14T15:28:49+00:00",
-      "reported_by": "Jere — current preparation report",
+      "task": "Run two bounded missing HTP chain cases",
+      "reported_at": "2026-09-14T16:02:10+00:00",
+      "reported_by": "Jere — actual start/no graph result",
       "stale_after_seconds": 900
     },
     {
