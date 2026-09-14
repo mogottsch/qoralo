@@ -1,0 +1,55 @@
+---
+timestamp: 1013608036589
+command: /data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/bin/qnn-net-run --backend /data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/lib/libQnnHtp.so --retrieve_context /data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/power-edge-context.bin --input_list /data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/evidence/power_edge.inputlist,/data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/evidence/normalization_chain.inputlist,/data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/evidence/normalization_exposed.inputlist --output_dir /data/local/tmp/vibevoice-0031-htp-power-htp-power-20260914T152014Z-03/evidence/outputs --num_inferences 1 --use_native_input_files --use_native_output_files --shared_buffer --profiling_level basic --log_level info
+execution_mode: synchronous
+inferences_completed: 1
+graphs:
+  - graph_name: power_edge
+    input_tensors:
+    - tensor_name: base
+      id: 1
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+    output_tensors:
+    - tensor_name: inverse
+      id: 3
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+  - graph_name: normalization_chain
+    input_tensors:
+    - tensor_name: x
+      id: 4
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1536]
+    output_tensors:
+    - tensor_name: normalized
+      id: 12
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1536]
+  - graph_name: normalization_exposed
+    input_tensors:
+    - tensor_name: x
+      id: 13
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1536]
+    output_tensors:
+    - tensor_name: squared
+      id: 14
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1536]
+    - tensor_name: mean
+      id: 15
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+    - tensor_name: denom
+      id: 18
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+    - tensor_name: inverse
+      id: 20
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1]
+    - tensor_name: normalized
+      id: 21
+      datatype: QNN_DATATYPE_UFIXED_POINT_16
+      dimensions: [1,128,1536]
