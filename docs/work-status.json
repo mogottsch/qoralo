@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T07:57:21+00:00",
+  "updated_at": "2026-09-14T08:00:55+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Jere found a saved-reference storage bug: tensors declared as 16-bit floats were read as unsigned integer transport words, so values such as binary16 one were treated as 15360 instead of one.",
-      "next": "Test an independent 16-bit float decode while preserving views, negative zero, and true unsigned-16 inputs. This is not a model change, a phone replay, or proof of the sole QNN mismatch cause.",
+      "now": "The saved reference has a confirmed decoding defect: declared 16-bit float transport words must be reinterpreted as binary16 values, not converted as integers. This invalidates the earlier reference comparison, not the QNN model.",
+      "next": "Jere is testing the corrected decoding across all affected saved weights and edge cases. Then one bounded host reference will use the same captured inputs and model contract. It will preserve raw vectors and stop on the first unexpected non-finite value; no phone recapture, model variant, repair, or automatic rerun.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -122,10 +122,10 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jere / Nik",
-      "now": "Jere is testing a saved reference-data decoding issue. Nik’s focused visual validation waits for stable phone visibility.",
-      "next": "No production reference change, device replay, real deletion, or model work.",
+      "now": "Jere is testing a corrected saved-reference decoder. Nik waits for stable phone visibility for a targeted visual test.",
+      "next": "No QNN blame or quality claim. One corrected host reference follows only after focused contract tests and a source freeze.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Test saved 16-bit float storage decoding",
-      "reported_at": "2026-09-14T07:57:21+00:00",
-      "reported_by": "Jere — active reference-contract finding",
+      "task": "Test corrected 16-bit float reference decoding",
+      "reported_at": "2026-09-14T08:00:55+00:00",
+      "reported_by": "Pi — confirmed reference defect/no host run yet",
       "stale_after_seconds": 900
     },
     {
