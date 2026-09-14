@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T08:46:12+00:00",
+  "updated_at": "2026-09-14T08:47:33+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -91,10 +91,10 @@
     {
       "id": "gemma",
       "title": "Gemma QNN diagnostics",
-      "status": "reviewing",
+      "status": "preparing",
       "owner": "Jere",
-      "now": "Jere clarified the saved power edge: the small epsilon changes no quantized codes, so zero remains zero and a negative half-power produces positive infinity, not NaN. The earlier trap alone is not model-failure proof.",
-      "next": "Small CPU fixtures show one portable behavior, but do not establish HTP behavior. Documentation does not define infinity/NaN quantization here. The next checkpoint is an authoritative HTP contract or a separately scheduled tiny HTP scalar test before any policy choice; no rerun or repair.",
+      "now": "Jere is preparing a tiny host-only HTP test for the saved power edge and the surrounding normalization chain. It uses the same data types and settings, with zero and small positive controls.",
+      "next": "It will retain raw codes and expose chain intermediates only as instrumentation. This is not a full reference or language-model run. A phone test waits for a physical-ready bundle, Nik priority, and stable USB; no CPU result is being transferred into an HTP policy.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "offline",
-      "owner": "Pi",
-      "now": "Nik’s targeted visual capture could not start because the phone was not found. No tests, install, model call, or user-data action occurred.",
-      "next": "The last installed-app observation is historical. Await stable reconnection and fresh checks; no retry loop.",
+      "status": "waiting",
+      "owner": "Nik → Jere",
+      "now": "Nik’s focused visual validation has priority once the phone is stable. Jere is only preparing a tiny HTP test bundle.",
+      "next": "No phone or full-model run. Jere needs a frozen physical-ready bundle and stable USB after Nik’s window.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere / Nik",
-      "now": "Jere has narrowed a saved power-edge question and is looking for an authoritative HTP rule or a tiny scalar test. Nik still waits for stable phone visibility.",
-      "next": "No policy change, full model run, phone replay, or numerical repair. Portable CPU fixture results do not establish HTP behavior.",
+      "now": "Jere prepares a small HTP edge and normalization-chain test. Nik’s focused visual validation still waits for stable phone visibility.",
+      "next": "No full reference, model run, policy change, or numerical repair. The test keeps cases and graphs small with explicit controls and cleanup.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -161,9 +161,9 @@
     },
     {
       "name": "Jere",
-      "task": "Find HTP power-edge contract or prepare tiny scalar test",
-      "reported_at": "2026-09-14T08:46:12+00:00",
-      "reported_by": "Jere — portable fixture limits/no policy change",
+      "task": "Prepare tiny HTP power-edge and chain discriminator",
+      "reported_at": "2026-09-14T08:47:33+00:00",
+      "reported_by": "Pi — host-only/no full run",
       "stale_after_seconds": 900
     },
     {
