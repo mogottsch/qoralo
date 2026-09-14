@@ -22,7 +22,9 @@ import java.util.UUID
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.SystemClock
-import androidx.compose.ui.graphics.asAndroidBitmap
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.view.accessibility.AccessibilityWindowInfo
+import android.graphics.Rect
 import org.json.JSONObject
 import java.security.MessageDigest
 
@@ -149,9 +151,9 @@ class EpisodeManagementRegressionTest {
         assertNull(attempts.single().second)
         assertTrue(runBlocking { repo.runningJobs() }.isEmpty()); assertTrue(runBlocking { repo.queuedJobs() }.isEmpty())
     }
-    /** Capture only the known synthetic Compose root/window, not an unrelated device screen.
-     * Before/after root identity, geometry and displayed marker bind the image to this fixture.
-     * Capture failures are retained separately; the controller/visual review must not call them a pass.
+    /** Authenticate the focused owned accessibility window before full compositor capture.
+     * Compose captureToImage uses Activity-relative PixelCopy and cannot prove popup/dialog pixels.
+     * Keep root/marker AND focused-window identity paired; unknown ownership never authorizes capture.
      */
     private fun captureOwnedRoot(state: String, marker: String) {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -165,31 +167,63 @@ class EpisodeManagementRegressionTest {
         val image = File(root, "$state.png"); val receipt = File(root, "$state.json")
         require(!image.exists() && !receipt.exists())
         val metadata = JSONObject().put("schemaVersion", 1).put("diagnosticRun", run).put("profile", profile).put("state", state)
-            .put("captureScope", "owned synthetic Compose root via PixelCopy/view capture; not arbitrary device screenshot")
+            .put("captureScope", "full compositor; paired focused target-app accessibility window and displayed synthetic semantic marker")
             .put("newCacheAndInMemoryFixtureOnly", true).put("modelCalls", 0).put("userEpisodeDeletion", false)
             .put("appApkSha256", args.getString("appApkSha256")).put("testApkSha256", args.getString("testApkSha256"))
             .put("fontScale", context.resources.configuration.fontScale.toDouble()).put("densityDpi", context.resources.configuration.densityDpi)
             .put("appLastUpdateTimeMs", context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime)
+        var originalAccessibilityFlags: Int? = null
+        fun ownedWindow(): JSONObject {
+            val candidates = instrumentation.uiAutomation.windows.filter { it.type == AccessibilityWindowInfo.TYPE_APPLICATION && (it.isFocused || it.isActive) }
+                .mapNotNull { window ->
+                    val content = window.root ?: return@mapNotNull null
+                    if (content.packageName?.toString() != context.packageName) return@mapNotNull null
+                    val matches = content.findAccessibilityNodeInfosByText(marker).any { it.isVisibleToUser &&
+                        (it.text?.toString() == marker || it.contentDescription?.toString() == marker) }
+                    if (!matches) return@mapNotNull null
+                    val bounds = Rect(); window.getBoundsInScreen(bounds)
+                    JSONObject().put("id", window.id).put("package", content.packageName.toString()).put("bounds", bounds.toShortString())
+                        .put("focused", window.isFocused).put("active", window.isActive).put("markerVisibleInWindow", true)
+                }
+            require(candidates.size == 1) { "Focused fixture window ownership is unknown or ambiguous" }
+            return candidates.single()
+        }
         try {
+            val service = instrumentation.uiAutomation.serviceInfo
+            originalAccessibilityFlags = service.flags
+            service.flags = service.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+            instrumentation.uiAutomation.serviceInfo = service
             rule.waitForIdle()
+            instrumentation.waitForIdleSync()
+            SystemClock.sleep(100) // Bounded compositor settle; no production timing measurement.
             rule.onNodeWithText(marker).assertIsDisplayed()
             val node = rule.onNode(isRoot() and hasAnyDescendant(hasText(marker)), useUnmergedTree = true)
             val before = node.fetchSemanticsNode(); val beforeId = before.id; val beforeBounds = before.boundsInRoot
-            val start = SystemClock.elapsedRealtime()
-            val bitmap = node.captureToImage().asAndroidBitmap()
+            val windowBefore = ownedWindow(); val start = SystemClock.elapsedRealtime()
+            val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
             try {
                 metadata.put("widthPx", bitmap.width).put("heightPx", bitmap.height)
                 image.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)); it.fd.sync() }
             } finally { bitmap.recycle() }
-            val after = node.fetchSemanticsNode()
+            val after = node.fetchSemanticsNode(); val windowAfter = ownedWindow()
             rule.onNodeWithText(marker).assertIsDisplayed()
-            val paired = beforeId == after.id && beforeBounds == after.boundsInRoot
-            metadata.put("status", if (paired) "paired_owned_root" else "unpaired_root_changed").put("capturePaired", paired)
+            val paired = beforeId == after.id && beforeBounds == after.boundsInRoot &&
+                listOf("id", "package", "bounds", "focused", "active").all { windowBefore.get(it) == windowAfter.get(it) }
+            metadata.put("status", if (paired) "paired_owned_window" else "unpaired_window_changed").put("capturePaired", paired)
+                .put("windowBefore", windowBefore).put("windowAfter", windowAfter)
                 .put("rootIdBefore", beforeId).put("rootIdAfter", after.id).put("boundsBefore", beforeBounds.toString()).put("boundsAfter", after.boundsInRoot.toString())
                 .put("captureStartElapsedMs", start).put("captureEndElapsedMs", SystemClock.elapsedRealtime()).put("bytes", image.length())
                 .put("sha256", MessageDigest.getInstance("SHA-256").digest(image.readBytes()).joinToString("") { "%02x".format(it) })
         } catch (error: Throwable) {
             metadata.put("status", "capture_unavailable").put("capturePaired", false).put("errorType", error.javaClass.simpleName)
+        } finally {
+            val restored = runCatching {
+                val flags = requireNotNull(originalAccessibilityFlags)
+                val service = instrumentation.uiAutomation.serviceInfo; service.flags = flags
+                instrumentation.uiAutomation.serviceInfo = service
+                instrumentation.uiAutomation.serviceInfo.flags == flags
+            }.getOrDefault(false)
+            metadata.put("automationServiceFlagsRestored", restored)
         }
         receipt.writeText(metadata.toString(2))
         instrumentation.sendStatus(0, Bundle().apply { putString("episodeManagementCapture", receipt.absolutePath) })
