@@ -1,0 +1,45 @@
+{
+  "base_sha256": "06f108e24d5370d94e57b24cb8e285106deeef8be0d03d9f29b28187b4cd2045",
+  "materialized_sha256": "1a814576f037bf56e3e7f8465df23533a9c7eadfb4d5eacebef968e7256f2516",
+  "changes": [
+    [
+      "    dtype=t['datatype']\n    if 'Fxp_' not in dtype:return np.asarray(raw,dtype=np.float32) if dtype.startswith('Float') else raw",
+      "    dtype=t['datatype']\n    if dtype=='Float_16':return np.asarray(_storage_view(raw,dtype),dtype=np.float32)\n    if 'Fxp_' not in dtype:return np.asarray(raw,dtype=np.float32) if dtype.startswith('Float') else raw"
+    ],
+    [
+      "def encode(value,t):\n    dtype=t['datatype']\n    if dtype=='Float_16':return np.asarray(value,dtype=np.float16)",
+      "def encode(value,t):\n    _finite(value,'encode_input',t.get('name'))\n    dtype=t['datatype']\n    if dtype=='Float_16':\n        encoded=np.asarray(value,dtype=np.float16)\n        _finite(encoded,'float16_encode',t.get('name'))\n        return encoded"
+    ],
+    [
+      "    return np.clip(np.rint(np.asarray(value,dtype=np.float32)/scale-offset),lo,hi).astype(storage)",
+      "    shifted=np.asarray(value,dtype=np.float32)/scale-offset\n    _finite(shifted,'requantization_before_round_clip',t.get('name'))\n    return np.clip(np.rint(shifted),lo,hi).astype(storage)"
+    ],
+    [
+      "        start=time.monotonic()\n        if len(self.policy['operators'])>32 and not self._static_verified:self.verify_static_bindings()",
+      "        chunk=getattr(self,'_observed_chunks',0);self._observed_chunks=chunk+1\n        _observer_context(None,chunk)\n        start=time.monotonic()\n        if len(self.policy['operators'])>32 and not self._static_verified:self.verify_static_bindings()"
+    ],
+    [
+      "            live[n]=v\n        for op in p['operators']:",
+      "            _finite(v,'graph_input',n)\n            live[n]=v\n        for op in p['operators']:\n            _observer_context(op,chunk)"
+    ],
+    [
+      "raw=[np.load(self.path.parent/t[n]['static']['file'],mmap_mode='r',allow_pickle=False) if 'static' in t[n] else live[n] for n in op['inputs']]",
+      "raw=[_load_static(self.path.parent/t[n]['static']['file'],t[n]) if 'static' in t[n] else live[n] for n in op['inputs']]"
+    ],
+    [
+      "            value=logical_op(op,args,spec['dimensions']);value=value if preserved else encode(value,spec)",
+      "            for input_name,arg in zip(op['inputs'],args):_finite(arg,'operator_input',input_name)\n            value=logical_op(op,args,spec['dimensions'])\n            _finite(value,'logical_output',out_name)\n            value=value if preserved else encode(value,spec)\n            _finite(value,'encoded_output',out_name)"
+    ]
+  ],
+  "storage_correction": "declared Float16 UInt16 words -> binary16 views before preserved-memory operations and decode",
+  "true_UFIXED16_and_BW4_unchanged": true,
+  "finite_grid_rounding_and_clipping_unchanged": true,
+  "nonfinite_policy": "record first unexpected nonfinite and stop before integer rounding/clipping/cast; no repair",
+  "arithmetic_beyond_storage_correction_changed": false,
+  "floating_error_traps": [
+    "overflow",
+    "invalid",
+    "divide_by_zero"
+  ],
+  "underflow_policy": "unchanged; not escalated"
+}

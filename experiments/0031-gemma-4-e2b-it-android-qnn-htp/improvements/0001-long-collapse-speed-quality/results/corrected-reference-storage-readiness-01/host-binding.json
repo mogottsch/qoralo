@@ -1,0 +1,69 @@
+{
+  "classification": "one_storage_corrected_declared_reference_host_adapter",
+  "baseline_host_sha256": "fb32816a41f9a9246df79c807b67da7f88fd06c8b94ff8921eb02e2a0e19d77c",
+  "corrected_reference_sha256": "3ececc8f93c6535a728bfa38eac64c471eafb72fdf13df57d0b25ae625c57582",
+  "corrected_grant": "pi-gemma-corrected-fp16-20260914-01",
+  "same_phone_capture_binding_sha256": "b0fcf4f660dafb4c88097edfc1517d34a1a015564b39a6d16b814418d78d616a",
+  "source_changes": [
+    [
+      "ROOT=TRACK/'.local/legacy-prefill-host-runs'",
+      "ROOT=TRACK/'.local/corrected-legacy-prefill-host-runs'",
+      1
+    ],
+    [
+      "results/paired-legacy-host-binding-01/implementation-bindings.json",
+      "results/corrected-reference-storage-readiness-01/implementation-bindings.json",
+      1
+    ],
+    [
+      "spec['host_grant_id']",
+      "CORRECTED_GRANT",
+      2
+    ]
+  ],
+  "reference_patch": {
+    "base_sha256": "06f108e24d5370d94e57b24cb8e285106deeef8be0d03d9f29b28187b4cd2045",
+    "materialized_sha256": "1a814576f037bf56e3e7f8465df23533a9c7eadfb4d5eacebef968e7256f2516",
+    "changes": [
+      [
+        "    dtype=t['datatype']\n    if 'Fxp_' not in dtype:return np.asarray(raw,dtype=np.float32) if dtype.startswith('Float') else raw",
+        "    dtype=t['datatype']\n    if dtype=='Float_16':return np.asarray(_storage_view(raw,dtype),dtype=np.float32)\n    if 'Fxp_' not in dtype:return np.asarray(raw,dtype=np.float32) if dtype.startswith('Float') else raw"
+      ],
+      [
+        "def encode(value,t):\n    dtype=t['datatype']\n    if dtype=='Float_16':return np.asarray(value,dtype=np.float16)",
+        "def encode(value,t):\n    _finite(value,'encode_input',t.get('name'))\n    dtype=t['datatype']\n    if dtype=='Float_16':\n        encoded=np.asarray(value,dtype=np.float16)\n        _finite(encoded,'float16_encode',t.get('name'))\n        return encoded"
+      ],
+      [
+        "    return np.clip(np.rint(np.asarray(value,dtype=np.float32)/scale-offset),lo,hi).astype(storage)",
+        "    shifted=np.asarray(value,dtype=np.float32)/scale-offset\n    _finite(shifted,'requantization_before_round_clip',t.get('name'))\n    return np.clip(np.rint(shifted),lo,hi).astype(storage)"
+      ],
+      [
+        "        start=time.monotonic()\n        if len(self.policy['operators'])>32 and not self._static_verified:self.verify_static_bindings()",
+        "        chunk=getattr(self,'_observed_chunks',0);self._observed_chunks=chunk+1\n        _observer_context(None,chunk)\n        start=time.monotonic()\n        if len(self.policy['operators'])>32 and not self._static_verified:self.verify_static_bindings()"
+      ],
+      [
+        "            live[n]=v\n        for op in p['operators']:",
+        "            _finite(v,'graph_input',n)\n            live[n]=v\n        for op in p['operators']:\n            _observer_context(op,chunk)"
+      ],
+      [
+        "raw=[np.load(self.path.parent/t[n]['static']['file'],mmap_mode='r',allow_pickle=False) if 'static' in t[n] else live[n] for n in op['inputs']]",
+        "raw=[_load_static(self.path.parent/t[n]['static']['file'],t[n]) if 'static' in t[n] else live[n] for n in op['inputs']]"
+      ],
+      [
+        "            value=logical_op(op,args,spec['dimensions']);value=value if preserved else encode(value,spec)",
+        "            for input_name,arg in zip(op['inputs'],args):_finite(arg,'operator_input',input_name)\n            value=logical_op(op,args,spec['dimensions'])\n            _finite(value,'logical_output',out_name)\n            value=value if preserved else encode(value,spec)\n            _finite(value,'encoded_output',out_name)"
+      ]
+    ],
+    "storage_correction": "declared Float16 UInt16 words -> binary16 views before preserved-memory operations and decode",
+    "true_UFIXED16_and_BW4_unchanged": true,
+    "finite_grid_rounding_and_clipping_unchanged": true,
+    "nonfinite_policy": "record first unexpected nonfinite and stop before integer rounding/clipping/cast; no repair",
+    "arithmetic_beyond_storage_correction_changed": false
+  },
+  "same_model_policy_actual_inputs_own30caches_and_limits": true,
+  "first_unexpected_nonfinite_recorded_then_stop": true,
+  "no_NaN_integer_cast_or_arithmetic_repair": true,
+  "phone_access": false,
+  "automatic_retry": false,
+  "prior_failed_reference_preserved": true
+}
