@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-14T15:02:59+00:00",
+  "updated_at": "2026-09-14T15:04:27+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -93,8 +93,8 @@
       "title": "Gemma QNN diagnostics",
       "status": "preparing",
       "owner": "Jere",
-      "now": "The corrected small HTP test stopped at memory-registration startup: the selected DMA-buffer mode is not supported by this backend. No graph output or execution occurred.",
-      "next": "Jere is preserving the attempt and testing one explicit HTP/RPC-compatible memory option locally. This is not a power or fusion result, a mode sweep, or a phone retry; any later phone window is separate.",
+      "now": "Jere is making one source-bound HTP/RPC invocation correction, using the actual tool behavior or a retained successful HTP invocation rather than a different codebase.",
+      "next": "The candidate is the legacy shared-buffer option alone if it maps to the supported RPC/ION path. Freeze and test one command and process guard, preserving the DMA-buffer failure. Then one corrected three-graph phone window after fresh checks; no mode sweep, full model, fallback, or automatic retry.",
       "reported_at": "2026-09-13T12:55:43+00:00",
       "reported_by": "Pi — current bounded QNN capture window",
       "stale_after_seconds": 900,
@@ -110,10 +110,10 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "unassigned",
-      "owner": "Pi",
-      "now": "The corrected small HTP test released after a DMA-buffer capability mismatch before graph execution.",
-      "next": "No current phone work, mode sweep, or retry. Jere is preparing an explicit RPC-compatible option locally.",
+      "status": "preparing",
+      "owner": "Jere",
+      "now": "Jere is preparing one source-bound corrected HTP invocation for a later three-graph phone window.",
+      "next": "No phone run yet. The window keeps the same graphs, inputs, and limits; raw results and cleanup precede analysis.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — granted final no-NN window",
       "stale_after_seconds": 600,
@@ -124,8 +124,8 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Jere is testing an explicit HTP/RPC-compatible memory option after the DMA-buffer startup mismatch.",
-      "next": "No graph execution, power/fusion conclusion, mode sweep, or phone retry.",
+      "now": "Jere is binding and testing one RPC-compatible HTP command after the DMA-buffer startup mismatch.",
+      "next": "No graph execution, mode sweep, full model, fallback, or retry. Any later conclusion needs observed graph results.",
       "reported_at": "2026-09-13T12:51:43+00:00",
       "reported_by": "Pi — current granted validation",
       "stale_after_seconds": 600,
@@ -154,9 +154,9 @@
     },
     {
       "name": "Jere",
-      "task": "Test HTP RPC-compatible memory option locally",
-      "reported_at": "2026-09-14T15:02:59+00:00",
-      "reported_by": "Jere — no graph execution/no phone retry",
+      "task": "Freeze and test one RPC-compatible HTP command",
+      "reported_at": "2026-09-14T15:04:27+00:00",
+      "reported_by": "Pi — source-bound correction/no phone run",
       "stale_after_seconds": 900
     },
     {
