@@ -1,0 +1,18 @@
+{
+  "status": "passed_scoped_feature_visual_review",
+  "reviewer": "nik",
+  "reviewMethod": "Actual inspection of all six retained full-compositor images after controller ownership/identity/geometry/hash checks; no inferred visual pass from semantics alone",
+  "profiles": ["default: 600dpi, fontScale1", "narrow: 320dp at720dpi, fontScale2"],
+  "states": {
+    "owned-overflow": "PASS both profiles: real popup visible, Episode details and destructive Delete episode labels readable, no clipping or overlap of the action labels",
+    "owned-delete-confirmation": "PASS both profiles: real settled dialog shows captured target title, irreversible deletion warning, and distinct Keep/Delete controls. At font2 the body is intentionally scrollable; both actions remain visible and were exercised by the fixture.",
+    "owned-historical-unavailable": "PASS both profiles: actual Episode details shows preserved failed attempt and explicit unavailable metrics. At font2 the lazy list is scrolled to the exact unchanged text; no invented runtime numbers."
+  },
+  "scopeLimits": [
+    "New owned cache/in-memory fixtures only; no actual user podcast was deleted",
+    "No new model calls or genuine SDK throughput/TTFT observation",
+    "No dark/tablet/background-service or fresh neural/player end-to-end claim",
+    "Raw full-screen images remain private; system-bar content is not for publication",
+    "Prior cropped/unknown/unpaired captures and failures remain retained and are not retroactively passed"
+  ]
+}

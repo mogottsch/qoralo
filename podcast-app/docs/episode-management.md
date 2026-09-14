@@ -1,13 +1,13 @@
 # Episode details and deletion
 
-This feature is developed on `nik/episode-management`, in the isolated
-`.local/episode-management/source` worktree. It is not part of the separate
-progressive-player validation APK until explicitly integrated and tested. The
-isolated integration now includes Janek/Jens's passed `e07d4d4e` lineage: 3072 MiB
-whole-start and 2648 MiB pre-context admission, guarded teardown, fresh playback
-checks, terminal-aware driver and explicit Main/applicationLooper ownership.
-Their physical handoff combines genuine concurrent playback evidence and later
-zero-neural replay; it is not one clean original-script pass or a feature APK pass.
+This feature was developed in the isolated `nik/episode-management` worktree,
+then integrated into main and left installed after the [scoped non-neural feature
+validation](episode-management-handoff-2026-09-14.md). It preserves Janek/Jens's
+`e07d4d4e` lineage: 3072 MiB whole-start and 2648 MiB pre-context admission,
+guarded teardown, fresh playback checks, terminal-aware driver and explicit
+Main/applicationLooper ownership. The earlier progressive handoff combines
+genuine concurrent playback and later zero-neural replay; this feature adds no
+new neural result or clean all-in-one original-script claim.
 
 ## Private diagnostics
 
@@ -103,7 +103,7 @@ Host tests use temporary episode roots, in-memory databases, fake engines and a
 bounded Python child holding an OS lock. Tests cover wrong/captured identity,
 queued/running/finished deletion, blocked render and native teardown, multiple
 leases, process-death lock release, restart after marker persistence, symlinks,
-shared-source preservation, late callback rejection, genuine runtime-counter
+shared-source preservation, late callback rejection, typed runtime-counter
 mapping, missing data, gap-inclusive RTF and no synthesis rate for recovery.
 
 `EpisodeManagementRegressionTest` is a four-case Android fixture-only suite:
@@ -113,11 +113,11 @@ wrong-thread rejection and failed release retaining files until an awaited Main
 retry; historical diagnostics without measurements or model entry. It uses new cache roots and a separate
 in-memory database, never deletes a real user episode, and makes zero model calls.
 
-Device execution, default/narrow-font2 visual inspection, final APK hashes and
-tested deployment must be scheduled by Pi after the progressive handoff,
-under the full phone lock and fresh
-preservation/identity checks. Host compilation is not a physical UI/deployment
-verdict. The SDK adapter and metric boundaries have host evidence only; actual
-on-device SDK metric availability and runtime observations remain unverified.
-Missing historic measurements stay unavailable. No duplicate model run is needed
-to validate the deletion fixtures or fill old statistics.
+The final scheduled device window passed these four cases in both default and
+narrow/font2 profiles, the exact-pair blocked-teardown guard, and inspection of
+six paired owned-window captures. Fresh preservation/identity/settings checks
+and independent cleanup ran under the full phone lock. See the handoff for exact
+installed hashes, original failures and limits. The SDK adapter and metric
+calculations have host evidence only; actual on-device SDK metric availability
+and new neural observations remain unverified. Missing historic measurements
+stay unavailable. No duplicate model run was made to fill old statistics.
