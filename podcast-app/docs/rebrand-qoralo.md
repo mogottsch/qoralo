@@ -117,3 +117,9 @@ Gemma script generation, playback, export and the full UI flow are still unexerc
 The rename build that first proved the bridge was superseded by a rebuild from `ffa7cf3c` carrying the UI copy pass. Running the same smoke test against that installed pair — app `677f8d6f…`, test `21293c4c…` — produced a byte-identical segment: 79,872 frames, WAV `1e176357…e16d9`. Two independent builds of the same source therefore render the same audio through the renamed bridge, so the earlier result was not a one-off.
 
 The Qoralo id now holds real user episodes; six episode directories were present before and after the re-proof, and the run wrote only its own receipt, which it then deleted.
+
+### Script path under the renamed id
+
+`RenamedScriptSmokeTest` exercises the LiteRT GPU path on the installed app: pack verification against the pinned manifest, engine load on `LITERT_GPU` with LiteRT-LM 0.16.1, one real outline request and one real chapter request, producing a 62-word chapter in 28.4s. It writes nothing to the library — six episode directories before and after — and its receipt records counts and stage rather than generated text.
+
+Both model routes are therefore proven under `dev.qoralo.podcast.internal`. What remains unproven is the UI itself: script generation driven through `GeneratingScreen`, playback, and export through the system file picker. Note that the failure panel now shows the runtime's own message with the fail-closed sentence one disclosure behind "Error details", so a failed run should be read from `episodes.failureMessage` and the job's `failureStage` rather than from a screenshot.
