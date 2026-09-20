@@ -114,13 +114,13 @@
     },
     {
       "id": "gemma",
-      "title": "Gemma QNN diagnostics",
-      "status": "reviewing",
+      "title": "Gemma QNN diagnostics (closed)",
+      "status": "released",
       "owner": "Jere",
-      "now": "The saved endpoint comparison is complete: the CPU and QNN endpoints have different top choices and meaningful disagreement among their highest-ranked results, even though their overall rank relationship is fairly similar.",
-      "next": "This divergence exists before decoding and does not identify a QNN defect, a quantization-only cause, or a repetition cause. The comparison itself stayed within its small service limits, but a preparation metadata print exceeded the overall output budget privately; the exception is retained and no retry is planned.",
-      "reported_at": "2026-09-14T16:02:10+00:00",
-      "reported_by": "Jere — actual two-chain HTP window start",
+      "now": "The investigation was closed and handed off. Gemma’s long-output repetition is still unexplained, and nothing in the work proves a QNN defect, a quantization-only cause, or any correctness verdict.",
+      "next": "The last prepared checkpoint was withdrawn before it ran. Valid partial findings are kept with their limits: a corrected reference that stopped early, one matched capture, small isolated hardware observations, and an endpoint comparison showing different top choices before decoding.",
+      "reported_at": "2026-09-20T09:37:14+00:00",
+      "reported_by": "Kate — from committed closing handoff",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -148,10 +148,10 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "Thomas completed and released a read-only app failure diagnosis; no app changes were made.",
-      "next": "A chapter-generation JSON parsing failure is documented, but its raw response is private/unavailable. No phone run is active.",
-      "reported_at": "2026-09-14T15:28:49+00:00",
-      "reported_by": "Jere — current small HTP chain preparation",
+      "now": "No phone work is running. The last window was the app copy check, which released the phone and changed no user data.",
+      "next": "The tested app pair installed is the copy-simplification pair under the old app identity. The renamed build is not installed.",
+      "reported_at": "2026-09-20T09:37:14+00:00",
+      "reported_by": "Kate — from committed device handoff",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -159,11 +159,11 @@
       "id": "host",
       "title": "On this computer",
       "status": "active",
-      "owner": "Jere / Nik",
-      "now": "Jere is preserving and interpreting the endpoint comparison, including its private output-budget exception. Nik continues the isolated UI simplification pass.",
-      "next": "No new forward, phone run, or policy fitting. Overall rank similarity is not treated as a small decision-drift or causal result.",
-      "reported_at": "2026-09-14T15:28:49+00:00",
-      "reported_by": "Jere — current host scheduling preparation",
+      "owner": "Thomas / Luke",
+      "now": "Computer-only work: Thomas’s chapter-generation reliability change is finished but unverified on a phone, and Luke is reconstructing the Supertonic history for teaching.",
+      "next": "The Gemma investigation is closed and no model or device work is scheduled.",
+      "reported_at": "2026-09-20T09:37:14+00:00",
+      "reported_by": "Kate — current reported assignments",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -196,18 +196,18 @@
       "stale_after_seconds": 900
     },
     {
-      "name": "Jere",
-      "task": "Localize route and activation boundary from saved endpoints",
-      "reported_at": "2026-09-14T17:36:37+00:00",
-      "reported_by": "Jere — endpoint packet complete/budget exception retained",
-      "stale_after_seconds": 900
-    },
-    {
       "name": "Kate",
       "task": "Maintain compact live dashboard",
       "reported_at": "2026-09-11T16:57:58+00:00",
       "reported_by": "Kate — current responsibility",
       "stale_after_seconds": "persistent"
+    },
+    {
+      "name": "Luke",
+      "task": "Reconstruct and teach the Supertonic history (read-only)",
+      "reported_at": "2026-09-20T09:37:14+00:00",
+      "reported_by": "Luke — no edits, device use or publishing",
+      "stale_after_seconds": 900
     }
   ],
   "listening": {
@@ -227,8 +227,9 @@
     },
     "whole_chapter_htp_pending_review": {
       "wav_sha256": "3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c",
-      "state": "not_reviewed",
-      "scope": "Exact HTP WAV only"
+      "state": "rejected",
+      "scope": "Exact HTP WAV only",
+      "review_commit": "613aca89"
     },
     "provider_cpu_pending_review": {
       "wav_sha256": "6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be",
