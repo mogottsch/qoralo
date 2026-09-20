@@ -83,6 +83,18 @@ class GenerationCoordinatorTest {
         }
     }
 
+    @Test fun eachChapterIsToldWhatWasAlreadySpokenSoItDoesNotRestartTheEpisode() = runTest {
+        val (episode, job) = queuedScript(review = true)
+        val llm = FakeLlm()
+        coordinator(llm = llm).generateScript(episode, job) {}
+        assertEquals(2, llm.precedingSeen.size)
+        // The opening chapter has nothing before it; the next one is told what was spoken and how it ended.
+        assertTrue(llm.precedingSeen[0].isEmpty())
+        assertEquals(listOf("One"), llm.precedingSeen[1].map { it.title })
+        assertTrue(llm.precedingSeen[1].single().ending.isNotBlank())
+        assertTrue("Complete One chapter transcript.".endsWith(llm.precedingSeen[1].single().ending))
+    }
+
     @Test fun duplicateCompletedCommandNeverOverwritesMetricsOrRunsAgain() = runTest {
         val (episode, job) = queuedScript(review = true)
         val llm = FakeLlm(); val coordinator = coordinator(llm = llm)
@@ -219,13 +231,15 @@ class GenerationCoordinatorTest {
     private class FakeLlm(private val chapterOverride: FrozenChapter? = null, private val retriesPerChapter: Int = 0) : LlmEngine {
         override val provenance = RuntimeProvenance(1, "GEMMA_4_E2B", "LITERT_GPU", "fake", false, setOf("model", "tokenizer", "gpu_delegate"))
         val chapterRequests = mutableListOf<String>()
+        val precedingSeen = mutableListOf<List<dev.qoralo.podcast.runtime.ChapterRecap>>()
         override suspend fun load(pack: VerifiedModelPack) = Unit
         override suspend fun createSourceNotes(source: SourceMaterial, chunkIndex: Int, chunkCount: Int) = SourceMaterial("notes", source.title, source.text)
         override suspend fun createOutline(sources: List<SourceMaterial>, instructions: String) = EpisodeOutline("Episode", listOf(
             OutlineChapter("chapter-1", "One", "First"), OutlineChapter("chapter-2", "Two", "Second"),
         ))
-        override suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String): FrozenChapter {
+        override suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String, preceding: List<dev.qoralo.podcast.runtime.ChapterRecap>): FrozenChapter {
             chapterRequests += chapter.id
+            precedingSeen += preceding
             for (attempt in 2..(retriesPerChapter + 1)) {
                 kotlin.coroutines.coroutineContext[ChapterRetryNotice]?.retrying(attempt, retriesPerChapter + 1)
             }

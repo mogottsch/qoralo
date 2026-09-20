@@ -45,17 +45,17 @@ class ChapterResponseFormatTest {
 
     @Test fun laterAttemptsAskForShorterChaptersInsteadOfResamplingTheSameRequest() {
         assertNull(chapterWordCeiling(1))
-        assertEquals(500, chapterWordCeiling(2))
-        assertEquals(300, chapterWordCeiling(3))
-        assertEquals(300, chapterWordCeiling(CHAPTER_ATTEMPTS))
+        assertEquals(240, chapterWordCeiling(2))
+        assertEquals(180, chapterWordCeiling(3))
+        assertEquals(180, chapterWordCeiling(CHAPTER_ATTEMPTS))
     }
 
     @Test fun brevityAppearsOnlyOnRetryAndNeverDisturbsTheReturnedExample() {
         val chapter = OutlineChapter("chapter-2", "Mapping It Out", "A plan.")
         val first = singleChapterInstruction(chapter)
         val second = singleChapterInstruction(chapter, chapterWordCeiling(2))
-        assertFalse(first.contains("500 spoken words"))
-        assertTrue(second.contains("under 500 spoken words"))
+        assertFalse(first.contains("under 240 spoken words"))
+        assertTrue(second.contains("under 240 spoken words"))
         assertTrue(second.contains("never stop mid-sentence"))
         // The trailing JSON example stays parseable and identical for every attempt.
         assertEquals(first.substringAfter("Return only JSON: "), second.substringAfter("Return only JSON: "))

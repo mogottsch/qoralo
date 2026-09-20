@@ -48,7 +48,7 @@ class SourcePreparerTest {
             return SourceMaterial("notes-$chunkIndex-${requestLengths.size}", source.title, source.text.take(SourcePreparer.MAX_NOTE_CHARS))
         }
         override suspend fun createOutline(sources: List<SourceMaterial>, instructions: String) = error("unused")
-        override suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String) = error("unused")
+        override suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String, preceding: List<ChapterRecap>) = error("unused")
         override suspend fun editScript(requestJson: String) = error("unused")
         override fun close() = Unit
     }

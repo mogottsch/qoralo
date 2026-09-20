@@ -48,6 +48,7 @@ class GenerationCoordinator(
             val outline = engine.createOutline(preparedSources, episode.instructions)
             require(outline.title.isNotBlank() && outline.chapters.size in 1..20) { "Gemma returned an invalid outline" }
             require(outline.chapters.map { it.id }.toSet().size == outline.chapters.size) { "Gemma returned duplicate chapter IDs" }
+            val written = mutableListOf<FrozenChapter>()
             val chapters = outline.chapters.mapIndexed { index, planned ->
                 repository.updateJobProgress(episodeId, jobId, JobKind.SCRIPT, index + 1, outline.chapters.size, "Writing ${planned.title}")
                 progress("Writing chapter ${index + 1} of ${outline.chapters.size}")
@@ -56,10 +57,17 @@ class GenerationCoordinator(
                     repository.updateJobProgress(episodeId, jobId, JobKind.SCRIPT, index + 1, outline.chapters.size, "Refining ${planned.title}")
                     progress("Refining chapter ${index + 1} of ${outline.chapters.size}")
                 }
+                // Titles of everything already spoken, plus only the last chapter's tail, so the model
+                // continues the episode without re-introducing it and without eating the context budget.
+                val preceding = written.mapIndexed { position, done ->
+                    dev.qoralo.podcast.runtime.ChapterRecap(done.title,
+                        if (position == written.lastIndex) dev.qoralo.podcast.runtime.chapterEnding(done.text) else "")
+                }
                 val generated = withContext(retryNotice) {
-                    engine.createChapter(outline, planned, preparedSources, episode.instructions)
+                    engine.createChapter(outline, planned, preparedSources, episode.instructions, preceding)
                 }
                 require(generated.id == planned.id) { "Gemma returned the wrong complete chapter" }
+                written += generated
                 ChapterDraft(generated.id, generated.title, generated.text)
             }
             repository.commitGeneratedScript(episodeId, jobId, outline.title, chapters)

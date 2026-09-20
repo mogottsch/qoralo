@@ -8,6 +8,9 @@ data class SourceMaterial(val id: String, val title: String, val text: String)
 data class OutlineChapter(val id: String, val title: String, val brief: String)
 data class EpisodeOutline(val title: String, val chapters: List<OutlineChapter>)
 data class FrozenChapter(val id: String, val title: String, val text: String)
+
+/** What an earlier chapter already covered, so the next one continues instead of restarting. */
+data class ChapterRecap(val title: String, val ending: String = "")
 data class AudioMetadata(val sampleRateHz: Int, val channelCount: Int, val frameCount: Long, val sha256: String)
 data class RuntimeProvenance(
     val runtimeApiVersion: Int,
@@ -23,7 +26,8 @@ interface LlmEngine : Closeable {
     suspend fun load(pack: VerifiedModelPack)
     suspend fun createSourceNotes(source: SourceMaterial, chunkIndex: Int, chunkCount: Int): SourceMaterial
     suspend fun createOutline(sources: List<SourceMaterial>, instructions: String): EpisodeOutline
-    suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String): FrozenChapter
+    suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String,
+        preceding: List<ChapterRecap> = emptyList()): FrozenChapter
     suspend fun editScript(requestJson: String): String
 }
 

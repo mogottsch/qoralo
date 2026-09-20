@@ -90,6 +90,7 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
         chapter: OutlineChapter,
         sources: List<SourceMaterial>,
         instructions: String,
+        preceding: List<ChapterRecap>,
     ): FrozenChapter {
         val request = requestJson(sources, instructions)
             .put("outline", JSONObject().put("title", outline.title).put("chapters", JSONArray(outline.chapters.map {
@@ -97,6 +98,9 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
             })))
             .put("requestedChapterId", chapter.id)
             .put("requestedChapter", JSONObject().put("id", chapter.id).put("title", chapter.title).put("brief", chapter.brief))
+            .put("alreadySpokenChapters", JSONArray(preceding.map {
+                JSONObject().put("title", it.title).apply { if (it.ending.isNotBlank()) put("ending", it.ending) }
+            }))
         val serialized = request.toString()
         require(serialized.length <= MAX_GENERATION_REQUEST_CHARS) { "Chapter request exceeds the Gemma context budget" }
         val schema = chapterResponseSchema(chapter)
@@ -105,7 +109,7 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
         while (true) {
             try {
                 val json = JSONObject(generate("chapter", serialized,
-                    singleChapterInstruction(chapter, chapterWordCeiling(attempt)), schema.takeIf { constrained }))
+                    singleChapterInstruction(chapter, chapterWordCeiling(attempt), preceding), schema.takeIf { constrained }))
                 return FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text"))
             } catch (error: GemmaRequestException) {
                 // A grammar the runtime refuses fails the request at SEND before any token is produced. That
@@ -206,7 +210,7 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
 
     private fun systemInstruction(mode: String): String = when (mode) {
         "source_notes" -> sourceNotesInstruction()
-        "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
+        "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Give every chapter its own material: name in each brief the specific facts, figures, names or events from the notes that this chapter alone will cover, and never assign the same fact to two chapters. Drop material the instructions call uninteresting rather than spreading it across chapters. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
         "chapter" -> error("A chapter request requires its concrete single-chapter instruction")
         "edit" -> SCRIPT_EDIT_INSTRUCTION
         else -> error("Unsupported Gemma request mode")

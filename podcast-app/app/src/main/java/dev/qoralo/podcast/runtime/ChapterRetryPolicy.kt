@@ -12,13 +12,16 @@ internal const val CHAPTER_ATTEMPTS = 3
 internal val RETRIABLE_CHAPTER_PHASES = setOf(GemmaFailurePhase.JSON_EXTRACTION, GemmaFailurePhase.JSON_PARSE)
 
 /**
- * Escalating completion budget. Attempt 1 keeps the caller's original length guidance; later attempts
- * apply only after a previous attempt did not finish inside the output ceiling.
+ * Escalating completion budget. Attempt 1 uses the ordinary per-chapter target; later attempts apply
+ * only after a previous attempt did not finish inside the output ceiling, and must be shorter than it.
  */
+internal const val CHAPTER_WORD_TARGET = 300
+internal const val CHAPTER_WORD_TOLERANCE = 60
+
 internal fun chapterWordCeiling(attempt: Int): Int? = when {
     attempt <= 1 -> null
-    attempt == 2 -> 500
-    else -> 300
+    attempt == 2 -> 240
+    else -> 180
 }
 
 /** Only an unparsed (unfinished) response is retried, and never beyond the fixed attempt budget. */
