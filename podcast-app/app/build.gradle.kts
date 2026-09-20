@@ -40,6 +40,10 @@ val supertonicManifest = normalSupertonic.getProperty("supertonic.manifest.sha25
 android {
     namespace = "dev.qoralo.podcast"
     compileSdk = 35
+    // The accepted native bridge was built with this toolchain (docs/rebrand-qoralo.md). AGP's default
+    // NDK 27 fails to compile provider_runtime.cpp, whose JNI close() becomes ambiguous with unistd.h
+    // close(int) under that release's headers, so the toolchain is pinned rather than left implicit.
+    ndkVersion = "28.1.13356709"
 
     defaultConfig {
         applicationId = if (legacyApplicationId) "dev.vibevoice.podcast.internal" else "dev.qoralo.podcast.internal"
