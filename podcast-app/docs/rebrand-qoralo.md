@@ -96,3 +96,18 @@ Generation, playback, export and native QNN/HTP execution have not yet been exer
 ### Launcher label
 
 The app is labelled **Qoralo**. An earlier build briefly used "Qoralo dev" to distinguish it from the retired app while both were installed; that app has since been uninstalled, so the distinction is gone and the label is plain again.
+
+## Single app, provisioned and bridge-proven
+
+The old id was uninstalled at Moritz's instruction, with data loss explicitly accepted, so the phone now holds exactly one app.
+
+- `dev.qoralo.podcast.internal` — `53abde985c2f288a073603920f231d591eacbb80a9257bacc46cca2b3ce01dfa`, label **Qoralo**, debug variant so `run-as` and the debug-only failure diagnostics stay available.
+- Instrumentation `dev.qoralo.podcast.internal.test` — `9bbd562fd8e89a7399bb6f0527faf8f40cecbf87688cf1cc19d4ca1ba89d1744`.
+- No `vibevoice` package remains.
+- Model packs staged into the new id and matching the APK's pinned hashes: `gemma-4-e2b` `9fb627ef…`, `supertonic-3-provider` `423429c6…`. The build pins the provider pack, not the legacy `supertonic-3` pack.
+
+`RenamedBridgeSmokeTest` proves the rebuilt bridge on the device. `JNI_OnLoad` resolved `SupertonicNative`, the wiring probe and the provider natives under `dev/qoralo`; a stale path would have failed closed with `UnsatisfiedLinkError` at load. One real provider segment then rendered on HTP: 79,872 frames of mono 44.1kHz audio, 1.811156s, WAV `1e176357cbabfe9f373e5c1f1d49730fa2ca365f920f8a6f0d6da6ba438e16d9`, with the native-reported hash matching the file.
+
+The first attempt failed in the render phase with `IllegalArgumentException` because the test called `renderChapter` without `load()`. That was a defect in the new test, not in the app or the bridge, and the receipt records it as such.
+
+Gemma script generation, playback, export and the full UI flow are still unexercised under the new id.

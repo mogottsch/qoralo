@@ -1,0 +1,43 @@
+{
+  "scope": "single installed app after the Qoralo rename; old id uninstalled with data loss accepted by Moritz",
+  "installed": {
+    "dev.qoralo.podcast.internal": "53abde985c2f288a073603920f231d591eacbb80a9257bacc46cca2b3ce01dfa",
+    "dev.qoralo.podcast.internal.test": "9bbd562fd8e89a7399bb6f0527faf8f40cecbf87688cf1cc19d4ca1ba89d1744"
+  },
+  "label": "Qoralo",
+  "variant": "debug (debuggable, run-as available, UserFailureDiagnostics present)",
+  "oldIdRemoved": "dev.vibevoice.podcast.internal and .test uninstalled; zero vibevoice packages remain",
+  "modelPacks": {
+    "gemma-4-e2b": "9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd",
+    "supertonic-3-provider": "423429c6642da131ac62511e3b233f1a121b97975aa5b6e9aa755bb13a927670",
+    "matchesApkPins": true
+  },
+  "bridgeProof": {
+    "test": "dev.qoralo.podcast.e2e.RenamedBridgeSmokeTest",
+    "result": "passed",
+    "nativeLibraryLoaded": true,
+    "registrationFailure": false,
+    "meaning": "JNI_OnLoad resolved SupertonicNative, the wiring probe and the provider natives under dev/qoralo; a stale path would have raised UnsatisfiedLinkError",
+    "realHtpSegment": {
+      "frames": 79872,
+      "sampleRateHz": 44100,
+      "channels": 1,
+      "wavBytes": 159788,
+      "sha256": "1e176357cbabfe9f373e5c1f1d49730fa2ca365f920f8a6f0d6da6ba438e16d9",
+      "durationSeconds": 1.811156
+    },
+    "firstAttemptFailure": "the first run failed in the render phase with IllegalArgumentException because the test called renderChapter without load(); that was a test defect, not an app or bridge failure"
+  },
+  "hostTests": {
+    "tests": 277,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "notVerified": [
+    "Gemma script generation",
+    "playback",
+    "export",
+    "full episode flow through the UI"
+  ]
+}
