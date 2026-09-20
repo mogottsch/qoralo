@@ -22,7 +22,7 @@ The existing listening page at <http://127.0.0.1:40187/> is a separate, unchange
 
 - **Phone:** last reported assignment—not a connection or lock check.
 - **On this computer:** reported computer work, such as source review; not device execution.
-- **Sharing changes:** Git pushes/external publication are paused for privacy. Safe local work can continue.
+- **Sharing changes:** commit and push state for the private origin.
 
 ## Milestone update contract
 
@@ -35,7 +35,7 @@ Kate maintains `docs/work-status.json` from Pi/owner reports. Polling never inve
 - Keep `now` and `next` to one short line each where practical. Use plain words. Separate constructor/compile success from inference, and sample acceptance from capacity/quality claims.
 - Old or invalid timestamps are visibly stale/unknown. Presence never changes a workstream's status.
 - Write JSON atomically: temporary file in `docs/`, then `os.replace(temporary, 'docs/work-status.json')`. No refresher restart is needed.
-- Do not add credentials, private logs, battery/sleep histories, private inventory paths or message/session bodies. Exact-WAV listening acceptance stays hash-bound. No push while the privacy hold applies.
+- Do not add credential values or message/session bodies. Exact-WAV listening acceptance stays hash-bound. Commit and push board updates to the private origin as normal.
 
 ## Read-only presence
 
