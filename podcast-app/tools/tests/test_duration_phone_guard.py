@@ -259,7 +259,9 @@ class GuardOrderingTests(unittest.TestCase):
                 prefix=['adb','-s','R5CW81PR8SY'];counter=0;wrong=None;pid_error=False
                 def shell(self,cmd,**kwargs):
                     if cmd.startswith('getprop '):
-                        key=cmd.split()[1];return 'mismatch' if key==self.wrong else g.IDENTITY[key]
+                        key=cmd.split()[1]
+                        if key==self.wrong:return 'mismatch'
+                        return g.IDENTITY.get(key) or {'ro.build.fingerprint':g.PRIOR_FINGERPRINT}[key]
                     self.counter+=1;record=root/f'{self.counter:03d}-command'
                     record.with_suffix('.exit').write_text('1');record.with_suffix('.stderr').write_text('offline' if self.pid_error else '')
                     return ''
@@ -267,6 +269,15 @@ class GuardOrderingTests(unittest.TestCase):
             for key in g.IDENTITY:
                 fake.wrong=key
                 with self.subTest(key=key),self.assertRaisesRegex(g.GuardError,'identity mismatch'):guard.identity()
+            fake.wrong=None;guard.identity()
+            # A newer platform build on the same phone is recorded, not blocked (decision 2026-09-20).
+            for key in g.RECORDED_PROPERTIES:
+                fake.wrong=key
+                with self.subTest(recorded=key):guard.identity()
+                observed=json.loads((root/'guard-device-identity.json').read_text())
+                self.assertEqual('mismatch',observed[key])
+                self.assertEqual(sorted(g.IDENTITY),observed['blockingProperties'])
+                self.assertEqual(sorted(g.RECORDED_PROPERTIES),observed['recordedOnlyProperties'])
             fake.wrong=None;guard.identity();guard.idle();fake.pid_error=True
             with self.assertRaisesRegex(g.GuardError,'absence unproven'):guard.idle()
 

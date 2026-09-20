@@ -18,8 +18,13 @@ from run_wiring_gate import APP, TEST_APP
 IDENTITY = {
     'ro.serialno': 'R5CW81PR8SY', 'ro.product.model': 'SM-S918B', 'ro.soc.model': 'SM8550',
     'ro.product.cpu.abi': 'arm64-v8a', 'ro.build.version.release': '16', 'ro.build.version.sdk': '36',
-    'ro.build.fingerprint': 'samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys',
 }
+# Decided by Moritz on 2026-09-20: the platform build may advance on this same phone, so the
+# fingerprint is observed and recorded in every run's evidence but does not block. Physical
+# evidence recorded before that date was produced on S918BXXSAFZG1 and is not re-verified on a
+# later build. Every other identity field above still blocks.
+RECORDED_PROPERTIES = ('ro.build.fingerprint',)
+PRIOR_FINGERPRINT = 'samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys'
 SCHEMA = PROJECT / 'app/schemas/dev.qoralo.podcast.data.PodcastDatabase/1.json'
 SCHEMA_SHA = 'aa0440c6e4636618a3eb9ec50131aef8a66c280e568262e88daae9edd21a8a84'
 MAX_BYTES = 64 * 1024 * 1024
@@ -214,7 +219,12 @@ class PhoneGuard:
     def identity(self):
         require(self.device.prefix[-1] == IDENTITY['ro.serialno'], 'wrong target serial')
         observed = {key: self.device.shell('getprop ' + key).strip() for key in IDENTITY}
-        (self.output/'guard-device-identity.json').write_text(json.dumps(observed, indent=2)+'\n')
+        recorded = {key: self.device.shell('getprop ' + key).strip() for key in RECORDED_PROPERTIES}
+        (self.output/'guard-device-identity.json').write_text(json.dumps(
+            {**observed, **recorded, 'blockingProperties': sorted(IDENTITY),
+             'recordedOnlyProperties': sorted(RECORDED_PROPERTIES),
+             'priorFingerprint': PRIOR_FINGERPRINT,
+             'earlierEvidenceRebuiltOnThisBuild': False}, indent=2)+'\n')
         require(observed == IDENTITY, 'exact phone identity mismatch')
         self.identity_verified = True
 
