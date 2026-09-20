@@ -27,7 +27,7 @@ class ProfileOffScopeTests(unittest.TestCase):
         self.assertEqual(old_text, (path.parent / 'narration.txt').read_bytes())
         self.assertEqual(new['input']['sha256'], hashlib.sha256(old_text).hexdigest())
         self.assertTrue(new['profilingEvidence'].startswith('UNAVAILABLE_BY_DESIGN'))
-        self.assertEqual('841fcb8970a4a187c1d753d8b519535bec7efb742c99459439a7823b3c519def', off.digest(PROJECT / 'tools/run_tts_long_gate.py'))
+        self.assertEqual('3f5e6840b91830528d542d5a01bddb7d0af454f00ddeb911e5a4db0ebae4c295', off.digest(PROJECT / 'tools/run_tts_long_gate.py'))
         self.assertEqual(off.PRIVACY_SOURCE_SHA, off.digest(PROJECT / 'tools/run_tts_only_gate.py'))
 
     def test_controller_matches_approved_logic_except_variant_pins_and_labels(self):

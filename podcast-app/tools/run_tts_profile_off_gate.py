@@ -140,9 +140,9 @@ def main():
         capture_conditions(device, args.output, 'before')
         old_pack_identity(device)
         check_controller(args); guard.checkpoint('before-app-install')
-        device.run(['install', '-r', '-t', value['app']['path']], timeout=180)
+        device.run(['install', '-r', '-t', '--user', '0', value['app']['path']], timeout=180)
         check_controller(args); guard.checkpoint('before-test-install')
-        device.run(['install', '-r', '-t', value['test']['path']], timeout=180)
+        device.run(['install', '-r', '-t', '--user', '0', value['test']['path']], timeout=180)
         check_controller(args); guard.idle(); verify_local_pack(value['modelPack'], pinned)
         stage_new_pack(device, value['modelPack'], remote, cleanup)
         with (args.output / 'logcat.txt').open('wb') as out, (args.output / 'logcat.stderr').open('wb') as err:

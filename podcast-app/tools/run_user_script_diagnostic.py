@@ -209,7 +209,7 @@ def main():
             installations={}
             for kind,package in (('app',APP),('test',TEST_APP)):
                 changed=candidate['priorInstalled'][package]!=candidate[kind]['sha256']
-                if changed:device.run(['install','-r','-t',candidate[kind]['path']],timeout=180)
+                if changed:device.run(['install','-r','-t','--user','0',candidate[kind]['path']],timeout=180)
                 installations[package]={'installed':changed,'reusedExactInstalledBytes':not changed}
             save('install-operations.json',installations)
             save('installed-candidate.json',installed({APP:candidate['app']['sha256'],TEST_APP:candidate['test']['sha256']}))

@@ -123,3 +123,9 @@ The Qoralo id now holds real user episodes; six episode directories were present
 `RenamedScriptSmokeTest` exercises the LiteRT GPU path on the installed app: pack verification against the pinned manifest, engine load on `LITERT_GPU` with LiteRT-LM 0.16.1, one real outline request and one real chapter request, producing a 62-word chapter in 28.4s. It writes nothing to the library — six episode directories before and after — and its receipt records counts and stage rather than generated text.
 
 Both model routes are therefore proven under `dev.qoralo.podcast.internal`. What remains unproven is the UI itself: script generation driven through `GeneratingScreen`, playback, and export through the system file picker. Note that the failure panel now shows the runtime's own message with the fail-closed sentence one disclosure behind "Error details", so a failed run should be read from `episodes.failureMessage` and the job's `failureStage` rather than from a screenshot.
+
+## Personal user only
+
+Installs were landing on the work profile as well as the personal user, which put the app somewhere it does not belong. The work profile (user 10) had our instrumentation package; it was removed there with `pm uninstall --user 10`, leaving user 0 untouched. No app belonging to the work profile was touched.
+
+Every install path now passes `--user 0`: `tools/install_local_debug.sh` and the gate controllers in `tools/` and `tools/provider_pipeline/`. A default install without that flag can reach every user on the device, so it must not come back.

@@ -109,7 +109,7 @@ class ProviderPipelineTests(unittest.TestCase):
         src=(ROOT/'podcast-app/app/src/androidTest/java/dev/qoralo/podcast/e2e/ProviderAppIntegrationTest.kt').read_text()
         self.assertIn('no new SCRIPT inference',src)
         self.assertIn('onNodeWithContentDescription("New episode").performClick()',src)
-        self.assertIn('onNodeWithText("Lock & create").performClick()',src)
+        self.assertIn('onNodeWithText("Create audio").assertIsEnabled().performClick()',src)
         self.assertIn('copied_real_chapter_normal_audio_complete',src)
         for prohibited in ('throw error','queueScriptGeneration(','.play()','startAudio(', 'applyAgentRevision('):self.assertNotIn(prohibited,src)
     def test_no_case_specific_shapes_in_app_native_or_frontend(self):

@@ -37,7 +37,8 @@ printf 'serial=%s\nmodel=%s\nsoc=%s\n' "$SERIAL" "$MODEL" "$SOC" | tee "$EVIDENC
 [[ "$MODEL" == "SM-S918B" && "$SOC" == "SM8550" ]] || { echo "unexpected phone identity" >&2; exit 65; }
 sha256sum "$APK" "$PACKS/gemma-4-e2b/current/manifest.json" "$PACKS/supertonic-3/current/manifest.json" >"$EVIDENCE/local-sha256.txt"
 
-"$ADB" -s "$SERIAL" install -r -t "$APK" 9>&- | tee "$EVIDENCE/install.txt"
+# Personal user only: never install into the work profile.
+"$ADB" -s "$SERIAL" install -r -t --user 0 "$APK" 9>&- | tee "$EVIDENCE/install.txt"
 "$ADB" -s "$SERIAL" shell mkdir -p "$REMOTE" 9>&-
 "$ADB" -s "$SERIAL" push "$PACKS/gemma-4-e2b/current" "$REMOTE/gemma-current" 9>&- | tee "$EVIDENCE/push-gemma.txt"
 "$ADB" -s "$SERIAL" push "$PACKS/supertonic-3/current" "$REMOTE/supertonic-current" 9>&- | tee "$EVIDENCE/push-supertonic.txt"

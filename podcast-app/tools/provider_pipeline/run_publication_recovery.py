@@ -111,7 +111,7 @@ def main():
             d.shell(f'run-as {APP} sh -c '+shlex.quote(f'test ! -e files/provider-integration/{a.run_id}-driver'))
             stop();setup=True
             for k,pkg in [('app',APP),('test',TEST_APP)]:
-                if c[k]['sha256']!=c['priorInstalled'][pkg]:d.run(['install','-r','-t',c[k]['path']],timeout=180)
+                if c[k]['sha256']!=c['priorInstalled'][pkg]:d.run(['install','-r','-t','--user','0',c[k]['path']],timeout=180)
             save('installed-candidate.json',identity({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}));require(stable('prelaunch')==before,'data changed during update')
             cmd=['shell','am','instrument','-w','-e','class','dev.qoralo.podcast.e2e.ProviderPublicationRecoveryTest#publishExactCompletedChapterWithoutInference',
                 '-e','providerRecovery','non-neural-v1','-e','diagnosticRun',a.run_id,'-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256']]

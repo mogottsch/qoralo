@@ -246,7 +246,7 @@ def main():
             stop(state,None);setup=True
             health('health-after-idle-close',True)  # Same limits, after authorized closure of proven-idle app caches and before staging/model work.
             for kind,package in [('app',APP),('test',TEST_APP)]:
-                if c['priorInstalled'][package]!=c[kind]['sha256']:device.run(['install','-r','-t',c[kind]['path']],timeout=180)
+                if c['priorInstalled'][package]!=c[kind]['sha256']:device.run(['install','-r','-t','--user','0',c[kind]['path']],timeout=180)
             save('installed-candidate.json',installed({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}));candidate_installed=True
             destination='no_backup/model-packs/'+manifest['id']+'/current'
             present=device.shell(f'run-as {APP} sh -c '+shlex.quote(f'if test -d {destination}; then echo PRESENT; else echo MISSING; fi'),timeout=10).strip()

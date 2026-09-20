@@ -150,8 +150,8 @@ def main():
                 require(files_before.get('files/episodes/'+path)==sha,'existing export master/timeline changed')
             require(all(files_before.get('files/episodes/'+r['relativePath'])==r['sha256'] for r in scope['chapters']),'existing chapter WAV bytes changed')
             (out/'app-reused-installed.json').write_text(json.dumps({'sha256':PRIOR[APP],'appReinstalled':False}))
-        else:device.run(['install','-r','-t',value['app']['path']],timeout=180)
-        check_sources(value);guard.checkpoint('before-test-install');device.run(['install','-r','-t',value['test']['path']],timeout=180)
+        else:device.run(['install','-r','-t','--user','0',value['app']['path']],timeout=180)
+        check_sources(value);guard.checkpoint('before-test-install');device.run(['install','-r','-t','--user','0',value['test']['path']],timeout=180)
         with (out/'logcat.txt').open('wb') as stdout,(out/'logcat.stderr').open('wb') as stderr:
             logs=subprocess.Popen(device.prefix+['logcat','-v','threadtime','-T','1'],stdout=stdout,stderr=stderr,start_new_session=True,close_fds=True)
         check_sources(value);guard.checkpoint('before-instrument')
