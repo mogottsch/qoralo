@@ -1,8 +1,8 @@
 {
   "scope": "single installed app after the Qoralo rename; old id uninstalled with data loss accepted by Moritz",
   "installed": {
-    "dev.qoralo.podcast.internal": "53abde985c2f288a073603920f231d591eacbb80a9257bacc46cca2b3ce01dfa",
-    "dev.qoralo.podcast.internal.test": "9bbd562fd8e89a7399bb6f0527faf8f40cecbf87688cf1cc19d4ca1ba89d1744"
+    "dev.qoralo.podcast.internal": "677f8d6fbe25d4ed8b438af1f55f198c0cf7cd135dceaf2a66fbe40151eec46d",
+    "dev.qoralo.podcast.internal.test": "21293c4c80e237fdae7491b48b099ee6a081adf0b41930163f46a4679f207f4b"
   },
   "label": "Qoralo",
   "variant": "debug (debuggable, run-as available, UserFailureDiagnostics present)",
@@ -26,7 +26,14 @@
       "sha256": "1e176357cbabfe9f373e5c1f1d49730fa2ca365f920f8a6f0d6da6ba438e16d9",
       "durationSeconds": 1.811156
     },
-    "firstAttemptFailure": "the first run failed in the render phase with IllegalArgumentException because the test called renderChapter without load(); that was a test defect, not an app or bridge failure"
+    "firstAttemptFailure": "the first run failed in the render phase with IllegalArgumentException because the test called renderChapter without load(); that was a test defect, not an app or bridge failure",
+    "reproofOnInstalledPair": {
+      "result": "passed",
+      "sameSegmentHash": true,
+      "frames": 79872,
+      "sha256": "1e176357cbabfe9f373e5c1f1d49730fa2ca365f920f8a6f0d6da6ba438e16d9",
+      "note": "byte-identical output from a different build of the same source, so the renamed bridge is reproducible, not a one-off"
+    }
   },
   "hostTests": {
     "tests": 277,
@@ -39,5 +46,15 @@
     "playback",
     "export",
     "full episode flow through the UI"
-  ]
+  ],
+  "supersededInstall": {
+    "dev.qoralo.podcast.internal": "53abde985c2f288a073603920f231d591eacbb80a9257bacc46cca2b3ce01dfa",
+    "dev.qoralo.podcast.internal.test": "9bbd562fd8e89a7399bb6f0527faf8f40cecbf87688cf1cc19d4ca1ba89d1744"
+  },
+  "installNote": "later rebuilt and installed by nik from main at ffa7cf3c with the UI copy pass; hashes read back from the device",
+  "userData": {
+    "episodeDirectories": 6,
+    "unchangedByThisRun": true,
+    "note": "the Qoralo id now holds real user episodes; Moritz removed the old app himself"
+  }
 }

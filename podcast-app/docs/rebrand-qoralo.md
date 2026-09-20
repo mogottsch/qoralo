@@ -111,3 +111,9 @@ The old id was uninstalled at Moritz's instruction, with data loss explicitly ac
 The first attempt failed in the render phase with `IllegalArgumentException` because the test called `renderChapter` without `load()`. That was a defect in the new test, not in the app or the bridge, and the receipt records it as such.
 
 Gemma script generation, playback, export and the full UI flow are still unexercised under the new id.
+
+### Bridge re-proof on the shipped pair
+
+The rename build that first proved the bridge was superseded by a rebuild from `ffa7cf3c` carrying the UI copy pass. Running the same smoke test against that installed pair — app `677f8d6f…`, test `21293c4c…` — produced a byte-identical segment: 79,872 frames, WAV `1e176357…e16d9`. Two independent builds of the same source therefore render the same audio through the renamed bridge, so the earlier result was not a one-off.
+
+The Qoralo id now holds real user episodes; six episode directories were present before and after the re-proof, and the run wrote only its own receipt, which it then deleted.
