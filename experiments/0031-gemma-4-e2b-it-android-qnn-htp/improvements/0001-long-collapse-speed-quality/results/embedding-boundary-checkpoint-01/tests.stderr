@@ -1,0 +1,19 @@
+test_bf16_half_ulp_scales_with_magnitude (test_embedding_boundary_checkpoint.EmbeddingBoundaryCheckpointTests.test_bf16_half_ulp_scales_with_magnitude) ... FAIL
+test_capture_code_image_check_rejects_out_of_image_codes (test_embedding_boundary_checkpoint.EmbeddingBoundaryCheckpointTests.test_capture_code_image_check_rejects_out_of_image_codes) ... ok
+test_declared_requantization_matches_recorded_export_contract (test_embedding_boundary_checkpoint.EmbeddingBoundaryCheckpointTests.test_declared_requantization_matches_recorded_export_contract) ... ok
+test_error_budget_declares_three_terms_and_no_acceptance_threshold (test_embedding_boundary_checkpoint.EmbeddingBoundaryCheckpointTests.test_error_budget_declares_three_terms_and_no_acceptance_threshold) ... ok
+test_frozen_contract_is_declarative_and_admits_its_limits (test_embedding_boundary_checkpoint.EmbeddingBoundaryCheckpointTests.test_frozen_contract_is_declarative_and_admits_its_limits) ... ok
+
+======================================================================
+FAIL: test_bf16_half_ulp_scales_with_magnitude (test_embedding_boundary_checkpoint.EmbeddingBoundaryCheckpointTests.test_bf16_half_ulp_scales_with_magnitude)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/tests/test_embedding_boundary_checkpoint.py", line 36, in test_bf16_half_ulp_scales_with_magnitude
+    self.assertEqual(f.bf16_half_ulp(1.0),2.0**-9)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.00390625 != 0.001953125
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.010s
+
+FAILED (failures=1)

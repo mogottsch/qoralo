@@ -1,0 +1,150 @@
+{
+  "classification": "frozen_input_boundary_checkpoint_not_executed",
+  "question": "Do the two routes start from the same token embeddings, within declared quantization and storage terms, for exactly the 1929 captured IDs?",
+  "earliest_boundary_with_both_sides_available": "model input (token embedding and per-layer embedding)",
+  "internal_layer_activations_saved_on_either_route": false,
+  "input_ids_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+  "input_ids": 1929,
+  "hidden_size": 1536,
+  "sides": [
+    {
+      "graph_input": "inputs_embeds",
+      "QNN_side": {
+        "deployed_LUT": {
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/phone-stage/embedding_int8_lut.bin",
+          "bytes": 402653184,
+          "sha256": "3b55bb6bf947bf6a26056a25bc19a50564047c550b64c0d5f505a478cdb64239"
+        },
+        "LUT_encoding": {
+          "bw": 8,
+          "max": 4.294310092926025,
+          "min": -8.58862018585205,
+          "offset": -170,
+          "scale": 0.050521295210894414
+        },
+        "graph_grid": {
+          "scale": 0.0006225576507858932,
+          "offset": -30370
+        },
+        "requantization": {
+          "requant_scale": 81.15119161593829,
+          "requant_offset_int32": 16574,
+          "reachable_code_min": 16574,
+          "reachable_code_max": 37268,
+          "all_codes_in_UINT16_range": true
+        },
+        "captured_payloads": "16 chunks of actual graph inputs, already validated equal to the host LUT formula"
+      },
+      "native_side": {
+        "source_checkpoint_sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+        "quantized_key": "model.language_model.embed_tokens.embedding_quantized",
+        "scale_key": "model.language_model.embed_tokens.embedding_scale",
+        "source_bits": 2,
+        "architectural_scale": 39.191835884530846,
+        "signed_mapping": {
+          "int2": "unsigned 0..3 minus 2",
+          "int4": "unsigned 0..15 minus 8"
+        },
+        "saved_native_activation_available": false,
+        "reconstruction": "Static table gather and declared dequantization for exactly the 1929 captured IDs; no transformer forward."
+      },
+      "error_budget": {
+        "units": "architecturally scaled embedding value units",
+        "LUT_UINT8_half_step": 0.025260647605447207,
+        "UINT8_to_UINT16_max_added_error": 0.0008041618001537465,
+        "native_BF16_half_ulp_at_max_abs_value": 0.03125,
+        "per_element_budget_at_max_abs_value": 0.05731480940560095,
+        "boundary": "Declared quantization/storage terms only. Not a claimed hardware error bound and not an accuracy acceptance threshold."
+      }
+    },
+    {
+      "graph_input": "per_layer_inputs",
+      "QNN_side": {
+        "deployed_LUT": {
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/phone-stage/embed_tokens_per_layer_int8_lut.bin",
+          "bytes": 2348810240,
+          "sha256": "bc5f25db058421efa5ac9cd38f9cd74e250e286ab4f6fe094c134a997dc29fa4"
+        },
+        "LUT_encoding": {
+          "bw": 8,
+          "max": 13.422158241271973,
+          "min": -14.808453559875488,
+          "offset": -134,
+          "scale": 0.1107082815731273
+        },
+        "graph_grid": {
+          "scale": 0.0005264362553134561,
+          "offset": -34192
+        },
+        "requantization": {
+          "requant_scale": 210.29760100243902,
+          "requant_offset_int32": 6012,
+          "reachable_code_min": 6012,
+          "reachable_code_max": 59638,
+          "all_codes_in_UINT16_range": true
+        },
+        "captured_payloads": "16 chunks of actual graph inputs, already validated equal to the host LUT formula"
+      },
+      "native_side": {
+        "source_checkpoint_sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+        "quantized_key": "model.language_model.embed_tokens_per_layer.embedding_quantized",
+        "scale_key": "model.language_model.embed_tokens_per_layer.embedding_scale",
+        "source_bits": 4,
+        "architectural_scale": 16.0,
+        "signed_mapping": {
+          "int2": "unsigned 0..3 minus 2",
+          "int4": "unsigned 0..15 minus 8"
+        },
+        "saved_native_activation_available": false,
+        "reconstruction": "Static table gather and declared dequantization for exactly the 1929 captured IDs; no transformer forward."
+      },
+      "error_budget": {
+        "units": "architecturally scaled embedding value units",
+        "LUT_UINT8_half_step": 0.05535414078656365,
+        "UINT8_to_UINT16_max_added_error": 0.0005895822199386558,
+        "native_BF16_half_ulp_at_max_abs_value": 0.03125,
+        "per_element_budget_at_max_abs_value": 0.0871937230065023,
+        "boundary": "Declared quantization/storage terms only. Not a claimed hardware error bound and not an accuracy acceptance threshold."
+      }
+    }
+  ],
+  "captured_chunk0_check": {
+    "values_checked": 196608,
+    "observed_code_min": 16574,
+    "observed_code_max": 37267,
+    "inside_declared_LUT_image": true,
+    "distinct_codes": 70,
+    "boundary": "Consistency of captured codes with the declared requantized LUT image; not proof of equality to native embeddings."
+  },
+  "captured_chunk0_sha256": "cafd3f67352a0ad9c80cdf3a70312bb0f85314c55b9a5eff2623b09b789ae1b9",
+  "predictions": {
+    "consistent_with_declared_quantization": "Per-element differences stay within the declared per-element budget with no systematic sign or scale pattern. Then both routes start from the same embeddings up to declared quantization, and endpoint divergence arises at or after the first in-graph operation. This does NOT identify a layer.",
+    "divergent_before_any_transformer_arithmetic": "A systematic offset, missing or extra architectural scale, wrong row order, or per-element differences far beyond the budget. Then endpoint differences cannot be attributed to in-graph HTP arithmetic alone.",
+    "reported_regardless": "Per-element and per-row difference distributions in declared units, worst rows/IDs, and the exact fraction outside budget. No pass or fail quality verdict."
+  },
+  "stop_criterion": "Stop immediately on any binding, size, hash or dtype failure. Otherwise stop after ONE bounded packet, whatever the outcome. No variant, no second boundary, no repeated reconstruction, no automatic follow-up.",
+  "execution_envelope_if_authorized": {
+    "RAM_bytes": 2147483648,
+    "swap": 0,
+    "CPU": 1,
+    "seconds": 300,
+    "new_output_bytes": 262144,
+    "output_accounting_includes_preparation_spill": true,
+    "model_forward_calls": 0,
+    "ADB_calls": 0,
+    "token_text_decoding": false,
+    "reads": "Static embedding tables and captured input payloads only"
+  },
+  "free_parameters_or_fitted_scalars": 0,
+  "declared_transform_source": "Pinned LUT provenance, pinned source quantization code revision and the recorded export-boundary contract; nothing fitted to QNN outputs.",
+  "what_this_cannot_decide": [
+    "Which decoder layer or operation diverges; no route saved internal activations.",
+    "Whether the QNN repetition collapse is caused by any of this.",
+    "Any QNN defect, quantization-only cause, or HTP kernel behaviour.",
+    "Whether agreement at the input boundary implies agreement later."
+  ],
+  "endpoint_packet_and_budget_exception": "unchanged",
+  "executed_by_this_freeze": false,
+  "seconds": 0.024594773999979225,
+  "source_sha256": "eeb8c5b08834539c40d148a1bb1ff559c1bef820b2734a42cc64b4cc5fe403c9"
+}
