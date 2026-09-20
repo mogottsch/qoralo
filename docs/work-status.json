@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-20T11:49:13+00:00",
+  "updated_at": "2026-09-20T11:50:00+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -31,12 +31,12 @@
     {
       "id": "app-script-failure",
       "title": "App chapter-generation reliability",
-      "status": "reviewing",
+      "status": "blocked",
       "owner": "Thomas",
-      "now": "Thomas made a host-only change so chapter generation must follow a fixed reply format, and retries up to three times with shorter targets if the reply cannot be read. Retries look like ordinary progress, and a final failure after three tries is unchanged. Host tests pass.",
-      "next": "This is unverified on a phone, so it is not yet shown to fix the observed failure. Output being cut off at the length ceiling remains the leading but unproven explanation. A separate host test suite fails the same way with and without this change, from the earlier rename.",
-      "reported_at": "2026-09-20T09:25:56+00:00",
-      "reported_by": "Thomas — host complete/no device run",
+      "now": "The chapter-generation fix is installed on the phone: chapters must follow a fixed reply format, with up to three shorter retries if a reply cannot be read. It keeps the old app identity while carrying the new name and code layout.",
+      "next": "It has not produced a chapter yet, so it is not yet shown to work. The only open step is Moritz starting one generation; a failure receipt is armed for it.",
+      "reported_at": "2026-09-20T11:50:00+00:00",
+      "reported_by": "Pi — installed build, awaiting one user run",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -147,7 +147,7 @@
       "status": "completed",
       "owner": "Moritz",
       "now": "The app is named Qoralo, and its Android identity changed too, so the Qoralo build installs as its own app and its native bridge was rebuilt.",
-      "next": "The Qoralo build is not installed or verified on the phone yet; the old app is the one currently installed. Earlier installed-app evidence describes that old build.",
+      "next": "The separate Qoralo identity build is still not installed. The phone runs the old identity, which now carries the Qoralo name and the renamed code.",
       "reported_at": "2026-09-20T09:34:50+00:00",
       "reported_by": "Kate — corrected from committed rebrand record",
       "stale_after_seconds": "persistent",
@@ -160,10 +160,10 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "No phone work is running. The app copy simplification was validated on the phone and released.",
-      "next": "Installing the app on the phone is part of finishing work. The copy-simplification pair is installed under the old app identity; the renamed build is not installed yet.",
-      "reported_at": "2026-09-20T11:49:13+00:00",
-      "reported_by": "Kate — current reported assignments",
+      "now": "The phone has the current app installed, including the chapter-generation fix and the simplified copy.",
+      "next": "Waiting for Moritz to start one generation so the chapter fix can be judged. The separate Qoralo identity build is not installed.",
+      "reported_at": "2026-09-20T11:50:00+00:00",
+      "reported_by": "Pi — installed build state",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -202,9 +202,9 @@
     },
     {
       "name": "Thomas",
-      "task": "Host-only chapter reliability change, unverified on device",
-      "reported_at": "2026-09-20T09:25:56+00:00",
-      "reported_by": "Thomas — no device/model run",
+      "task": "Chapter fix installed; awaiting one user generation",
+      "reported_at": "2026-09-20T11:50:00+00:00",
+      "reported_by": "Pi — installed, unverified",
       "stale_after_seconds": 900
     },
     {
