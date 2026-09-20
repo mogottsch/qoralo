@@ -55,14 +55,16 @@ Android identifies an app by its application ID, so the renamed build is a **dif
 
 ### Migration path for the existing episodes
 
-Both builds are debuggable, so app-private data can be moved without root and without uninstalling anything:
+**Moritz decided this is not needed.** The old app stays installed with all of its data until he removes it himself, and the Qoralo build may be installed beside it as a second, empty app. No migration is authorized, and none has been performed. The procedure below is kept only in case that decision changes.
+
+Both builds are debuggable, so app-private data could be moved without root and without uninstalling anything:
 
 1. Install the Qoralo build alongside the existing app and start it once so its data directory exists.
 2. With the old app stopped and no generation job running, copy `files/` and `databases/` out of `dev.vibevoice.podcast.internal` using `adb exec-out run-as`, recording sizes and hashes.
 3. Copy the tree into `dev.qoralo.podcast.internal` through `run-as`, preserving the WAL and SHM files together with their database.
 4. Verify row counts, file hashes and playback state in the new app before relying on it. Keep the old app installed until that check passes.
 
-This has not been performed. It needs a coordinated phone slot, and it must not interrupt an active job or playback.
+This has not been performed. It would need a coordinated phone slot, and it must not interrupt an active job or playback.
 
 ## Deliberately unchanged
 
@@ -73,7 +75,7 @@ This has not been performed. It needs a coordinated phone slot, and it must not 
 ## Remaining steps
 
 1. Install the Qoralo candidate in a coordinated phone slot and verify the new installed hashes. Unverified local build: app `10e698876967619dbebd14d07132e340cd358596bac46903993cef1498e5f111`, test `ede1a9387ff278008b4bc5c1a46f570cd921225e5dcc36db0c92707ecae8c6fd`; 265 host tests pass with 1 pre-existing skip, and the renamed bridge is present in all nine packaged native libraries. No device has run this build, so neither generation nor playback has been re-proven under the new identity.
-2. Migrate the existing episode data as described above, or accept a fresh library.
+2. Nothing else is required before the old app can be removed: that is Moritz's own step, at his timing.
 3. Rename the repository and its working directory, then update absolute paths in local tooling. Do this while no agent sessions are running, because their working directory would disappear.
 4. Decide what happens to the published dashboard path.
 
