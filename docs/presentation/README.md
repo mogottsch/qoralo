@@ -70,7 +70,7 @@ The walkthrough maps one-to-one to the document, not to a fictional clean succes
 | 2 | `slide-htp-runtime` | Our packaged ORT lacked QNN support; recorded Android build options show how we enabled it |
 | 3 | `slide-htp-shapes` | Actual dynamic-shape rejection, then concrete T239/L238 sizes |
 | 4 | `slide-htp-int8` | Actual CPU / mixed / HTP placement; INT8 did not mean full offload |
-| 5 | `slide-htp-softplus` | Why official FP32 avoided the INT8 quantized-op blockers; then the remaining Softplus rewrite |
+| 5 | `slide-htp-softplus` | Why FP32 avoided INT8 quantized-op blockers; Softplus rewrite; FP32 source versus the default FP16 request |
 | 6 | `slide-htp-proof` | Numerical comparison failed, but Moritz accepted the final audio; both checks mattered |
 | 7 | `slide-htp-contexts` | Long startup prompted precompilation; exact-scale 21.6129s vs 0.497816s setup bars |
 | 8 | `slide-htp-android` | APK library visibility; load-only proof separate from short synthesis |
@@ -83,6 +83,8 @@ The one-pager is a summary of the resulting route; the detail slides preserve ch
 The walkthrough is written as a report: what we tried, what failed, what changed and what happened. Implementation details such as native-edge indices and the publication-recovery mechanism remain in Notes rather than crowding the main explanation. Dynamic-shape rejection is distinguished from the separate ORT Pad-selector crash. Observed ~30-second long-input outputs are not presented as a demonstrated hard cap.
 
 No new inference, phone benchmark, listening verdict or hardware measurement was produced for these slides. Diagrams are authored HTML/SVG, and the startup chart uses the exact retained ratio. The compilation command shows the actual options from the saved August 13 ORT build log through the standard `./build.sh` wrapper; the log did not retain the outer shell invocation. [Build provenance](evidence/qnn-build-record.json) records that distinction, source hash and required container paths. This is not a turnkey SDK installation guide.
+
+Slide 5 explicitly separates **FP32 source graphs** from **the FP16 graph precision requested by the pinned ORT QNN provider**. The retained ORT source defaults `enable_htp_fp16_precision` to enabled, and the 0011 runner did not override it. [Precision-policy evidence](evidence/qnn-precision-policy.json) pins the unmodified source files and configuration path. This is not an instruction-level or per-operation arithmetic measurement, a claim of default INT8 conversion, or proof that the precision request alone caused the numerical differences.
 
 ### Rejected whole-input recordings
 

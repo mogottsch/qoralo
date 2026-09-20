@@ -46,6 +46,9 @@ Direction and route scope are recorded here; README documents all eleven steps, 
 ### ceiling
 Reached for the report-style revision. /tmp/luke-htp-report/{desktop,phone}-0.png through -11.png and the audio-error captures were reviewed in-session. All23slides × six viewports passed again with exact audio hashes/durations, muted playback, no preload/autoplay, media keys, mutual exclusion and pause-on-exit. Build-command argument/value pairs match the retained log whose hash is recorded in evidence/qnn-build-record.json. Test-only fixes resolved unavailable sandbox URL and accessing note text through template.content. No additional visual polish round was needed. Browser-native text selection and keyboard focus use the deck palette.
 
+### Precision clarification
+Slide5 now explicitly states FP32 source / FP16 requested / per-operation precision unmeasured. The retained ORT repository is at df2ba1cf8108aa63627cf4cdf8f807880b938616 with the inspected header/implementation unmodified. The provider default, HTP precision request and runner's lack of override are recorded in docs/presentation/evidence/qnn-precision-policy.json. This does not upgrade a software request into physical per-operation proof or attribute the numerical difference solely to FP16. The full23-slide/six-viewport suite passed again; /tmp/luke-precision-{desktop,phone}.png were reviewed in-session.
+
 ### material_fixes
 None outstanding. Detector warnings concern the inherited palette/font/cadence and h3 headings inside speaker-note templates; these render under the notes dialog's h2. No new eyebrow or new visual-world defaults were introduced. REJECTED is an intentional safety label on each failure sample. Actual audio testing was muted and grants no new listening verdict.
 

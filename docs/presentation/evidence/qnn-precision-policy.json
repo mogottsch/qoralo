@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "scope": "Source and configuration inspection for the experiment-0011 Supertonic route; not a new hardware measurement.",
+  "onnxruntime_version": "1.27.1",
+  "source_revision": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+  "source_files_unmodified_at_revision": true,
+  "provider_option": "enable_htp_fp16_precision",
+  "default_enabled": true,
+  "header": {
+    "path": "onnxruntime/core/providers/qnn/qnn_execution_provider.h",
+    "sha256": "79e3364d4c87548b3b6fe2c4b4f237488ea5d469860e5c33be58fa3d425a58ac",
+    "line": 118,
+    "excerpt": "bool enable_HTP_FP16_precision_ = true;"
+  },
+  "implementation": {
+    "path": "onnxruntime/core/providers/qnn/qnn_execution_provider.cc",
+    "sha256": "6b598a97664a6e2717081dff1a99001e3ac31168538cf2f3dd0b0495012e2612",
+    "option_parser_lines": [537, 547],
+    "graph_config_lines": [1231, 1238],
+    "graph_precision_request": "QNN_PRECISION_FLOAT16",
+    "condition": "HTP backend and enable_HTP_FP16_precision_ is true"
+  },
+  "runner": {
+    "path": "experiments/0011-supertonic-official-fp32-phone-comparison/host/official_fp32_e2e_runner.cc",
+    "function": "Options",
+    "fp16_option_overridden": false,
+    "explicit_provider_option_names": [
+      "backend_path",
+      "profiling_level",
+      "profiling_file_path",
+      "offload_graph_io_quantization",
+      "htp_performance_mode",
+      "soc_model"
+    ]
+  },
+  "conclusion": "The source ONNX graphs were FP32. The retained ORT QNN provider defaults to requesting FP16 HTP graph precision, and this runner did not override that default.",
+  "not_established": [
+    "The exact physical arithmetic, accumulation precision or precision of every operation in the compiled graph.",
+    "A default INT8 conversion for this FP32 route.",
+    "That all QNN versions, models or HTP routes have the same defaults.",
+    "That the numerical CPU/HTP difference was caused solely by the FP16 precision request."
+  ],
+  "historical_numerical_result_unchanged": "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json"
+}

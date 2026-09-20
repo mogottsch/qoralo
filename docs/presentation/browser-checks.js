@@ -377,6 +377,7 @@ async (page) => {
   check(await page.locator('#slide-htp-runtime .htp-command').evaluate(e => e.textContent.includes('--use_qnn static_lib --qnn_home /opt/qairt') && e.textContent.includes('--android_ndk_path /opt/android-sdk/ndk/26.2.11394342')), 'Runtime report includes the verified QNN-enabled Android build command');
   check(await page.locator('#slide-htp-shapes').evaluate(e => e.textContent.includes('Dynamic shape is not supported yet')), 'Describe the actual dynamic-shape rejection');
   check(await page.locator('#slide-htp-softplus').evaluate(e => e.textContent.includes('avoided the INT8 export') && e.textContent.includes('DynamicQuantizeLinear') && e.textContent.includes('Floating-point operations instead')), 'Explain why selecting FP32 graphs avoided the quantized-op blockers');
+  check(await page.locator('#slide-htp-softplus .htp-takeaway').evaluate(e => e.textContent.includes('FP32 source; FP16 requested') && e.textContent.includes('Per-operation precision was not measured')), 'Distinguish FP32 source from the source-verified FP16 request and unmeasured operation precision');
   check(await page.locator('#slide-htp-recipe .htp-recipe-list li').count() === 4, 'Provider slide explains the actual recipe rather than an unexplained edge diagram');
 
   // Exact rejected audio: no preload/autoplay; technical playback checks are muted, not listening verdicts.
