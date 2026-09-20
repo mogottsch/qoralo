@@ -1,0 +1,27 @@
+{
+  "scope": "what the app owns in an export, under the renamed id; the SAF picker hop is the platform contract and is out of scope",
+  "test": "dev.qoralo.podcast.e2e.RenamedExportSmokeTest",
+  "result": "passed",
+  "sanitizedNameCases": 3,
+  "requestedFileName": "export-gate-owned-fixture.wav",
+  "ownedFixture": {
+    "episodeId": "3447b178-3dda-491a-94b1-39d6351b1574",
+    "audioBytes": 8864,
+    "writtenSha256": "6c44cf63ec09b2f638793fac3619793ecb9852728de23d15b2af32d51b561389",
+    "matchesEpisodeFinalAudioSha256": true,
+    "note": "the complete episode is built by the test, so the gate does not depend on what the library happens to hold"
+  },
+  "negativeCase": {
+    "partialEpisodeRefused": true,
+    "fileCreated": false
+  },
+  "cleanup": {
+    "fixtureRowsDeleted": true,
+    "fixtureFilesDeleted": true,
+    "userEpisodeDirectoriesBefore": 6,
+    "after": 6
+  },
+  "notVerified": [
+    "the SAF picker hop itself, which would need UiAutomator against a device-specific Files UI and would be a weaker, non-reproducible observation"
+  ]
+}

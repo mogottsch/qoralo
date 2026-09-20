@@ -129,3 +129,11 @@ Both model routes are therefore proven under `dev.qoralo.podcast.internal`. What
 Installs were landing on the work profile as well as the personal user, which put the app somewhere it does not belong. The work profile (user 10) had our instrumentation package; it was removed there with `pm uninstall --user 10`, leaving user 0 untouched. No app belonging to the work profile was touched.
 
 Every install path now passes `--user 0`: `tools/install_local_debug.sh` and the gate controllers in `tools/` and `tools/provider_pipeline/`. A default install without that flag can reach every user on the device, so it must not come back.
+
+### Export
+
+`RenamedExportSmokeTest` covers the part of export the app owns: the sanitized name it asks the picker for (three cases, including the fallback to `episode`), the bytes written to a destination stream, and the refusal to export an episode that is not ready.
+
+The complete episode is built by the test — a short owned WAV plus the rows that mark it ready — so the gate is reproducible rather than dependent on what the library happens to hold. The exported file matched the episode's `finalAudioSha256` exactly at 8,864 bytes under the name `export-gate-owned-fixture.wav`, a partial episode produced no file, and the fixture's rows and files were removed afterwards, leaving the six user episode directories untouched.
+
+The SAF hop itself stays unproven by choice: it is the platform's contract, and driving the Files picker through UiAutomator would be device-skin dependent and not reproducible.
