@@ -27,7 +27,7 @@ class ProfileOffScopeTests(unittest.TestCase):
         self.assertEqual(old_text, (path.parent / 'narration.txt').read_bytes())
         self.assertEqual(new['input']['sha256'], hashlib.sha256(old_text).hexdigest())
         self.assertTrue(new['profilingEvidence'].startswith('UNAVAILABLE_BY_DESIGN'))
-        self.assertEqual('a87b3f358f9efff213beeed3261f651620e5763c0f3b022718190860740815a4', off.digest(PROJECT / 'tools/run_tts_long_gate.py'))
+        self.assertEqual('841fcb8970a4a187c1d753d8b519535bec7efb742c99459439a7823b3c519def', off.digest(PROJECT / 'tools/run_tts_long_gate.py'))
         self.assertEqual(off.PRIVACY_SOURCE_SHA, off.digest(PROJECT / 'tools/run_tts_only_gate.py'))
 
     def test_controller_matches_approved_logic_except_variant_pins_and_labels(self):
@@ -49,7 +49,7 @@ class ProfileOffScopeTests(unittest.TestCase):
         self.assertEqual(normalized(PROJECT / 'tools/run_tts_long_gate.py'), normalized(PROJECT / 'tools/run_tts_profile_off_gate.py'))
 
     def test_existing_hook_only_and_unavailable_counts_not_zero_measurements(self):
-        service = (PROJECT / 'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt').read_text()
+        service = (PROJECT / 'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyService.kt').read_text()
         native = (PROJECT / 'app/src/main/cpp/podcast_runtime.cpp').read_text()
         self.assertIn('if (contract.collectProfiles) RuntimeDiagnostics.enableTtsOnly(evidence)', service)
         self.assertIn('NativeStdioCapture(root).use', service)

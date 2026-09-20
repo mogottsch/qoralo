@@ -32,7 +32,7 @@ def main():
         if archive.read("assets/duration-load/contract.json") != contract_bytes:
             raise ValueError("APK diagnostic contract mismatch")
     subprocess.run([str(PROJECT / "tools/verify_apk_runtime.py"), "--apk", str(apk), "--output", str(args.output / "native-inventory.json")], check=True)
-    for name, path, pkg in [("app", apk, "dev.vibevoice.podcast.internal"), ("test", tests, "dev.vibevoice.podcast.internal.test")]:
+    for name, path, pkg in [("app", apk, "dev.qoralo.podcast.internal"), ("test", tests, "dev.qoralo.podcast.internal.test")]:
         badging = subprocess.check_output([str(args.aapt), "dump", "badging", str(path)], text=True)
         if f"package: name='{pkg}'" not in badging:
             raise ValueError("wrong diagnostic package")

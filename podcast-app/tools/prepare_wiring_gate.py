@@ -49,7 +49,7 @@ def main() -> None:
     args.output.mkdir(parents=True, exist_ok=False)
     contract = check_inputs(args.apk, PROJECT / "app/src/debug/assets/wiring/contract.json")
     subprocess.run([str(PROJECT / "tools/verify_apk_runtime.py"), "--apk", str(args.apk), "--output", str(args.output / "runtime-inventory.json")], check=True)
-    for kind, apk, expected_package in [("app", args.apk, "dev.vibevoice.podcast.internal"), ("test", args.test_apk, "dev.vibevoice.podcast.internal.test")]:
+    for kind, apk, expected_package in [("app", args.apk, "dev.qoralo.podcast.internal"), ("test", args.test_apk, "dev.qoralo.podcast.internal.test")]:
         result = subprocess.run([str(args.aapt), "dump", "badging", str(apk)], check=True, capture_output=True, text=True)
         (args.output / f"{kind}-badging.txt").write_text(result.stdout)
         if f"package: name='{expected_package}'" not in result.stdout:

@@ -180,7 +180,7 @@ def main():
         active=[j for j in state['generation_jobs'] if j['status'] in ('QUEUED','RUNNING')]
         if active:
             require(all(j['status']=='RUNNING' for j in active),'queued work retained; no automatic dispatch retry')
-            device.shell(f'am start -W -n {APP}/dev.vibevoice.podcast.MainActivity',timeout=15)
+            device.shell(f'am start -W -n {APP}/dev.qoralo.podcast.MainActivity',timeout=15)
             deadline=time.monotonic()+25
             while True:
                 state=rows(stable('watchdog-'+str(device.counter)));safe_close(state,owned)
@@ -261,7 +261,7 @@ def main():
             fresh_quiet_audio()
             if guard_probe_only:
                 output=device.run(['shell','am','instrument','-w','-e','class',
-                    'dev.vibevoice.podcast.e2e.OwnedAudioGuardProbeTest,dev.vibevoice.podcast.ui.LiveCollectorRegressionTest',
+                    'dev.qoralo.podcast.e2e.OwnedAudioGuardProbeTest,dev.qoralo.podcast.ui.LiveCollectorRegressionTest',
                     '-e','ownedGuardProbe','true','-e','diagnosticRun',a.run_id,'-e','profile','guard-probe',
                     '-e','sourceEpisodeId',REPLAY['episodeId'],'-e','sourceJobId',REPLAY['jobId'],'-e','expectedMasterSha256',REPLAY['masterSha256'],
                     '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
@@ -291,7 +291,7 @@ def main():
                         device.shell('settings put system font_scale 2.0',timeout=10)
                     fresh_quiet_audio()
                     synthetic=device.run(['shell','am','instrument','-w','-e','class',
-                        'dev.vibevoice.podcast.ui.PersistentPlayerRegressionTest,dev.vibevoice.podcast.ui.ProgressivePlayerRegressionTest',
+                        'dev.qoralo.podcast.ui.PersistentPlayerRegressionTest,dev.qoralo.podcast.ui.ProgressivePlayerRegressionTest',
                         '-e','diagnosticRun',a.run_id,'-e','profile',profile,
                         TEST_APP+'/androidx.test.runner.AndroidJUnitRunner'],timeout=180)
                     require(re.search(r'OK \(4 tests\)',synthetic) is not None and 'FAILURES!!!' not in synthetic,'synthetic '+profile+' playback regression failed; no model run')
@@ -308,7 +308,7 @@ def main():
                 return # finally performs preservation/settings/identity/cleanup; never fall through to AUDIO.
             health('health-before-inference',True)
             fresh_quiet_audio()
-            command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
+            command=['shell','am','instrument','-w','-e','class','dev.qoralo.podcast.e2e.ProviderAppIntegrationTest#copiedRealChapterCompletesNormalAudioJob',
                 '-e','providerIntegration','copied-real-chapter-v1','-e','diagnosticRun',a.run_id,
                 '-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256'],
                 '-e','originalEpisodeId',REFERENCE['episode'],'-e','originalRevisionId',REFERENCE['revision'],

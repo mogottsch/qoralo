@@ -18,7 +18,7 @@ import time
 
 from prepare_wiring_gate import CONTRACT_SHA, PROJECT, digest
 
-APP = "dev.vibevoice.podcast.internal"
+APP = "dev.qoralo.podcast.internal"
 TEST_APP = APP + ".test"
 ANIMATIONS = ("window_animation_scale", "transition_animation_scale", "animator_duration_scale")
 
@@ -193,7 +193,7 @@ def main():
             settings.disable_animations()
         with (args.output / "logcat.txt").open("wb") as out, (args.output / "logcat.stderr").open("wb") as err:
             logcat = subprocess.Popen(device.prefix + ["logcat", "-v", "threadtime", "-T", "1"], stdout=out, stderr=err, close_fds=True, start_new_session=True)
-        test_class = "dev.vibevoice.podcast.wiring.RealRuntimeWiringTest" if args.suite == "wiring" else "dev.vibevoice.podcast.ui.ScreenSemanticsTest"
+        test_class = "dev.qoralo.podcast.wiring.RealRuntimeWiringTest" if args.suite == "wiring" else "dev.qoralo.podcast.ui.ScreenSemanticsTest"
         command = f"am instrument -w -r -e class {test_class}"
         if args.suite == "wiring":
             command += f" -e wiringApproved {CONTRACT_SHA} -e wiringRunId {args.run_id} -e appApkSha256 {candidate['app']['sha256']} -e testApkSha256 {candidate['test']['sha256']}"

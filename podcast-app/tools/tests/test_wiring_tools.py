@@ -122,7 +122,7 @@ class WiringToolsTests(unittest.TestCase):
         self.assertIn('android:process=":generation"', debug)
         self.assertNotIn("RuntimeWiringService", production)
         self.assertFalse((PROJECT / "app/src/release/assets/wiring").exists())
-        release = (PROJECT / "app/src/release/java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt").read_text()
+        release = (PROJECT / "app/src/release/java/dev/qoralo/podcast/runtime/RuntimeDiagnostics.kt").read_text()
         self.assertNotIn("enable(", release)
         self.assertIn('fun qnnProfileDirectory(): String = ""', release)
 

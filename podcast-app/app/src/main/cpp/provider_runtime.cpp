@@ -159,7 +159,7 @@ jstring provenance(JNIEnv* env,jclass,jlong handle) {
 }
 }
 bool RegisterProviderNatives(JNIEnv* env) {
-  auto type=env->FindClass("dev/vibevoice/podcast/runtime/ProviderNative");if(!type) return false;
+  auto type=env->FindClass("dev/qoralo/podcast/runtime/ProviderNative");if(!type) return false;
   JNINativeMethod methods[]={
     {const_cast<char*>("create"),const_cast<char*>("(Ljava/lang/String;)J"),reinterpret_cast<void*>(create)},
     {const_cast<char*>("beginChapter"),const_cast<char*>("(J)V"),reinterpret_cast<void*>(begin)},

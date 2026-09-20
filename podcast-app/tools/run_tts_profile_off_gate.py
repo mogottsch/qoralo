@@ -19,7 +19,7 @@ from run_tts_only_gate import capture_conditions
 CONTRACT_SHA = '8d6b93557a2ac9d191b731735015bad6ce9d95c9b605861dc3c930cf9c82cd35'
 PACK_ID = 'supertonic-3-t2048-l2048-parity'
 OLD_MANIFEST_SHA = 'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d'
-PRIVACY_SOURCE_SHA = 'a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
+PRIVACY_SOURCE_SHA = '0d4a150fd4ae76d996d015bd79a172a9ad68220c24ea83ad3c917161cbf64120'
 
 
 def check_controller(args):
@@ -147,7 +147,7 @@ def main():
         stage_new_pack(device, value['modelPack'], remote, cleanup)
         with (args.output / 'logcat.txt').open('wb') as out, (args.output / 'logcat.stderr').open('wb') as err:
             logs = subprocess.Popen(device.prefix + ['logcat', '-v', 'threadtime', '-T', '1'], stdout=out, stderr=err, start_new_session=True, close_fds=True)
-        command = ('am instrument -w -r -e class dev.vibevoice.podcast.wiring.TtsOnlyTest'
+        command = ('am instrument -w -r -e class dev.qoralo.podcast.wiring.TtsOnlyTest'
                    f' -e ttsOnlyApproved {CONTRACT_SHA} -e ttsOnlyRunId {args.run_id}'
                    f" -e appApkSha256 {value['app']['sha256']} -e testApkSha256 {value['test']['sha256']}"
                    f' {TEST_APP}/androidx.test.runner.AndroidJUnitRunner')

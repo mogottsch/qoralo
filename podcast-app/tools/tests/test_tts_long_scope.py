@@ -34,7 +34,7 @@ class TtsLongScopeTests(unittest.TestCase):
         self.assertEqual({'duration': 1, 'text': 1, 'vector': 5, 'vocoder': 1}, contract['expectedSessionRunCounts'])
 
     def test_same_single_renderer_and_fail_closed_native_capacity(self):
-        service = (PROJECT / 'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt').read_text()
+        service = (PROJECT / 'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyService.kt').read_text()
         native = (PROJECT / 'app/src/main/cpp/podcast_runtime.cpp').read_text()
         self.assertEqual(1, service.count('tts.renderChapter(')); self.assertEqual(1, service.count('tts.load('))
         self.assertIn('app.artifacts.modelPackRoot(contract.packId)', service)

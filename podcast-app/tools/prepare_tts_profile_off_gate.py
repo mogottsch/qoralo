@@ -19,16 +19,16 @@ from prepare_tts_long_pack import PACK_ID, NEW_ROOT, AUTHORITY
 BASE='3fd75c06481bcc709d45da5c4933347f348e9079'
 BASE_APP_SHA='78488901d63032b87d2d575c6bec5b7f578b3a7ee38c92e3c633ed943dcb96ab'
 PATCH=[
- 'app/src/debug/java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt',
- 'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyContract.kt',
- 'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt',
+ 'app/src/debug/java/dev/qoralo/podcast/runtime/RuntimeDiagnostics.kt',
+ 'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyContract.kt',
+ 'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyService.kt',
  'app/src/debug/assets/tts-only/contract.json','app/src/debug/assets/tts-only/canonical.txt',
- 'app/src/androidTest/java/dev/vibevoice/podcast/wiring/TtsOnlyTest.kt',
- 'app/src/testDebug/java/dev/vibevoice/podcast/wiring/TtsOnlyContractTest.kt',
- 'app/src/testDebug/java/dev/vibevoice/podcast/wiring/TtsLongContractTest.kt',
+ 'app/src/androidTest/java/dev/qoralo/podcast/wiring/TtsOnlyTest.kt',
+ 'app/src/testDebug/java/dev/qoralo/podcast/wiring/TtsOnlyContractTest.kt',
+ 'app/src/testDebug/java/dev/qoralo/podcast/wiring/TtsLongContractTest.kt',
  'app/src/debug/assets/tts-long/contract.json', 'app/src/debug/assets/tts-long/narration.txt',
  'app/src/debug/assets/tts-long-profile-off/contract.json', 'app/src/debug/assets/tts-long-profile-off/narration.txt',
- 'app/src/testDebug/java/dev/vibevoice/podcast/wiring/TtsProfileOffContractTest.kt',
+ 'app/src/testDebug/java/dev/qoralo/podcast/wiring/TtsProfileOffContractTest.kt',
 ]
 
 
@@ -108,17 +108,17 @@ def main():
         assert git('show',source+':podcast-app/config/trusted-supertonic-long.json')==AUTHORITY.read_bytes()
         app_src=git('rev-parse',tree+':podcast-app/app/src').decode().strip()
         profile_delta=git('diff','--name-only',previous['effectiveAppSrcTree'],app_src).decode().splitlines()
-        assert profile_delta==sorted(['androidTest/java/dev/vibevoice/podcast/wiring/TtsOnlyTest.kt',
-            'debug/java/dev/vibevoice/podcast/wiring/TtsOnlyContract.kt','debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt',
+        assert profile_delta==sorted(['androidTest/java/dev/qoralo/podcast/wiring/TtsOnlyTest.kt',
+            'debug/java/dev/qoralo/podcast/wiring/TtsOnlyContract.kt','debug/java/dev/qoralo/podcast/wiring/TtsOnlyService.kt',
             'debug/assets/tts-long-profile-off/contract.json','debug/assets/tts-long-profile-off/narration.txt',
-            'testDebug/java/dev/vibevoice/podcast/wiring/TtsProfileOffContractTest.kt']),profile_delta
+            'testDebug/java/dev/qoralo/podcast/wiring/TtsProfileOffContractTest.kt']),profile_delta
         save('source-proof.json',{'baseSource':BASE,'overlaySource':source,'effectiveAppSrcTree':app_src,'changedSourcePaths':effective_paths,
             'profiledBaselineCandidateSha256':digest(previous_path),'profiledBaselineAppSrcTree':previous['effectiveAppSrcTree'],'deltaAgainstProfiledAppSrc':profile_delta,
             'allSourceBlobs':expected,'allFileSetsAndBlobsVerified':True,'nativeBridge':'exact frozen APK bytes reused; host CMake disabled only in isolated build local.properties',
             'baselineAppSha256':BASE_APP_SHA,'mainRenderAndCppChanged':False,'neuralRuntimeOptionsChanged':False,
             'observabilityDelta':'collectProfiles=false: existing empty-directory path disables both ORT and QNN profiles','sharedSourceWorktreeOrGradleOutputsReplaced':False,
             'overlayInputHashes':{p:digest(project/p) for p in effective_paths},'localPropertiesSha256':digest(project/'local.properties')})
-        command('host-build.log',['./gradlew','--offline','--max-workers=2',':app:assembleDebug',':app:assembleDebugAndroidTest',':app:testDebugUnitTest','--tests','dev.vibevoice.podcast.wiring.TtsOnlyContractTest','--tests','dev.vibevoice.podcast.wiring.TtsProfileOffContractTest'],project)
+        command('host-build.log',['./gradlew','--offline','--max-workers=2',':app:assembleDebug',':app:assembleDebugAndroidTest',':app:testDebugUnitTest','--tests','dev.qoralo.podcast.wiring.TtsOnlyContractTest','--tests','dev.qoralo.podcast.wiring.TtsProfileOffContractTest'],project)
         for name,path in [('app','app/build/outputs/apk/debug/app-debug.apk'),('test','app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk')]:shutil.copy2(project/path,out/(name+'.apk'))
         suites=list((project/'app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
         counts={k:sum(int(ET.parse(p).getroot().attrib.get(k,0)) for p in suites) for k in ['tests','failures','errors','skipped']}

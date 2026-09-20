@@ -4,14 +4,14 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 PROJECT="$ROOT/podcast-app"
 LOCK="$ROOT/artifacts/locks/phone.lock"
-APP_ID=dev.vibevoice.podcast.internal
+APP_ID=dev.qoralo.podcast.internal
 SERIAL=${ANDROID_SERIAL:-R5CW81PR8SY}
 ADB=${ADB:-adb}
 APK="$PROJECT/app/build/outputs/apk/debug/app-debug.apk"
 PACKS="$PROJECT/.local/model-packs"
 STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 EVIDENCE="$PROJECT/.local/phone-install/$STAMP"
-REMOTE="/data/local/tmp/vibevoice-podcast-$STAMP-$$"
+REMOTE="/data/local/tmp/qoralo-podcast-$STAMP-$$"
 
 if [[ ${PODCAST_PHONE_PRIORITY:-} != approved ]]; then
   echo "PODCAST_PHONE_PRIORITY=approved is required after explicit Pi priority" >&2

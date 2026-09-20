@@ -64,7 +64,7 @@ def main():
         assert digest(project/f'app/src/{asset_source}/assets/{asset}/contract.json')==contract_sha
         assert digest(project/'app/src/main/cpp/podcast_runtime.cpp')=='a3de4cd62a83275977036516ff1e0c04a3beda454794e7c331aed7b936ad8b35'
         if previous:
-            if args.export_only:assert previous['kind']=='short-production-continuation' and previous['app']['sha256']==PRIOR['dev.vibevoice.podcast.internal']
+            if args.export_only:assert previous['kind']=='short-production-continuation' and previous['app']['sha256']==PRIOR['dev.qoralo.podcast.internal']
             else:assert previous['kind']==('short-production-continuation' if args.continuation else 'short-production-plumbing') and previous['contractSha256']==contract_sha
             assert digest(Path(previous['app']['path']))==previous['app']['sha256']
             for path in build_paths:
@@ -86,8 +86,8 @@ def main():
         app_tasks=[] if previous else [':app:assembleDebug']
         command('host-build.log',['./gradlew','--offline','--max-workers=2','--no-configuration-cache','-Ppodcast.shortProductE2e=true','-I',str(init),
             ':app:coherentArtifactInputs',*app_tasks,':app:assembleDebugAndroidTest',':app:testDebugUnitTest',
-            '--tests','dev.vibevoice.podcast.e2e.ShortProductPolicyTest','--tests','dev.vibevoice.podcast.generation.GenerationCoordinatorTest',
-            '--tests','dev.vibevoice.podcast.runtime.GemmaChapterPromptTest','--tests','dev.vibevoice.podcast.runtime.GemmaEditPromptTest','--tests','dev.vibevoice.podcast.e2e.ShortContinuationPolicyTest'],project,env)
+            '--tests','dev.qoralo.podcast.e2e.ShortProductPolicyTest','--tests','dev.qoralo.podcast.generation.GenerationCoordinatorTest',
+            '--tests','dev.qoralo.podcast.runtime.GemmaChapterPromptTest','--tests','dev.qoralo.podcast.runtime.GemmaEditPromptTest','--tests','dev.qoralo.podcast.e2e.ShortContinuationPolicyTest'],project,env)
         artifacts=json.loads((out/'resolved-artifacts.json').read_text())
         save('resolved-artifact-hashes.json',{r['file']:{'sha256':digest(Path(r['file'])),'bytes':Path(r['file']).stat().st_size} for r in artifacts})
         if previous:
@@ -95,7 +95,7 @@ def main():
             shutil.copy2(previous['app']['path'],out/'app.apk')
         else:shutil.copy2(project/'app/build/outputs/apk/debug/app-debug.apk',out/'app.apk')
         shutil.copy2(project/'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',out/'test.apk')
-        generated=(project/'app/build/generated/source/buildConfig/debug/dev/vibevoice/podcast/BuildConfig.java').read_text()
+        generated=(project/'app/build/generated/source/buildConfig/debug/dev/qoralo/podcast/BuildConfig.java').read_text()
         assert 'SHORT_PRODUCT_E2E = true' in generated and '"supertonic-3"' in generated and PACKS['supertonic-3'] in generated
         (out/'generated-BuildConfig.java').write_text(generated)
         suites=list((project/'app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))

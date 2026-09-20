@@ -23,19 +23,19 @@ class NormalIntegrationScopeTests(unittest.TestCase):
         self.assertIn('config/normal-supertonic-pack.properties', gradle)
         self.assertIn('"SUPERTONIC_PACK_ID", "\\"$supertonicPackId\\""', gradle)
         self.assertIn('"SUPERTONIC_MANIFEST_SHA256", "\\"$supertonicManifest\\""', gradle)
-        ui = (PROJECT / 'app/src/main/java/dev/vibevoice/podcast/ui/PodcastApp.kt').read_text()
+        ui = (PROJECT / 'app/src/main/java/dev/qoralo/podcast/ui/PodcastApp.kt').read_text()
         self.assertIn('modelPackRoot(BuildConfig.SUPERTONIC_PACK_ID)', ui)
         self.assertIn('Supertonic 3 · experimental', ui)
         self.assertIn('speech coverage unverified', ui)
 
     def test_coordinator_changes_only_model_directory_and_id_selection(self):
-        path = 'app/src/main/java/dev/vibevoice/podcast/generation/GenerationCoordinator.kt'
+        path = 'app/src/main/java/dev/qoralo/podcast/generation/GenerationCoordinator.kt'
         expected = frozen(path).replace('Triple("supertonic-3", "supertonic-3", BuildConfig.SUPERTONIC_MANIFEST_SHA256)',
                                         'Triple(BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_MANIFEST_SHA256)')
         self.assertEqual(expected, (PROJECT / path).read_text())
 
     def test_target_prompt_binding_only_no_limits_parser_sampler_or_global_minimum(self):
-        path = 'app/src/main/java/dev/vibevoice/podcast/runtime/NativeEngines.kt'
+        path = 'app/src/main/java/dev/qoralo/podcast/runtime/NativeEngines.kt'
         expected = subprocess.check_output(['git','show','7980d11:podcast-app/'+path],cwd=ROOT).decode()
         expected = expected.replace('.put("requestedChapterId", chapter.id)',
             '.put("requestedChapterId", chapter.id)\n            .put("requestedChapter", JSONObject().put("id", chapter.id).put("title", chapter.title).put("brief", chapter.brief))')

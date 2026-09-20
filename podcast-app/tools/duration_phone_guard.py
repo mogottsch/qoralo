@@ -20,7 +20,7 @@ IDENTITY = {
     'ro.product.cpu.abi': 'arm64-v8a', 'ro.build.version.release': '16', 'ro.build.version.sdk': '36',
     'ro.build.fingerprint': 'samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys',
 }
-SCHEMA = PROJECT / 'app/schemas/dev.vibevoice.podcast.data.PodcastDatabase/1.json'
+SCHEMA = PROJECT / 'app/schemas/dev.qoralo.podcast.data.PodcastDatabase/1.json'
 SCHEMA_SHA = 'aa0440c6e4636618a3eb9ec50131aef8a66c280e568262e88daae9edd21a8a84'
 MAX_BYTES = 64 * 1024 * 1024
 FILES = {'databases/podcast.db', 'databases/podcast.db-wal', 'databases/podcast.db-shm'}

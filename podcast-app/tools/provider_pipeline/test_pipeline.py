@@ -23,7 +23,7 @@ class ProviderPipelineTests(unittest.TestCase):
         neural=source.index("            health('health-before-inference',True)")
         self.assertIn('return # finally',source[boundary:neural])
         for name in ['PersistentPlayerRegressionTest','ProgressivePlayerRegressionTest']:
-            test=(ROOT/f'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/{name}.kt').read_text()
+            test=(ROOT/f'podcast-app/app/src/androidTest/java/dev/qoralo/podcast/ui/{name}.kt').read_text()
             for forbidden in ['ProviderQnnEngine(', 'ConfiguredTtsEngine(', 'ProviderNative.', 'GenerationService', 'NativeGemmaEngine(']:
                 self.assertNotIn(forbidden,test)
     def test_collector_replay_requires_exact_source_apks_and_zero_model_scope(self):
@@ -53,18 +53,18 @@ class ProviderPipelineTests(unittest.TestCase):
         start=source.index('            if guard_probe_only:\n                output=')
         end=source.index("            health('health-before-inference',True)")
         self.assertIn('return # Dedicated non-neural phase',source[start:end])
-        service=(ROOT/'podcast-app/app/src/debug/java/dev/vibevoice/podcast/runtime/OwnedAudioGuardProbeService.kt').read_text()
+        service=(ROOT/'podcast-app/app/src/debug/java/dev/qoralo/podcast/runtime/OwnedAudioGuardProbeService.kt').read_text()
         for forbidden in ['ProviderNative.', 'ConfiguredTtsEngine(', 'GenerationCoordinator(', 'NativeAppRuntime']:
             self.assertNotIn(forbidden,service)
         self.assertIn('START_NOT_STICKY',service)
         self.assertIn('Process.killProcess(pid)',service)
-        runtime=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/runtime/ProviderQnnEngine.kt').read_text()
+        runtime=(ROOT/'podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/ProviderQnnEngine.kt').read_text()
         self.assertEqual(2,runtime.count('catch (cancelled: CancellationException)'))
     def test_package_stop_refreshes_audio_and_probe_covers_shared_teardown(self):
         source=(ROOT/'podcast-app/tools/provider_pipeline/run_app_gate.py').read_text()
         stop=source[source.index('    def stop(state,owned):'):source.index('    owned=None;')]
         self.assertLess(stop.index('fresh_quiet_audio()'),stop.index("device.shell('am force-stop '"))
-        for relative in ['app/src/main/java/dev/vibevoice/podcast/generation/GenerationCoordinator.kt','app/src/debug/java/dev/vibevoice/podcast/runtime/OwnedAudioGuardProbeService.kt']:
+        for relative in ['app/src/main/java/dev/qoralo/podcast/generation/GenerationCoordinator.kt','app/src/debug/java/dev/qoralo/podcast/runtime/OwnedAudioGuardProbeService.kt']:
             self.assertIn('closeGuardedAudio(guard)',(ROOT/'podcast-app'/relative).read_text())
     def test_quiet_then_foreign_play_and_stale_unknown_close_observations_reject(self):
         quiet='PlaybackActivityMonitor dump time\n  players:\n    ID:4 -- type:AudioTrack -- u/pid:123/456 -- state:paused\n  ducked players:\n'
@@ -91,10 +91,10 @@ class ProviderPipelineTests(unittest.TestCase):
         self.assertEqual(0,compare_recovery(before,after)['newNeuralCalls'])
         after['generation_jobs'][0]['status']='COMPLETE'
         with self.assertRaises(GuardError):compare_recovery(before,after)
-        source=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/generation/GenerationCoordinator.kt').read_text()
+        source=(ROOT/'podcast-app/app/src/main/java/dev/qoralo/podcast/generation/GenerationCoordinator.kt').read_text()
         self.assertLess(source.index('if (recovery != null)'),source.index('engine=ttsFactory()'))
         self.assertIn('return // Crucially before constructing/loading any TtsEngine.',source)
-        driver=(ROOT/'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/e2e/ProviderPublicationRecoveryTest.kt').read_text()
+        driver=(ROOT/'podcast-app/app/src/androidTest/java/dev/qoralo/podcast/e2e/ProviderPublicationRecoveryTest.kt').read_text()
         for forbidden in ('ProviderNative','GemmaLiteRtGpuEngine','renderChapter','throw error','performClick'):
             self.assertNotIn(forbidden,driver)
     def test_only_authenticated_owned_audio_work_can_be_closed(self):
@@ -106,7 +106,7 @@ class ProviderPipelineTests(unittest.TestCase):
             ({'status':'RUNNING','episodeId':'owned','kind':'AUDIO'},None)]:
             with self.assertRaises(GuardError):safe_close({'generation_jobs':[row]},owner)
     def test_source_only_copy_is_labelled_and_audio_uses_real_ui(self):
-        src=(ROOT/'podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/e2e/ProviderAppIntegrationTest.kt').read_text()
+        src=(ROOT/'podcast-app/app/src/androidTest/java/dev/qoralo/podcast/e2e/ProviderAppIntegrationTest.kt').read_text()
         self.assertIn('no new SCRIPT inference',src)
         self.assertIn('onNodeWithContentDescription("New episode").performClick()',src)
         self.assertIn('onNodeWithText("Lock & create").performClick()',src)
@@ -120,11 +120,11 @@ class ProviderPipelineTests(unittest.TestCase):
         self.assertIn('size.native_length*kHop',native)
         self.assertIn('session.disable_cpu_ep_fallback',native)
         self.assertIn('Nonzero inactive provider latent; no repair',native)
-        front=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/runtime/ProviderTextFrontend.kt').read_text()
+        front=(ROOT/'podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/ProviderTextFrontend.kt').read_text()
         self.assertIn('ProviderUnicode14.normalize',front)
         self.assertIn('original == grouped',front)
     def test_plan_uses_nonce_pack_revision_and_frontend_not_mutable_status_fields(self):
-        plan=(ROOT/'podcast-app/app/src/main/java/dev/vibevoice/podcast/runtime/ProviderAudioPlan.kt').read_text()
+        plan=(ROOT/'podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/ProviderAudioPlan.kt').read_text()
         for field in ['nonce','revisionSha256','packSha256','unicodeTableSha256','idsSha256']:
             self.assertIn('"'+field+'"',plan)
         self.assertIn('hash(bytes) == job',plan)

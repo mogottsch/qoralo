@@ -30,11 +30,11 @@ val supertonicManifest = normalSupertonic.getProperty("supertonic.manifest.sha25
 }
 
 android {
-    namespace = "dev.vibevoice.podcast"
+    namespace = "dev.qoralo.podcast"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "dev.vibevoice.podcast.internal"
+        applicationId = "dev.qoralo.podcast.internal"
         minSdk = 29
         targetSdk = 35
         versionCode = 1

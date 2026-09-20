@@ -18,12 +18,12 @@ from duration_phone_guard import host_identity
 BASE='3fd75c06481bcc709d45da5c4933347f348e9079'
 BASE_APP_SHA='78488901d63032b87d2d575c6bec5b7f578b3a7ee38c92e3c633ed943dcb96ab'
 PATCH=[
- 'app/src/debug/java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt',
- 'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyContract.kt',
- 'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt',
+ 'app/src/debug/java/dev/qoralo/podcast/runtime/RuntimeDiagnostics.kt',
+ 'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyContract.kt',
+ 'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyService.kt',
  'app/src/debug/assets/tts-only/contract.json','app/src/debug/assets/tts-only/canonical.txt',
- 'app/src/androidTest/java/dev/vibevoice/podcast/wiring/TtsOnlyTest.kt',
- 'app/src/testDebug/java/dev/vibevoice/podcast/wiring/TtsOnlyContractTest.kt',
+ 'app/src/androidTest/java/dev/qoralo/podcast/wiring/TtsOnlyTest.kt',
+ 'app/src/testDebug/java/dev/qoralo/podcast/wiring/TtsOnlyContractTest.kt',
 ]
 
 
@@ -92,7 +92,7 @@ def main():
             'allSourceBlobs':expected,'allFileSetsAndBlobsVerified':True,'nativeBridge':'exact frozen APK bytes reused; host CMake disabled only in isolated build local.properties',
             'baselineAppSha256':BASE_APP_SHA,'mainRenderAndCppChanged':False,'runtimeOptionsChanged':False,'sharedSourceWorktreeOrGradleOutputsReplaced':False,
             'overlayInputHashes':{p:digest(project/p) for p in effective_paths},'localPropertiesSha256':digest(project/'local.properties')})
-        command('host-build.log',['./gradlew','--offline','--max-workers=2',':app:assembleDebug',':app:assembleDebugAndroidTest',':app:testDebugUnitTest','--tests','dev.vibevoice.podcast.wiring.TtsOnlyContractTest'],project)
+        command('host-build.log',['./gradlew','--offline','--max-workers=2',':app:assembleDebug',':app:assembleDebugAndroidTest',':app:testDebugUnitTest','--tests','dev.qoralo.podcast.wiring.TtsOnlyContractTest'],project)
         for name,path in [('app','app/build/outputs/apk/debug/app-debug.apk'),('test','app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk')]:shutil.copy2(project/path,out/(name+'.apk'))
         suites=list((project/'app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
         counts={k:sum(int(ET.parse(p).getroot().attrib.get(k,0)) for p in suites) for k in ['tests','failures','errors','skipped']}

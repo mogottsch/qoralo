@@ -67,7 +67,7 @@ def main():
         for pkg in (APP,TEST_APP):d.shell('am force-stop '+pkg)
         g.idle()
         if active:
-            d.shell(f'am start -W -n {APP}/dev.vibevoice.podcast.MainActivity')
+            d.shell(f'am start -W -n {APP}/dev.qoralo.podcast.MainActivity')
             deadline=time.monotonic()+25
             while True:
                 current=rows(stable('watchdog-'+str(d.counter)));safe_close(current,SCOPE['episodeId'])
@@ -113,7 +113,7 @@ def main():
             for k,pkg in [('app',APP),('test',TEST_APP)]:
                 if c[k]['sha256']!=c['priorInstalled'][pkg]:d.run(['install','-r','-t',c[k]['path']],timeout=180)
             save('installed-candidate.json',identity({APP:c['app']['sha256'],TEST_APP:c['test']['sha256']}));require(stable('prelaunch')==before,'data changed during update')
-            cmd=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ProviderPublicationRecoveryTest#publishExactCompletedChapterWithoutInference',
+            cmd=['shell','am','instrument','-w','-e','class','dev.qoralo.podcast.e2e.ProviderPublicationRecoveryTest#publishExactCompletedChapterWithoutInference',
                 '-e','providerRecovery','non-neural-v1','-e','diagnosticRun',a.run_id,'-e','appApkSha256',c['app']['sha256'],'-e','testApkSha256',c['test']['sha256']]
             for key,value in dict(SCOPE,ownedEpisodeId=SCOPE['episodeId']).items():cmd+=['-e',key,value]
             cmd+=[TEST_APP+'/androidx.test.runner.AndroidJUnitRunner'];launched=True;d.run(cmd,timeout=120);pull()

@@ -26,14 +26,14 @@ def main():
         assert (build/relative).read_bytes()==expected== (PROJECT/relative).read_bytes(),name
         pins[str(relative)]=hashlib.sha256(expected).hexdigest()
     assert 'native.runtime.enabled=false' in (build/'local.properties').read_text()
-    config=(build/'app/build/generated/source/buildConfig/debug/dev/vibevoice/podcast/BuildConfig.java').read_text()
+    config=(build/'app/build/generated/source/buildConfig/debug/dev/qoralo/podcast/BuildConfig.java').read_text()
     assert 'SHORT_PRODUCT_E2E = true' in config and '"supertonic-3"' in config
     def save(name,data):(out/name).write_text(json.dumps(data,indent=2)+'\n')
     save('compiled-source-bindings.json',{'sourceCommit':source,'files':pins,'builtFromExactBytesBeforeCommitNomination':True,'nativeCompilation':False,'explicitProperty':'-Ppodcast.shortProductE2e=true'})
     (out/'generated-BuildConfig.java').write_text(config)
     structured=None
     if a.structured_edit:
-        source_text=(build/'app/src/main/java/dev/vibevoice/podcast/runtime/GemmaEditResponseFormat.kt').read_text()
+        source_text=(build/'app/src/main/java/dev/qoralo/podcast/runtime/GemmaEditResponseFormat.kt').read_text()
         schema=textwrap.dedent(re.search(r'EDIT_REVISION_JSON_SCHEMA = """\n(.*?)\n"""\.trimIndent\(\)',source_text,re.S).group(1))
         json.loads(schema);(out/'edit-response-schema.json').write_text(schema)
         structured={'version':re.search(r'EDIT_RESPONSE_FORMAT_VERSION = "([^"]+)"',source_text).group(1),
@@ -54,7 +54,7 @@ def main():
         for k in counts:counts[k]+=int(root.attrib[k])
         skipped += [(t.attrib['classname'],t.attrib['name']) for t in root.findall('testcase') if t.find('skipped') is not None]
         shutil.copy2(f,junit/f.name)
-    optional_long_pack=('dev.vibevoice.podcast.wiring.TtsLongContractTest','explicitLocalPackPassesProductionVerifierAndFullReconstruction')
+    optional_long_pack=('dev.qoralo.podcast.wiring.TtsLongContractTest','explicitLocalPackPassesProductionVerifierAndFullReconstruction')
     allowed_skips={optional_long_pack} if a.existing_edit_probe else set()
     assert counts['tests']>=28 and counts['failures']==counts['errors']==0
     assert counts['skipped']==len(skipped) and set(skipped)<=allowed_skips,skipped
@@ -70,7 +70,7 @@ def main():
         command(kind+'-signature.txt',[str(sdk/'apksigner'),'verify','--verbose','--print-certs',str(out/(kind+'.apk'))])
         command(kind+'-manifest.txt',[str(sdk/'aapt2'),'dump','xmltree','--file','AndroidManifest.xml',str(out/(kind+'.apk'))])
     value={'schemaVersion':1,'kind':'existing-edit-probe' if a.existing_edit_probe else ('user-capacity-guard' if a.capacity_only else 'user-script-diagnostic'),'sourceCommit':source,'controllerSha256':digest(PROJECT/'tools/run_user_script_diagnostic.py'),
-        'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{'dev.vibevoice.podcast.internal':prior['app']['sha256'],'dev.vibevoice.podcast.internal.test':prior['test']['sha256']},
+        'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{'dev.qoralo.podcast.internal':prior['app']['sha256'],'dev.qoralo.podcast.internal.test':prior['test']['sha256']},
         'scope':('One reconstructed saved EDIT request with private raw/cause capture; recovery transaction always rolled back and recovery UI observed; ZERO jobs/revisions/committed episode writes/TTS/Play' if a.existing_edit_probe else ('Existing genuine full draft: capacity guard/UI only; ZERO model calls/jobs/committed episode writes' if a.capacity_only else 'One real-input fresh owned SCRIPT episode; original failed episode untouched; no edits/TTS/Play/retry; app-private diagnostic receipts only')),
         'driverSeconds':None if a.existing_edit_probe else (90 if a.capacity_only else 540),
         'driverDeadlineReason':'No in-app process killer; host bounds instrumentation and performs fresh safe closure' if a.existing_edit_probe else None,

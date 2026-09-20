@@ -26,7 +26,7 @@ class DurationLoadScopeTests(unittest.TestCase):
         self.assertIn("OrtGetApiBase()->GetVersionString()", body)
 
     def test_debug_entry_has_no_gemma_or_tts_adapter_call(self):
-        service = (PROJECT / "app/src/debug/java/dev/vibevoice/podcast/wiring/DurationLoadService.kt").read_text()
+        service = (PROJECT / "app/src/debug/java/dev/qoralo/podcast/wiring/DurationLoadService.kt").read_text()
         self.assertNotIn("GemmaLiteRtGpuEngine", service)
         self.assertNotIn("SupertonicQnnHtpEngine", service)
         self.assertNotIn("renderChapter(", service)

@@ -125,7 +125,7 @@ def main():
         device.run(["install", "-r", "-t", value["test"]["path"]], timeout=180)
         with (args.output / "logcat.txt").open("wb") as out, (args.output / "logcat.stderr").open("wb") as err:
             logs = subprocess.Popen(device.prefix + ["logcat", "-v", "threadtime", "-T", "1"], stdout=out, stderr=err, start_new_session=True, close_fds=True)
-        command = ("am instrument -w -r -e class dev.vibevoice.podcast.wiring.TtsOnlyTest"
+        command = ("am instrument -w -r -e class dev.qoralo.podcast.wiring.TtsOnlyTest"
                    f" -e ttsOnlyApproved {CONTRACT_SHA} -e ttsOnlyRunId {args.run_id}"
                    f" -e appApkSha256 {value['app']['sha256']} -e testApkSha256 {value['test']['sha256']}"
                    f" {TEST_APP}/androidx.test.runner.AndroidJUnitRunner")

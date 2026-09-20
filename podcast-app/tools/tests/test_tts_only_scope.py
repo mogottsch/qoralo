@@ -21,7 +21,7 @@ class TtsOnlyScopeTests(unittest.TestCase):
         self.assertEqual('M1/SID5',value['voice']);self.assertEqual(1.0,value['speed']);self.assertEqual(20260813,value['seedXor'])
 
     def test_service_has_one_existing_render_path_no_gemma_or_capacity_probe(self):
-        service=(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt').read_text()
+        service=(PROJECT/'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyService.kt').read_text()
         self.assertEqual(1,service.count('tts.renderChapter('));self.assertEqual(1,service.count('tts.load('))
         for forbidden in ['GemmaLiteRtGpuEngine','createOutline(','createChapter(','capacity-output','splitToSequence','System.loadLibrary']:
             self.assertNotIn(forbidden,service)
@@ -30,11 +30,11 @@ class TtsOnlyScopeTests(unittest.TestCase):
         self.assertLess(service.index('tts.renderChapter('),service.index('optional("wav-metrics")'))
 
     def test_profile_hook_only_in_debug_and_not_production_render_options(self):
-        debug=(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt').read_text()
-        release=(PROJECT/'app/src/release/java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt').read_text()
+        debug=(PROJECT/'app/src/debug/java/dev/qoralo/podcast/runtime/RuntimeDiagnostics.kt').read_text()
+        release=(PROJECT/'app/src/release/java/dev/qoralo/podcast/runtime/RuntimeDiagnostics.kt').read_text()
         self.assertIn('enableTtsOnly',debug);self.assertNotIn('enableTtsOnly',release)
         self.assertNotIn('TtsOnlyService',(PROJECT/'app/src/main/AndroidManifest.xml').read_text())
-        self.assertIn('not native-buffer capture',(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyContract.kt').read_text())
+        self.assertIn('not native-buffer capture',(PROJECT/'app/src/debug/java/dev/qoralo/podcast/wiring/TtsOnlyContract.kt').read_text())
 
     def test_controller_pins_new_scope_before_dispatch_and_reuses_guard(self):
         source=(PROJECT/'tools/run_tts_only_gate.py').read_text()

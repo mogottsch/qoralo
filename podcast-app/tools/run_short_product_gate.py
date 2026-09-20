@@ -19,7 +19,7 @@ from short_product_preservation import rows, compare, compare_export, parse_inve
 CONTRACT_SHA='a39106380003a3a4c7b83c2f45066399e204d8aefade77ec88866f9062eccfc4'
 CONTINUATION_SHA='2f22bd6e500eca3f45e51c401aded0cd570bc576e8f805063f95d6dd02d23721'
 EXPORT_SHA='0b8bab27fa64473b66950ccea04081577cc3f48c2361548a4cef9bdb3a5fc738'
-PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
+PRIVACY_SHA='0d4a150fd4ae76d996d015bd79a172a9ad68220c24ea83ad3c917161cbf64120'
 PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd',
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',
        'supertonic-3-t2048-l2048-parity':'116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066'}
@@ -156,7 +156,7 @@ def main():
             logs=subprocess.Popen(device.prefix+['logcat','-v','threadtime','-T','1'],stdout=stdout,stderr=stderr,start_new_session=True,close_fds=True)
         check_sources(value);guard.checkpoint('before-instrument')
         method='exportExistingReadyEpisode' if export_only else 'continueOwnedReviewToAudioAndExport' if continuation else 'oneOwnedShortEpisodeThroughRealProductionWorkflow'
-        command=f'am instrument -w -r -e class dev.vibevoice.podcast.e2e.ShortProductE2eTest#{method} -e shortProductApproved {contract_sha} -e shortProductRunId {args.run_id}'
+        command=f'am instrument -w -r -e class dev.qoralo.podcast.e2e.ShortProductE2eTest#{method} -e shortProductApproved {contract_sha} -e shortProductRunId {args.run_id}'
         command+=f" -e appApkSha256 {value['app']['sha256']} -e testApkSha256 {value['test']['sha256']} {TEST_APP}/androidx.test.runner.AndroidJUnitRunner"
         launched=True;result=device.shell(command,timeout=host_seconds)
         (out/'instrumentation-summary.json').write_text(json.dumps({'ok':'OK (' in result and 'FAILURES!!!' not in result,'longReadiness':False}))

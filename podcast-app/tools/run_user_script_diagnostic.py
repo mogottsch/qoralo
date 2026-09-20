@@ -145,7 +145,7 @@ def main():
         remaining=[j for j in current['generation_jobs'] if j['status'] in ('QUEUED','RUNNING')]
         if remaining:
             require(all(j['status']=='RUNNING' for j in remaining),'owned QUEUED row retained; do not launch dispatcher/retry')
-            device.shell(f'am start -W -n {APP}/dev.vibevoice.podcast.MainActivity',timeout=15)
+            device.shell(f'am start -W -n {APP}/dev.qoralo.podcast.MainActivity',timeout=15)
             deadline=time.monotonic()+20
             while True:
                 now=rows(stable(f'owned-watchdog-{device.counter}'))
@@ -215,20 +215,20 @@ def main():
             save('installed-candidate.json',installed({APP:candidate['app']['sha256'],TEST_APP:candidate['test']['sha256']}))
             prelaunch=stable('before-instrument');require(prelaunch==before,'DB changed during installation');validate_snapshot(prelaunch);guard.idle()
             save('private-original-bindings.json',{'episodeId':args.original_episode,'jobId':args.original_job,'sourceSha256':sources[0]['sha256'],'instructionsSha256':hashlib.sha256(original['instructions'].encode()).hexdigest()})
-            command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.UserScriptReproductionTest#reproduceNormalInputScriptOnly',
+            command=['shell','am','instrument','-w','-e','class','dev.qoralo.podcast.e2e.UserScriptReproductionTest#reproduceNormalInputScriptOnly',
                 '-e','userScriptDiagnostic','one-private-script-v1','-e','diagnosticRun',args.run_id,
                 '-e','appApkSha256',candidate['app']['sha256'],'-e','testApkSha256',candidate['test']['sha256'],
                 '-e','originalEpisodeId',args.original_episode,'-e','originalJobId',args.original_job,
                 '-e','originalSourceSha256',sources[0]['sha256'],'-e','originalInstructionsSha256',hashlib.sha256(original['instructions'].encode()).hexdigest(),
                 TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
             if capacity_only:
-                command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ExistingDraftCapacityTest#fullDraftCannotLockOrDispatchAudio',
+                command=['shell','am','instrument','-w','-e','class','dev.qoralo.podcast.e2e.ExistingDraftCapacityTest#fullDraftCannotLockOrDispatchAudio',
                     '-e','capacityDiagnostic','existing-draft-no-model-v1','-e','diagnosticRun',args.run_id,
                     '-e','appApkSha256',candidate['app']['sha256'],'-e','testApkSha256',candidate['test']['sha256'],
                     '-e','originalEpisodeId',args.original_episode,'-e','revisionId',args.revision_id,'-e','revisionSha256',args.revision_sha256,
                     TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
             if edit_probe:
-                command=['shell','am','instrument','-w','-e','class','dev.vibevoice.podcast.e2e.ExistingEditDiagnosticTest#captureOneExistingEditAndVerifyDraftRecovery',
+                command=['shell','am','instrument','-w','-e','class','dev.qoralo.podcast.e2e.ExistingEditDiagnosticTest#captureOneExistingEditAndVerifyDraftRecovery',
                     '-e','editDiagnostic','existing-failed-edit-v1','-e','diagnosticRun',args.run_id,
                     '-e','appApkSha256',candidate['app']['sha256'],'-e','testApkSha256',candidate['test']['sha256'],
                     '-e','originalEpisodeId',args.original_episode,'-e','originalJobId',args.original_job,

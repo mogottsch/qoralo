@@ -1,4 +1,4 @@
-package dev.vibevoice.podcast.e2e;
+package dev.qoralo.podcast.e2e;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -69,13 +69,13 @@ class ContinuationScopeTests(unittest.TestCase):
         before['chapter_audio']=[{'id':'old-audio','episodeId':s['episodeId']}]
         with self.assertRaises(GuardError):compare(before,before,s['episodeId'],s)
     def test_continuation_has_a_distinct_zero_llm_method_and_owned_audio_bound(self):
-        source=(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/e2e/ShortProductDiagnostics.kt').read_text()
+        source=(PROJECT/'app/src/debug/java/dev/qoralo/podcast/e2e/ShortProductDiagnostics.kt').read_text()
         self.assertIn('if (continuation) require(entity.kind == "AUDIO")',source)
         self.assertIn('if (continuation) listOf("AUDIO")',source)
         self.assertIn('if (continuation) ShortContinuationPolicy.validateStored(context, locked = true)',source)
-        policy=(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/e2e/ShortContinuationPolicy.kt').read_text()
+        policy=(PROJECT/'app/src/debug/java/dev/qoralo/podcast/e2e/ShortContinuationPolicy.kt').read_text()
         self.assertIn('enforceWordTarget = false',policy)
-        test=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text().split('@Test fun continueOwnedReviewToAudioAndExport()',1)[1].split('private fun verifyAssembly',1)[0]
+        test=(PROJECT/'app/src/androidTest/java/dev/qoralo/podcast/e2e/ShortProductE2eTest.kt').read_text().split('@Test fun continueOwnedReviewToAudioAndExport()',1)[1].split('private fun verifyAssembly',1)[0]
         for forbidden in ['newEpisode(', 'createEpisode(', 'generateScript(', 'Send change request', 'setContent', 'writeRevision(']:self.assertNotIn(forbidden,test)
         controller=(PROJECT/'tools/run_short_product_gate.py').read_text()
         self.assertIn('host_seconds=150 if export_only else 390 if continuation else 930',controller)

@@ -27,7 +27,7 @@ def main():
         pins[str(rel)]=hashlib.sha256(raw).hexdigest()
     def save(name,value):(out/name).write_text(json.dumps(value,indent=2)+'\n')
     save('source-bindings.json',{'commit':commit,'files':pins,'credentialFreeBuildEnvironment':True})
-    cfg=build/'app/build/generated/source/buildConfig/debug/dev/vibevoice/podcast/BuildConfig.java'
+    cfg=build/'app/build/generated/source/buildConfig/debug/dev/qoralo/podcast/BuildConfig.java'
     config=cfg.read_text()
     if 'SHORT_PRODUCT_E2E = false' not in config or 'supertonic-3-provider' not in config:raise ValueError('wrong build selector')
     shutil.copy2(cfg,out/'BuildConfig.java')
@@ -58,10 +58,10 @@ def main():
         skipped += [t.attrib['classname']+'#'+t.attrib['name'] for t in e.findall('testcase') if t.find('skipped') is not None]
         shutil.copy2(f,junit/f.name)
     if counts['tests']<190 or counts['failures'] or counts['errors']:raise ValueError('unit failure/incomplete tests')
-    allowed={'dev.vibevoice.podcast.wiring.TtsLongContractTest#explicitLocalPackPassesProductionVerifierAndFullReconstruction'}
+    allowed={'dev.qoralo.podcast.wiring.TtsLongContractTest#explicitLocalPackPassesProductionVerifierAndFullReconstruction'}
     if not set(skipped)<=allowed:raise ValueError('unexpected skipped tests')
     for name in ['ProviderTextFrontendTest','ProviderAudioPlanTest','ProviderWaveAssemblyTest']:
-        row=suites['dev.vibevoice.podcast.runtime.'+name]
+        row=suites['dev.qoralo.podcast.runtime.'+name]
         if int(row['skipped']) or int(row['tests'])<2:raise ValueError('required provider test skipped')
     save('host-tests.json',{'counts':counts,'passed':counts['tests']-counts['skipped'],'skipped':skipped})
     env={'HOME':str(Path.home()),'PATH':'/usr/bin:/bin','LANG':'C.UTF-8'}
@@ -81,7 +81,7 @@ def main():
         if file.stat().st_size!=item['bytes'] or digest(file)!=item['sha256']:raise ValueError('provider asset drift')
     shutil.copy2(pack/'manifest.json',out/'provider-manifest.json')
     value={'kind':'provider-publication-recovery' if a.publication_recovery else 'provider-app-integration','sourceCommit':commit,'controllerSha256':digest(Path(__file__).with_name('run_publication_recovery.py' if a.publication_recovery else 'run_app_gate.py')),
-        'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{ 'dev.vibevoice.podcast.internal':prior['app']['sha256'],'dev.vibevoice.podcast.internal.test':prior['test']['sha256']},
+        'hostGuardSha256':host_identity()['sha256'],'priorInstalled':{ 'dev.qoralo.podcast.internal':prior['app']['sha256'],'dev.qoralo.podcast.internal.test':prior['test']['sha256']},
         'providerPack':{'root':str(pack),'manifestSha256':binding['manifestSha256'],'bytes':sum(x['bytes'] for x in manifest['files'])},
         'scope':'preserving install and eight synthetic-only playback UI cases; zero model construction/calls/new AUDIO jobs; explicit return before neural entry' if a.synthetic_only else 'new non-neural publication attempt for exact already-completed owned chapter; original failed job/plan/WAV and all other user data preserved' if a.publication_recovery else 'one normal AUDIO job from a labelled copy of the accepted487-word real chapter; no original episode/source/revision/job/playback mutation; no newSCRIPT/EDIT/modelsubstitution/forcedduration',
         'progressivePlayback':a.progressive_playback,

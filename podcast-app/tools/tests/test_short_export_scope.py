@@ -47,7 +47,7 @@ class ExportOnlyScopeTests(unittest.TestCase):
         with self.assertRaises(GuardError):compare_files(files,{**files,'files/episodes/owned/new.wav':'b'*64},None)
         with self.assertRaises(GuardError):compare_files(files,{next(iter(files)):'c'*64},None)
     def test_export_method_never_arms_models_or_writes_destination_directly(self):
-        source=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text()
+        source=(PROJECT/'app/src/androidTest/java/dev/qoralo/podcast/e2e/ShortProductE2eTest.kt').read_text()
         method=source.split('@Test fun exportExistingReadyEpisode()',1)[1].split('private fun verifyAssembly',1)[0]
         for forbidden in ['Lock & create','Send change request','generateAudio(', 'openOutputStream(', 'writeRevision(', 'createEpisode(', 'icon("Play")','write(marker']:
             self.assertNotIn(forbidden,method)
@@ -56,12 +56,12 @@ class ExportOnlyScopeTests(unittest.TestCase):
         self.assertIn('check(!root.exists() && root.mkdirs())',method)
         self.assertIn('"newModelCalls", 0',method)
     def test_rooted_downloads_selector_uses_bounded_actual_click_ancestor(self):
-        source=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text()
+        source=(PROJECT/'app/src/androidTest/java/dev/qoralo/podcast/e2e/ShortProductE2eTest.kt').read_text()
         self.assertNotIn('downloads.first { it.parent?.isClickable',source)
         self.assertIn('endsWith(":id/roots_list")',source)
         self.assertIn('waitUntil("actionable local Downloads drawer row", 15_000)',source)
         self.assertIn('SafRootReadiness.downloadsAction(current, safNodes)',source)
-        predicate=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/SafRootReadiness.java').read_text()
+        predicate=(PROJECT/'app/src/androidTest/java/dev/qoralo/podcast/e2e/SafRootReadiness.java').read_text()
         self.assertIn('"android:id/title".equals(nodes.id(node)) && "Downloads".equals(nodes.text(node))',predicate)
         self.assertIn('!Objects.equals(action, list)',predicate)
         self.assertIn('rootAction != null',source)
@@ -74,9 +74,9 @@ class ExportOnlyScopeTests(unittest.TestCase):
         self.assertIn('compare_export(rows(before),rows(after)',controller)
     def test_actual_shared_predicate_rejects_breadcrumb_and_delayed_list_until_ready(self):
         with tempfile.TemporaryDirectory() as temp:
-            source=PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/SafRootReadiness.java'
+            source=PROJECT/'app/src/androidTest/java/dev/qoralo/podcast/e2e/SafRootReadiness.java'
             fixture=PROJECT/'tools/tests/fixtures/SafRootReadinessFixture.java'
             subprocess.run(['javac','-d',temp,str(source),str(fixture)],check=True,timeout=30)
-            subprocess.run(['java','-cp',temp,'dev.vibevoice.podcast.e2e.SafRootReadinessFixture'],check=True,timeout=10)
+            subprocess.run(['java','-cp',temp,'dev.qoralo.podcast.e2e.SafRootReadinessFixture'],check=True,timeout=10)
 
 if __name__=='__main__':unittest.main()

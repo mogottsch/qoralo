@@ -473,11 +473,11 @@ static JNINativeMethod kMethods[] = {
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
   JNIEnv *env = nullptr;
   if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) return JNI_ERR;
-  jclass type = env->FindClass("dev/vibevoice/podcast/runtime/SupertonicNative");
+  jclass type = env->FindClass("dev/qoralo/podcast/runtime/SupertonicNative");
   if (type == nullptr) return JNI_ERR;
   if (env->RegisterNatives(type, kMethods, sizeof(kMethods) / sizeof(kMethods[0])) != JNI_OK) return JNI_ERR;
 #ifdef PODCAST_WIRING_DIAGNOSTICS
-  jclass diagnostic_type = env->FindClass("dev/vibevoice/podcast/wiring/DurationLoadNative");
+  jclass diagnostic_type = env->FindClass("dev/qoralo/podcast/wiring/DurationLoadNative");
   if (diagnostic_type == nullptr) return JNI_ERR;
   JNINativeMethod diagnostic_methods[] = {
       {const_cast<char *>("probe"), const_cast<char *>("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"),

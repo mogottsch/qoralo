@@ -30,7 +30,7 @@ The exact long candidate `b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56
 - Old guard: `3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d`.
 - New guard: `5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425`.
 - Override SHA: `60dd58885efdc8406049365d92c26838fdedf4db99f568638479a1f71e1b046d`.
-- Unchanged long caller: `a87b3f358f9efff213beeed3261f651620e5763c0f3b022718190860740815a4`; unchanged privacy dependency `a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c`.
+- Unchanged long caller: `a87b3f358f9efff213beeed3261f651620e5763c0f3b022718190860740815a4`; unchanged privacy dependency `a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c`. Both hashes were recomputed later when the package was renamed to `dev.qoralo.podcast`; see [the rebrand notes](rebrand-qoralo.md). The values above describe the files as they were when this gate ran.
 
 The override binds the same APKs/contract/pack and seven exact frozen startup sources. No APK/controller/native/pack rebuild. The long staging/render bounds stay those of its existing contract, not the duration-only bounds described in the historical action sequence above. Routine exact app/test closure is authorized within the separately released test setup; no data clear/job deletion/model-pack removal. The override alone grants no phone access.
 
