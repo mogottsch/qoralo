@@ -43,7 +43,15 @@ Android identifies an app by its application ID, so the renamed build is a **dif
 - The installed `dev.vibevoice.podcast.internal` app and all of its data stay exactly where they are. Nothing is deleted or overwritten by installing Qoralo.
 - The new build starts with an empty library. Existing episodes, sources, revisions, jobs, playback positions and audio files will not appear in it until they are migrated.
 - Every prior installed-hash binding, receipt and preservation count refers to the old ID and remains accurate for the build it describes.
-- The app's own JNI library is rebuilt because the registered class paths changed, so its hash differs from `01d2ba53…`. The six vendored ONNX Runtime/QNN libraries are untouched.
+- The app's own JNI library is rebuilt because the registered class paths changed, so its hash differs from `01d2ba53…`. The eight vendored ONNX Runtime/QNN libraries are untouched.
+
+### Rebuilt native bridge
+
+`RegisterNatives` resolves its classes by name, so `podcast_runtime.cpp` and `provider_runtime.cpp` had to change and the bridge had to be recompiled. Keeping the old prebuilt library would have failed at native initialisation.
+
+- Build directory `.local/provider-integration/native-build-02-qoralo/`, same NDK 28.1.13356709 / CMake 3.22.1 toolchain, `arm64-v8a`, `android-29`, `c++_static`, Debug, as the original bridge.
+- Unstripped bridge `059a4c31f91fef681891312db6e67d8a17f16dbce79d0359cd9b64325a8f5cc0`; packaged after AGP stripping `44a41cd41eabd1022c3363b816276c102b0274ab1a49e758e80c7c311cc62c22`.
+- The original `native-build-01` output and its logs were left in place.
 
 ### Migration path for the existing episodes
 
@@ -64,7 +72,7 @@ This has not been performed. It needs a coordinated phone slot, and it must not 
 
 ## Remaining steps
 
-1. Build and install a Qoralo candidate, then verify the new installed hashes.
+1. Install the Qoralo candidate in a coordinated phone slot and verify the new installed hashes. Unverified local build: app `10e698876967619dbebd14d07132e340cd358596bac46903993cef1498e5f111`, test `ede1a9387ff278008b4bc5c1a46f570cd921225e5dcc36db0c92707ecae8c6fd`; 265 host tests pass with 1 pre-existing skip, and the renamed bridge is present in all nine packaged native libraries. No device has run this build, so neither generation nor playback has been re-proven under the new identity.
 2. Migrate the existing episode data as described above, or accept a fresh library.
 3. Rename the repository and its working directory, then update absolute paths in local tooling. Do this while no agent sessions are running, because their working directory would disappear.
 4. Decide what happens to the published dashboard path.
