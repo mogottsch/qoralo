@@ -175,8 +175,14 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                         action
                     } else null
                     val available = liveAudio?.takeIf { it.binding.episodeId == current?.id }
+                    val retry: (() -> Unit)? = if (dev.qoralo.podcast.data.canRetryFailedGeneration(current, failedJob)) {
+                        val episodeId = requireNotNull(current).id
+                        val jobId = requireNotNull(failedJob).id
+                        val action: () -> Unit = { viewModel.retryFailedGeneration(episodeId, jobId) }
+                        action
+                    } else null
                     GeneratingScreen(current, failedJob, viewModel::showLibrary, returnToDraft,
-                        available, { available?.let { viewModel.openLivePlayer(it.binding) } })
+                        available, { available?.let { viewModel.openLivePlayer(it.binding) } }, retry)
                 }
                 AppScreen.Player -> {
                     val active = activePlayback?.takeIf {

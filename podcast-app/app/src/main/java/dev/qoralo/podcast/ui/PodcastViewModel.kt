@@ -203,6 +203,16 @@ class PodcastViewModel internal constructor(
         Unit
     }
 
+    fun retryFailedGeneration(episodeId: String, failedJobId: String) = launchAction {
+        repository.retryFailedGeneration(episodeId, failedJobId)
+        // Keep the stopped episode on screen; the queued job drives it back to live progress.
+        if (selectedEpisodeId.value == episodeId) {
+            agentSheetOpen.value = false
+            lockDialogOpen.value = false
+            explicitScreen.value = null
+        }
+    }
+
     fun returnToSavedDraft(episodeId: String, failedJobId: String, revisionId: String) = launchAction {
         repository.returnToSavedDraft(episodeId, failedJobId, revisionId)
         // A completed recovery for another selection must not redirect the current screen.

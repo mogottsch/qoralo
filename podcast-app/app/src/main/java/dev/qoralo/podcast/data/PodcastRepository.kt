@@ -514,6 +514,61 @@ class PodcastRepository(
         dao.updateEpisode(episode.copy(phase = EpisodePhase.SCRIPT_DRAFT, updatedAtEpochMs = clock()))
     }
 
+    /**
+     * Queue the same work again after a failure. The failed job row, its request message and every
+     * existing artifact are retained; only a new QUEUED job and the matching phase are written, which
+     * the ordinary dispatcher then picks up. No script, revision or audio is rewritten here.
+     */
+    suspend fun retryFailedGeneration(episodeId: String, failedJobId: String): String {
+        var plan: dev.qoralo.podcast.runtime.ProviderAudioPlan.Saved? = null
+        try {
+            return database.withTransaction {
+                val episode = requireEpisode(episodeId)
+                val failed = requireNotNull(dao.latestJob(episodeId)) { "No stopped generation exists" }
+                require(failed.id == failedJobId) { "The episode changed; reopen it before retrying" }
+                require(canRetryFailedGeneration(episode, failed)) { "This episode cannot be retried" }
+                require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
+                val job = when (failed.kind) {
+                    JobKind.SCRIPT -> {
+                        val sources = dao.sources(episodeId)
+                        require(sources.isNotEmpty()) { "Add at least one source" }
+                        require(sources.sumOf { it.byteCount } <= MAX_EPISODE_SOURCE_BYTES) { "Episode sources exceed the 5 MB generation limit" }
+                        newJob(episodeId, JobKind.SCRIPT, null, "Preparing sources")
+                    }
+                    JobKind.AUDIO -> {
+                        val revisionId = requireNotNull(episode.lockedRevisionId)
+                        val revision = requireNotNull(dao.revision(revisionId)) { "The locked script is missing" }
+                        val chapters = dao.chapters(revisionId)
+                        require(revision.episodeId == episodeId && chapters.isNotEmpty()) { "The locked script is invalid" }
+                        require(revision.contentHash == episode.lockedContentHash &&
+                            artifacts.sha256(artifacts.resolveEpisodeFile(revision.relativePath)) == revision.contentHash) {
+                            "The locked script failed its integrity check"
+                        }
+                        val capacity = audioTextCapacity(chapters.map { it.text })
+                        if (!capacity.fits) throw dev.qoralo.podcast.runtime.AudioTextCapacityException(capacity)
+                        var audio = newJob(episodeId, JobKind.AUDIO, revisionId, "Waiting to create audio")
+                        if (providerAdmission) {
+                            plan = dev.qoralo.podcast.runtime.ProviderAudioPlan.save(artifacts, episodeId, revisionId,
+                                revision.contentHash, audio.id, chapters.map { ChapterDraft(it.stableChapterId, it.title, it.text) })
+                            audio = audio.copy(id = requireNotNull(plan).jobId)
+                        }
+                        audio
+                    }
+                    else -> error("Unsupported retry kind")
+                }
+                dao.updateEpisode(episode.copy(
+                    phase = if (failed.kind == JobKind.SCRIPT) EpisodePhase.GENERATING_SCRIPT else EpisodePhase.LOCKED,
+                    failurePhase = null, failureMessage = null, updatedAtEpochMs = clock(),
+                ))
+                dao.insertJob(job)
+                job.id
+            }
+        } catch (error: Throwable) {
+            plan?.file?.delete()
+            throw error
+        }
+    }
+
     suspend fun runningJobs(): List<GenerationJobEntity> = dao.runningJobs().filterNot { deletionRequested(it.episodeId) }
     suspend fun queuedJobs(): List<GenerationJobEntity> = dao.queuedJobs().filterNot { deletionRequested(it.episodeId) }
 

@@ -297,6 +297,47 @@ class PodcastRepositoryTest {
         assertEquals(EpisodePhase.LOCKED, repository.episode(episodeId).phase)
     }
 
+    @Test fun retryingAStoppedScriptQueuesTheSameWorkAgainAndKeepsTheFailedAttempt() = runTest {
+        val episodeId = episodeAtInstructions()
+        val failedJobId = repository.queueScriptGeneration(episodeId, "Use the normal full chapter request", true)
+        repository.claimJob(episodeId, failedJobId, JobKind.SCRIPT, "Verifying Gemma 4 E2B")
+        repository.failJob(episodeId, failedJobId, "Gemma LiteRT GPU chapter failed at JSON_PARSE")
+        assertEquals(EpisodePhase.FAILED, repository.episode(episodeId).phase)
+
+        val retryJobId = repository.retryFailedGeneration(episodeId, failedJobId)
+
+        assertTrue(retryJobId != failedJobId)
+        val episode = repository.episode(episodeId)
+        assertEquals(EpisodePhase.GENERATING_SCRIPT, episode.phase)
+        assertEquals("Use the normal full chapter request", episode.instructions)
+        assertTrue(episode.reviewEnabled)
+        // The failure is cleared from the episode, not from history.
+        assertEquals(null, episode.failureMessage)
+        val queued = repository.latestJob(episodeId)
+        assertEquals(retryJobId, queued?.id)
+        assertEquals(JobStatus.QUEUED, queued?.status)
+        assertEquals(JobKind.SCRIPT, queued?.kind)
+        assertEquals(1, repository.queuedJobs().count { it.id == retryJobId })
+        val failed = database.podcastDao().job(failedJobId)
+        assertEquals(JobStatus.FAILED, failed?.status)
+        assertEquals("Gemma LiteRT GPU chapter failed at JSON_PARSE", failed?.errorMessage)
+    }
+
+    @Test fun retryIsRefusedForAStaleJobOrAnEpisodeThatIsNotStopped() = runTest {
+        val episodeId = episodeAtInstructions()
+        val jobId = repository.queueScriptGeneration(episodeId, "Use the normal full chapter request", true)
+        // Still running: nothing to retry, and a second job must never be queued alongside it.
+        repository.claimJob(episodeId, jobId, JobKind.SCRIPT, "Verifying Gemma 4 E2B")
+        try { repository.retryFailedGeneration(episodeId, jobId); fail("running job retried") }
+        catch (_: IllegalArgumentException) { }
+
+        repository.failJob(episodeId, jobId, "stopped")
+        try { repository.retryFailedGeneration(episodeId, "not-the-failed-job"); fail("stale job id accepted") }
+        catch (_: IllegalArgumentException) { }
+        assertEquals(EpisodePhase.FAILED, repository.episode(episodeId).phase)
+        assertEquals(jobId, repository.latestJob(episodeId)?.id)
+    }
+
     private suspend fun episodeAtInstructions(): String {
         val id = repository.createEpisode()
         repository.addPastedForTest(id)

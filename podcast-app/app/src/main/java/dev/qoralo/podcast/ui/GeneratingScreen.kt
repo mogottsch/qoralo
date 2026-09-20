@@ -48,9 +48,11 @@ import dev.qoralo.podcast.data.GenerationJobEntity
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose: () -> Unit, onReturnToDraft: (() -> Unit)? = null,
-    availableAudio: dev.qoralo.podcast.runtime.AudioAvailability? = null, onOpenAudio: (() -> Unit)? = null) {
+    availableAudio: dev.qoralo.podcast.runtime.AudioAvailability? = null, onOpenAudio: (() -> Unit)? = null,
+    onRetry: (() -> Unit)? = null) {
     val failed = episode?.phase == EpisodePhase.FAILED
     val restore = onReturnToDraft?.takeIf { dev.qoralo.podcast.data.canReturnToSavedDraft(episode, job) }
+    val retry = onRetry?.takeIf { dev.qoralo.podcast.data.canRetryFailedGeneration(episode, job) }
     PhoneContent {
         Scaffold(topBar = {
             // Let wrapped large-font titles determine height instead of clipping inside the
@@ -72,7 +74,7 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
             ) {
                 item {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (failed) FailurePanel(episode, onClose, restore) else GenerationPanel(episode, job)
+                        if (failed) FailurePanel(episode, onClose, restore, retry) else GenerationPanel(episode, job)
                         if (availableAudio?.canListen == true && onOpenAudio != null) {
                             Text("${formatDuration(availableAudio.availableMs)} available", style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center, modifier = Modifier.padding(top = 20.dp))
@@ -124,7 +126,7 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
 }
 
 @Composable
-private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit, onReturnToDraft: (() -> Unit)?) {
+private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit, onReturnToDraft: (() -> Unit)?, onRetry: (() -> Unit)? = null) {
     Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(28.dp), modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(Icons.Default.ErrorOutline, null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.error)
@@ -137,7 +139,12 @@ private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit, onReturnTo
                     "No alternate model, CPU fallback, script rewriting or forced duration was attempted."
                     else "No alternate model, CPU fallback, or hidden chapter splitting was attempted.")
             }
-            if (onReturnToDraft != null) {
+            // Retrying starts the same work over from the last saved state; it never edits saved content.
+            if (onRetry != null) {
+                PrimaryAction("Try again", onRetry, modifier = Modifier.padding(top = 16.dp))
+                if (onReturnToDraft != null) TextButton(onClick = onReturnToDraft, modifier = Modifier.heightIn(min = 48.dp)) { Text("Return to saved draft") }
+                TextButton(onClick = onClose, modifier = Modifier.heightIn(min = 48.dp)) { Text("Return to library") }
+            } else if (onReturnToDraft != null) {
                 PrimaryAction("Return to saved draft", onReturnToDraft, modifier = Modifier.padding(top = 16.dp))
                 TextButton(onClick = onClose, modifier = Modifier.heightIn(min = 48.dp)) { Text("Return to library") }
             } else PrimaryAction("Return to library", onClose, modifier = Modifier.padding(top = 16.dp))
