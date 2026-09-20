@@ -5,7 +5,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val VibeVoiceColors = lightColorScheme(
+private val QoraloColors = lightColorScheme(
     primary = Color(0xFF65558F),
     onPrimary = Color.White,
     primaryContainer = Color(0xFFE9DDFF),
@@ -29,6 +29,6 @@ private val VibeVoiceColors = lightColorScheme(
 )
 
 @Composable
-fun VibeVoiceTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = VibeVoiceColors, content = content)
+fun QoraloTheme(content: @Composable () -> Unit) {
+    MaterialTheme(colorScheme = QoraloColors, content = content)
 }

@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VibeVoicePodcast"
+rootProject.name = "Qoralo"
 include(":app")

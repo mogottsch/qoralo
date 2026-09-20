@@ -36,7 +36,7 @@ import dev.vibevoice.podcast.data.EpisodePhase
 import dev.vibevoice.podcast.data.GenerationJobEntity
 import dev.vibevoice.podcast.data.JobKind
 import dev.vibevoice.podcast.data.JobStatus
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -158,7 +158,7 @@ class ScreenSemanticsTest {
             val wrapper = Density(density.density, 2f)
             SideEffect { platformDensity = density; wrapperDensity = wrapper }
             CompositionLocalProvider(LocalDensity provides wrapper) {
-                Box(Modifier.requiredWidth(320.dp)) { VibeVoiceTheme { content() } }
+                Box(Modifier.requiredWidth(320.dp)) { QoraloTheme { content() } }
             }
         }
     }

@@ -12,7 +12,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -50,7 +50,7 @@ class PasteImeRegressionTest {
                 .put("geometry", current?.json() ?: JSONObject.NULL).toString(2))
         }
         try {
-            rule.setContent { VibeVoiceTheme { PasteSourceDialog({}, { _, body -> submitted = body }) } }
+            rule.setContent { QoraloTheme { PasteSourceDialog({}, { _, body -> submitted = body }) } }
             rule.onAllNodes(hasSetTextAction())[1].performScrollTo().performClick().performTextInput("Rivers can flood after heavy rain.")
             var previous: Geometry? = null
             var stableSince = SystemClock.elapsedRealtime()

@@ -1,4 +1,4 @@
-# VibeVoice podcast app
+# Qoralo podcast app
 
 Greenfield Android implementation of the binding UX in `../docs/app-ux-mvp.html` and architecture in `../docs/podcast-generation-app-architecture-proposal.md`.
 
@@ -10,7 +10,7 @@ The [prior progressive Player handoff](docs/progressive-player-handoff-2026-09-1
 
 ## Identity
 
-The reversible internal application ID is `dev.vibevoice.podcast.internal`; the launcher name is **VibeVoice**. This is deliberately not a production Play identity.
+The launcher name is **Qoralo**. The internal application ID and Kotlin package are still `dev.vibevoice.podcast.internal` and `dev.vibevoice.podcast`: changing them creates a different Android app identity, which would hide the existing on-device episodes and invalidate every installed-hash evidence binding. See [the rebrand notes](docs/rebrand-qoralo.md) for the staged plan. This is deliberately not a production Play identity.
 
 ## Build
 

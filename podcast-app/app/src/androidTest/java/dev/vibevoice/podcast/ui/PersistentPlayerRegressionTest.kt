@@ -23,7 +23,7 @@ import dev.vibevoice.podcast.runtime.AudioAvailabilityState
 import dev.vibevoice.podcast.runtime.AudioPassageKind
 import dev.vibevoice.podcast.runtime.AvailableAudioChunk
 import dev.vibevoice.podcast.runtime.ProviderTextFrontend
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Rule
@@ -66,7 +66,7 @@ class PersistentPlayerRegressionTest {
         rule.setContent {
             host = remember { PlaybackHost(context) }
             PlaybackHostEffects(host, repository)
-            VibeVoiceTheme {
+            QoraloTheme {
                 statusBarTopPx = WindowInsets.statusBars.getTop(LocalDensity.current)
                 Surface(color = MaterialTheme.colorScheme.surface) {
                 // Mirror PodcastApp's edge-to-edge inset ownership, not a bare fixture Column.
@@ -146,7 +146,7 @@ class PersistentPlayerRegressionTest {
         rule.setContent {
             val timeline = remember(availableCount) { TranscriptTiming.progressive("synthetic", chapters,
                 AudioAvailability(binding, chunks.take(availableCount), if (availableCount == chunks.size) AudioAvailabilityState.COMPLETE else AudioAvailabilityState.GENERATING)) }
-            VibeVoiceTheme { TranscriptSheet("synthetic", timeline, position, true, false, {}) }
+            QoraloTheme { TranscriptSheet("synthetic", timeline, position, true, false, {}) }
         }
         rule.onNodeWithText("Following · stop").assertIsDisplayed()
         rule.onNodeWithTag("Transcript passages").performTouchInput { swipeUp() }

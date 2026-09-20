@@ -5,7 +5,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -22,7 +22,7 @@ class FormSubmissionInteractionTest {
     @Test fun pasteSaveRejectionRetainsExactTitleBodyAndVisibleLocalError() {
         var accepted = 0
         var calls = 0
-        rule.setContent { VibeVoiceTheme { PasteSourceDialog({}, { _, _ -> calls++; error("Synthetic storage failure") }, { accepted++ }) } }
+        rule.setContent { QoraloTheme { PasteSourceDialog({}, { _, _ -> calls++; error("Synthetic storage failure") }, { accepted++ }) } }
         rule.onAllNodes(hasSetTextAction())[0].performTextInput("Precise source title")
         pasteBody("Keep  all punctuation, and text.")
         rule.onNodeWithText("Add source").performClick()
@@ -35,7 +35,7 @@ class FormSubmissionInteractionTest {
 
     @Test fun agentQueueRejectionRetainsExactRequestAndVisibleLocalError() {
         var calls = 0
-        rule.setContent { VibeVoiceTheme { AgentEditorSheet(emptyList(), null, {}, { calls++; error("Another on-device generation job is active") }) } }
+        rule.setContent { QoraloTheme { AgentEditorSheet(emptyList(), null, {}, { calls++; error("Another on-device generation job is active") }) } }
         rule.onNode(hasSetTextAction()).performTextInput("Keep this exact change request.")
         rule.onNodeWithContentDescription("Send change request").performClick()
         rule.onNodeWithText("Request wasn’t sent").assertIsDisplayed()
@@ -49,7 +49,7 @@ class FormSubmissionInteractionTest {
         val acknowledgement = CompletableDeferred<Unit>()
         var accepted = 0
         var open by mutableStateOf(true)
-        rule.setContent { if (open) VibeVoiceTheme { PasteSourceDialog({}, { _, _ -> acknowledgement.await() }, { accepted++; open = false }) } }
+        rule.setContent { if (open) QoraloTheme { PasteSourceDialog({}, { _, _ -> acknowledgement.await() }, { accepted++; open = false }) } }
         pasteBody("Await persistence")
         rule.onNodeWithText("Add source").performClick()
         rule.onNodeWithText("Adding source…").assertIsDisplayed().assertIsNotEnabled()
@@ -64,7 +64,7 @@ class FormSubmissionInteractionTest {
         val acknowledgement = CompletableDeferred<Unit>()
         var accepted = 0
         var submitted: String? = null
-        rule.setContent { VibeVoiceTheme { PasteSourceDialog({}, { _, body -> submitted = body; acknowledgement.await() }, { accepted++ }) } }
+        rule.setContent { QoraloTheme { PasteSourceDialog({}, { _, body -> submitted = body; acknowledgement.await() }, { accepted++ }) } }
         pasteBody("Original submitted body")
         rule.onNodeWithText("Add source").performClick()
         rule.onAllNodes(hasSetTextAction())[1].performTextReplacement("Newer unsent body")
@@ -80,7 +80,7 @@ class FormSubmissionInteractionTest {
         var accepted = 0
         rule.setContent {
             key(generation) {
-                VibeVoiceTheme { PasteSourceDialog({ generation++ }, { _, _ ->
+                QoraloTheme { PasteSourceDialog({ generation++ }, { _, _ ->
                     // Emulate an already-owned backend operation completing after its UI is gone.
                     withContext(NonCancellable) { acknowledgement.await() }
                 }, { accepted++ }) }
@@ -99,7 +99,7 @@ class FormSubmissionInteractionTest {
     @Test fun unchangedAgentRequestClearsOnlyAfterQueueAcknowledgement() {
         val acknowledgement = CompletableDeferred<Unit>()
         var submitted: String? = null
-        rule.setContent { VibeVoiceTheme { AgentEditorSheet(emptyList(), null, {}, { request -> submitted = request; acknowledgement.await() }) } }
+        rule.setContent { QoraloTheme { AgentEditorSheet(emptyList(), null, {}, { request -> submitted = request; acknowledgement.await() }) } }
         rule.onNode(hasSetTextAction()).performTextInput("Please shorten chapter two")
         rule.onNodeWithContentDescription("Send change request").performClick()
         rule.onNode(hasSetTextAction()).assertTextContains("Please shorten chapter two")
@@ -113,7 +113,7 @@ class FormSubmissionInteractionTest {
     @Test fun olderAgentAcknowledgementDoesNotClearNewerRequest() {
         val acknowledgement = CompletableDeferred<Unit>()
         var submitted: String? = null
-        rule.setContent { VibeVoiceTheme { AgentEditorSheet(emptyList(), null, {}, { request -> submitted = request; acknowledgement.await() }) } }
+        rule.setContent { QoraloTheme { AgentEditorSheet(emptyList(), null, {}, { request -> submitted = request; acknowledgement.await() }) } }
         rule.onNode(hasSetTextAction()).performTextInput("Original submitted request")
         rule.onNodeWithContentDescription("Send change request").performClick()
         rule.onNode(hasSetTextAction()).performTextReplacement("Newer unsent request")

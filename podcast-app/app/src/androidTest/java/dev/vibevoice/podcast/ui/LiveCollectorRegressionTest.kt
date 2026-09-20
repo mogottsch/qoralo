@@ -20,7 +20,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.vibevoice.podcast.PodcastApplication
 import dev.vibevoice.podcast.e2e.OwnedWindowCapturePolicy
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import dev.vibevoice.podcast.data.ArtifactStore
 import dev.vibevoice.podcast.data.EpisodePhase
 import dev.vibevoice.podcast.data.JobStatus
@@ -131,7 +131,7 @@ class LiveCollectorRegressionTest {
                 val currentHost = remember { PlaybackHost(isolatedContext, repository::acquireEpisodeFiles) }
                 host = currentHost
                 PlaybackHostEffects(currentHost, repository)
-                VibeVoiceTheme {
+                QoraloTheme {
                     Surface(color = MaterialTheme.colorScheme.surface) {
                         Column(Modifier.fillMaxSize().then(if (!expanded) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)) {
                             val active = currentHost.active

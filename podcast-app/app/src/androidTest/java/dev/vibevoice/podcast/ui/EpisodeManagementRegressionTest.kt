@@ -8,7 +8,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.vibevoice.podcast.data.*
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.Dispatchers
 import android.os.Looper
@@ -46,7 +46,7 @@ class EpisodeManagementRegressionTest {
         val second = runBlocking { repo.episode(b) }.copy(title = "Owned draft B")
         var target by mutableStateOf<EpisodeDeletionTarget?>(null)
         var captured: String? = null
-        rule.setContent { VibeVoiceTheme {
+        rule.setContent { QoraloTheme {
             LibraryScreen(listOf(first, second), {}, {}, {}, episodeActions = { episode ->
                 EpisodeOverflow(episode, {}, { target = EpisodeDeletionTarget(it.id, it.title) })
             })
@@ -79,7 +79,7 @@ class EpisodeManagementRegressionTest {
         val episode = runBlocking { repo.episode(a) }.copy(phase = EpisodePhase.FROZEN_READY, durationMs = 10000)
         val host = PlaybackHost(context, repo::acquireEpisodeFiles)
         var saves = 0
-        rule.setContent { VibeVoiceTheme {
+        rule.setContent { QoraloTheme {
             Text("Owned player deletion fixture; no models")
             val active = host.active
             LaunchedEffect(active) { if (active != null) while (true) { active.session.tick(); kotlinx.coroutines.delay(50) } }
@@ -114,7 +114,7 @@ class EpisodeManagementRegressionTest {
             if (fail) { fail = false; error("Owned injected release failure") }
             session.close()
         })
-        rule.setContent { VibeVoiceTheme { Text("Owned release failure fixture; no models") } }
+        rule.setContent { QoraloTheme { Text("Owned release failure fixture; no models") } }
         try {
             rule.runOnIdle { host.open(episode, emptyList(), emptyList(), null, source, null, null) { _, _, _ -> error("Owned checkpoint failure") } }
             val original = rule.runOnIdle { requireNotNull(host.active) }
@@ -141,7 +141,7 @@ class EpisodeManagementRegressionTest {
             repo.failQueuedJob(id, job, "Synthetic historical failure")
         }
         val attempts = runBlocking { repo.episodeDiagnostics(id) }
-        rule.setContent { VibeVoiceTheme { EpisodeDiagnosticsScreen("Owned diagnostics fixture", attempts, null, {}) } }
+        rule.setContent { QoraloTheme { EpisodeDiagnosticsScreen("Owned diagnostics fixture", attempts, null, {}) } }
         val missing = "Measurements were not recorded for this attempt. Existing history is kept without replaying generation."
         // A lazy item below a large-font header does not exist in the semantics tree yet.
         // Search by scrolling the container; retain the identical visible-text assertion.

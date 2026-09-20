@@ -13,7 +13,7 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -25,13 +25,13 @@ class TextReadabilityClippingTest {
     @get:Rule val rule = createComposeRule()
 
     @Test fun genuinelyWidthConstrainedMinusCannotPassReadability() {
-        rule.setContent { VibeVoiceTheme { Text("−15", modifier = Modifier.width(16.dp), fontSize = 28.sp, maxLines = 1, softWrap = false) } }
+        rule.setContent { QoraloTheme { Text("−15", modifier = Modifier.width(16.dp), fontSize = 28.sp, maxLines = 1, softWrap = false) } }
         val errors = errors("−15")
         assertTrue("Actually truncated −15 was accepted: $errors", errors.any { it.contains("clips intrinsic") || it.contains("complete text") || it.contains("Maximum lines") })
     }
 
     @Test fun genuinelyHeightConstrainedHeaderCannotPassReadability() {
-        rule.setContent { VibeVoiceTheme { Text("Creating episode", modifier = Modifier.height(4.dp), fontSize = 22.sp) } }
+        rule.setContent { QoraloTheme { Text("Creating episode", modifier = Modifier.height(4.dp), fontSize = 22.sp) } }
         val errors = errors("Creating episode")
         assertTrue("Actually clipped title was accepted: $errors", errors.any { it.contains("Height") || it.contains("clips intrinsic") })
     }

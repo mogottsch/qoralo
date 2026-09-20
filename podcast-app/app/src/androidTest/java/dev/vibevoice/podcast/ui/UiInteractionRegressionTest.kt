@@ -10,7 +10,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.vibevoice.podcast.data.*
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +26,7 @@ class UiInteractionRegressionTest {
 
     @Test fun nearLimitHintIsDisabledThenEditingRestoresValidInsertion() {
         val observed = AtomicReference("")
-        rule.setContent { VibeVoiceTheme { InstructionsScreen(episode(EpisodePhase.INSTRUCTIONS).copy(instructions = "a".repeat(1990)), {}, { _, _ -> },
+        rule.setContent { QoraloTheme { InstructionsScreen(episode(EpisodePhase.INSTRUCTIONS).copy(instructions = "a".repeat(1990)), {}, { _, _ -> },
             onDraftChanged = { text, _ -> observed.set(text) }) } }
         rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Length"))
         rule.onNodeWithText("Length").assertIsDisplayed().assertIsNotEnabled()
@@ -43,7 +43,7 @@ class UiInteractionRegressionTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val file = File(context.cacheDir, "synthetic-scrub-silence-60s.wav").also(::writeSilentWav)
         val saved = AtomicLong(-1)
-        rule.setContent { VibeVoiceTheme { PlayerScreen(episode(EpisodePhase.FROZEN_READY), emptyList(), emptyList(), null, file, {}, {},
+        rule.setContent { QoraloTheme { PlayerScreen(episode(EpisodePhase.FROZEN_READY), emptyList(), emptyList(), null, file, {}, {},
             { position, _, _ -> saved.set(position) }) } }
         val slider = rule.onNodeWithContentDescription("Playback position")
         slider.assertIsDisplayed().performTouchInput {
@@ -66,7 +66,7 @@ class UiInteractionRegressionTest {
         val writes = mutableMapOf<String, Pair<Long, Float>>()
         rule.setContent {
             val current = shown
-            VibeVoiceTheme { PlayerScreen(current, emptyList(), emptyList(),
+            QoraloTheme { PlayerScreen(current, emptyList(), emptyList(),
                 if (current.id == a.id) PlaybackStateEntity(a.id, 30_000, 1.5f, false, 1) else null,
                 files.getValue(current.id), {}, {}, { position, speed, _ -> writes[current.id] = position to speed }) }
         }

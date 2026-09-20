@@ -16,7 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalDensity
 import dev.vibevoice.podcast.data.*
 import dev.vibevoice.podcast.ui.*
-import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
+import dev.vibevoice.podcast.ui.theme.QoraloTheme
 import org.json.JSONObject
 import org.json.JSONArray
 import java.io.File
@@ -33,7 +33,7 @@ class SyntheticGalleryActivity : ComponentActivity() {
         enableEdgeToEdge()
         accept(intent)
         setContent {
-            VibeVoiceTheme {
+            QoraloTheme {
                 var draftText by rememberSaveable { mutableStateOf(fixtureEpisode(EpisodePhase.INSTRUCTIONS).instructions) }
                 var draftReview by rememberSaveable { mutableStateOf(true) }
                 val draft = fixtureEpisode(EpisodePhase.INSTRUCTIONS).copy(instructions = draftText, reviewEnabled = draftReview)
