@@ -1,6 +1,6 @@
 # Project presentation
 
-Open [`index.html`](index.html) directly in a modern browser. This is a self-contained HTML presentation with native CSS/SVG, no external runtime assets, and no build step.
+Open [`index.html`](index.html) directly in a modern browser. CSS, JavaScript and diagrams are inline, with no external runtime service or build step. Two optional recordings live in `audio/`; keep that folder beside the HTML when sharing or moving the deck.
 
 For a local preview, from the repository root:
 
@@ -66,21 +66,32 @@ The walkthrough maps one-to-one to the document, not to a fictional clean succes
 
 | Step | Slide ID | Main visual / lesson |
 |---|---|---|
-| 1 | `slide-htp-reference` | Four-graph CPU reference; separate duration/text data paths |
-| 2 | `slide-htp-runtime` | Model format vs runtime vs QNN bridge; packaged route vs our native runner |
-| 3 | `slide-htp-shapes` | Symbolic arrays become a T239/L238 deployment contract |
+| 1 | `slide-htp-reference` | We ran the complete model on CPU first to establish a reference; architecture retained |
+| 2 | `slide-htp-runtime` | Our packaged ORT lacked QNN support; recorded Android build options show how we enabled it |
+| 3 | `slide-htp-shapes` | Actual dynamic-shape rejection, then concrete T239/L238 sizes |
 | 4 | `slide-htp-int8` | Actual CPU / mixed / HTP placement; INT8 did not mean full offload |
-| 5 | `slide-htp-softplus` | Official FP32 pivot and the single stable-Softplus compatibility rewrite |
-| 6 | `slide-htp-proof` | Execution proven, numerical policy failed, exact samples accepted |
-| 7 | `slide-htp-contexts` | Exact-scale 21.6129s vs 0.497816s setup bars; 0022's failed padding gate remains |
+| 5 | `slide-htp-softplus` | Why official FP32 avoided the INT8 quantized-op blockers; then the remaining Softplus rewrite |
+| 6 | `slide-htp-proof` | Numerical comparison failed, but Moritz accepted the final audio; both checks mattered |
+| 7 | `slide-htp-contexts` | Long startup prompted precompilation; exact-scale 21.6129s vs 0.497816s setup bars |
 | 8 | `slide-htp-android` | APK library visibility; load-only proof separate from short synthesis |
-| 9 | `slide-htp-capacity` | Larger-graph engineering followed by rejected whole-input CPU/HTP WAVs |
-| 10 | `slide-htp-recipe` | Provider segmentation plus schematic native-edge reads; multifactor quality change |
-| 11 | `slide-htp-reusable` | 32 case-specific contexts become four reusable contexts; synthesis vs publication recovery |
+| 9 | `slide-htp-capacity` | From short clips to one full chapter; play the actual rejected ~30s CPU/HTP WAVs |
+| 10 | `slide-htp-recipe` | The provider's four-step long-text recipe and its accepted exact chapter samples |
+| 11 | `slide-htp-reusable` | Integrating that recipe into the app with a reusable pack; app output still not reviewed |
 
 The one-pager is a summary of the resulting route; the detail slides preserve chronology, failures and qualifications. Speaker notes cite the reconstruction, owning records and exact result/tool paths. A mathematical identity is not promised bitwise backend equality. Failed numerical gates stay failed. The 0037 recipe changed several factors, so segmentation alone is not declared causal. The new app WAV remains `not_reviewed`; its zero-inference publication recovery is not a second synthesis run. Current Qoralo naming is distinguished from historical package identities.
 
-No new inference, phone benchmark, output-quality verdict or hardware measurement was produced for these slides. Diagrams are authored HTML/SVG. The native-edge and segment pictures are explicitly schematic, not tensor captures or duration plots; the startup chart alone encodes the exact measured ratio.
+The walkthrough is written as a report: what we tried, what failed, what changed and what happened. Implementation details such as native-edge indices and the publication-recovery mechanism remain in Notes rather than crowding the main explanation. Dynamic-shape rejection is distinguished from the separate ORT Pad-selector crash. Observed ~30-second long-input outputs are not presented as a demonstrated hard cap.
+
+No new inference, phone benchmark, listening verdict or hardware measurement was produced for these slides. Diagrams are authored HTML/SVG, and the startup chart uses the exact retained ratio. The compilation command shows the actual options from the saved August 13 ORT build log through the standard `./build.sh` wrapper; the log did not retain the outer shell invocation. [Build provenance](evidence/qnn-build-record.json) records that distinction, source hash and required container paths. This is not a turnkey SDK installation guide.
+
+### Rejected whole-input recordings
+
+The two players on [step 9](http://localhost:8766/docs/presentation/#slide-htp-capacity) are unmistakably labelled **REJECTED**. They are failure examples Moritz judged unusable, not the later accepted provider-recipe output.
+
+- CPU: `audio/0036-cpu-rejected.wav` · SHA-256 `9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2`.
+- HTP: `audio/0036-htp-rejected.wav` · SHA-256 `3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c`.
+
+Both are byte-identical copies, with no re-encoding, trimming, normalization or new synthesis. [Audio provenance](audio/manifest.json) binds their source paths, byte counts, sample counts and rejected listening records. Native controls require explicit playback; `preload="none"` avoids loading audio merely by navigating. Starting one recording pauses the other. Leaving the slide or hiding the page pauses playback; returning does not resume it. Arrow/Space media controls do not navigate the deck. Download links remain available if playback fails. Browser playback tests are muted technical checks, not new listening assessments.
 
 ### Other optional details
 
@@ -109,9 +120,11 @@ The `.slide-content` group preserves the original artwork proportions inside the
 
 ## Browser checks
 
-`browser-checks.js` is an async Playwright callback that verifies all 23 slides at six viewport sizes, including the five-step journey; overflow and overlap; aligned model collections, readable labels and intact architecture entries; the seven-slide main route ending at the HTP one-pager; its root slide7 numbering and continuation from Models & results; all eleven optional detail steps, visible controls, source link, step numbering, bidirectional return boundaries, deep links/history, SVG label bounds, failure/quality/causality wording and exact-scale startup bars; both benchmark links opening real result tables in separate tabs; removed-slide recovery; all five original optional detours and their exits, including both model architecture entries and the nested long-input route, return boundaries, SVG labels, history/reload, fullscreen and offline behavior; exact sample-count chart proportions and the visible training-version/causality qualifications; Gemma's 4:1 layer tiles and 15/20 KV-sharing split; all ten backend detail dialogs; overview; keyboard/focus; direct links, refresh and browser history; the static GPU/NPU illustrations; notes; fullscreen; offline behavior; invalid hashes; and print visibility.
+`browser-checks.js` is an async Playwright callback that verifies all 23 slides at six viewport sizes, including the five-step journey; overflow and overlap; aligned model collections, readable labels and intact architecture entries; the seven-slide main route ending at the HTP one-pager; its root slide7 numbering and continuation from Models & results; all eleven optional detail steps, visible controls, source link, step numbering, bidirectional return boundaries, deep links/history, SVG label bounds, report wording and recorded compile options, failure/quality/causality boundaries and exact-scale startup bars; both rejected audio hashes, decoded durations, no preload/autoplay, muted playback, mutual exclusion and pause-on-exit; both benchmark links opening real result tables in separate tabs; removed-slide recovery; all five original optional detours and their exits, including both model architecture entries and the nested long-input route, return boundaries, SVG labels, history/reload, fullscreen and offline behavior; exact sample-count chart proportions and the visible training-version/causality qualifications; Gemma's 4:1 layer tiles and 15/20 KV-sharing split; all ten backend detail dialogs; overview; keyboard/focus; direct links, refresh and browser history; the static GPU/NPU illustrations; notes; fullscreen; offline behavior; invalid hashes; and print visibility.
 
-The HTP overview/walkthrough extension passed the full 23-slide/six-viewport browser suite on September 20, 2026. All twelve new slides were visually inspected at 1280×720 and 390×844. Moritz then requested the one-pager as root slide7 rather than an optional deployment detour; the final route and visible slide6 continuation are covered by the updated checks. The nested walkthrough has no added runtime assets or inference dependency. Review was performed in-session because no extra agent spawning was authorized. The detector reported incumbent font/palette/copy warnings and template-heading warnings; notes render beneath the dialog's existing h2 title, so their h3 sections are intentional. No redesign of unrelated slides was made. Layout checks explicitly neutralize pointer hover before each viewport sweep so the pre-existing benchmark-link arrow animation does not create a spurious overflow report.
+The HTP overview/walkthrough extension passed the full 23-slide/six-viewport browser suite on September 20, 2026. All twelve new slides were visually inspected at 1280×720 and 390×844. Moritz then requested the one-pager as root slide7 rather than an optional deployment detour; the final route and visible slide6 continuation are covered by the updated checks. The nested walkthrough has no external runtime or inference dependency; its two optional audio files are local copies only. Review was performed in-session because no extra agent spawning was authorized. The detector reported incumbent font/palette/copy warnings and template-heading warnings; notes render beneath the dialog's existing h2 title, so their h3 sections are intentional. No redesign of unrelated slides was made. Layout checks explicitly neutralize pointer hover before each viewport sweep so the pre-existing benchmark-link arrow animation does not create a spurious overflow report.
+
+The later report-style revision also passed the full 23-slide/six-viewport suite, including muted playback of both exact recordings, byte hashes, decoded durations, no audio fetch during ordinary navigation, keyboard handling, mutual exclusion and pause-on-exit. All twelve HTP slides plus the audio-error state were visually reviewed at 1280×720 and 390×844. The build command's option/value pairs were independently compared with the original saved log. No new build, inference, phone action or listening verdict was produced.
 
 The earlier long-input addition passed the full suite and an in-session visual review at 1280×720 and 390×844; no separate review agent was spawned. It preserves the existing deck palette, typography, fixed-stage geometry and computation-explorer link. The design detector's remaining warnings concern the incumbent palette/font, uppercase labels and existing notes hierarchy; this scoped addition does not redesign those surfaces. The new slide has no added eyebrow or shipping raster assets.
 

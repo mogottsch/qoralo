@@ -4,6 +4,9 @@ async (page) => {
   page.on('pageerror', error => errors.push(error.message));
   const check = (condition, message) => { if (!condition) failures.push(message); };
   const deckURL = page.url() === 'about:blank' ? 'http://127.0.0.1:8766/docs/presentation/' : page.url().split('#')[0];
+  const audioRequests = [];
+  const recordAudioRequest = request => { if (/\/audio\/0036-.*\.wav(?:\?|$)/.test(request.url())) audioRequests.push(request.url()); };
+  page.on('request', recordAudioRequest);
   await page.goto(deckURL);
   await page.waitForFunction(() => !!window.presentation);
   const config = await page.evaluate(() => ({ routes: window.presentation.routes, branchMeta: window.presentation.branchMeta, branchPoint: window.presentation.branchPoint, resumePoint: window.presentation.resumePoint }));
@@ -49,15 +52,15 @@ async (page) => {
       const layout = await page.evaluate(() => {
         const slide = document.querySelector('.slide.active');
         const bounds = slide.getBoundingClientRect();
-        const protruding = [...slide.querySelectorAll('article, h1, h2, h3, p, button, table, td, th, .slide-footer, .soc-boundary, .memory-block, .hexagon-units, .workflow-lane, .workflow-node, .deploy-bridge, .journey-step, .branch-choices, .detour-actions, .local-memory, .backend-catalog-grid, .backend-tool-grid, .models-grid, .model-results, .model-list li, .supertonic-diagram, .st-module > rect, .gemma-architecture-visual, .htp-body, .htp-svg, .htp-node, .htp-position, .htp-source-link, .htp-keyline')]
+        const protruding = [...slide.querySelectorAll('article, h1, h2, h3, p, button, table, td, th, .slide-footer, .soc-boundary, .memory-block, .hexagon-units, .workflow-lane, .workflow-node, .deploy-bridge, .journey-step, .branch-choices, .detour-actions, .local-memory, .backend-catalog-grid, .backend-tool-grid, .models-grid, .model-results, .model-list li, .supertonic-diagram, .st-module > rect, .gemma-architecture-visual, .htp-body, .htp-svg, .htp-node, .htp-position, .htp-source-link, .htp-keyline, .htp-command, .htp-audio-player, .htp-audio-meta, .htp-recipe-list')]
           .filter(element => {
             const rect = element.getBoundingClientRect();
             return rect.width && (rect.left < bounds.left - 1 || rect.right > bounds.right + 1 || rect.top < bounds.top - 1 || rect.bottom > bounds.bottom + 1);
           }).map(element => element.className || element.tagName);
-        const overflowing = [...slide.querySelectorAll('.processor-column, td, th, .quadrant-name, p, h1, h2, h3, .compute-block, .memory-block, .workflow-node, .hexagon-units, .journey-step, .branch-choices button, .detour-actions button, .hexagon-worker, .qnn-backend-card, .backend-tool-card, .model-family, .model-list li, .model-results, .htp-body, .htp-node, .htp-column, .htp-proof-list li, .htp-position')]
+        const overflowing = [...slide.querySelectorAll('.processor-column, td, th, .quadrant-name, p, h1, h2, h3, .compute-block, .memory-block, .workflow-node, .hexagon-units, .journey-step, .branch-choices button, .detour-actions button, .hexagon-worker, .qnn-backend-card, .backend-tool-card, .model-family, .model-list li, .model-results, .htp-body, .htp-node, .htp-column, .htp-proof-list li, .htp-position, .htp-command, .htp-recipe-list, .htp-audio-meta')]
           .filter(element => element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1)
           .map(element => element.className || element.tagName);
-        const panels = [...slide.querySelectorAll('.processor-column, tbody td, .compute-block, .memory-block, .workflow-node, .journey-step, .hexagon-worker, .branch-choices button, .detour-actions button, .qnn-backend-card, .backend-tool-card, .model-family, .gemma-architecture-visual, .htp-node')].map(element => element.getBoundingClientRect());
+        const panels = [...slide.querySelectorAll('.processor-column, tbody td, .compute-block, .memory-block, .workflow-node, .journey-step, .hexagon-worker, .branch-choices button, .detour-actions button, .qnn-backend-card, .backend-tool-card, .model-family, .gemma-architecture-visual, .htp-node, .htp-audio-player')].map(element => element.getBoundingClientRect());
         const overlaps = panels.some((a, i) => panels.slice(i + 1).some(b =>
           Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 &&
           Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1));
@@ -369,8 +372,46 @@ async (page) => {
     check((await page.locator(`#${id}`).innerText()).includes(text), message);
   }
   check(await page.locator('#slide-htp-capacity').evaluate(e => e.textContent.includes('Both WAVs rejected.')), 'The whole-input attempt must stay rejected');
-  check(await page.locator('#slide-htp-recipe').evaluate(e => e.textContent.includes('Strict source numerical gate still failed')), 'Preserve the provider source-gate failure');
-  check(await page.locator('#slide-htp-reusable').evaluate(e => e.textContent.includes('New app WAV: not reviewed') && e.textContent.includes('zero new model calls')), 'App quality and publication recovery must stay distinct');
+  check(await page.locator('#slide-htp-recipe').evaluate(e => e.textContent.includes('strict HTP source numerical gate still failed')), 'Preserve the provider source-gate failure');
+  check(await page.locator('#slide-htp-reusable').evaluate(e => e.textContent.includes('its WAV is still not reviewed') && e.querySelector('.speaker-notes').content.textContent.includes('zero new model calls')), 'App quality and publication recovery must stay distinct, with recovery details in Notes');
+  check(await page.locator('#slide-htp-runtime .htp-command').evaluate(e => e.textContent.includes('--use_qnn static_lib --qnn_home /opt/qairt') && e.textContent.includes('--android_ndk_path /opt/android-sdk/ndk/26.2.11394342')), 'Runtime report includes the verified QNN-enabled Android build command');
+  check(await page.locator('#slide-htp-shapes').evaluate(e => e.textContent.includes('Dynamic shape is not supported yet')), 'Describe the actual dynamic-shape rejection');
+  check(await page.locator('#slide-htp-softplus').evaluate(e => e.textContent.includes('avoided the INT8 export') && e.textContent.includes('DynamicQuantizeLinear') && e.textContent.includes('Floating-point operations instead')), 'Explain why selecting FP32 graphs avoided the quantized-op blockers');
+  check(await page.locator('#slide-htp-recipe .htp-recipe-list li').count() === 4, 'Provider slide explains the actual recipe rather than an unexplained edge diagram');
+
+  // Exact rejected audio: no preload/autoplay; technical playback checks are muted, not listening verdicts.
+  check(audioRequests.length === 0, 'Navigating and inspecting the deck must not fetch audio before an explicit test/play action');
+  page.off('request', recordAudioRequest);
+  await go('slide-htp-capacity');
+  check(await page.locator('.htp-audio-player').count() === 2, 'Provide both exact rejected CPU and HTP outputs');
+  check(await page.locator('.htp-audio-player').evaluateAll(es => es.every(e => e.controls && e.preload === 'none' && !e.autoplay && e.paused)), 'Audio must be click-to-play with no autoplay/preload');
+  check(await page.locator('.htp-rejected-label').evaluateAll(es => es.every(e => e.innerText.includes('REJECTED'))), 'Each player must be unmistakably labelled rejected');
+  const manifestURL = await page.evaluate(() => new URL('audio/manifest.json', location.href).href);
+  const manifestResponse = await page.request.get(manifestURL);
+  const audioManifest = await manifestResponse.json();
+  for (const sample of audioManifest.samples) {
+    const file = sample.file.split('/').at(-1);
+    const actual = await page.evaluate(async path => {
+      const response = await fetch(path); const bytes = await response.arrayBuffer();
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return {ok:response.ok,bytes:bytes.byteLength,sha256:[...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+    }, `audio/${file}`);
+    check(actual.ok && actual.sha256 === sample.sha256 && actual.bytes === sample.bytes && sample.listening_verdict === 'rejected', `${sample.route}: served audio must match the retained rejected WAV bytes`);
+    const player = page.locator(`.htp-audio-player[data-audio-route="${sample.route}"]`);
+    await player.evaluate(async audio => { audio.muted = true; await audio.play(); });
+    await page.waitForFunction(id => { const a=document.getElementById(id); return !a.paused && a.currentTime > 0; }, await player.getAttribute('id'));
+    check(Math.abs(await player.evaluate(a=>a.duration) - sample.duration_seconds) < .001, `${sample.route}: decoded duration must match the exact source`);
+    check(await page.locator('.htp-audio-player').evaluateAll(es=>es.filter(e=>!e.paused).length) === 1, 'Starting one recording pauses the other');
+    await player.focus(); await page.keyboard.press('ArrowRight');
+    check(await current() === 'slide-htp-capacity', 'Native audio seek keys must not advance the deck');
+  }
+  await go(htpOverview[0]);
+  check(await page.locator('.htp-audio-player').evaluateAll(es=>es.every(e=>e.paused)), 'Leaving the slide stops recorded playback');
+  await go('slide-htp-capacity');
+  check(await page.locator('.htp-audio-player').evaluateAll(es=>es.every(e=>e.paused)), 'Returning to the slide never resumes audio automatically');
+  await page.locator('#htp-cpu-audio').evaluate(a=>a.dispatchEvent(new Event('error')));
+  check(await page.locator('#htp-cpu-audio').locator('..').locator('.htp-audio-error').isVisible(), 'Audio errors reveal an explicit fallback message beside the download link');
+  await page.locator('#htp-cpu-audio').evaluate(a=>a.dispatchEvent(new Event('loadedmetadata')));
   await page.goto(`${deckURL}#${htpSteps[6]}`); await page.reload();
   check(await current() === htpSteps[6], 'Middle-of-walkthrough deep link survives reload');
   await page.keyboard.press('ArrowRight'); await page.goBack();
@@ -554,5 +595,5 @@ async (page) => {
   check(!errors.length, `JavaScript errors: ${errors.join('; ')}`);
   if (failures.length) throw new Error(failures.join('\n'));
   await go(config.branchPoint);
-  return 'PASS: 23 slides × six viewport sizes; seven-slide main story ending with the Supertonic HTP overview; eleven-step nested walkthrough with working controls, exact startup ratio and preserved failure/causality boundaries; existing architecture and long-input detours; benchmarks; map; notes; keyboard/focus; deep links/history/reload; fullscreen; offline; print; no overflow, overlap or JS errors.';
+  return 'PASS: 23 slides × six viewport sizes; seven-slide main story ending with the Supertonic HTP overview; report-style eleven-step walkthrough with recorded QNN build command, exact rejected-audio hashes/muted playback/no autoplay/pause-on-exit, exact startup ratio and preserved failure/causality boundaries; existing architecture and long-input detours; benchmarks; map; notes; keyboard/focus; deep links/history/reload; fullscreen; offline; print; no overflow, overlap or JS errors.';
 }

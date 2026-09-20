@@ -11,19 +11,19 @@ Mode: Read. Moritz wants one overview slide plus a detailed subslideshow visuali
 
 ## Direction contract
 
-THESIS: Running Supertonic on HTP required a supported runtime, explicit graph adaptation, verification and the right synthesis recipe—not one conversion switch. Keep failed paths and claim boundaries legible.
+THESIS: Report what we tried, what failed, what we changed and what happened next. Moritz explicitly rejects sales-pitch headlines and unexplained implementation detail. Lead with the actual problem on each slide; distinguish reported failures from inferred causes.
 
 OWN-WORLD: Inherit the dark #0b1017 canvas, incumbent sans typography and fixed 1920×1080 stage. Mint identifies HTP; blue identifies CPU/host work; amber identifies blocked or qualified results. Use flow diagrams, a placement table, exact-scale startup bars and sequence-boundary drawings rather than repeated cards.
 
 STORY: Follow the root presentation through Models & results to the one-page summary on slide7; choose eleven numbered steps matching the Markdown; advance with arrows or visible controls; return to root slide7 at any time. Notes hold technical receipts, source links and causal qualifications.
 
-FIRST VIEWPORT: A large Supertonic-to-HTP heading above two connected lanes: host preparation and phone execution. One visible qualification separates execution from correctness. A primary walkthrough button and a return to Models & results anchor the bottom. Every detail uses one large content-specific diagram, concise interpretation and persistent exit/step controls.
+FIRST VIEWPORT: Root slide7 keeps the host/phone overview. Details are literal reports: a CPU reference; missing QNN build support with recorded compilation options; rejected dynamic shapes; INT8 blockers and why FP32 avoids them; numerical versus listening results; long startup; Android packaging; rejected longer-chapter audio; the provider recipe; reusable app integration. Two byte-identical0036 audio samples have native click-to-play controls and explicit rejected labels. Preserve persistent navigation; move obscure edge-index and publication mechanics into Notes.
 
 FORM: Code-led local extension of an established surface; no concept roll or replacement world is applicable. One root overview as the seventh and final main-story slide, plus one optional eleven-slide route using existing route metadata and stable hashes. Static diagrams prioritize comprehension over spectacle.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-Scope qualification: Preserve the incumbent system; do not create a new root DESIGN.md for this local addition. No shipping raster assets. Review runs in-session because this project forbids unrequested agent spawning.
+Scope qualification: Preserve the incumbent system; do not create a new root DESIGN.md for this local addition. No shipping raster assets. Two local WAVs are exact copies of rejected0036 outputs, never re-encoded or autoplayed; provenance binds them to Moritz's reviews. Build-command options come from the retained build log and CMake cache. Review runs in-session because this project forbids unrequested agent spawning.
 
 ## HTP extension finish review — 2026-09-20
 
@@ -36,18 +36,18 @@ Direction and route scope are recorded here; README documents all eleven steps, 
 
 ### fidelity
 - TYPE — match: existing sans face, fixed-stage title/body hierarchy and comfortable desktop diagram labels.
-- MATERIAL — match: native HTML/SVG diagrams, truthful measured startup bars, explicitly schematic edge/segment illustrations; no simulated textures or decorative raster substitutions.
+- MATERIAL — match: native HTML/SVG reference and shape diagrams, exact measured startup bars, actual recorded compile options and two byte-identical rejected recordings. The obscure edge illustration was removed in favor of the provider recipe; implementation details remain in Notes.
 - GROUND — match: existing #0b1017 dark canvas, mint HTP/blue CPU roles, amber qualification/failure text.
 - Topology — corrected at Moritz's request: original root slides1–6 → overview as root slide7 → optional eleven-step route. Both detail boundaries and every direct exit return to root slide7; normal root arrows never force the details.
-- Content — match: numbered reconstruction; hybrid and strict numerical failures remain visible; 0036 rejected; 0037 multifactor change; new app WAV not_reviewed; synthesis and publication recovery separated.
+- Content — report revision matches Moritz's slide-specific feedback: CPU reference stated plainly; missing QNN build support plus command; actual dynamic-shape rejection; explanation of why FP32 avoids quantized-op blockers; simplified numerical-versus-listening comparison; startup problem first; short-clips-to-long-chapter failure with exact rejected audio; provider recipe in four steps; reusable app integration explained before implementation detail. Failed gates and multifactor boundaries remain.
 - Captures — all thirteen initial changed/new destinations inspected at 1280×720 and 390×844. After Moritz's placement correction, slides5,6,7 were re-inspected at both sizes in /tmp/luke-htp-review/corrected-{desktop,phone}-{slide-5,slide-models,slide-supertonic-htp}.png. Slide6 has a visible forward control; slide7 shows Main story / 7 of7. Portrait letterboxing is required fixed-stage behavior, not missing content.
 - Mechanical checks — all23slides × six viewports passed, including SVG labels, node/section bounds, exact startup ratio, corrected root-slide7 placement and eleven-step detour, old routes, notes, map, keyboard, history, fullscreen, offline and print. First content assertions were corrected to read active slides. A pre-existing hover-arrow translation was isolated and intrinsic-layout tests now park the pointer outside controls.
 
 ### ceiling
-Reached for this explanatory extension. Content-specific diagrams carry the lesson; no additional animation or external visual asset is necessary. Browser-native text selection and keyboard focus use the deck palette.
+Reached for the report-style revision. /tmp/luke-htp-report/{desktop,phone}-0.png through -11.png and the audio-error captures were reviewed in-session. All23slides × six viewports passed again with exact audio hashes/durations, muted playback, no preload/autoplay, media keys, mutual exclusion and pause-on-exit. Build-command argument/value pairs match the retained log whose hash is recorded in evidence/qnn-build-record.json. Test-only fixes resolved unavailable sandbox URL and accessing note text through template.content. No additional visual polish round was needed. Browser-native text selection and keyboard focus use the deck palette.
 
 ### material_fixes
-None outstanding. Detector warnings concern the inherited palette/font/cadence and h3 headings inside speaker-note templates; these render under the notes dialog's h2. No new eyebrow or new visual-world defaults were introduced.
+None outstanding. Detector warnings concern the inherited palette/font/cadence and h3 headings inside speaker-note templates; these render under the notes dialog's h2. No new eyebrow or new visual-world defaults were introduced. REJECTED is an intentional safety label on each failure sample. Actual audio testing was muted and grants no new listening verdict.
 
 ### keep
 Keep the visible distinction between execution, numerical fidelity, exact-sample quality and multi-factor historical changes; keep the one-pager at root slide7, with only the eleven details optional.

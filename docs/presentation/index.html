@@ -528,6 +528,40 @@ svg {
     .htp-runtime .htp-lane h2 { margin-bottom: 16px; }
     .htp-runtime .htp-node { min-height: 86px; }
     .htp-runtime .htp-node strong { font-size: 26px; }
+    /* === REPORT DETAILS: RECORDED COMMAND, RESULTS AND EXACT REJECTED AUDIO === */
+    .htp-build-layout { display: grid; grid-template-columns: 1000px 1fr; gap: 40px; }
+    .htp-build-layout h2 { margin: 0 0 18px; font-size: 27px; font-weight: 550; }
+    .htp-command { margin: 0; padding: 23px; border: 1px solid var(--line); border-radius: 8px; background: #101720; font: 22px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre; }
+    .htp-command .qnn-option { color: var(--npu); font-weight: 600; }
+    .htp-build-layout p { margin: 0 0 24px; color: var(--muted); font-size: 24px; line-height: 1.45; }
+    .htp-build-layout code { font-size: 22px; }
+    .htp-build-layout .htp-build-output { color: var(--npu); }
+    .htp-fp32-comparison .htp-columns { height: 300px; }
+    .htp-operation-list { margin: 15px 0 0; padding-left: 26px; font-size: 25px; line-height: 1.65; }
+    .htp-inline-equation { border-top: 1px solid var(--line); padding-top: 23px; margin: 15px 0 0; font-size: 26px; line-height: 1.6; }
+    .htp-inline-equation code { color: var(--npu); }
+    .htp-listening-result { padding-top: 26px; }
+    .htp-listening-result .htp-column { padding-top: 25px; border-top: 1px solid var(--line); }
+    .htp-listening-result p { font-size: 30px; line-height: 1.55; }
+    .htp-listening-result .htp-warning { color: #f0b77a; }
+    .htp-long-results .htp-column h2 { margin-bottom: 12px; }
+    .htp-long-results .htp-duration { margin: 0; color: var(--text); font-size: 36px; }
+    .htp-long-results .htp-rejected-label { margin: 18px 0 10px; color: #f0b77a; font-size: 25px; line-height: 1.35; }
+    .htp-audio-player { width: 100%; height: 54px; margin-top: 18px; display: block; }
+    .htp-audio-player:focus-visible { outline: 3px solid var(--npu); outline-offset: 5px; }
+    .htp-audio-meta { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 15px; font-size: 21px; }
+    .htp-audio-meta a { color: var(--cpu); text-underline-offset: 5px; }
+    .htp-audio-meta code { color: var(--muted); font-size: 18px; }
+    .htp-long-results .htp-audio-error { color: #f0b77a; font-size: 20px; margin: 10px 0 0; }
+    .htp-audio-description { margin: 24px 0 0; font-size: 24px; color: var(--muted); line-height: 1.4; }
+    .htp-provider-recipe { grid-template-columns: 930px 1fr; }
+    .htp-recipe-list { margin: 0; padding-left: 38px; font-size: 28px; line-height: 1.4; }
+    .htp-recipe-list li { margin-bottom: 25px; padding-left: 8px; }
+    .htp-recipe-list small { display: block; color: var(--muted); font-size: 23px; margin-top: 5px; }
+    .htp-provider-recipe .htp-column p { font-size: 28px; line-height: 1.55; }
+    .htp-app-comparison { height: 280px; }
+    .htp-app-comparison p { font-size: 29px; }
+    @media print { .htp-audio-player, .htp-audio-error { display: none !important; } }
     @media print {
       @page { size: 16in 9in; margin: 0; }
       :root, body { background: var(--bg); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
@@ -1287,7 +1321,7 @@ svg {
       <section class="slide htp-slide htp-overview" id="slide-supertonic-htp" data-title="Supertonic 3 → HTP" aria-labelledby="htp-overview-title" inert aria-hidden="true">
         <div class="slide-content">
           <h1 id="htp-overview-title">Supertonic 3 → <em>HTP</em></h1>
-          <p class="subtitle">A supported runtime, adapted graphs and the right speech recipe. Not one backend switch.</p>
+          <p class="subtitle">How we deployed the four Supertonic 3 graphs on the Galaxy S23 Ultra’s HTP.</p>
           <div class="htp-body">
             <section class="htp-lane" aria-label="Prepare on the development machine">
               <h2>Prepare on the development machine</h2>
@@ -1309,7 +1343,7 @@ svg {
             </section>
             <p class="htp-overview-note">Verify hardware execution, numerical fidelity, spoken coverage and exact-sample listening separately.</p>
           </div>
-          <p class="htp-takeaway"><strong>The route works.</strong> Failed numerical gates remain failed; accepted samples are not universal quality proof.</p>
+          <p class="htp-takeaway">HTP execution was verified. Numerical comparison and listening produced different verdicts.</p>
           <nav class="detour-actions htp-nav" aria-label="Explore the Supertonic HTP reconstruction">
             <button type="button" data-go-slide="slide-models">← Models &amp; results</button>
             <a class="htp-source-link" href="../supertonic-android-htp-reconstruction.md" target="_blank" rel="noopener">Read the reconstruction ↗</a>
@@ -1331,8 +1365,8 @@ svg {
       <!-- === RECONSTRUCTION 1: A COMPLETE CPU REFERENCE === -->
       <section class="slide htp-slide" id="slide-htp-reference" data-title="1. Establish the CPU reference" data-branch="supertonic-htp-steps" data-branch-origin="slide-supertonic-htp" data-branch-resume="slide-supertonic-htp" data-reconstruction-step="1" aria-labelledby="htp-reference-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-reference-title">First, a <em>working CPU reference.</em></h1>
-          <p class="subtitle">Four existing ONNX graphs. Ordinary code connects them into one synthesis.</p>
+          <h1 id="htp-reference-title">We ran the complete model on CPU first.</h1>
+          <p class="subtitle">This established the reference for our HTP work.</p>
           <div class="htp-body">
             <svg class="htp-svg" viewBox="0 0 1472 470" role="img" aria-labelledby="htp-ref-svg-title htp-ref-svg-desc">
               <title id="htp-ref-svg-title">CPU reference with separate duration and text branches</title><desc id="htp-ref-svg-desc">Prepared text feeds duration prediction and text encoding separately. Duration sizes the initial noisy latent. Encoded text conditions the repeated vector estimator, then the vocoder emits samples. The CPU runtime executes all four graphs.</desc>
@@ -1347,7 +1381,6 @@ svg {
               <path d="M270 407V422H1470V407" fill="none" stroke="#5475a6"/><text x="870" y="459" text-anchor="middle" class="htp-svg-small">CPU execution · voice style conditions duration, text and estimation</text>
             </svg>
           </div>
-          <p class="htp-takeaway">Freeze <strong>text, voice and random state</strong> so later changes have a meaningful reference.</p>
           <nav class="detour-actions htp-nav" aria-label="CPU-reference walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><span class="htp-position">1 / 11</span><button type="button" data-go-slide="slide-htp-runtime">Runtime →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §1 · 0008 → 0010 · the initial package was INT8</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
@@ -1361,21 +1394,27 @@ svg {
       <!-- === RECONSTRUCTION 2: OPTIONAL BUILD SUPPORT AND CALLER INTEGRATION === -->
       <section class="slide htp-slide htp-runtime" id="slide-htp-runtime" data-title="2. Build and wire the runtime" data-branch="supertonic-htp-steps" data-reconstruction-step="2" aria-labelledby="htp-runtime-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-runtime-title">HTP support is <em>not a switch.</em></h1>
-          <p class="subtitle">ONNX Runtime supported QNN. Our packaged runtime and sherpa TTS path did not expose it.</p>
-          <div class="htp-body">
-            <div class="htp-keyline"><span><strong>ONNX</strong> = model format</span><span><strong>ORT</strong> = executor</span><span><strong>QNN EP</strong> = bridge</span></div>
-            <section class="htp-lane"><h2>Original package</h2><div class="htp-flow"><div class="htp-node"><strong>Our app</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node"><strong>sherpa TTS wrapper</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node"><strong>Packaged ORT → CPU</strong></div></div></section>
-            <section class="htp-lane"><h2>Separate route we built</h2><div class="htp-flow"><div class="htp-node"><strong>Our C++ runner</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node"><strong>ORT + QNN EP</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node accelerator"><strong>QNN HTP → Hexagon</strong></div></div></section>
-            <p class="htp-caption">QNN-enabled build + matching Qualcomm libraries + explicit provider configuration.</p>
+          <h1 id="htp-runtime-title">Our ORT build had no QNN support.</h1>
+          <p class="subtitle">We rebuilt ONNX Runtime for Android with the QNN execution provider enabled.</p>
+          <div class="htp-body htp-build-layout">
+            <div><h2>Build command · ORT 1.27.1 source, prepared container</h2><pre class="htp-command"><code>./build.sh --build_dir /build --config Release \
+  --update --build --parallel 8 \
+  --android --android_abi arm64-v8a --android_api 27 \
+  --android_sdk_path /opt/android-sdk \
+  --android_ndk_path /opt/android-sdk/ndk/26.2.11394342 \
+  --build_shared_lib --skip_tests \
+  <span class="qnn-option">--use_qnn static_lib --qnn_home /opt/qairt</span> \
+  --cmake_generator Ninja --compile_no_warning_as_error</code></pre></div>
+            <div><h2>What changed</h2><p>QNN integration compiled into ORT.</p><p>QAIRT 2.49 mounted at<br><code>/opt/qairt</code>.</p><p class="htp-build-output">Output:<br><code>libonnxruntime.so</code></p><p>Options verified against the saved build log.</p></div>
           </div>
-          <p class="htp-takeaway"><strong>Three gates:</strong> runtime support → caller integration → supported model operations and shapes.</p>
+          <p class="htp-takeaway">We also used our own C++ runner: the pinned sherpa TTS selector did not support <code>qnn</code>.</p>
           <nav class="detour-actions htp-nav" aria-label="Runtime walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-reference">← Reference</button><span class="htp-position">2 / 11</span><button type="button" data-go-slide="slide-htp-shapes">Shapes →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §2 · ORT 1.27.1 · QAIRT 2.49 · SM8550 / V73</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
             <h3>Why selecting qnn was not enough</h3><p>ONNX is a model format, not an executing program. ONNX Runtime can be built with different execution providers. The retained source defaults onnxruntime_USE_QNN to OFF. The original AAR's runtime was not our QNN-enabled build, and the pinned generic sherpa TTS provider selector did not recognize qnn. This is about that version and path, not every sherpa feature or future release. Runtime here means execution software, not elapsed time or Android ART.</p>
             <p>We built ORT 1.27.1 with QAIRT 2.49 QNN integration and used a separate native runner. Matching backend, prepare, system, V73 stub and skeleton libraries were necessary. The first tiny QDQ-add control omitted libQnnHtpPrepare.so and failed; after supplying it the control had physical RPC/accelerator/cycle/HVX evidence. The larger model was still a separate compatibility question. A later ORT Pad-selector crash required an upstream backport.</p>
-            <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §2: runtime terminology</a></li><li><a href="../../experiments/0010-supertonic-qnn-htp-feasibility/README.md#runtime-choice">Pinned wrapper and runtime findings</a></li><li><a href="../../experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json">Physical control, missing library and crash receipts</a></li></ul>
+            <h3>Recorded compilation command</h3><p>The displayed options come from the August 13 build.stderr.log, whose SHA-256 matches the committed host checkpoint. The retained CMake cache confirms onnxruntime_USE_QNN=ON and onnxruntime_BUILD_QNN_EP_STATIC_LIB=ON. The log records build.py arguments, not the outer shell command; the slide expresses those same options through ORT's standard ./build.sh wrapper. Run it from the pinned ORT 1.27.1 source in the prepared build container. The SDK, NDK and QAIRT directories shown are container mounts, not assumed workstation paths. This is not a complete SDK installation guide or a new build result. The separate Pad-selector fix was applied later. The original broad build compiled unit-test targets despite skipping their execution.</p>
+            <h3>Sources</h3><ul><li><a href="evidence/qnn-build-record.json">Recorded build options, log hash and invocation qualification</a></li><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §2: runtime terminology</a></li><li><a href="../../experiments/0010-supertonic-qnn-htp-feasibility/README.md#runtime-choice">Pinned wrapper and runtime findings</a></li><li><a href="../../experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json">Physical control, missing library and crash receipts</a></li></ul>
           </template>
         </div>
       </section>
@@ -1383,8 +1422,8 @@ svg {
       <!-- === RECONSTRUCTION 3: SYMBOLIC SHAPES BECOME A DEPLOYMENT CONTRACT === -->
       <section class="slide htp-slide" id="slide-htp-shapes" data-title="3. Make dimensions concrete" data-branch="supertonic-htp-steps" data-reconstruction-step="3" aria-labelledby="htp-shapes-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-shapes-title">The compiler needs <em>concrete sizes.</em></h1>
-          <p class="subtitle">Specialize the graph for an explicit contract. Do not assume it now accepts arbitrary text.</p>
+          <h1 id="htp-shapes-title">QNN rejected the dynamic graph shapes.</h1>
+          <p class="subtitle">The released graphs had variable dimensions. Our QNN HTP route required concrete sizes.</p>
           <div class="htp-body">
             <svg class="htp-svg" viewBox="0 0 1472 470" role="img" aria-labelledby="htp-shape-svg-title htp-shape-svg-desc"><title id="htp-shape-svg-title">Symbolic text and latent dimensions become fixed T239 and L238</title><desc id="htp-shape-svg-desc">The text tensor changes from one by T to one by 239; the latent from one by 144 by L to one by 144 by 238. These are array positions, not words or waveform samples. The historical comparison used a predeclared latent extent rather than reallocating from each duration prediction.</desc>
               <text x="35" y="45" class="htp-svg-large">Released ONNX</text><text x="860" y="45" class="htp-svg-large htp-svg-green">Initial fixed contract</text>
@@ -1396,13 +1435,13 @@ svg {
               <text x="35" y="408">Record source + derivative hashes. Preserve learned weights.</text><text x="35" y="450" class="htp-svg-small">Historical comparison: duration prediction ran, but L238 remained predeclared.</text>
             </svg>
           </div>
-          <p class="htp-takeaway"><strong>Shape compatibility is a constraint.</strong> Padding and longer inputs need their own checks.</p>
+          <p class="htp-takeaway">QNN: <code>“Dynamic shape is not supported yet”</code>. We fixed T and L and checked the result on CPU.</p>
           <nav class="detour-actions htp-nav" aria-label="Shape walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-runtime">← Runtime</button><span class="htp-position">3 / 11</span><button type="button" data-go-slide="slide-htp-int8">INT8 attempt →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §3 · initial T239 / L238 deployment, not a model-wide limit</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
-            <h3>Shape specialization, not training</h3><p>The first captured CPU component fixtures supplied concrete dimensions for the QNN route. For the official-FP32 follow-up, I/O specialization preserved ordered nodes and learned initializers; the specialized CPU chain passed its predeclared equivalence policy. Fixing dimensions lets the compiler plan a concrete computation, but changes the accepted input contract.</p>
+            <h3>The failure and the change</h3><p>The retained released-graph gate reports: qnn_model.cc:73 ParseGraphInputOrOutput Dynamic shape is not supported yet, for output: total_step. Session creation was rejected before capability checks. This is not the separate PadNodeGroupSelector segmentation fault, and it does not establish that every HTP software route forever rejects every dynamic shape. It establishes the limitation of our pinned QNN route.</p><p>The first captured CPU component fixtures supplied concrete dimensions for the QNN route. For the official-FP32 follow-up, I/O specialization preserved ordered nodes and learned initializers; the specialized CPU chain passed its predeclared equivalence policy. Fixing dimensions lets the compiler plan a concrete computation, but changes the accepted input contract.</p>
             <p>T is processed character-position extent, including language tags. L is the packed latent's temporal extent with 144 channels. Each latent position corresponds to 3072 waveform samples in the vocoder interface. In the legacy comparison, the predeclared L238 and 729746 retained samples were not recomputed from the later 16.9202-second duration prediction. Do not teach these historical fixture values as one dynamically derived example. The later provider route calculates its own native length and uses separate capacity/boundary handling.</p>
-            <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §3</a></li><li><a href="../../experiments/0010-supertonic-qnn-htp-feasibility/README.md">Initial shapes and fixed comparison contract</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/results/step2-fail-closed-htp-checkpoint.json">Shape-specialization and CPU-equivalence evidence</a></li></ul>
+            <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §3</a></li><li><a href="../../experiments/0010-supertonic-qnn-htp-feasibility/results/vector-estimator-checkpoint.json">Recorded dynamic-I/O rejection and fixed-shape host gate</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/results/step2-fail-closed-htp-checkpoint.json">Shape-specialization and CPU-equivalence evidence</a></li></ul>
           </template>
         </div>
       </section>
@@ -1410,11 +1449,11 @@ svg {
       <!-- === RECONSTRUCTION 4: PRESERVE THE BOUNDED INT8 HYBRID === -->
       <section class="slide htp-slide" id="slide-htp-int8" data-title="4. INT8 reached a hybrid, not full offload" data-branch="supertonic-htp-steps" data-reconstruction-step="4" aria-labelledby="htp-int8-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-int8-title">INT8 did not mean <em>HTP-ready.</em></h1>
-          <p class="subtitle">The packaged graphs reached a bounded hybrid—not full neural offload.</p>
+          <h1 id="htp-int8-title">The INT8 graphs still needed CPU fallback.</h1>
+          <p class="subtitle">After fixing the shapes, unsupported quantization operations prevented full HTP execution.</p>
           <div class="htp-body htp-columns">
             <div class="htp-column"><table class="htp-placement" aria-label="Experiment 0010 final component placement"><thead><tr><th scope="col">Component</th><th scope="col">Where it ran</th></tr></thead><tbody><tr><td>Duration predictor</td><td>CPU</td></tr><tr><td>Text encoder</td><td>CPU</td></tr><tr><td>Vector estimator</td><td class="mixed">QNN HTP + CPU</td></tr><tr><td>Rewritten vocoder</td><td class="accelerator">QNN HTP</td></tr></tbody></table></div>
-            <div class="htp-column"><h2>What remained in the way</h2><ul class="htp-blockers"><li>Dynamic quantization operations</li><li>Integer matrix multiplication</li><li>One unsupported <code>Softplus</code></li></ul><p>Each estimator call: 21 HTP partitions<br>plus 136 CPU nodes.</p></div>
+            <div class="htp-column"><h2>What remained in the way</h2><ul class="htp-blockers"><li><code>DynamicQuantizeLinear</code></li><li><code>MatMulInteger</code> + weight dequantization</li><li>One unsupported <code>Softplus</code></li></ul><p>Each estimator call: 21 HTP partitions<br>plus 136 CPU nodes.</p></div>
           </div>
           <p class="htp-takeaway"><span class="htp-warning">Numerical gate failed.</span> Exact listening samples were accepted; this was still a hybrid route.</p>
           <nav class="detour-actions htp-nav" aria-label="INT8 walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-shapes">← Shapes</button><span class="htp-position">4 / 11</span><button type="button" data-go-slide="slide-htp-softplus">FP32 pivot →</button></div></nav>
@@ -1430,19 +1469,19 @@ svg {
       <!-- === RECONSTRUCTION 5: ONE AUDITED COMPATIBILITY REWRITE === -->
       <section class="slide htp-slide" id="slide-htp-softplus" data-title="5. FP32 source and the Softplus rewrite" data-branch="supertonic-htp-steps" data-reconstruction-step="5" aria-labelledby="htp-softplus-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-softplus-title">The pivot: <em>official FP32 graphs.</em></h1>
-          <p class="subtitle">With concrete shapes, three components were supported. One operation blocked the estimator.</p>
-          <div class="htp-body htp-columns">
-            <div class="htp-column"><h2>Same function, supported expression</h2><div class="htp-equation"><code>Softplus(x)</code><span class="htp-formula"><code>max(x, 0)<br>+ log(1 + exp(-abs(x)))</code></span></div><p>The exponential never receives a positive value.</p><div class="htp-rewrite-result"><span class="htp-warning">Blocked vector</span><span aria-hidden="true">→</span><span style="color:var(--npu)">One QNN partition</span></div></div>
-            <div class="htp-column"><ul class="htp-proof-list"><li><strong>1 operation replaced</strong><span>Seven supported primitive operations</span></li><li><strong>Learned weights unchanged</strong><span>All unrelated computation preserved</span></li><li><strong class="passed">CPU rewrite checks passed</strong><span>Physical HTP output needed its own test</span></li></ul></div>
+          <h1 id="htp-softplus-title">We switched to the official FP32 graphs.</h1>
+          <p class="subtitle">They avoided the INT8 export’s unsupported quantization operations.</p>
+          <div class="htp-body htp-fp32-comparison">
+            <div class="htp-columns"><div class="htp-column"><h2>Packaged INT8 estimator</h2><p>Its execution path included:</p><ul class="htp-operation-list"><li><code>DynamicQuantizeLinear</code></li><li><code>MatMulInteger</code></li><li>Weight dequantization operations</li></ul></div><div class="htp-column"><h2>Official FP32 estimator</h2><p>Floating-point operations instead of that quantized execution path.</p><p>QNN could handle those operations.<br>Only <code>Softplus</code> remained unsupported.</p></div></div>
+            <p class="htp-inline-equation">We replaced that remaining operation:<br><code>Softplus(x) → max(x, 0) + log(1 + exp(-abs(x)))</code></p>
           </div>
-          <p class="htp-takeaway"><strong>No retraining or explicit INT8 conversion.</strong> FP32 source does not prove FP32 arithmetic inside HTP.</p>
+          <p class="htp-takeaway">All four graphs then ran on HTP. We changed graph representation—not the model’s training.</p>
           <nav class="detour-actions htp-nav" aria-label="Softplus walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-int8">← INT8 attempt</button><span class="htp-position">5 / 11</span><button type="button" data-go-slide="slide-htp-proof">Verify execution →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §5 · experiment 0011 · a demonstrated compatibility fix</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
-            <h3>What changed, exactly</h3><p>We used the official FP32 ONNX assets at revision 724fb5abbf5502583fb520898d45929e62f02c0b. With shape specialization only, duration, text and vocoder fully delegated. The estimator left exactly one unsupported Softplus in its time encoder. The hash-locked tool replaced it with Relu, Abs, Neg, Exp, Add, Log and Add, adding only scalar float32 one. Original learned weights and every unrelated node remained byte-identical.</p>
+            <h3>Why FP32 helped with the previous failure</h3><p>We selected different first-party graph files; we did not merely cast the packaged INT8 weights back to float. The INT8 export's dynamic activation quantization, integer matrix multiplication and weight-dequantization path created unsupported nodes. In the official FP32 estimator, the QNN gate reported only Softplus as unsupported. The benefit here was a compatible graph representation, not evidence that HTP inherently prefers higher precision or executes every source operation in FP32.</p><h3>What changed, exactly</h3><p>We used the official FP32 ONNX assets at revision 724fb5abbf5502583fb520898d45929e62f02c0b. With shape specialization only, duration, text and vocoder fully delegated. The estimator left exactly one unsupported Softplus in its time encoder. The hash-locked tool replaced it with Relu, Abs, Neg, Exp, Add, Log and Add, adding only scalar float32 one. Original learned weights and every unrelated node remained byte-identical.</p>
             <p>The stable identity is mathematical equality, not a blanket promise of floating-point bit identity. CPU comparisons of real step inputs and the recursive five-step chain passed the frozen rewrite policy. The vector then formed one supported 874-node QNN partition and passed a physical fallback-disabled probe. This identifies a causal compatibility fix. It does not establish the separate end-to-end CPU-versus-HTP numerical gate, which failed.</p>
-            <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §5</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/tools/rewrite_vector_softplus.py">Source-hash-locked rewrite and structural checks</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json">Rewrite, delegation and complete phone evidence</a></li></ul>
+            <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §5</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/results/step2-fail-closed-htp-checkpoint.json">Official FP32 gate: only Softplus remained unsupported</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/tools/rewrite_vector_softplus.py">Source-hash-locked rewrite and structural checks</a></li><li><a href="../../experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json">Rewrite, delegation and complete phone evidence</a></li></ul>
           </template>
         </div>
       </section>
@@ -1450,13 +1489,13 @@ svg {
       <!-- === RECONSTRUCTION 6: EXECUTION IS DISTINCT FROM FIDELITY AND LISTENING === -->
       <section class="slide htp-slide" id="slide-htp-proof" data-title="6. Verify execution and output separately" data-branch="supertonic-htp-steps" data-reconstruction-step="6" aria-labelledby="htp-proof-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-proof-title">“It ran” is <em>only one answer.</em></h1>
-          <p class="subtitle">Disable CPU fallback. Inspect the provider and physical accelerator evidence. Then test the output.</p>
-          <div class="htp-body htp-columns">
-            <div class="htp-column"><h2>48 neural calls on HTP</h2><p>Six complete generations<br>with five estimator steps each.</p><div class="htp-call-ledger" aria-label="Six duration calls, six text calls, thirty estimator calls and six vocoder calls"><div><strong>6</strong><span>Duration</span></div><div><strong>6</strong><span>Text</span></div><div><strong>30</strong><span>Estimator</span></div><div><strong>6</strong><span>Vocoder</span></div></div><p>QNN provider events + RPC + cycles + HVX<br>Zero CPU-provider node events</p></div>
-            <div class="htp-column"><ul class="htp-proof-list"><li><strong class="passed">Hardware execution: proven</strong><span>All four neural components on HTP</span></li><li><strong class="failed">Numerical policy: failed</strong><span>Waveform cosine 0.92668; required ≥ 0.95</span></li><li><strong class="passed">Listening: exact samples accepted</strong><span>Not broad-corpus or numerical acceptance</span></li></ul></div>
+          <h1 id="htp-proof-title">The audio was accepted in listening.</h1>
+          <p class="subtitle">Even though it failed our numerical comparison against the CPU waveform.</p>
+          <div class="htp-body htp-columns htp-listening-result">
+            <div class="htp-column"><h2>Numerical comparison</h2><p>Waveform cosine: <code>0.92668</code><br>Required: <code>≥ 0.95</code></p><p class="htp-warning">Numerical policy: failed.</p></div>
+            <div class="htp-column"><h2>Listening to the final audio</h2><p>Moritz listened to the CPU and HTP outputs and accepted both.</p><p>The HTP sample was usable to the listener despite failing that numerical threshold.</p></div>
           </div>
-          <p class="htp-takeaway"><strong>All-neural HTP ≠ an all-HTP application.</strong> The CPU still prepares inputs, runs the loop and writes audio.</p>
+          <p class="htp-takeaway">We needed both checks: numerical similarity alone did not tell us whether the speech sounded usable.</p>
           <nav class="detour-actions htp-nav" aria-label="Verification walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-softplus">← FP32 pivot</button><span class="htp-position">6 / 11</span><button type="button" data-go-slide="slide-htp-contexts">Startup →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §6 · experiment 0011 · three independent findings</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
@@ -1470,15 +1509,15 @@ svg {
       <!-- === RECONSTRUCTION 7: MEASURED STARTUP, NOT A SYNTHESIS SPEED CLAIM === -->
       <section class="slide htp-slide" id="slide-htp-contexts" data-title="7. Precompile instead of preparing on startup" data-branch="supertonic-htp-steps" data-reconstruction-step="7" aria-labelledby="htp-contexts-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-contexts-title">Compile once. <em>Load the context.</em></h1>
-          <p class="subtitle">Move graph preparation to the development machine; deploy the descriptor and QNN binary.</p>
+          <h1 id="htp-contexts-title">Startup took about 22 seconds.</h1>
+          <p class="subtitle">QNN prepared the graphs during session creation. We moved that work to the development machine.</p>
           <div class="htp-body">
             <figure class="htp-setup-chart"><figcaption>Galaxy S23 Ultra · median four-session setup · experiment 0023</figcaption><div class="htp-setup-row"><span>From source ONNX</span><div class="htp-setup-track"><span class="htp-setup-bar" data-setup-seconds="21.6129" style="width:100%"></span></div><strong>21.61 s</strong></div><div class="htp-setup-row context"><span>External EPContext</span><div class="htp-setup-track"><span class="htp-setup-bar" data-setup-seconds="0.497816" style="width:2.303328105%"></span></div><strong>0.50 s</strong></div></figure>
             <div class="htp-setup-foot"><span>Same output bytes</span><span>Source absent during context proof</span><span style="color:var(--npu)">Fallback disabled</span></div>
             <p class="htp-history-stop">Earlier 0022 attempt stopped: masked T235 → T239 padding changed the calculation.</p>
             <p class="htp-caption">0023 kept the legacy input and graph identities instead. It did not solve that padding failure.</p>
           </div>
-          <p class="htp-takeaway"><strong>A startup improvement.</strong> Offline compilation is excluded; this is not a 43× synthesis speedup.</p>
+          <p class="htp-takeaway">Loading precompiled contexts reduced setup to about half a second. Synthesis time stayed roughly the same.</p>
           <nav class="detour-actions htp-nav" aria-label="Context walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-proof">← Verification</button><span class="htp-position">7 / 11</span><button type="button" data-go-slide="slide-htp-android">Android app →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §7 · same-runtime, matched setup comparison · three fresh processes per arm</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
@@ -1493,13 +1532,13 @@ svg {
       <!-- === RECONSTRUCTION 8: THE APK HAS A DIFFERENT LIBRARY NAMESPACE === -->
       <section class="slide htp-slide" id="slide-htp-android" data-title="8. Make the runtime work inside an APK" data-branch="supertonic-htp-steps" data-reconstruction-step="8" aria-labelledby="htp-android-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-android-title">A runner is <em>not an Android app.</em></h1>
-          <p class="subtitle">The same model and libraries still have to work inside the app’s native-library namespace.</p>
+          <h1 id="htp-android-title">QNN could not load inside the app.</h1>
+          <p class="subtitle">Unlike the standalone runner, the APK could not resolve the public library libcdsprpc.so.</p>
           <div class="htp-body htp-columns">
             <div class="htp-column"><h2>App startup was blocked</h2><div class="htp-node" style="margin-top:36px"><strong>QNN HTP → V73 stub</strong><small>Inside the APK process</small></div><p style="font-size:36px;text-align:center" aria-hidden="true">↓</p><div class="htp-node" style="border-color:#a97f50"><strong class="htp-warning"><code>libcdsprpc.so</code></strong><small>Public FastRPC library was not visible</small></div><p>No duration session. No synthesis.</p></div>
             <div class="htp-column"><ul class="htp-proof-list"><li><strong>Declare the native library</strong><span>Manifest-only variant; same neural assets</span></li><li><strong class="passed">Duration session loaded</strong><span>Load-only proof · zero inference calls</span></li><li><strong class="passed">Then test complete synthesis</strong><span>Separate short run: physical evidence<br>and exact-WAV listening acceptance</span></li></ul></div>
           </div>
-          <p class="htp-takeaway"><strong>A packaging fix, not a model rewrite.</strong> Successful loading and successful synthesis were separate tests.</p>
+          <p class="htp-takeaway">The manifest declaration fixed library access. A separate short synthesis test then passed.</p>
           <nav class="detour-actions htp-nav" aria-label="Android walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-contexts">← Startup</button><span class="htp-position">8 / 11</span><button type="button" data-go-slide="slide-htp-capacity">Long inputs →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §8 · September 10 app integration · historical package identity</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
@@ -1511,29 +1550,31 @@ svg {
       </section>
 
       <!-- === RECONSTRUCTION 9: COMPLETE EXECUTION, REJECTED WHOLE-INPUT SPEECH === -->
-      <section class="slide htp-slide" id="slide-htp-capacity" data-title="9. Larger graphs did not fix whole-input speech" data-branch="supertonic-htp-steps" data-reconstruction-step="9" aria-labelledby="htp-capacity-title" inert aria-hidden="true">
+      <section class="slide htp-slide htp-capacity" id="slide-htp-capacity" data-title="9. Larger graphs did not fix whole-input speech" data-branch="supertonic-htp-steps" data-reconstruction-step="9" aria-labelledby="htp-capacity-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-capacity-title">A bigger graph <em>did not fix speech.</em></h1>
-          <p class="subtitle">More capacity required real engineering. Complete execution still failed the actual task.</p>
-          <div class="htp-body">
-            <svg class="htp-svg" viewBox="0 0 1472 470" role="img" aria-labelledby="htp-cap-svg-title htp-cap-svg-desc"><title id="htp-cap-svg-title">Larger-graph engineering followed by rejected whole-chapter CPU and HTP outputs</title><desc id="htp-cap-svg-desc">The larger-capacity effort required positional-table extension, vocoder tiling changes and later text-encoder depth partitioning. Experiment 0036 provided all 487 words in one input, but CPU emitted 29.57 seconds and HTP 29.58 seconds. Both WAVs were rejected; both ASR word-error rates were about 89 percent.</desc>
-              <g fill="#141d28" stroke="#53657d"><rect x="0" y="10" width="464" height="105" rx="10"/><rect x="504" y="10" width="464" height="105" rx="10"/><rect x="1008" y="10" width="464" height="105" rx="10"/></g>
-              <text x="25" y="53">Extend position table</text><text x="25" y="89" class="htp-svg-small">Preserve the original prefix</text><text x="529" y="53">Adapt vocoder tiling</text><text x="529" y="89" class="htp-svg-small">Two local-memory failure sites</text><text x="1033" y="53">Split text-encoder depth</text><text x="1033" y="89" class="htp-svg-small">Whole text still in every stage</text>
-              <text x="0" y="197" class="htp-svg-large">487 words in one input</text><text x="0" y="239" class="htp-svg-small">No segmentation · experiment 0036</text>
-              <path d="M465 210H575M564 200l14 10-14 10" fill="none" stroke="#9bbdff" stroke-width="2"/>
-              <text x="630" y="198" class="htp-svg-blue">CPU</text><text x="1070" y="198" class="htp-svg-green">HTP</text>
-              <text x="630" y="271" class="htp-svg-large">29.57 s</text><text x="1070" y="271" class="htp-svg-large">29.58 s</text>
-              <text x="630" y="316" class="htp-svg-small">emitted audio</text><text x="1070" y="316" class="htp-svg-small">emitted audio</text>
-              <path d="M0 362H1472" stroke="#303e4e"/><text x="0" y="421" class="htp-svg-large htp-svg-amber">Both WAVs rejected.</text><text x="630" y="421" class="htp-svg-amber">About 89% ASR word error on both routes</text>
-            </svg>
+          <h1 id="htp-capacity-title">The longer chapter produced unusable audio.</h1>
+          <p class="subtitle">Short clips worked. To move toward full episodes, we tried a whole 487-word chapter in one call.</p>
+          <div class="htp-body htp-long-results">
+            <div class="htp-columns">
+              <section class="htp-column" aria-labelledby="htp-cpu-audio-label"><h2 id="htp-cpu-audio-label">CPU · whole-input output</h2><p class="htp-duration">29.57 s of emitted audio</p><p class="htp-rejected-label" id="htp-cpu-verdict">REJECTED · Moritz judged it unusable</p>
+                <audio class="htp-audio-player" id="htp-cpu-audio" controls preload="none" src="audio/0036-cpu-rejected.wav" data-audio-route="CPU" aria-labelledby="htp-cpu-audio-label" aria-describedby="htp-cpu-verdict htp-audio-description">Your browser cannot play this WAV. Use the download link.</audio>
+                <div class="htp-audio-meta"><a href="audio/0036-cpu-rejected.wav" download>Download exact CPU WAV</a><code title="SHA-256 9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2">9b1c8587…</code></div><p class="htp-audio-error" role="status" hidden>Audio unavailable. Try the WAV download link.</p><p>ASR word error: 89.09%</p>
+              </section>
+              <section class="htp-column" aria-labelledby="htp-htp-audio-label"><h2 id="htp-htp-audio-label">HTP · whole-input output</h2><p class="htp-duration">29.58 s of emitted audio</p><p class="htp-rejected-label" id="htp-htp-verdict">REJECTED · Moritz judged it gibberish</p>
+                <audio class="htp-audio-player" id="htp-htp-audio" controls preload="none" src="audio/0036-htp-rejected.wav" data-audio-route="HTP" aria-labelledby="htp-htp-audio-label" aria-describedby="htp-htp-verdict htp-audio-description">Your browser cannot play this WAV. Use the download link.</audio>
+                <div class="htp-audio-meta"><a href="audio/0036-htp-rejected.wav" download>Download exact HTP WAV</a><code title="SHA-256 3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c">3ae276f2…</code></div><p class="htp-audio-error" role="status" hidden>Audio unavailable. Try the WAV download link.</p><p>ASR word error: 88.69%</p>
+              </section>
+            </div>
+            <p class="htp-audio-description" id="htp-audio-description">These are the exact rejected outputs—not examples of the later working recipe. Click Play to listen.</p>
           </div>
-          <p class="htp-takeaway"><span class="htp-warning">Valid WAV ≠ complete, intelligible speech.</span> This tested whole-input recipe failed.</p>
+          <p class="htp-takeaway"><span class="htp-warning">Both WAVs rejected.</span> About 30 seconds were observed here; we did not establish a hard duration cap.</p>
           <nav class="detour-actions htp-nav" aria-label="Capacity walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-android">← Android app</button><span class="htp-position">9 / 11</span><button type="button" data-go-slide="slide-htp-recipe">Provider recipe →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §9 · larger-context work → 0036 · not a successful long-speech result</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
             <h3>Capacity involved several separate fixes</h3><p>The T2048/L2048 attempt extended a nonlearned arange positional table beyond 1000 and retained the stable Softplus rewrite. Two large vocoder convolutions failed HTP tiling/local-memory limits, so a two-site parity lowering was prepared. This was not a neutral reshape or proof of long-speech quality. Later 0036 used T3200/L512; its single text context exceeded signed RPC allocation sizes. Splitting the encoder into three network-depth stages preserved the entire sequence and passed a bitwise CPU source-equivalence check. It was not text chunking.</p>
             <p>Both complete 0036 routes produced valid but unusable short WAVs for the unchanged 487-word chapter. CPU emitted 29.569841 seconds with 89.09% ASR WER; HTP emitted 29.578118 seconds with 88.69%. Moritz rejected both exact files. The numeric samples are actual emitted duration, not generation latency. No sole model defect, hard 30-second clamp or universal failure of Supertonic was established. These rejections remain unchanged after 0037.</p>
-            <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §9</a></li><li><a href="../../experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/README.md">Position and vocoder capacity engineering</a></li><li><a href="../../experiments/0036-supertonic-whole-chapter-cpu-htp/README.md">Complete CPU/HTP execution and both rejections</a></li></ul>
+            <h3>Listen to the actual rejected files</h3><p>The two on-slide controls load local byte-identical WAV copies, with no re-encoding, trimming, normalization or new inference. CPU SHA-256: 9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2. HTP SHA-256: 3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c. Both have Moritz's rejected verdict. These are failure examples, not the later accepted provider-recipe output. Playback requires an explicit action; starting one pauses the other, and leaving the slide or hiding the page pauses playback.</p><p>Our goal was to progress from short clips toward full podcast episodes. The specific comparison here was one 487-word chapter, not an entire multi-chapter episode. Both outputs were about 30 seconds. Earlier long-input probes were similarly short, but no universal maximum was established. The duration-head audit found no removable 30-second clamp; version3's exact training-duration cutoff is unknown.</p>
+            <h3>Sources</h3><ul><li><a href="audio/manifest.json">Exact WAV copy hashes, source paths and rejected review records</a></li><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §9</a></li><li><a href="../../experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/README.md">Position and vocoder capacity engineering</a></li><li><a href="../../experiments/0036-supertonic-whole-chapter-cpu-htp/README.md">Complete CPU/HTP execution and both rejections</a></li></ul>
           </template>
         </div>
       </section>
@@ -1541,30 +1582,18 @@ svg {
       <!-- === RECONSTRUCTION 10: PROVIDER RECIPE PLUS NATIVE-EDGE SEMANTICS === -->
       <section class="slide htp-slide" id="slide-htp-recipe" data-title="10. Follow the provider recipe and preserve edges" data-branch="supertonic-htp-steps" data-reconstruction-step="10" aria-labelledby="htp-recipe-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-recipe-title">Short segments. <em>Correct boundaries.</em></h1>
-          <p class="subtitle">Follow the complete provider recipe—and make fixed-capacity graphs respect each segment’s real edge.</p>
-          <div class="htp-body">
-            <svg class="htp-svg" viewBox="0 0 1472 470" role="img" aria-labelledby="htp-recipe-svg-title htp-recipe-svg-desc"><title id="htp-recipe-svg-title">Provider segmentation and native-edge reads inside a fixed bucket</title><desc id="htp-recipe-svg-desc">The provider groups raw sentences toward 300 characters, normalizes each segment, uses eight steps and speed 1.05, then assembles full native waveform outputs with 0.3-second gaps. A schematic on the right contrasts reading zeros past the real edge with repeating the actual edge value using Gather indices. Neither diagram is an audio-duration plot.</desc>
-              <text x="0" y="40" class="htp-svg-large">One chapter → 15 calls</text><text x="0" y="88" class="htp-svg-small">Raw sentences → normalize each segment</text>
-              <g fill="#8ee8c2"><rect x="0" y="120" width="32" height="45"/><rect x="43" y="120" width="32" height="45"/><rect x="86" y="120" width="32" height="45"/><rect x="129" y="120" width="32" height="45"/><rect x="172" y="120" width="32" height="45"/><rect x="215" y="120" width="32" height="45"/><rect x="258" y="120" width="32" height="45"/><rect x="301" y="120" width="32" height="45"/><rect x="344" y="120" width="32" height="45"/><rect x="387" y="120" width="32" height="45"/><rect x="430" y="120" width="32" height="45"/><rect x="473" y="120" width="32" height="45"/><rect x="516" y="120" width="32" height="45"/><rect x="559" y="120" width="32" height="45"/><rect x="602" y="120" width="32" height="45"/></g>
-              <text x="0" y="212">8 steps · speed 1.05 · M1</text><text x="0" y="255">Full native audio + 0.3 s gaps</text><text x="0" y="313" class="htp-svg-small">Blocks are schematic, not duration-scaled.</text>
-              <text x="0" y="395" class="htp-svg-green">≈210 s · both exact samples accepted</text><text x="0" y="439" class="htp-svg-small">ASR word error: CPU 2.42% · HTP 3.03%</text>
-              <path d="M702 5V450" stroke="#303e4e"/>
-              <text x="760" y="40" class="htp-svg-large">Read the actual edge</text><text x="760" y="88" class="htp-svg-small">Conceptual convolution-boundary example</text>
-              <g fill="#172338" stroke="#5475a6"><rect x="760" y="120" width="110" height="65"/><rect x="870" y="120" width="110" height="65"/><rect x="980" y="120" width="110" height="65"/></g><g fill="#302519" stroke="#9a7045"><rect x="1090" y="120" width="110" height="65"/><rect x="1200" y="120" width="110" height="65"/></g>
-              <g text-anchor="middle"><text x="815" y="162">a</text><text x="925" y="162">b</text><text x="1035" y="162">c</text><text x="1145" y="162" class="htp-svg-amber">0</text><text x="1255" y="162" class="htp-svg-amber">0</text></g>
-              <text x="760" y="224" class="htp-svg-amber">Naive padding changes edge behavior</text>
-              <g fill="#132821" stroke="#4a8c73"><rect x="760" y="260" width="110" height="65"/><rect x="870" y="260" width="110" height="65"/><rect x="980" y="260" width="110" height="65"/><rect x="1090" y="260" width="110" height="65"/><rect x="1200" y="260" width="110" height="65"/></g>
-              <g text-anchor="middle"><text x="815" y="302">a</text><text x="925" y="302">b</text><text x="1035" y="302">c</text><text x="1145" y="302" class="htp-svg-green">c</text><text x="1255" y="302" class="htp-svg-green">c</text></g>
-              <path d="M1090 108V196M1090 248V337" stroke="#adbacb" stroke-dasharray="5 5"/><text x="760" y="369">Gather indices preserve the native edge</text><text x="760" y="419" class="htp-svg-small">32 contexts in this chapter-specific experiment</text><text x="760" y="454" class="htp-svg-amber">Strict source numerical gate still failed</text>
-            </svg>
+          <h1 id="htp-recipe-title">We followed the provider’s long-text recipe.</h1>
+          <p class="subtitle">Instead of passing the whole chapter to a single synthesis call.</p>
+          <div class="htp-body htp-columns htp-provider-recipe">
+            <ol class="htp-recipe-list"><li>Group whole sentences toward 300 characters.<small>Split the raw text before normalization.</small></li><li>Normalize and index each group.<small>Use explicit English and the M1 voice.</small></li><li>Synthesize each group separately.<small>Eight refinement steps · speed 1.05.</small></li><li>Keep each full waveform and join the segments.<small>Insert 0.3 seconds of silence between them.</small></li></ol>
+            <div class="htp-column"><h2>Result · experiment 0037</h2><p>The same 487-word chapter became 15 segments.</p><p>CPU: 210.04 s<br>HTP: 210.18 s<br>of emitted audio.</p><p style="color:var(--npu)">Moritz accepted both exact files.</p></div>
           </div>
-          <p class="htp-takeaway"><strong>The whole recipe changed.</strong> This does not prove segmentation alone caused the quality improvement.</p>
+          <p class="htp-takeaway">The whole recipe changed. This does not prove segmentation alone caused the improvement.</p>
           <nav class="detour-actions htp-nav" aria-label="Provider-recipe walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-capacity">← Long inputs</button><span class="htp-position">10 / 11</span><button type="button" data-go-slide="slide-htp-reusable">Reusable app route →</button></div></nav>
-          <footer class="slide-footer"><span>Reconstruction §10 · experiment 0037 · acceptance does not rewrite 0036</span><span class="page">Optional</span></footer>
+          <footer class="slide-footer"><span>Reconstruction §10 · supertonic-py 1.3.1 · strict HTP source numerical gate still failed; see Notes</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
             <h3>A complete recipe, not an isolated segmentation test</h3><p>The pinned supertonic-py 1.3.1 recipe groups raw sentences toward 300 code points before normalization; individually overlong sentences remain intact. It uses English/M1, eight steps, speed 1.05, full nativeL×3072 waveform output and exactly 13230 zero samples between segments. The same chapter produced 15 segments, about 210 seconds and strong automatic coverage. Moritz accepted both exact 0037 WAVs in the later hash-bound review. Normalization, steps, speed and sample selection changed as well as segmentation, so the quality result does not isolate a sole cause.</p>
-            <h3>Why the native edge matters</h3><p>Vector convolutions use symmetric EDGE pads. Zero-padding a short latent to L512 moves the right edge and changes active outputs. The derivative replaces 28 EDGE pads with Gather indices clamped to the route's own nativeL. The drawing shows conceptual values read by the boundary operation, not overwriting arbitrary waveform samples or a numerical tensor capture. Four index arrays cover radii 2, 4, 8 and 16. HTP computes its own duration and latent length; CPU predictions or activations are not substituted.</p>
+            <h3>Why the native edge matters</h3><p>Vector convolutions use symmetric EDGE pads. Zero-padding a short latent to L512 moves the right edge and changes active outputs. The derivative replaces 28 EDGE pads with Gather indices clamped to the route's own nativeL. This preserves which feature values the convolution reads at the segment boundary. It does not repair the waveform or substitute CPU-generated speech. These implementation details are kept here in Notes; the slide explains the provider recipe itself. Four index arrays cover radii 2, 4, 8 and 16. HTP computes its own duration and latent length; CPU predictions or activations are not substituted.</p>
             <p>Fifteen exact-T duration/text pairs plus shared T320/L512 vector and L512 vocoder gave 32 contexts, at most four resident. Original weights and the 1000-position table remained unchanged; stable Softplus remained. Native-edge changes greatly reduced source errors but the strict source gate stayed failed. Physical logs supported HTP RPC use; profile OFF means no independent cycle/HVX counters. Exact-sample acceptance is not generic pack readiness or universal numerical parity.</p>
             <h3>Sources</h3><ul><li><a href="../supertonic-android-htp-reconstruction.md">Reconstruction §10</a></li><li><a href="../../experiments/0037-supertonic-provider-pipeline/htp/README.md">Padding isolation, controls, exports and physical result</a></li><li><a href="../../experiments/0037-supertonic-provider-pipeline/results/listening-review-20260911.json">Both exact-file listening acceptances</a></li></ul>
           </template>
@@ -1572,21 +1601,15 @@ svg {
       </section>
 
       <!-- === RECONSTRUCTION 11: REUSABLE CAPACITY AND HONEST APP PUBLICATION EVIDENCE === -->
-      <section class="slide htp-slide" id="slide-htp-reusable" data-title="11. Reuse four contexts in the app" data-branch="supertonic-htp-steps" data-reconstruction-step="11" aria-labelledby="htp-reusable-title" inert aria-hidden="true">
+      <section class="slide htp-slide" id="slide-htp-reusable" data-title="11. Integrate the provider recipe in the app" data-branch="supertonic-htp-steps" data-reconstruction-step="11" aria-labelledby="htp-reusable-title" inert aria-hidden="true">
         <div class="slide-content">
-          <h1 id="htp-reusable-title">From a test pack to <em>four reusable contexts.</em></h1>
-          <p class="subtitle">Port the provider recipe. Preserve each input’s native boundary. Reject unsupported extents.</p>
+          <h1 id="htp-reusable-title">We integrated the recipe into the app.</h1>
+          <p class="subtitle">The experiment pack was prepared for particular text lengths. The app needed a reusable pack.</p>
           <div class="htp-body">
-            <svg class="htp-svg" viewBox="0 0 1472 470" role="img" aria-labelledby="htp-reuse-svg-title htp-reuse-svg-desc"><title id="htp-reuse-svg-title">Four reusable app contexts and the separate synthesis and publication outcomes</title><desc id="htp-reuse-svg-desc">A chapter-specific collection of 32 contexts becomes four reusable contexts with text capacity 320 and latent capacity 512, using native-edge inputs. Real app synthesis completed 15 segments, then file publication failed. A separate recovery published the same bytes with zero new model calls. The new app WAV remains not reviewed.</desc>
-              <text x="0" y="55" class="htp-svg-large">32 case-specific contexts</text><text x="0" y="103" class="htp-svg-small">15 exact-T pairs + shared vector / vocoder</text><path d="M600 70H715M704 60l14 10-14 10" fill="none" stroke="#9bbdff" stroke-width="2"/>
-              <text x="770" y="55" class="htp-svg-large htp-svg-green">4 reusable contexts</text><text x="770" y="103" class="htp-svg-small">T320 / L512 + actual-length boundary inputs</text>
-              <g fill="#132821" stroke="#4a8c73"><rect x="0" y="145" width="340" height="90" rx="10"/><rect x="377" y="145" width="340" height="90" rx="10"/><rect x="754" y="145" width="340" height="90" rx="10"/><rect x="1131" y="145" width="340" height="90" rx="10"/></g>
-              <text x="170" y="199" text-anchor="middle">Duration</text><text x="547" y="199" text-anchor="middle">Text encoder</text><text x="924" y="199" text-anchor="middle">Vector estimator</text><text x="1301" y="199" text-anchor="middle">Vocoder</text>
-              <path d="M0 275H1472" stroke="#303e4e"/><text x="0" y="326" class="htp-svg-green">Synthesis completed</text><text x="0" y="367" class="htp-svg-small">15 segments · 165 reported neural calls</text><text x="0" y="427" class="htp-svg-amber">File publication then failed</text>
-              <path d="M600 355H715M704 345l14 10-14 10" fill="none" stroke="#9bbdff" stroke-width="2"/><text x="770" y="326">Separate exact-byte recovery</text><text x="770" y="367" class="htp-svg-small">Same audio published · zero new model calls</text><text x="770" y="427" class="htp-svg-amber">New app WAV: not reviewed</text>
-            </svg>
+            <div class="htp-columns htp-app-comparison"><div class="htp-column"><h2>Experiment 0037</h2><p>32 compiled contexts covered the 15 specific text lengths in that chapter.</p></div><div class="htp-column"><h2>App implementation</h2><p>Four contexts are reused across different segment lengths, within fixed limits.</p><p>Text capacity: 320 positions.<br>Latent capacity: 512 positions.</p></div></div>
+            <div class="htp-flow" aria-label="App synthesis process"><div class="htp-node"><strong>Chapter text</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node"><strong>Provider segments</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node accelerator"><strong>HTP synthesis</strong></div><span class="htp-arrow" aria-hidden="true">→</span><div class="htp-node"><strong>Joined chapter WAV</strong></div></div>
           </div>
-          <p class="htp-takeaway"><strong>Reusable within explicit limits.</strong> Prior listening acceptance and failed numerical gates do not change.</p>
+          <p class="htp-takeaway">The app rendered all 15 segments. Publication needed recovery; its WAV is still not reviewed.</p>
           <nav class="detour-actions htp-nav" aria-label="Reusable-route walkthrough controls"><button type="button" data-back-story>← HTP overview</button><div class="htp-step-controls"><button type="button" data-go-slide="slide-htp-recipe">← Provider recipe</button><span class="htp-position">11 / 11</span><button type="button" class="htp-primary" data-back-story>Finish at overview →</button></div></nav>
           <footer class="slide-footer"><span>Reconstruction §11 · retained September 12 app milestone · now branded Qoralo</span><span class="page">Optional</span></footer>
           <template class="speaker-notes">
@@ -1862,6 +1885,7 @@ svg {
           slide.classList.toggle('active', i === current);
           slide.inert = i !== current;
           slide.setAttribute('aria-hidden', String(i !== current));
+          if (i !== current) slide.querySelectorAll('audio, video').forEach(media => media.pause());
           const number = slide.querySelector('.page');
           if (number) number.textContent = routeKey(slide) === 'main'
             ? String(routes.main.indexOf(slide.id) + 1).padStart(2, '0') : 'Optional';
@@ -1967,8 +1991,19 @@ svg {
       document.querySelector('#fullscreen').addEventListener('click', toggleFullscreen);
       document.querySelector('#close-backend').addEventListener('click', () => backendDialog.close());
       backendDialog.addEventListener('close', () => backendTrigger?.focus());
+      // Recorded examples require explicit playback. Do not mix CPU/HTP audio or hijack media keys.
+      const recordedAudio = [...document.querySelectorAll('.htp-audio-player')];
+      recordedAudio.forEach(audio => {
+        audio.addEventListener('play', () => {
+          if (!audio.closest('.slide').classList.contains('active')) { audio.pause(); return; }
+          recordedAudio.filter(other => other !== audio).forEach(other => other.pause());
+        });
+        audio.addEventListener('error', () => { audio.closest('.htp-column').querySelector('.htp-audio-error').hidden = false; });
+        audio.addEventListener('loadedmetadata', () => { audio.closest('.htp-column').querySelector('.htp-audio-error').hidden = true; });
+      });
+      document.addEventListener('visibilitychange', () => { if (document.hidden) recordedAudio.forEach(audio => audio.pause()); });
       document.addEventListener('keydown', event => {
-        if (event.ctrlKey || event.metaKey || event.altKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName) || event.target.isContentEditable) return;
+        if (event.ctrlKey || event.metaKey || event.altKey || /INPUT|TEXTAREA|SELECT|AUDIO|VIDEO/.test(event.target.tagName) || event.target.isContentEditable) return;
         if (backendDialog.open) return;
         if (notes.open) {
           if (event.key.toLowerCase() === 'n') { event.preventDefault(); notes.close(); }

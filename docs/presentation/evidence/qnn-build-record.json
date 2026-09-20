@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "purpose": "Provenance for the ORT compilation command displayed on slide-htp-runtime. Read-only reconstruction; no build was run for the presentation.",
+  "source_revision": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+  "onnxruntime_version": "1.27.1",
+  "qairt_version": "2.49.0.260730",
+  "recorded_build_date": "2026-08-13",
+  "argument_source": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64/build.stderr.log",
+  "argument_source_sha256": "992748bee8378101812d7f3c5e61332a083c69678e5ba292bfe1b94c08042de1",
+  "durable_record": "experiments/0010-supertonic-qnn-htp-feasibility/results/host-checkpoint.json",
+  "invocation_note": "The saved log records build.py's parsed arguments, not the outer shell invocation. The slide renders those exact arguments through the retained source tree's standard ./build.sh wrapper, with line wrapping and argument order adjusted. Run from the pinned ORT source in the prepared container. /opt/android-sdk, its NDK and /opt/qairt are container paths, not assumed workstation installations.",
+  "recorded_arguments": [
+    "--build_dir", "/build",
+    "--config", "Release",
+    "--update", "--build",
+    "--parallel", "8",
+    "--android",
+    "--android_sdk_path", "/opt/android-sdk",
+    "--android_ndk_path", "/opt/android-sdk/ndk/26.2.11394342",
+    "--android_abi", "arm64-v8a",
+    "--android_api", "27",
+    "--build_shared_lib",
+    "--skip_tests",
+    "--use_qnn", "static_lib",
+    "--qnn_home", "/opt/qairt",
+    "--cmake_generator", "Ninja",
+    "--compile_no_warning_as_error"
+  ],
+  "confirmed_cmake_cache": {
+    "onnxruntime_USE_QNN": "ON",
+    "onnxruntime_BUILD_QNN_EP_STATIC_LIB": "ON",
+    "onnxruntime_BUILD_SHARED_LIB": "ON",
+    "ANDROID_ABI": "arm64-v8a",
+    "ANDROID_PLATFORM": "android-27",
+    "onnxruntime_QNN_HOME": "/opt/qairt"
+  },
+  "qualification": "This records the initial QNN-enabled build. The later upstream Pad-selector bug-fix backport was a separate runtime change. --skip_tests skipped execution, but the broad initial build still compiled unit-test targets. This is not a minimal build recommendation, a new build result or a complete SDK installation guide."
+}
