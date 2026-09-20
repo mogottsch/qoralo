@@ -12,6 +12,7 @@ import dev.qoralo.podcast.model.GemmaModelContract
 import dev.qoralo.podcast.model.ModelRoute
 import dev.qoralo.podcast.model.SupertonicModelContract
 import dev.qoralo.podcast.model.VerifiedModelPack
+import dev.qoralo.podcast.episode.ChapterRetryNotice
 import dev.qoralo.podcast.runtime.AudioMetadata
 import dev.qoralo.podcast.runtime.EpisodeOutline
 import dev.qoralo.podcast.runtime.FrozenChapter
@@ -25,6 +26,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.async
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.json.JSONObject
@@ -60,6 +62,25 @@ class GenerationCoordinatorTest {
         assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(episode).phase)
         assertEquals(listOf("chapter-1", "chapter-2"), llm.chapterRequests)
         assertEquals(2, repository.activeRevision(episode).second.size)
+    }
+
+    @Test fun aRetriedChapterStaysOrdinaryProgressWithoutFailureWording() = runTest {
+        val (episode, job) = queuedScript(review = true)
+        val llm = FakeLlm(retriesPerChapter = 2)
+        val announced = mutableListOf<String>()
+        val statuses = mutableListOf<String>()
+        coordinator(llm = llm).generateScript(episode, job) { announced += it; repository.latestJob(episode)?.let { record -> statuses += record.statusText } }
+        assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(episode).phase)
+        assertEquals(2, repository.activeRevision(episode).second.size)
+        assertNull(repository.episode(episode).failureMessage)
+        // The retry is visible, but only as normal chapter progress.
+        assertTrue(announced.contains("Refining chapter 1 of 2"))
+        assertTrue(statuses.contains("Refining One"))
+        for (text in announced + statuses) {
+            for (word in listOf("fail", "error", "retry", "again", "problem", "invalid")) {
+                assertFalse("$text leaked a failure to the user", text.lowercase().contains(word))
+            }
+        }
     }
 
     @Test fun duplicateCompletedCommandNeverOverwritesMetricsOrRunsAgain() = runTest {
@@ -195,7 +216,7 @@ class GenerationCoordinatorTest {
         manifestSha256 = "a".repeat(64), root = temporary.root, files = emptyList(),
     )
 
-    private class FakeLlm(private val chapterOverride: FrozenChapter? = null) : LlmEngine {
+    private class FakeLlm(private val chapterOverride: FrozenChapter? = null, private val retriesPerChapter: Int = 0) : LlmEngine {
         override val provenance = RuntimeProvenance(1, "GEMMA_4_E2B", "LITERT_GPU", "fake", false, setOf("model", "tokenizer", "gpu_delegate"))
         val chapterRequests = mutableListOf<String>()
         override suspend fun load(pack: VerifiedModelPack) = Unit
@@ -205,6 +226,9 @@ class GenerationCoordinatorTest {
         ))
         override suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String): FrozenChapter {
             chapterRequests += chapter.id
+            for (attempt in 2..(retriesPerChapter + 1)) {
+                kotlin.coroutines.coroutineContext[ChapterRetryNotice]?.retrying(attempt, retriesPerChapter + 1)
+            }
             return chapterOverride ?: FrozenChapter(chapter.id, chapter.title, "Complete ${chapter.title} chapter transcript.")
         }
         override suspend fun editScript(requestJson: String) = error("unused")

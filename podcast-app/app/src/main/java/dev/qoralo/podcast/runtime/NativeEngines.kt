@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import dev.qoralo.podcast.episode.ChapterRetryNotice
 import dev.qoralo.podcast.episode.EpisodeMetrics
 import dev.qoralo.podcast.episode.runtimeRequestMetrics
 import kotlinx.coroutines.withContext
@@ -98,8 +99,22 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
             .put("requestedChapter", JSONObject().put("id", chapter.id).put("title", chapter.title).put("brief", chapter.brief))
         val serialized = request.toString()
         require(serialized.length <= MAX_GENERATION_REQUEST_CHARS) { "Chapter request exceeds the Gemma context budget" }
-        val json = JSONObject(generate("chapter", serialized, singleChapterInstruction(chapter)))
-        return FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text"))
+        val schema = chapterResponseSchema(chapter)
+        var attempt = 1
+        while (true) {
+            try {
+                val json = JSONObject(generate("chapter", serialized,
+                    singleChapterInstruction(chapter, chapterWordCeiling(attempt)), schema))
+                return FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text"))
+            } catch (error: GemmaRequestException) {
+                // Constrained decoding makes a malformed envelope unreachable, so an unparsed response means the
+                // model never finished inside the output ceiling. Only that case earns another, shorter attempt.
+                if (!shouldRetryChapter(error, attempt)) throw error
+                currentCoroutineContext().ensureActive()
+                attempt++
+                currentCoroutineContext()[ChapterRetryNotice]?.retrying(attempt, CHAPTER_ATTEMPTS)
+            }
+        }
     }
 
     override suspend fun editScript(requestJson: String): String {
@@ -108,7 +123,8 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
     }
 
     @OptIn(com.google.ai.edge.litertlm.ExperimentalApi::class)
-    private suspend fun generate(mode: String, request: String, specificInstruction: String? = null): String = withContext(Dispatchers.Default) {
+    private suspend fun generate(mode: String, request: String, specificInstruction: String? = null,
+        schemaOverride: String? = null): String = withContext(Dispatchers.Default) {
         currentCoroutineContext().ensureActive()
         val metrics = currentCoroutineContext()[EpisodeMetrics]
         val started = System.nanoTime()
@@ -124,7 +140,7 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
             else -> error("Unsupported Gemma request mode")
         })
         val instruction = specificInstruction ?: systemInstruction(mode)
-        val responseSchema = responseSchemaForMode(mode)
+        val responseSchema = responseSchemaForMode(mode) ?: schemaOverride
         val responseFormat = responseSchema?.let(ResponseFormat::json)
         RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput, responseSchema)
         runCatching { observer?.beforeRequest(mode, request, instruction, maxOutput, responseSchema) }
@@ -165,7 +181,7 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
             metrics?.request(runtimeRequestMetrics(mode, outcome, elapsed(started), setupMs, sendMs,
                 counters?.lastPrefillTokenCount, counters?.lastDecodeTokenCount,
                 counters?.lastPrefillTokensPerSecond, counters?.lastDecodeTokensPerSecond,
-                counters?.initTimeInSecond, counters?.timeToFirstTokenInSecond))
+                counters?.initTimeInSecond, counters?.timeToFirstTokenInSecond, maxOutput))
         }
     }
 
@@ -187,7 +203,9 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
         else -> error("Unsupported Gemma request mode")
     }
 
-    private companion object { const val MAX_GENERATION_REQUEST_CHARS = 20_000 }
+    private companion object {
+        const val MAX_GENERATION_REQUEST_CHARS = 20_000
+    }
 }
 
 /** APK-supplied JNI/runtime executes QNN/HTP; the verified Supertonic pack contains data only. */

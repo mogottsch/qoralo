@@ -19,6 +19,14 @@ val shortProductE2e = providers.gradleProperty("podcast.shortProductE2e").orNull
     require(it == null || it in setOf("true", "false")) { "Invalid short plumbing build selector" }
     it == "true"
 }
+// Continuity install onto the pre-rename package. The Qoralo rename changed the application ID, which
+// would create an empty second app and orphan the existing on-device episodes and multi-gigabyte model
+// packs. This opt-in keeps the original ID so an authorized -r upgrade preserves that data. Kotlin
+// packages and the namespace stay renamed; only the installed identity is held back.
+val legacyApplicationId = providers.gradleProperty("podcast.legacyApplicationId").orNull.let {
+    require(it == null || it in setOf("true", "false")) { "Invalid legacy application ID selector" }
+    it == "true"
+}
 val normalSupertonic = Properties().apply {
     rootProject.file(if (shortProductE2e) "config/short-product-e2e.properties" else "config/normal-supertonic-pack.properties").inputStream().use(::load)
 }
@@ -34,7 +42,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "dev.qoralo.podcast.internal"
+        applicationId = if (legacyApplicationId) "dev.vibevoice.podcast.internal" else "dev.qoralo.podcast.internal"
         minSdk = 29
         targetSdk = 35
         versionCode = 1

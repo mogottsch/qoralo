@@ -21,12 +21,15 @@ data class LlmRequestMetrics(
     val decodeTokensPerSecond: Double?,
     val runtimeInitMs: Double?,
     val runtimeTtftMs: Double?,
+    val outputTokenLimit: Int? = null,
+    val reachedOutputLimit: Boolean? = null,
 ) {
     fun json(): JSONObject = JSONObject().put("mode", mode).put("outcome", outcome).put("totalMs", totalMs)
         .nullable("conversationSetupMs", conversationSetupMs).nullable("sendWallMs", sendWallMs)
         .nullable("prefillTokens", prefillTokens).nullable("decodeTokens", decodeTokens)
         .nullable("prefillTokensPerSecond", prefillTokensPerSecond).nullable("decodeTokensPerSecond", decodeTokensPerSecond)
         .nullable("runtimeInitMs", runtimeInitMs).nullable("runtimeTtftMs", runtimeTtftMs)
+        .nullable("outputTokenLimit", outputTokenLimit).nullable("reachedOutputLimit", reachedOutputLimit)
 }
 
 fun JSONObject.nullable(name: String, value: Any?): JSONObject = put(name, value ?: JSONObject.NULL)
@@ -36,13 +39,17 @@ fun validRate(value: Double?, tokens: Int?): Double? = value?.takeIf { it.isFini
 /** Runtime's own last-prefill/last-decode counters are scoped to one fresh Conversation request. */
 fun runtimeRequestMetrics(mode: String, outcome: String, totalMs: Double, setupMs: Double?, sendMs: Double?,
     prefillTokens: Int? = null, decodeTokens: Int? = null, prefillRate: Double? = null, decodeRate: Double? = null,
-    initSeconds: Double? = null, ttftSeconds: Double? = null): LlmRequestMetrics {
+    initSeconds: Double? = null, ttftSeconds: Double? = null, outputTokenLimit: Int? = null): LlmRequestMetrics {
     require(mode in setOf("source_notes", "outline", "chapter", "edit"))
     require(outcome in setOf("complete", "failed", "cancelled"))
     val prefill = prefillTokens?.takeIf { it >= 0 }; val decode = decodeTokens?.takeIf { it >= 0 }
+    val limit = outputTokenLimit?.takeIf { it > 0 }
+    // Runtime-reported decode count against the configured ceiling; an unreported count stays unknown, not false.
+    val reachedLimit = if (decode == null || limit == null) null else decode >= limit
     return LlmRequestMetrics(mode, outcome, requireNotNull(validTime(totalMs)), validTime(setupMs), validTime(sendMs),
         prefill, decode, validRate(prefillRate, prefill), validRate(decodeRate, decode),
-        validTime(initSeconds?.times(1000))?.takeIf { it > 0 }, validTime(ttftSeconds?.times(1000))?.takeIf { it > 0 })
+        validTime(initSeconds?.times(1000))?.takeIf { it > 0 }, validTime(ttftSeconds?.times(1000))?.takeIf { it > 0 },
+        limit, reachedLimit)
 }
 
 /** One job's monotonic boundaries. Persist eagerly at boundaries, never log raw content/errors.

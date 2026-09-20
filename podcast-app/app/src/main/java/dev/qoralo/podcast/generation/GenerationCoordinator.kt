@@ -17,6 +17,7 @@ import dev.qoralo.podcast.runtime.TtsEngine
 import dev.qoralo.podcast.runtime.WavAssembler
 import org.json.JSONArray
 import org.json.JSONObject
+import dev.qoralo.podcast.episode.ChapterRetryNotice
 import dev.qoralo.podcast.episode.EpisodeMetrics
 import kotlinx.coroutines.*
 
@@ -50,7 +51,14 @@ class GenerationCoordinator(
             val chapters = outline.chapters.mapIndexed { index, planned ->
                 repository.updateJobProgress(episodeId, jobId, JobKind.SCRIPT, index + 1, outline.chapters.size, "Writing ${planned.title}")
                 progress("Writing chapter ${index + 1} of ${outline.chapters.size}")
-                val generated = engine.createChapter(outline, planned, preparedSources, episode.instructions)
+                // A bounded retry stays ordinary progress: the user is never shown an attempt that failed.
+                val retryNotice = ChapterRetryNotice { _, _ ->
+                    repository.updateJobProgress(episodeId, jobId, JobKind.SCRIPT, index + 1, outline.chapters.size, "Refining ${planned.title}")
+                    progress("Refining chapter ${index + 1} of ${outline.chapters.size}")
+                }
+                val generated = withContext(retryNotice) {
+                    engine.createChapter(outline, planned, preparedSources, episode.instructions)
+                }
                 require(generated.id == planned.id) { "Gemma returned the wrong complete chapter" }
                 ChapterDraft(generated.id, generated.title, generated.text)
             }
