@@ -79,3 +79,16 @@ This has not been performed. It would need a coordinated phone slot, and it must
 3. Rename the repository and its working directory, then update absolute paths in local tooling. Do this while no agent sessions are running, because their working directory would disappear.
 4. Decide what happens to the published dashboard path.
 
+
+## Installed
+
+The Qoralo build is installed on the phone beside the old app.
+
+- App `dev.qoralo.podcast.internal` — `18780c26e4b0e32320d5d79744d0e93790a598a3c6b66068fb062e3ba32d3e6b`
+- Instrumentation `dev.qoralo.podcast.internal.test` — `9bbd562fd8e89a7399bb6f0527faf8f40cecbf87688cf1cc19d4ca1ba89d1744`
+- Both hashes were read back from the device after installation. 277 host tests pass with 1 pre-existing skip.
+- Cold launch succeeded in 676ms with the app's own window focused and no crash-log entries; the app was stopped again afterwards.
+- The previous id stays installed and keeps all of its data: app `0062cf41…`, test `abe68ac7…`. Nothing was uninstalled and no data was cleared.
+- The Qoralo library is empty, as expected for a new application id.
+
+Generation, playback, export and native QNN/HTP execution have not yet been exercised under the new id. See `evidence/qoralo-rebrand/install-20260920/result.json`.
