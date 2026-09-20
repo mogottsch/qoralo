@@ -60,7 +60,7 @@ class SyntheticGalleryActivity : ComponentActivity() {
                         "library", "library-empty" -> LibraryScreen(
                             if (frame == "library-empty") emptyList() else listOf(fixtureEpisode(EpisodePhase.FROZEN_READY)),
                             { frame = "sources" }, { frame = "player" }, { frame = "library-empty" },
-                            playbackStates = listOf(savedPlayback), chapterCounts = mapOf("ui-episode" to chapters.size))
+                            playbackStates = listOf(savedPlayback))
                         "sources", "sources-empty", "paste" -> {
                             SourcesScreen(if (frame == "sources-empty") emptyList() else sources, { frame = "library" },
                                 { title, text -> sources += fixtureSource().copy(id = "ui-source-${sources.size}", title = title.ifBlank { "Pasted text" }, wordCount = text.split(Regex("\\s+")).size) },

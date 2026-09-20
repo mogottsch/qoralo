@@ -48,7 +48,7 @@ private fun AttemptDiagnostics(number: Int, job: GenerationJobEntity, data: JSON
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         HorizontalDivider()
         Text("Attempt $number · $kind", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
-        Text("${job.status.lowercase().replaceFirstChar { it.titlecase() }} · ${job.id.take(12)}", style = MaterialTheme.typography.bodySmall)
+        Text(job.status.lowercase().replaceFirstChar { it.titlecase() }, style = MaterialTheme.typography.bodySmall)
         if (data == null) {
             Text("No measurements recorded.", color = MaterialTheme.colorScheme.onSurfaceVariant)
         } else {

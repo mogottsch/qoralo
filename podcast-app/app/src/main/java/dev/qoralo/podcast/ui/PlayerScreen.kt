@@ -135,7 +135,7 @@ fun PlayerScreen(
                         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             AssistChip(onClick = {
                                 session.changeSpeed(when (speed) { 1f -> 1.25f; 1.25f -> 1.5f; 1.5f -> 2f; else -> 1f })
-                            }, label = { Text("${speed}× Speed") }, modifier = Modifier.heightIn(min = 48.dp))
+                            }, label = { Text("${speed}×") }, modifier = Modifier.heightIn(min = 48.dp))
                             AssistChip(onClick = { session.showTranscript(true) }, leadingIcon = { Icon(Icons.Default.ClosedCaption, null) }, label = { Text("Transcript") }, modifier = Modifier.heightIn(min = 48.dp))
                             AssistChip(onClick = session::cycleSleepTimer,
                                 leadingIcon = { Icon(Icons.Default.Timer, null) }, label = { Text(sleepMinutes?.let { "$it min" } ?: "Sleep") }, modifier = Modifier.heightIn(min = 48.dp))
@@ -147,21 +147,15 @@ fun PlayerScreen(
             LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)) {
                 if (liveAudio != null) item {
                     Column(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        val status = when {
-                            session.error != null -> session.error!!
-                            session.waiting -> "Waiting for more audio…"
-                            session.isPlaying -> "Playing"
-                            session.wantsPlayback -> "Buffering"
-                            else -> "Paused"
-                        }
-                        Text(status, style = MaterialTheme.typography.titleMedium,
+                        val status = session.error ?: if (session.waiting) "Waiting for more audio…" else null
+                        if (status != null) Text(status, style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.semantics { liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite })
-                        Text(when (session.streamState) {
+                        when (session.streamState) {
                             dev.qoralo.podcast.runtime.AudioAvailabilityState.GENERATING -> "Still generating"
                             dev.qoralo.podcast.runtime.AudioAvailabilityState.FAILED -> "Partial audio · generation stopped. Export unavailable."
-                            dev.qoralo.podcast.runtime.AudioAvailabilityState.COMPLETE -> "Episode complete"
-                            else -> "Audio attempt is no longer current"
-                        }, style = MaterialTheme.typography.bodySmall)
+                            dev.qoralo.podcast.runtime.AudioAvailabilityState.COMPLETE -> null
+                            else -> "This recording was replaced"
+                        }?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                     }
                 }
                 item { VibeArtwork(Modifier.fillMaxWidth().height(if (largeText) 136.dp else 260.dp), episode.title) }
@@ -169,8 +163,6 @@ fun PlayerScreen(
                     Column(Modifier.fillMaxWidth().padding(top = 16.dp)) {
                         Text("CHAPTER $chapterNumber OF ${chapters.size}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                         Text(currentChapter?.title ?: episode.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 4.dp))
-                        if (liveAudio == null) Text("${chapters.size} chapters", style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
                     }
                 }
             }

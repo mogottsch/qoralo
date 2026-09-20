@@ -23,6 +23,8 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.MessageDigest
 import java.util.UUID
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onAllNodesWithText
 
 /** Genuine normal UI lock→AUDIO dispatcher/service→provider HTP→Ready, starting from a labelled copy of a real generated chapter. */
 @RunWith(AndroidJUnit4::class)
@@ -118,7 +120,7 @@ class ProviderAppIntegrationTest {
             retainedEpisodeId=id
             val lockRequestedNs = System.nanoTime()
             audioDeadlineNs=lockRequestedNs+600_000_000_000L
-            rule.onNodeWithText("Lock & create").performClick()
+            rule.onAllNodesWithText("Create audio").onLast().performClick()
             var audio: GenerationJobEntity? = null
             rule.waitUntil(15_000) { audio = db { app.repository.latestJob(id) }; audio != null }
             val audioId = requireNotNull(audio).id
@@ -211,7 +213,7 @@ class ProviderAppIntegrationTest {
                 rule.waitUntil(10_000) { (playerEvents().lastOrNull()?.getLong("absolutePositionMs") ?: 0L) > beforeNavigation+500 }
                 capture("mini-settings")
                 rule.onNodeWithContentDescription("Open player: $title").performClick()
-                rule.onNodeWithText("1.0× Speed").performClick()
+                rule.onNodeWithText("1.0×").performClick()
                 rule.waitUntil(10_000) { playerEvents().lastOrNull()?.optDouble("speed")==1.25 }
                 require(playerEvents().last().getInt("playerIdentity")==observedPlayerId)
                 json("mini-navigation-reopen-speed.json",playerEvents().last())

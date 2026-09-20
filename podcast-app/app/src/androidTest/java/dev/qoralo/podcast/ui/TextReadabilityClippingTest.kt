@@ -31,8 +31,8 @@ class TextReadabilityClippingTest {
     }
 
     @Test fun genuinelyHeightConstrainedHeaderCannotPassReadability() {
-        rule.setContent { QoraloTheme { Text("Creating episode", modifier = Modifier.height(4.dp), fontSize = 22.sp) } }
-        val errors = errors("Creating episode")
+        rule.setContent { QoraloTheme { Text("Episode stopped", modifier = Modifier.height(4.dp), fontSize = 22.sp) } }
+        val errors = errors("Episode stopped")
         assertTrue("Actually clipped title was accepted: $errors", errors.any { it.contains("Height") || it.contains("clips intrinsic") })
     }
 

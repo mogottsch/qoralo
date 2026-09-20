@@ -24,8 +24,8 @@ data class MiniPlayerPresentation(val status: String, val pauseAction: Boolean, 
             val enabled = state != AudioAvailabilityState.STALE
             return MiniPlayerPresentation(when {
                 error != null -> error
-                !enabled -> "Audio attempt changed"
-                waiting -> "Buffering · waiting for more audio"
+                !enabled -> "This recording was replaced"
+                waiting -> "Buffering"
                 isPlaying -> "Playing"
                 wantsPlayback -> "Buffering"
                 atEnd && state == AudioAvailabilityState.GENERATING -> "Paused · more audio is generating"

@@ -61,8 +61,6 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
                 Row(Modifier.fillMaxWidth().statusBarsPadding().heightIn(min = 64.dp)
                     .padding(start = 4.dp, end = 16.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onClose) { Icon(Icons.Default.Close, "Return to library") }
-                    Text(if (failed) "Episode stopped" else "Creating episode", style = MaterialTheme.typography.titleLarge,
-                        softWrap = true, modifier = Modifier.weight(1f))
                 }
             }
         }) { padding ->
@@ -78,8 +76,6 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
                         if (availableAudio?.canListen == true && onOpenAudio != null) {
                             Text("${formatDuration(availableAudio.availableMs)} available", style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center, modifier = Modifier.padding(top = 20.dp))
-                            if (failed) Text("Partial audio · export unavailable.", style = MaterialTheme.typography.bodyMedium,
-                                textAlign = TextAlign.Center, modifier = Modifier.padding(top = 6.dp))
                             PrimaryAction("Open player", onOpenAudio, modifier = Modifier.padding(top = 12.dp))
                         }
                     }
@@ -111,7 +107,8 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
         job?.statusText ?: "Preparing your episode",
         style = MaterialTheme.typography.headlineMedium,
         textAlign = TextAlign.Center,
-        modifier = Modifier.padding(top = 8.dp),
+        // Wrap inside the column at large font scales instead of overflowing its own bounds.
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
     )
     episode?.title?.takeUnless { it == "Untitled episode" }?.let { title -> Text(
         title,
@@ -135,18 +132,13 @@ private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit, onReturnTo
                 style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 10.dp))
             DetailsDisclosure("Error details", episode.id) {
                 Text(episode.failureMessage ?: "The selected on-device runtime stopped.")
-                Text(if (dev.qoralo.podcast.runtime.ProviderAudioPlan.selected && episode.lockedRevisionId != null)
-                    "No alternate model, CPU fallback, script rewriting or forced duration was attempted."
-                    else "No alternate model, CPU fallback, or hidden chapter splitting was attempted.")
             }
             // Retrying starts the same work over from the last saved state; it never edits saved content.
             if (onRetry != null) {
                 PrimaryAction("Try again", onRetry, modifier = Modifier.padding(top = 16.dp))
                 if (onReturnToDraft != null) TextButton(onClick = onReturnToDraft, modifier = Modifier.heightIn(min = 48.dp)) { Text("Return to saved draft") }
-                TextButton(onClick = onClose, modifier = Modifier.heightIn(min = 48.dp)) { Text("Return to library") }
             } else if (onReturnToDraft != null) {
                 PrimaryAction("Return to saved draft", onReturnToDraft, modifier = Modifier.padding(top = 16.dp))
-                TextButton(onClick = onClose, modifier = Modifier.heightIn(min = 48.dp)) { Text("Return to library") }
             } else PrimaryAction("Return to library", onClose, modifier = Modifier.padding(top = 16.dp))
         }
     }

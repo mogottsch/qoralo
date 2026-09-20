@@ -44,6 +44,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.RandomAccessFile
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onAllNodesWithText
 
 @RunWith(AndroidJUnit4::class)
 class ScreenSemanticsTest {
@@ -99,30 +101,29 @@ class ScreenSemanticsTest {
         rule.onNodeWithText("Edit the script").assertIsDisplayed()
         rule.onNodeWithText("Ask for a change…").assertIsDisplayed()
         agent = false; lock = true
-        rule.onNodeWithText("Ready to create audio?").assertIsDisplayed()
-        rule.onNodeWithText("Your script can’t be edited after audio generation starts.").assertIsDisplayed()
-        rule.onNodeWithText("Lock & create").assertHasClickAction()
+        rule.onNodeWithText("Create audio?").assertIsDisplayed()
+        rule.onNodeWithText("The script can’t be edited afterwards.").assertIsDisplayed()
+        rule.onAllNodesWithText("Create audio").onLast().assertHasClickAction()
     }
 
     @Test fun generationShowsChapterProgressAndFailClosedBoundary() {
         val job = GenerationJobEntity("job", "episode", JobKind.AUDIO, JobStatus.RUNNING, "revision", 1, 2, "Creating One", null, 1, 2)
         var current by mutableStateOf(episode(EpisodePhase.GENERATING_AUDIO))
         setNarrow { GeneratingScreen(current, job, {}) }
-        assertReadableText("Creating episode")
+        assertReadableText("Creating One")
         rule.onNodeWithText("Chapter 1 of 2").assertIsDisplayed()
         rule.runOnIdle { current = current.copy(phase = EpisodePhase.FAILED, failureMessage = "Synthetic failure") }
-        assertReadableText("Episode stopped")
+        assertReadableText("Generation couldn’t finish")
         rule.onNodeWithText("Synthetic failure").assertDoesNotExist()
         rule.onNodeWithText("Error details").performScrollTo().performClick()
         rule.onNodeWithText("Synthetic failure").assertIsDisplayed()
-        rule.onNode(hasText("No alternate model, CPU fallback", substring = true)).performScrollTo().assertIsDisplayed()
     }
 
     @Test fun readyHeroUsesReadableFullWidthMetadataAndNoEmptyRecentHeading() {
         val current = episode(EpisodePhase.FROZEN_READY).copy(title = "Why cities remember rivers", durationMs = 30_000)
         setNarrow { LibraryScreen(listOf(current), {}, {}, {},
-            listOf(dev.qoralo.podcast.data.PlaybackStateEntity(current.id, 12_000, 1.5f, false, 1)), mapOf(current.id to 3)) }
-        assertReadableText("CONTINUE LISTENING")
+            listOf(dev.qoralo.podcast.data.PlaybackStateEntity(current.id, 12_000, 1.5f, false, 1))) }
+        assertReadableText("Resume at 00:12", unmerged = true)
         rule.onNodeWithText(current.title).assertExists().assertHasClickAction()
         rule.onNodeWithText("Recent episodes").assertDoesNotExist()
     }
@@ -145,8 +146,8 @@ class ScreenSemanticsTest {
         rule.onNodeWithText("Every city carries the shape of the water that made it.").assertIsDisplayed().assertHasNoClickAction()
     }
 
-    private fun assertReadableText(text: String) {
-        val node = rule.onNodeWithText(text).assertIsDisplayed()
+    private fun assertReadableText(text: String, unmerged: Boolean = false) {
+        val node = rule.onNodeWithText(text, useUnmergedTree = unmerged).assertIsDisplayed()
         val layouts = mutableListOf<TextLayoutResult>()
         node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) { action -> action(layouts) }
         TextLayoutDiagnostics.retain(text, node, layouts, platformDensity, wrapperDensity)

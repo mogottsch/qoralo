@@ -244,7 +244,7 @@ class LiveCollectorRegressionTest {
             stages.put(snapshot("mini-settings")); captureOptional("replay-mini-settings")
             coverage.put("playbackAdvancesWhileMinimized", true)
             rule.onNodeWithContentDescription("Open player: ${sourceEpisode.title}").performClick()
-            rule.onNodeWithText("1.0× Speed").performClick()
+            rule.onNodeWithText("1.0×").performClick()
             rule.waitUntil(10_000) { session.speed == 1.25f }
             stages.put(snapshot("reopened-same-player-speed"))
             coverage.put("miniNavigationSamePlayer", true)
@@ -274,7 +274,7 @@ class LiveCollectorRegressionTest {
             captureOptional("replay-transcript-following")
             coverage.put("resumeFollowing", true)
             rule.onNodeWithContentDescription("Close transcript").performClick()
-            rule.onNodeWithText("1.25× Speed").assertIsDisplayed()
+            rule.onNodeWithText("1.25×").assertIsDisplayed()
             coverage.put("speedPreserved", true)
             stages.put(snapshot("replay-advanced-before-fixture-complete"))
             val positionBeforeComplete = rule.runOnIdle { session.positionMs }

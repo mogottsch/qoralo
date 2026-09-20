@@ -5,7 +5,7 @@ internal data class GallerySemanticValue(val text: String?, val description: Str
 /** Match existing production UI, never a synthetic marker node. Ownership alone cannot prove freshness. */
 internal object GalleryFrameContent {
     private val landmarks = mapOf(
-        "library" to listOf("CONTINUE LISTENING", "Why cities remember rivers"),
+        "library" to listOf("Resume at 00:12", "Why cities remember rivers"),
         "library-empty" to listOf("Your first episode", "Create an episode"),
         "sources" to listOf("Add sources", "Continue"),
         "sources-empty" to listOf("Add sources", "Continue"),
@@ -14,10 +14,10 @@ internal object GalleryFrameContent {
         "review" to listOf("Review script", "Edit script"),
         "agent" to listOf("Edit the script", "Ask for a change…"),
         "agent-error" to listOf("Edit the script", "Change wasn’t applied"),
-        "lock" to listOf("Ready to create audio?", "Lock & create"),
-        "generating" to listOf("Creating episode", "Creating What flooding remembers"),
-        "script-loading" to listOf("Creating episode", "Writing the complete chapter"),
-        "failure" to listOf("Episode stopped", "Generation couldn’t finish"),
+        "lock" to listOf("Create audio?", "The script can’t be edited afterwards."),
+        "generating" to listOf("Chapter 2 of 3", "Creating What flooding remembers"),
+        "script-loading" to listOf("Writing the complete chapter"),
+        "failure" to listOf("Generation couldn’t finish", "Your draft is saved."),
         "player" to listOf("Now playing", "Playback position"),
         "transcript" to listOf("Frozen chapter transcript", "Close transcript"),
     )

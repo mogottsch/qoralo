@@ -107,12 +107,9 @@ fun SourcesScreen(
                     SourceChoice(Icons.Default.ContentPaste, "Paste text", null) { pasteDialog = true }
                 }
                 item {
-                    SourceChoice(Icons.Default.AttachFile, "Choose a file", "Text, Markdown or JSON") {
+                    SourceChoice(Icons.Default.AttachFile, "Choose a file", null) {
                         document.launch(arrayOf("text/plain", "text/markdown", "application/json"))
                     }
-                }
-                if (sources.isNotEmpty()) item {
-                    Text("Sources", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp))
                 }
                 items(sources, key = { it.id }) { source ->
                     ListItem(
@@ -247,7 +244,6 @@ fun InstructionsScreen(
                         },
                         label = { Text("What should it cover?") },
                         supportingText = if (instructions.length >= 1800) { { Text("${instructions.length} / 2,000") } } else null,
-                        placeholder = { Text("Topic, length or audience…") },
                         minLines = if (largeText) 3 else 5,
                         maxLines = if (largeText) 4 else 8,
                         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),

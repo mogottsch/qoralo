@@ -121,8 +121,7 @@ fun ReviewScreen(
                 item {
                     Text("${chapters.size} chapters", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(vertical = 8.dp))
                 }
-                if (capacity == null) item { Text("Checking voice…", style = MaterialTheme.typography.bodySmall) }
-                else if (!capacity.fits) item {
+                if (capacity != null && !capacity.fits) item {
                     Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(14.dp), modifier = Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("Audio unavailable for this draft", style = MaterialTheme.typography.titleSmall)
@@ -177,9 +176,9 @@ fun ReviewScreen(
     if (lockOpen && canLock) AlertDialog(
         onDismissRequest = onDismissLock,
         icon = { Icon(Icons.Default.Lock, null, tint = MaterialTheme.colorScheme.tertiary) },
-        title = { Text("Ready to create audio?") },
-        text = { Text("Your script can’t be edited after audio generation starts.") },
-        confirmButton = { Button(onClick = onLock) { Text("Lock & create") } },
+        title = { Text("Create audio?") },
+        text = { Text("The script can’t be edited afterwards.") },
+        confirmButton = { Button(onClick = onLock) { Text("Create audio") } },
         dismissButton = { TextButton(onClick = onDismissLock) { Text("Cancel") } },
     )
 }
@@ -224,7 +223,7 @@ internal fun AgentEditorSheet(
                         }
                     }
                 }
-                if (messages.isEmpty()) item { AgentBubble("What should I change?", false) }
+                if (messages.isEmpty()) item { Spacer(Modifier.height(8.dp)) }
                 items(messages, key = { it.id }) { message -> AgentBubble(message.text, message.role == AgentRole.USER) }
                 if (working) item { LinearProgressIndicator(Modifier.fillMaxWidth()); Text(job.statusText, style = MaterialTheme.typography.labelMedium) }
                 val changed = messages.lastOrNull { it.role == AgentRole.AGENT && it.resultRevisionId != null }
@@ -239,7 +238,7 @@ internal fun AgentEditorSheet(
                 minLines = 1,
                 maxLines = 4,
                 placeholder = { Text("Ask for a change…") },
-                supportingText = if (submission.submitting) { { Text("Sending request…") } } else null,
+                supportingText = null,
                 trailingIcon = {
                     IconButton(onClick = {
                         val ticket = submission.begin()

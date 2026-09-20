@@ -30,6 +30,8 @@ import org.junit.runner.RunWith
 import java.io.File
 import java.util.Timer
 import java.util.TimerTask
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onAllNodesWithText
 
 /** ONE real UI/Room/dispatcher/native/SAF workflow. Never seed a draft, import audio, or substitute engines. */
 @RunWith(AndroidJUnit4::class)
@@ -61,6 +63,7 @@ class ShortProductE2eTest {
         rule.waitUntil(15_000) { rule.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty() }
     }
     private fun click(label: String) { shown(hasText(label)); rule.onNodeWithText(label).assertIsDisplayed().performClick() }
+    private fun clickLast(label: String) { shown(hasText(label)); rule.onAllNodesWithText(label).onLast().assertIsDisplayed().performClick() }
     private fun icon(label: String) { shown(hasContentDescription(label)); rule.onNodeWithContentDescription(label).assertIsDisplayed().performClick() }
     private fun episode() = db { app.repository.episode(requireNotNull(episodeId)) }
     private fun waitPhase(phase: String, millis: Long) = waitUntil(phase, millis) {
@@ -177,7 +180,7 @@ class ShortProductE2eTest {
             click("Create audio"); click("Cancel")
             assertNull(episode().lockedRevisionId)
             assertTrue(db { app.repository.observeAudio(requireNotNull(episodeId)).first() }.isEmpty())
-            click("Create audio"); click("Lock & create")
+            click("Create audio"); clickLast("Create audio")
             waitPhase(EpisodePhase.FROZEN_READY, 165_000)
             val ready = episode()
             assertEquals(final.id, ready.lockedRevisionId); assertEquals(final.contentHash, ready.lockedContentHash)
@@ -190,7 +193,7 @@ class ShortProductE2eTest {
             icon("Pause"); icon("Next chapter")
             val boundary = audio[1].startFrame * 1000 / 44100
             waitUntil("chapter boundary") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.currentPosition?.let { kotlin.math.abs(it - boundary) < 100 } == true }; ok }
-            click("1.0× Speed"); click("Transcript")
+            click("1.0×"); click("Transcript")
             shown(hasText("Chapter 2 · ${chapters[1].title}"))
             rule.onNodeWithText("Chapter 2 · ${chapters[1].title}").assertIsDisplayed()
             val paragraphs = chapters[1].text.split(Regex("(?<=[.!?])\\s+(?=[A-Z])")).filter(String::isNotBlank)
@@ -288,7 +291,7 @@ class ShortProductE2eTest {
             click("Create audio"); click("Cancel")
             assertNull(episode().lockedRevisionId)
             assertEquals(final.contentHash, revision().first.contentHash)
-            click("Create audio"); click("Lock & create")
+            click("Create audio"); clickLast("Create audio")
             waitPhase(EpisodePhase.FROZEN_READY, 165_000)
             val ready = episode()
             assertEquals(final.id, ready.lockedRevisionId); assertEquals(final.contentHash, ready.lockedContentHash)
@@ -300,7 +303,7 @@ class ShortProductE2eTest {
             icon("Pause"); icon("Next chapter")
             val boundary = audio[1].startFrame * 1000 / 44100
             waitUntil("continuation chapter boundary") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.currentPosition?.let { kotlin.math.abs(it - boundary) < 100 } == true }; ok }
-            click("1.0× Speed"); click("Transcript")
+            click("1.0×"); click("Transcript")
             shown(hasText("Chapter 2 · ${chapters[1].title}"))
             chapters[1].text.split(Regex("(?<=[.!?])\\s+(?=[A-Z])")).filter(String::isNotBlank).groupingBy { it }.eachCount().forEach { (paragraph, count) -> rule.onAllNodesWithText(paragraph).assertCountEquals(count) }
             capture("continued-chapter-two-transcript")

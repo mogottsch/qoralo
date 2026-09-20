@@ -53,7 +53,6 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val episodes by viewModel.episodes.collectAsStateWithLifecycle()
     val libraryPlayback by viewModel.libraryPlayback.collectAsStateWithLifecycle()
-    val libraryChapterCounts by viewModel.libraryChapterCounts.collectAsStateWithLifecycle()
     val episode by viewModel.episode.collectAsStateWithLifecycle()
     val sources by viewModel.sources.collectAsStateWithLifecycle()
     val chapters by viewModel.chapters.collectAsStateWithLifecycle()
@@ -138,7 +137,7 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
             Box(Modifier.fillMaxWidth().weight(1f)) {
             when (screen) {
                 AppScreen.Library -> LibraryScreen(episodes, viewModel::newEpisode, viewModel::selectEpisode, viewModel::showSettings,
-                    playbackStates = libraryPlayback, chapterCounts = libraryChapterCounts,
+                    playbackStates = libraryPlayback,
                     episodeActions = { current -> EpisodeOverflow(current, viewModel::showDiagnostics, viewModel::askToDelete) })
                 AppScreen.Sources -> episode?.let { current -> key(current.id) {
                     SourcesScreen(
@@ -216,20 +215,24 @@ private fun SettingsScreen(onBack: () -> Unit) {
     PhoneContent {
         Scaffold(topBar = { TopAppBar(title = { Text("Settings") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) }) { padding ->
             Column(Modifier.fillMaxSize().padding(padding).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("On-device models", style = MaterialTheme.typography.headlineSmall)
-                Text("Model data stays outside the APK and must match the manifest hashes pinned into this internal build.", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                RuntimeCard("Gemma 4 E2B", "LiteRT GPU · outline + one request per chapter", gemmaPresent)
                 val provider = dev.qoralo.podcast.runtime.ProviderAudioPlan.selected
-                RuntimeCard(if (provider) "Supertonic 3 · provider pipeline" else if (BuildConfig.SHORT_PRODUCT_E2E) "Supertonic 3 · short plumbing" else "Supertonic 3 · experimental",
-                    if (provider) "QNN/HTP · sentence segments · 8 steps · speed 1.05" else if (BuildConfig.SHORT_PRODUCT_E2E) "QNN/HTP · brief chapters only" else "QNN/HTP · speech coverage unverified", supertonicPresent)
-                Text("There are no fallback inference routes.", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+                RuntimeCard("Script model", gemmaPresent, "Missing · scripts can’t be created")
+                RuntimeCard("Voice model", supertonicPresent, "Missing · audio can’t be created")
+                DetailsDisclosure("Technical details") {
+                    Text("Gemma 4 E2B · LiteRT GPU · outline + one request per chapter")
+                    Text(if (provider) "Supertonic 3 · provider pipeline · QNN/HTP · sentence segments · 8 steps · speed 1.05"
+                        else if (BuildConfig.SHORT_PRODUCT_E2E) "Supertonic 3 · short plumbing · QNN/HTP · brief chapters only"
+                        else "Supertonic 3 · experimental · QNN/HTP · speech coverage unverified")
+                    Text("Model data stays outside the APK and must match the manifest hashes pinned into this internal build. Packs are verified when generation starts.")
+                    Text("There are no fallback inference routes.")
+                }
             }
         }
     }
 }
 
 @Composable
-private fun RuntimeCard(title: String, subtitle: String, present: Boolean) {
+private fun RuntimeCard(title: String, present: Boolean, missing: String) {
     Card(
         colors = CardDefaults.cardColors(containerColor = if (present) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer),
         shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth(),
@@ -238,8 +241,7 @@ private fun RuntimeCard(title: String, subtitle: String, present: Boolean) {
             Icon(if (present) Icons.Default.CheckCircle else Icons.Default.ErrorOutline, null)
             Column {
                 Text(title, style = MaterialTheme.typography.titleSmall)
-                Text(subtitle, style = MaterialTheme.typography.bodySmall)
-                Text(if (present) "Pack present and hash configured · verified when generation starts" else "Pack missing or hash not configured", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 4.dp))
+                if (!present) Text(missing, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
