@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-20T09:00:39+00:00",
+  "updated_at": "2026-09-20T09:25:56+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -18,13 +18,13 @@
     },
     {
       "id": "app-script-failure",
-      "title": "App chapter-generation failure",
-      "status": "blocked",
-      "owner": "Observed issue",
-      "now": "Observed SCRIPT-generation reliability issue: the latest job failed at chapter 2 of 7 with a JSON parsing error. It is not a TTS failure.",
-      "next": "Private raw response is unavailable, so the subtype remains unknown. It does not show that Nik’s feature work caused a regression or that a schema fix works. No further device, model, or code work is assigned.",
-      "reported_at": "2026-09-14T17:15:40+00:00",
-      "reported_by": "Thomas — completed read-only phone failure diagnosis",
+      "title": "App chapter-generation reliability",
+      "status": "reviewing",
+      "owner": "Thomas",
+      "now": "Thomas made a host-only change so chapter generation must follow a fixed reply format, and retries up to three times with shorter targets if the reply cannot be read. Retries look like ordinary progress, and a final failure after three tries is unchanged. Host tests pass.",
+      "next": "This is unverified on a phone, so it is not yet shown to fix the observed failure. Output being cut off at the length ceiling remains the leading but unproven explanation. A separate host test suite fails the same way with and without this change, from the earlier rename.",
+      "reported_at": "2026-09-20T09:25:56+00:00",
+      "reported_by": "Thomas — host complete/no device run",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -190,10 +190,10 @@
     },
     {
       "name": "Thomas",
-      "task": "Read-only app failure diagnosis complete",
-      "reported_at": "2026-09-14T17:15:40+00:00",
-      "reported_by": "Thomas — no rerun or changes",
-      "stale_after_seconds": "persistent"
+      "task": "Host-only chapter reliability change, unverified on device",
+      "reported_at": "2026-09-20T09:25:56+00:00",
+      "reported_by": "Thomas — no device/model run",
+      "stale_after_seconds": 900
     },
     {
       "name": "Jere",
