@@ -42,21 +42,59 @@ Sources:
 
 ### 2. Build a runtime that could actually reach Qualcomm’s accelerator
 
-Our existing Android runtime could not simply be switched to `qnn`. Its packaged ONNX Runtime lacked the required QNN integration, and that sherpa TTS path did not recognize it.
+**ONNX Runtime already supported HTP. But the ready-made sherpa Android package we were using did not expose a usable QNN/HTP route for Supertonic.** This was a build-and-integration limitation, not a fundamental limitation of ONNX.
 
-We therefore built a separate Android ARM64 runtime using:
+First, distinguish the layers:
 
-- **ONNX Runtime 1.27.1**
-- **Qualcomm QAIRT 2.49**, supplying QNN tools and libraries
-- The **QNN HTP backend**, targeting the S23 Ultra’s **SM8550 / Hexagon V73**
+| Term | Role |
+|---|---|
+| **ONNX** | The model format: computation graph, learned weights and tensor definitions. It does not execute itself. |
+| **ONNX Runtime (ORT)** | The software that loads a graph and manages its execution, including memory and operation implementations. |
+| **QNN Execution Provider** | An optional ORT integration that sends supported graph computations to Qualcomm’s QNN software. |
+| **QNN HTP backend** | The Qualcomm backend that targets Hexagon. QNN can have other backends; QNN does not always mean HTP. |
+
+Here, **runtime** means execution software, not elapsed execution time. When referring to ORT together with its Qualcomm dependencies, **runtime stack** is the clearer term. Our own application code still connects Supertonic’s four graphs and controls the refinement loop; ORT executes each graph rather than inventing the synthesis recipe.
+
+There were two separate obstacles:
+
+1. **The packaged runtime.** ONNX Runtime supports many execution providers as a project, but every prebuilt binary does not contain all of them. QNN support is optional at build time; the retained version’s CMake configuration defaults `onnxruntime_USE_QNN` to `OFF`. Our original packaged runtime lacked the required integration. Setting `provider="qnn"` at execution time cannot add code that was not included when the runtime was built.
+2. **The sherpa wrapper.** Our app called sherpa-onnx, which created the model sessions. Its pinned generic TTS provider-selection path did not recognize `qnn`. Even supplying a QNN-capable runtime would not, by itself, teach that wrapper to select and configure it. This is a statement about that specific version and path, not every sherpa feature or release.
+
+The original route was:
+
+```text
+Our app → sherpa-onnx → packaged ONNX Runtime → CPU
+```
+
+We built a separate Android ARM64 runtime and used our own C++ runner to connect the four components:
+
+```text
+Our C++ runner
+    → ONNX Runtime with QNN support
+        → QNN Execution Provider
+            → QNN HTP backend
+                → Hexagon
+```
+
+That route used:
+
+- **ONNX Runtime 1.27.1**, built with QNN integration.
+- **Qualcomm QAIRT 2.49**, supplying QNN tools and libraries.
+- The **QNN HTP backend**, targeting the S23 Ultra’s **SM8550 / Hexagon V73**.
 
 We also needed the matching phone-side libraries: the HTP backend, preparation library, V73 stub/skeleton and related runtime components.
 
 Before trying Supertonic, we tested a tiny addition graph. The first attempt failed because `libQnnHtpPrepare.so` was missing. After supplying it, profiling demonstrated real accelerator execution.
 
+**Three requirements must hold separately:** the runtime has QNN integration; the calling code selects and configures it correctly; and the model’s operations and shapes are supported. Fixing the first two did not automatically satisfy the third.
+
 **Why this mattered:** it separated “our Android-to-HTP connection works” from “Supertonic is compatible with it.”
 
-Source: [0010 physical-control and runtime record](../experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json).
+Sources:
+
+- [0010 runtime choice and packaged-runtime findings](../experiments/0010-supertonic-qnn-htp-feasibility/README.md#runtime-choice)
+- [ORT build options at the recorded source revision](https://github.com/microsoft/onnxruntime/blob/df2ba1cf8108aa63627cf4cdf8f807880b938616/cmake/CMakeLists.txt)
+- [0010 physical-control and runtime record](../experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json)
 
 ### 3. Give the graphs concrete input sizes
 
