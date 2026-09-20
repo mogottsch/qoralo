@@ -76,8 +76,8 @@ class ExistingDraftCapacityTest {
             rule.onNodeWithText(before.title).performClick()
             rule.waitUntil(15_000) { rule.onAllNodes(hasText("Audio unavailable for this draft")).fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText("Audio unavailable for this draft").assertIsDisplayed()
-            rule.onNodeWithText("Lock script & create audio").assertIsNotEnabled()
-            rule.onNodeWithText("Edit with agent").assertIsEnabled()
+            rule.onNodeWithText("Create audio").assertIsNotEnabled()
+            rule.onNodeWithText("Edit script").assertIsEnabled()
             require(before == db { app.repository.episode(id) } && revision == db { app.repository.activeRevision(id) })
             require(job == db { app.repository.latestJob(id) } && fileHash == app.artifacts.sha256(artifact))
             require(!File(context.filesDir, "user-failure-diagnostics/active.json").exists())

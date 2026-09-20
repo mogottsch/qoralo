@@ -149,7 +149,7 @@ fun PlayerScreen(
                     Column(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         val status = when {
                             session.error != null -> session.error!!
-                            session.waiting -> "Buffering · waiting for more audio"
+                            session.waiting -> "Waiting for more audio…"
                             session.isPlaying -> "Playing"
                             session.wantsPlayback -> "Buffering"
                             else -> "Paused"
@@ -157,9 +157,9 @@ fun PlayerScreen(
                         Text(status, style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.semantics { liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite })
                         Text(when (session.streamState) {
-                            dev.qoralo.podcast.runtime.AudioAvailabilityState.GENERATING -> "Still generating · ${formatDuration(duration)} available. More audio will be added here."
-                            dev.qoralo.podcast.runtime.AudioAvailabilityState.FAILED -> "Generation stopped · ${formatDuration(duration)} of partial audio available. Export is unavailable."
-                            dev.qoralo.podcast.runtime.AudioAvailabilityState.COMPLETE -> "Episode complete · ${formatDuration(duration)} available"
+                            dev.qoralo.podcast.runtime.AudioAvailabilityState.GENERATING -> "Still generating"
+                            dev.qoralo.podcast.runtime.AudioAvailabilityState.FAILED -> "Partial audio · generation stopped. Export unavailable."
+                            dev.qoralo.podcast.runtime.AudioAvailabilityState.COMPLETE -> "Episode complete"
                             else -> "Audio attempt is no longer current"
                         }, style = MaterialTheme.typography.bodySmall)
                     }
@@ -169,9 +169,8 @@ fun PlayerScreen(
                     Column(Modifier.fillMaxWidth().padding(top = 16.dp)) {
                         Text("CHAPTER $chapterNumber OF ${chapters.size}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                         Text(currentChapter?.title ?: episode.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 4.dp))
-                        Text(if (liveAudio != null && session.streamState == dev.qoralo.podcast.runtime.AudioAvailabilityState.GENERATING)
-                            "${chapters.size} planned chapters · total audio duration not known yet"
-                            else "${formatDuration(duration)} · ${chapters.size} chapters", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (liveAudio == null) Text("${chapters.size} chapters", style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
                     }
                 }
             }

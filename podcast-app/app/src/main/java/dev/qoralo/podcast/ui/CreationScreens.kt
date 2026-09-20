@@ -91,7 +91,7 @@ fun SourcesScreen(
     PhoneContent {
         Scaffold(
             modifier = Modifier.imePadding(),
-            topBar = { TopAppBar(title = { Text("New episode") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) },
+            topBar = { TopAppBar(title = { Text("Add sources") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) },
             bottomBar = {
                 PrimaryAction("Continue", onContinue, enabled = sources.isNotEmpty(),
                     modifier = Modifier.navigationBarsPadding().padding(horizontal = 20.dp, vertical = 12.dp))
@@ -103,28 +103,21 @@ fun SourcesScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item { WizardProgress(1, Modifier.padding(bottom = 18.dp)) }
-                item { Text("Add sources", style = MaterialTheme.typography.displaySmall, modifier = Modifier.padding(bottom = 10.dp)) }
                 item {
-                    SourceChoice(Icons.Default.ContentPaste, "Paste text", "Article, notes, or anything copied") { pasteDialog = true }
+                    SourceChoice(Icons.Default.ContentPaste, "Paste text", null) { pasteDialog = true }
                 }
                 item {
-                    SourceChoice(Icons.Default.AttachFile, "Choose a file", "Plain text or Markdown document") {
+                    SourceChoice(Icons.Default.AttachFile, "Choose a file", "Text, Markdown or JSON") {
                         document.launch(arrayOf("text/plain", "text/markdown", "application/json"))
                     }
                 }
-                item {
-                    Row(Modifier.fillMaxWidth().padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text("Added sources", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-                        TextButton(onClick = { pasteDialog = true }) { Icon(Icons.Default.Add, null); Text("Add") }
-                    }
-                }
-                if (sources.isEmpty()) item {
-                    Text("Add at least one source to continue.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
+                if (sources.isNotEmpty()) item {
+                    Text("Sources", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp))
                 }
                 items(sources, key = { it.id }) { source ->
                     ListItem(
                         headlineContent = { Text(source.title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
-                        supportingContent = { Text("${source.wordCount} words · ${source.mimeType}") },
+                        supportingContent = { Text("${source.wordCount} words") },
                         leadingContent = { Icon(Icons.Default.Description, null, tint = MaterialTheme.colorScheme.tertiary) },
                         trailingContent = { IconButton(onClick = { onRemove(source) }) { Icon(Icons.Default.Close, "Remove ${source.title}") } },
                         tonalElevation = 1.dp,
@@ -137,12 +130,12 @@ fun SourcesScreen(
 }
 
 @Composable
-private fun SourceChoice(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
+private fun SourceChoice(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String?, onClick: () -> Unit) {
     OutlinedButton(onClick = onClick, shape = RoundedCornerShape(18.dp), contentPadding = PaddingValues(16.dp), modifier = Modifier.fillMaxWidth()) {
         Icon(icon, null, Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
         Column(Modifier.weight(1f).padding(horizontal = 16.dp), horizontalAlignment = Alignment.Start) {
             Text(title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (subtitle != null) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Text("›", style = MaterialTheme.typography.titleLarge)
     }
@@ -235,7 +228,7 @@ fun InstructionsScreen(
     PhoneContent {
         Scaffold(
             modifier = Modifier.imePadding(),
-            topBar = { TopAppBar(title = { Text("New episode") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to sources") } }) },
+            topBar = { TopAppBar(title = { Text("Instructions") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to sources") } }) },
             bottomBar = {
                 PrimaryAction("Create", { onCreate(instructions, review) }, enabled = instructions.isNotBlank(),
                     modifier = Modifier.navigationBarsPadding().padding(horizontal = 20.dp, vertical = 12.dp))
@@ -243,7 +236,6 @@ fun InstructionsScreen(
         ) { padding ->
             LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)) {
                 item { WizardProgress(2, Modifier.padding(bottom = 18.dp)) }
-                item { Text("Shape your episode", style = MaterialTheme.typography.displaySmall) }
                 item {
                     OutlinedTextField(
                         value = instructions,
@@ -253,24 +245,24 @@ fun InstructionsScreen(
                                 onDraftChanged(instructions, review)
                             }
                         },
-                        label = { Text("Initial instructions") },
-                        supportingText = { Text("${instructions.length} / 2,000") },
-                        placeholder = { Text("Make it about 10 minutes. Focus on the questions that matter most.") },
+                        label = { Text("What should it cover?") },
+                        supportingText = if (instructions.length >= 1800) { { Text("${instructions.length} / 2,000") } } else null,
+                        placeholder = { Text("Topic, length or audience…") },
                         minLines = if (largeText) 3 else 5,
                         maxLines = if (largeText) 4 else 8,
                         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
                     )
                 }
-                item {
+                if (!dev.qoralo.podcast.runtime.ProviderAudioPlan.selected) item {
                     val limit = dev.qoralo.podcast.runtime.SupertonicTextCapacity.textLengthForManifest(dev.qoralo.podcast.BuildConfig.SUPERTONIC_MANIFEST_SHA256)
                         ?.minus(dev.qoralo.podcast.runtime.SupertonicTextCapacity.LANGUAGE_TAG_CODEPOINTS)
-                    Text(if (dev.qoralo.podcast.runtime.ProviderAudioPlan.selected) "Full chapters use the provider's sentence-grouped HTP speech pipeline. Long individual sentences are never forcibly split; segment limits are checked before locking. Your instructions and script remain intact."
-                        else if (limit != null) "Current voice input limit: $limit normalized characters per chapter. Longer scripts can still be generated and reviewed, but cannot be locked for audio with this voice. Your instructions are not changed."
-                        else "Voice input capacity is not configured. Scripts can still be generated and reviewed; audio locking is unavailable.",
-                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 12.dp))
+                    if (limit == null) Text("Voice setup required for audio.", modifier = Modifier.padding(top = 12.dp))
+                    else DetailsDisclosure("Voice limits") {
+                        Text("Up to $limit normalized characters per chapter. Longer drafts need editing before audio.")
+                    }
                 }
-                item { Text("Things you could mention", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)) }
                 item {
+                    DetailsDisclosure("Suggestions", episode.id) {
                     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         hints.forEach { (label, value) ->
                             val appended = InstructionDraftPolicy.appendedHint(instructions, value)
@@ -283,22 +275,14 @@ fun InstructionsScreen(
                         }
                     }
                 }
+                }
                 item {
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-                        shape = RoundedCornerShape(18.dp),
-                        modifier = Modifier.fillMaxWidth().padding(top = 20.dp),
-                    ) {
-                        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Column(Modifier.weight(1f)) {
-                                Text("Review script first", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
-                                Text("See the chapters before audio.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                            Switch(checked = review, onCheckedChange = {
-                                review = it
-                                onDraftChanged(instructions, review)
-                            }, modifier = Modifier.semantics { contentDescription = "Review script first" })
-                        }
+                    Row(Modifier.fillMaxWidth().padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text("Review script first", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                        Switch(checked = review, onCheckedChange = {
+                            review = it
+                            onDraftChanged(instructions, review)
+                        }, modifier = Modifier.semantics { contentDescription = "Review script first" })
                     }
                 }
                 item { Spacer(Modifier.height(24.dp)) }

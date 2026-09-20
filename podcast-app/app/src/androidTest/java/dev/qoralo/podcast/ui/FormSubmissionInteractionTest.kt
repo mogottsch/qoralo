@@ -41,7 +41,7 @@ class FormSubmissionInteractionTest {
         rule.onNodeWithText("Request wasn’t sent").assertIsDisplayed()
         rule.onNodeWithText("Another on-device generation job is active").assertIsDisplayed()
         rule.onNode(hasSetTextAction()).assertTextContains("Keep this exact change request.")
-        rule.onNodeWithText("Changes ready").assertDoesNotExist()
+        rule.onNodeWithText("Review changes").assertDoesNotExist()
         rule.runOnIdle { assertEquals(1, calls) }
     }
 

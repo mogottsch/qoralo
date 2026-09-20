@@ -40,13 +40,12 @@ internal fun DeleteEpisodeConfirmation(target: EpisodeDeletionTarget, busy: Bool
         text = {
             Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(target.title, style = MaterialTheme.typography.titleMedium)
-                Text("This removes this episode's draft, audio, history and diagnostics from this device. It cannot be undone.")
-                Text("If generation is running, it will be cancelled. Deletion waits until the worker and player have released their files. Other episodes, shared sources, model packs and exported copies stay unchanged.")
+                Text("Removes this episode from your device. This can’t be undone.")
                 if (busy) Text("Requesting deletion…")
                 if (error != null) Text(error, color = MaterialTheme.colorScheme.error)
             }
         },
-        confirmButton = { TextButton(enabled = !busy, onClick = onDelete, colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)) { Text("Delete episode") } },
-        dismissButton = { TextButton(enabled = !busy, onClick = onCancel) { Text("Keep episode") } },
+        confirmButton = { TextButton(enabled = !busy, onClick = onDelete, colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)) { Text("Delete") } },
+        dismissButton = { TextButton(enabled = !busy, onClick = onCancel) { Text("Cancel") } },
     )
 }
