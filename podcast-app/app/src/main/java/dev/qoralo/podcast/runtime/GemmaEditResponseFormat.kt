@@ -32,15 +32,17 @@ internal val EDIT_REVISION_JSON_SCHEMA = """
 """.trimIndent()
 
 /**
- * The requested identity is pinned with `const`, so a wrong or episode-level ID cannot be decoded at all.
+ * The requested identity is repeated in the prompt and re-checked by the caller. Only constructs that
+ * the shipped edit schema already proves on this runtime are used here: a grammar the runtime rejects
+ * fails the whole request at SEND, which is worse than the malformed output it prevents.
  * Length is deliberately unconstrained: a grammar cannot guarantee completion inside the output ceiling.
  */
 internal fun chapterResponseSchema(chapter: OutlineChapter): String = JSONObject()
     .put("type", "object")
     .put("additionalProperties", false)
     .put("properties", JSONObject()
-        .put("id", JSONObject().put("type", "string").put("const", chapter.id))
-        .put("title", JSONObject().put("type", "string").put("const", chapter.title))
+        .put("id", JSONObject().put("type", "string").put("minLength", 1))
+        .put("title", JSONObject().put("type", "string").put("minLength", 1))
         .put("text", JSONObject().put("type", "string").put("minLength", 1)))
     .put("required", JSONArray(listOf("id", "title", "text")))
     .toString()

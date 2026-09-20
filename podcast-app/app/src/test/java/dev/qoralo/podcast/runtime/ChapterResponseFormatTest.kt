@@ -8,23 +8,32 @@ class ChapterResponseFormatTest {
     private fun failure(phase: GemmaFailurePhase) =
         GemmaRequestException("chapter", phase, FailureTypeGraph.capture(RuntimeException("private")), RuntimeException("private"))
 
-    @Test fun schemaPinsTheRequestedIdentityAndForbidsExtraFields() {
+    @Test fun schemaUsesOnlyConstructsTheShippedEditSchemaAlreadyProves() {
         val schema = JSONObject(chapterResponseSchema(OutlineChapter("chapter-2", "Mapping It Out", "A plan.")))
         val properties = schema.getJSONObject("properties")
-        assertEquals("chapter-2", properties.getJSONObject("id").getString("const"))
-        assertEquals("Mapping It Out", properties.getJSONObject("title").getString("const"))
         assertFalse(schema.getBoolean("additionalProperties"))
         assertEquals(setOf("id", "title", "text"), properties.keys().asSequence().toSet())
-        assertEquals(1, properties.getJSONObject("text").getInt("minLength"))
+        val edit = JSONObject(EDIT_REVISION_JSON_SCHEMA)
+        fun keywords(node: Any?, into: MutableSet<String>): Set<String> {
+            if (node is JSONObject) node.keys().forEach { key -> into += key; keywords(node.get(key), into) }
+            return into
+        }
+        // A construct the runtime refuses fails the request at SEND, so stay inside the proven vocabulary.
+        assertTrue(keywords(schema, mutableSetOf()).minus(keywords(edit, mutableSetOf())).isEmpty())
+        for (field in listOf("id", "title", "text")) {
+            assertEquals(1, properties.getJSONObject(field).getInt("minLength"))
+            assertFalse(properties.getJSONObject(field).has("const"))
+        }
         // A grammar cannot guarantee completion, so length is deliberately not constrained.
         assertFalse(properties.getJSONObject("text").has("maxLength"))
     }
 
     @Test fun schemaEscapesIdentitiesThatWouldOtherwiseBreakTheGrammar() {
         val chapter = OutlineChapter("chapter-\"quoted\"", "Line\nTwo \\ title", "Quoted \"plan\"")
-        val properties = JSONObject(chapterResponseSchema(chapter)).getJSONObject("properties")
-        assertEquals(chapter.id, properties.getJSONObject("id").getString("const"))
-        assertEquals(chapter.title, properties.getJSONObject("title").getString("const"))
+        // Identity is carried by the prompt and re-checked by the caller, never embedded in the grammar.
+        val schema = JSONObject(chapterResponseSchema(chapter))
+        assertFalse(schema.toString().contains("quoted"))
+        assertEquals("string", schema.getJSONObject("properties").getJSONObject("id").getString("type"))
     }
 
     @Test fun onlyChapterModeGetsTheChapterSchemaThroughTheModeSeam() {

@@ -101,12 +101,21 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
         require(serialized.length <= MAX_GENERATION_REQUEST_CHARS) { "Chapter request exceeds the Gemma context budget" }
         val schema = chapterResponseSchema(chapter)
         var attempt = 1
+        var constrained = true
         while (true) {
             try {
                 val json = JSONObject(generate("chapter", serialized,
-                    singleChapterInstruction(chapter, chapterWordCeiling(attempt)), schema))
+                    singleChapterInstruction(chapter, chapterWordCeiling(attempt)), schema.takeIf { constrained }))
                 return FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text"))
             } catch (error: GemmaRequestException) {
+                // A grammar the runtime refuses fails the request at SEND before any token is produced. That
+                // must not cost the episode: drop the constraint once and continue with the plain request,
+                // which is exactly the behaviour that existed before constrained decoding.
+                if (constrained && error.failurePhase == GemmaFailurePhase.SEND) {
+                    constrained = false
+                    currentCoroutineContext().ensureActive()
+                    continue
+                }
                 // Constrained decoding makes a malformed envelope unreachable, so an unparsed response means the
                 // model never finished inside the output ceiling. Only that case earns another, shorter attempt.
                 if (!shouldRetryChapter(error, attempt)) throw error
