@@ -93,8 +93,6 @@ The Qoralo build is installed on the phone beside the old app.
 
 Generation, playback, export and native QNN/HTP execution have not yet been exercised under the new id. See `evidence/qoralo-rebrand/install-20260920/result.json`.
 
-### Temporary launcher label
+### Launcher label
 
-The retired `dev.vibevoice.podcast.internal` build was produced after the brand rename, so it is also labelled **Qoralo** and it still holds every episode. Two identical icons would make it easy to open the empty app and conclude the library was lost.
-
-The new id is therefore labelled **Qoralo dev** until the old app is removed, at which point `app_name` should go back to **Qoralo**. The old app's label cannot be changed without reinstalling it, which would disturb data that is deliberately being left alone.
+The app is labelled **Qoralo**. An earlier build briefly used "Qoralo dev" to distinguish it from the retired app while both were installed; that app has since been uninstalled, so the distinction is gone and the label is plain again.
