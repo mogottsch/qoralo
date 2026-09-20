@@ -10,30 +10,29 @@ python3 -m http.server 8766 --bind 127.0.0.1
 
 Visit <http://localhost:8766/docs/presentation/>. Serve the repository root so the notes can open both `docs/` pages and the reconstruction's relative experiment/app evidence links. The deck still works directly from `index.html` without a server.
 
-## The six-slide main story, with optional details
+## The seven-slide main story, with optional details
 
 ```text
-Main: Our journey → GPU vs NPU → Architecture × deployment → Our phone → How models run → Models & results
+Main: Our journey → GPU vs NPU → Architecture × deployment → Our phone → How models run → Models & results → [Supertonic 3 → HTP]
 
 Optional paths:
   Our phone      → Inside Hexagon             → How models run
   How models run ↔ QNN backend map
-  How models run ↔ Supertonic 3 → HTP (one-pager)
-                       ↔ 11-step reconstruction walkthrough
+  Supertonic 3 → HTP (root slide 7) ↔ 11-step reconstruction walkthrough
   Models & results ↔ Supertonic 3 architecture
                        ↔ Why Supertonic splits long text
   Models & results ↔ Gemma 4 E2B architecture
 ```
 
-The default arrow-key path follows the **six main-story slides**, ending with **Models & results** after the mandatory **How models run** explanation. **Inside Hexagon**, **QNN backend map**, **Supertonic 3 architecture** and **Gemma 4 E2B architecture** are optional. The GPU/NPU comparison continues directly to architecture × deployment. The phone's hardware detail rejoins at **How models run**. The backend catalog opens from and returns to the deployment slide; continue from there to the models and results.
+The default arrow-key path follows **seven main-story slides**. **Models & results** is slide 6, followed by the **Supertonic 3 → HTP** one-page overview as the final root slide 7. **Inside Hexagon**, **QNN backend map**, **Supertonic 3 architecture** and **Gemma 4 E2B architecture** are optional. The GPU/NPU comparison continues directly to architecture × deployment. The phone's hardware detail rejoins at **How models run**. The backend catalog opens from and returns to the deployment slide; continue from there to the models and results.
 
-The optional **Supertonic 3 → HTP** one-pager opens from **How models run**, with both arrow boundaries returning there. **Walk through 11 steps** enters a nested subslideshow. Arrow keys and visible Previous/Next controls follow its eleven steps; both ends return to the one-pager. Every detail also has an immediate **HTP overview** exit. These twelve new slides are not inserted into the default main story.
+Reach the **Supertonic 3 → HTP** one-pager with the right arrow or the **Supertonic on HTP** button on slide 6. On slide 7, **Walk through 11 steps** enters the optional subslideshow. Arrow keys and visible Previous/Next controls follow its eleven steps; both ends return to root slide 7. Every detail also has an immediate **HTP overview** exit. The one-pager is part of the main story; only the eleven details are optional. Right arrow at root slide 7 stays there rather than entering the details automatically.
 
-The hardware detail offers **Back to choices** and **How models run**. The backend catalog has **Back to model path**; either arrow key also returns to deployment. The Hexagon block on the phone slide remains clickable. Select the prominent **Supertonic 3** or **Gemma 4 E2B IT** architecture entry on the closing slide for its architecture; either arrow or **Models & results** returns there. Within Supertonic architecture, **Why short chunks?** opens a separate nested detour. Both arrows and its return button go back to the architecture, so normal architecture navigation does not force this additional detail.
+The hardware detail offers **Back to choices** and **How models run**. The backend catalog has **Back to model path**; either arrow key also returns to deployment. The Hexagon block on the phone slide remains clickable. Select the prominent **Supertonic 3** or **Gemma 4 E2B IT** architecture entry on slide 6 for its architecture; either arrow or **Models & results** returns there. Within Supertonic architecture, **Why short chunks?** opens a separate nested detour. Both arrows and its return button go back to the architecture, so normal architecture navigation does not force this additional detail.
 
 ## Presenting
 
-- The closing **Models & results** slide links to the [TTS benchmarks and audio](../android-benchmarks/index.html) and [LLM benchmarks](../android-llm-benchmarks/index.html). Links open in new tabs so the presentation keeps its place. Model names are a short index, not a ranking; detailed evidence stays in the registries.
+- The **Models & results** slide links to the [TTS benchmarks and audio](../android-benchmarks/index.html) and [LLM benchmarks](../android-llm-benchmarks/index.html). Links open in new tabs so the presentation keeps its place. Model names are a short index, not a ranking; detailed evidence stays in the registries.
 - **Map** or **M** opens the overview. Jump to any main slide or optional detail; the map marks the current location.
 - **← / →**, **Page Up / Page Down**, and **Space** follow the current route. Space still activates a focused button normally.
 - **Home / End** go to the first/last main-story slide, never into an optional appendix by accident.
@@ -41,7 +40,7 @@ The hardware detail offers **Back to choices** and **How models run**. The backe
 - Every card on the optional **QNN backend map** opens a detail dialog with two focused sections: **Execution** and **Sample use cases**. Short bullets carry the main points; compact paragraphs provide the technical detail and limitations.
 - **F** or **Fullscreen** toggles fullscreen. **Esc** closes a dialog or exits fullscreen. Branch choices and return buttons remain available inside the slides when fullscreen hides the toolbar; **M** still opens the map.
 - The GPU/NPU illustrations on slide 2 are static. Background and qualifications remain in speaker notes; there is no separate deep-dive slide or AI-specialist popup.
-- The toolbar counter is **route-relative**: `4 / 6` in the main story, `1 / 1` inside a single-slide detour, or `7 / 11` inside the HTP walkthrough. The walkthrough also retains its step count and controls inside the canvas for fullscreen use. The route label and optional-slide headings explain the context.
+- The toolbar counter is **route-relative**: `4 / 7` in the main story, `1 / 1` inside a single-slide detour, or `7 / 11` inside the HTP walkthrough. The walkthrough also retains its step count and controls inside the canvas for fullscreen use. The route label and optional-slide headings explain the context.
 - Slide hashes use stable IDs. Direct links, refresh, and browser Back/Forward preserve the destination and infer the right route.
 - Every viewport fits a fixed 1920×1080, 16:9 stage. Portrait phones letterbox rather than rearranging the diagrams. Browser printing includes all slides, including optional details, but omits navigation buttons.
 
@@ -57,9 +56,11 @@ The hardware detail offers **Back to choices** and **How models run**. The backe
 
 6. [TTS & LLM models and results](http://localhost:8766/docs/presentation/#slide-models) — two softly tinted collections in the deck's existing mint/lilac palette, with speech/text graphics, larger architecture entries, secondary model lists and aligned benchmark links. Existing typography and all model information are preserved; prominence indicates an available deep dive, not a ranking. TTS: Supertonic 3, Pocket TTS, Kokoro, MOSS-TTS-Nano and the VibeVoice family. LLM: Gemma 4 E2B IT, Qwen3.5-2B and LFM2.5-2.6B. Two direct benchmark links; no copied measurements or new quality verdicts.
 
+7. [Supertonic 3 → HTP](http://localhost:8766/docs/presentation/#slide-supertonic-htp) — the deployment one-pager closes the root presentation. Its button opens the eleven-step detail route; every detail can return here.
+
 ### Supertonic → HTP: one-pager and nested walkthrough
 
-Open [the HTP one-pager](http://localhost:8766/docs/presentation/#slide-supertonic-htp) from **How models run**. It summarizes host preparation and Android execution, with a prominent entry into the eleven-step reconstruction and a direct link to [the source Markdown](../supertonic-android-htp-reconstruction.md).
+Open [the HTP one-pager](http://localhost:8766/docs/presentation/#slide-supertonic-htp) as **root slide 7**, after **Models & results**. It summarizes host preparation and Android execution, with a prominent entry into the eleven-step reconstruction and a direct link to [the source Markdown](../supertonic-android-htp-reconstruction.md).
 
 The walkthrough maps one-to-one to the document, not to a fictional clean success path:
 
@@ -97,7 +98,7 @@ No new inference, phone benchmark, output-quality verdict or hardware measuremen
 Edit the same `index.html`. Each slide is a sibling `<section class="slide">` inside `.stage`, with a unique stable ID, heading ID, `data-title`, `.page`, and `<template class="speaker-notes">`.
 
 - Slides without `data-branch` form the main path in DOM order.
-- `data-branch="hardware"`, `data-branch="backends"`, `data-branch="supertonic"`, `data-branch="supertonic-length"`, `data-branch="gemma"`, `data-branch="supertonic-htp"` and `data-branch="supertonic-htp-steps"` assign slides to optional routes. Multiple slides with the same value form a multi-slide detour in DOM order. Main-story slides have no branch attribute.
+- `data-branch="hardware"`, `data-branch="backends"`, `data-branch="supertonic"`, `data-branch="supertonic-length"`, `data-branch="gemma"` and `data-branch="supertonic-htp-steps"` assign slides to optional routes. Multiple slides with the same value form a multi-slide detour in DOM order. Main-story slides have no branch attribute.
 - `data-branch-origin` and `data-branch-resume` define each optional route's boundaries. They can point to another optional slide: `supertonic-length` returns to `slide-supertonic-architecture` at both boundaries. The original `data-branch-point` and `data-resume-point` remain compatibility defaults for the hardware route.
 - Buttons use `data-enter-branch="…"`, `data-back-story`, `data-resume-story="slide-id"`, or `data-go-slide="slide-id"` for a specific walkthrough step. The overview is generated from the same route definitions.
 - To add another detour, add its `data-branch`, `data-branch-origin`, and `data-branch-resume` slides plus a choice button, then add a friendly label in the script's `labels` object.
@@ -108,9 +109,9 @@ The `.slide-content` group preserves the original artwork proportions inside the
 
 ## Browser checks
 
-`browser-checks.js` is an async Playwright callback that verifies all 23 slides at six viewport sizes, including the five-step journey; overflow and overlap; aligned model collections, readable labels and intact architecture entries; the unchanged six-slide main route ending at models; the HTP one-pager and all eleven nested steps, visible controls, source link, step numbering, bidirectional return boundaries, deep links/history, SVG label bounds, failure/quality/causality wording and exact-scale startup bars; both benchmark links opening real result tables in separate tabs; removed-slide recovery; all five optional detours and their exits, including both model architecture entries and the nested long-input route, return boundaries, SVG labels, history/reload, fullscreen and offline behavior; exact sample-count chart proportions and the visible training-version/causality qualifications; Gemma's 4:1 layer tiles and 15/20 KV-sharing split; all ten backend detail dialogs; overview; keyboard/focus; direct links, refresh and browser history; the static GPU/NPU illustrations; notes; fullscreen; offline behavior; invalid hashes; and print visibility.
+`browser-checks.js` is an async Playwright callback that verifies all 23 slides at six viewport sizes, including the five-step journey; overflow and overlap; aligned model collections, readable labels and intact architecture entries; the seven-slide main route ending at the HTP one-pager; its root slide7 numbering and continuation from Models & results; all eleven optional detail steps, visible controls, source link, step numbering, bidirectional return boundaries, deep links/history, SVG label bounds, failure/quality/causality wording and exact-scale startup bars; both benchmark links opening real result tables in separate tabs; removed-slide recovery; all five original optional detours and their exits, including both model architecture entries and the nested long-input route, return boundaries, SVG labels, history/reload, fullscreen and offline behavior; exact sample-count chart proportions and the visible training-version/causality qualifications; Gemma's 4:1 layer tiles and 15/20 KV-sharing split; all ten backend detail dialogs; overview; keyboard/focus; direct links, refresh and browser history; the static GPU/NPU illustrations; notes; fullscreen; offline behavior; invalid hashes; and print visibility.
 
-The HTP overview/walkthrough extension passed the full 23-slide/six-viewport browser suite on September 20, 2026. All twelve new slides and the changed deployment entry were visually inspected at 1280×720 and 390×844. The nested walkthrough has no added runtime assets or inference dependency. Review was performed in-session because no extra agent spawning was authorized. The detector reported incumbent font/palette/copy warnings and template-heading warnings; notes render beneath the dialog's existing h2 title, so their h3 sections are intentional. No redesign of unrelated slides was made. Layout checks explicitly neutralize pointer hover before each viewport sweep so the pre-existing benchmark-link arrow animation does not create a spurious overflow report.
+The HTP overview/walkthrough extension passed the full 23-slide/six-viewport browser suite on September 20, 2026. All twelve new slides were visually inspected at 1280×720 and 390×844. Moritz then requested the one-pager as root slide7 rather than an optional deployment detour; the final route and visible slide6 continuation are covered by the updated checks. The nested walkthrough has no added runtime assets or inference dependency. Review was performed in-session because no extra agent spawning was authorized. The detector reported incumbent font/palette/copy warnings and template-heading warnings; notes render beneath the dialog's existing h2 title, so their h3 sections are intentional. No redesign of unrelated slides was made. Layout checks explicitly neutralize pointer hover before each viewport sweep so the pre-existing benchmark-link arrow animation does not create a spurious overflow report.
 
 The earlier long-input addition passed the full suite and an in-session visual review at 1280×720 and 390×844; no separate review agent was spawned. It preserves the existing deck palette, typography, fixed-stage geometry and computation-explorer link. The design detector's remaining warnings concern the incumbent palette/font, uppercase labels and existing notes hierarchy; this scoped addition does not redesign those surfaces. The new slide has no added eyebrow or shipping raster assets.
 

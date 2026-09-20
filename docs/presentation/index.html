@@ -336,7 +336,10 @@ svg {
     .model-results:hover { color: var(--model-accent); }
     .model-results:hover svg { transform: translate(3px, -3px); }
     .model-results:focus-visible { outline: 3px solid var(--model-accent); outline-offset: -5px; }
-    .models-slide .slide-footer { margin-top: 25px; font-size: 17px; }
+    .models-slide .slide-footer { margin-top: 25px; font-size: 17px; gap: 24px; }
+    .model-story-next { margin-left: auto; padding: 11px 18px; border: 1px solid #4a8c73; border-radius: 8px; background: #132821; color: var(--text); font: inherit; font-size: 20px; cursor: pointer; }
+    .model-story-next:hover { background: #234436; border-color: var(--npu); }
+    @media print { .model-story-next { display: none !important; } }
     /* === OPTIONAL MODEL ARCHITECTURES === */
     .model-deep-dive { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 48px; align-items: center; gap: 15px; padding: 15px 0; color: var(--text); background: none; border: 0; font: inherit; text-align: left; cursor: pointer; }
     .model-deep-dive .model-name { display: block; font-size: 44px; line-height: 1.18; letter-spacing: -1px; font-weight: 600; }
@@ -525,7 +528,6 @@ svg {
     .htp-runtime .htp-lane h2 { margin-bottom: 16px; }
     .htp-runtime .htp-node { min-height: 86px; }
     .htp-runtime .htp-node strong { font-size: 26px; }
-    .deployment-slide .branch-choices { grid-template-columns: repeat(3, 1fr); }
     @media print {
       @page { size: 16in 9in; margin: 0; }
       :root, body { background: var(--bg); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
@@ -854,9 +856,8 @@ svg {
               </div>
             </section>
           </div>
-          <nav class="branch-choices" aria-label="Explore QNN backends or Supertonic deployment, or continue to models and results">
-            <button type="button" data-enter-branch="backends">QNN backend map ↗</button>
-            <button type="button" data-enter-branch="supertonic-htp">Supertonic → HTP ↗</button>
+          <nav class="branch-choices" aria-label="Explore optional QNN backend details or continue to models and results">
+            <button type="button" data-enter-branch="backends">QNN backend map · optional ↗</button>
             <button type="button" data-resume-story="slide-models" class="continue-story">Models &amp; results →</button>
           </nav>
           <footer class="slide-footer"><span>QAIRT = SDK package · QNN = graph API + backends</span><span class="page">05</span></footer>
@@ -889,7 +890,7 @@ svg {
         </div>
       </section>
 
-      <!-- === MAIN-STORY CLOSING: MODELS AND EXISTING BENCHMARK RESULTS === -->
+      <!-- === MAIN STORY: MODELS AND EXISTING BENCHMARK RESULTS === -->
       <section class="slide models-slide" id="slide-models" aria-labelledby="slide-models-title" data-title="TTS &amp; LLM models and results" inert aria-hidden="true">
         <div class="slide-content">
           <h1 id="slide-models-title">Models &amp; <em>benchmark results</em></h1>
@@ -921,7 +922,7 @@ svg {
               <a class="model-results" data-benchmark="llm" href="../android-llm-benchmarks/index.html" target="_blank" rel="noopener" aria-label="Open LLM benchmark results in a new tab"><span>LLM benchmark results</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M6 5h13v13"/></svg></a>
             </article>
           </div>
-          <footer class="slide-footer"><span>Our Android experiments · Galaxy S23 Ultra · Results open in a new tab</span><span class="page">06</span></footer>
+          <footer class="slide-footer"><span>Our Android experiments · Galaxy S23 Ultra · Results open in a new tab</span><button class="model-story-next" type="button" data-go-slide="slide-supertonic-htp">Supertonic on HTP →</button><span class="page">06</span></footer>
           <template class="speaker-notes">
             <h3>Talk track · about 30 seconds</h3>
             <p>“Now we can look at the models themselves. TTS turns text into speech; an LLM generates the text. These are the model families behind our Android experiments. The two links take us to the actual route results rather than squeezing another benchmark table onto a slide.”</p>
@@ -1282,8 +1283,8 @@ svg {
         </div>
       </section>
 
-      <!-- === OPTIONAL ONE-PAGER: THE SUPERTONIC HTP DEPLOYMENT ROUTE === -->
-      <section class="slide htp-slide htp-overview" id="slide-supertonic-htp" data-title="Supertonic 3 → HTP" data-branch="supertonic-htp" data-branch-origin="slide-5" data-branch-resume="slide-5" aria-labelledby="htp-overview-title" inert aria-hidden="true">
+      <!-- === MAIN-STORY SLIDE 7: THE SUPERTONIC HTP DEPLOYMENT ONE-PAGER === -->
+      <section class="slide htp-slide htp-overview" id="slide-supertonic-htp" data-title="Supertonic 3 → HTP" aria-labelledby="htp-overview-title" inert aria-hidden="true">
         <div class="slide-content">
           <h1 id="htp-overview-title">Supertonic 3 → <em>HTP</em></h1>
           <p class="subtitle">A supported runtime, adapted graphs and the right speech recipe. Not one backend switch.</p>
@@ -1310,15 +1311,15 @@ svg {
           </div>
           <p class="htp-takeaway"><strong>The route works.</strong> Failed numerical gates remain failed; accepted samples are not universal quality proof.</p>
           <nav class="detour-actions htp-nav" aria-label="Explore the Supertonic HTP reconstruction">
-            <button type="button" data-back-story>← Model path</button>
+            <button type="button" data-go-slide="slide-models">← Models &amp; results</button>
             <a class="htp-source-link" href="../supertonic-android-htp-reconstruction.md" target="_blank" rel="noopener">Read the reconstruction ↗</a>
             <button type="button" class="htp-primary" data-enter-branch="supertonic-htp-steps">Walk through 11 steps →</button>
           </nav>
-          <footer class="slide-footer"><span>Our deployment route · historical steps and failures inside</span><span class="page">Optional</span></footer>
+          <footer class="slide-footer"><span>Our deployment route · historical steps and failures inside</span><span class="page">07</span></footer>
           <template class="speaker-notes">
             <h3>One-page explanation</h3>
             <p>This summarizes the route we ultimately built, not a literal chronology or one conversion command. We began with an INT8 CPU reference, obtained only a hybrid from those packaged graphs, then pivoted to official FP32 ONNX. The first all-neural-HTP route needed concrete shapes and a single stable-Softplus rewrite, not retraining or an explicit INT8 conversion. FP32 describes source assets, not verified internal HTP arithmetic.</p>
-            <p>External contexts moved graph preparation off phone startup. Later provider-recipe and native-edge changes made fixed-capacity contexts useful across shorter speech segments. The original eleven-step reconstruction is available as a nested walkthrough; both route boundaries return here. The main six-slide story remains unchanged.</p>
+            <p>External contexts moved graph preparation off phone startup. Later provider-recipe and native-edge changes made fixed-capacity contexts useful across shorter speech segments. This one-pager closes the main presentation as slide 7, after Models &amp; results. The original eleven-step reconstruction is available as an optional subslideshow; both route boundaries and all overview exits return here. Normal main-story arrows never enter the eleven details automatically.</p>
             <h3>Evidence boundaries</h3>
             <p>Execution, numerical comparison, ASR coverage and Moritz's exact-WAV listening verdict are separate. The 0011 E2E numerical policy and 0037 strict source gate failed. The rejected whole-input result is not repaired by later success. The retained app-generated WAV is a new artifact and remains not_reviewed. No fresh model or device run was made for this presentation.</p>
             <h3>Sources</h3>
@@ -1667,7 +1668,7 @@ svg {
       slides.filter(slide => slide.dataset.branch).forEach(slide => {
         (routes[slide.dataset.branch] ??= []).push(slide.id);
       });
-      const labels = { main: 'Main story', hardware: 'Hardware detour', backends: 'QNN backend detour', supertonic: 'Supertonic architecture', 'supertonic-length': 'Supertonic · long inputs', gemma: 'Gemma architecture', 'supertonic-htp': 'Supertonic → HTP', 'supertonic-htp-steps': 'Supertonic → HTP · walkthrough' };
+      const labels = { main: 'Main story', hardware: 'Hardware detour', backends: 'QNN backend detour', supertonic: 'Supertonic architecture', 'supertonic-length': 'Supertonic · long inputs', gemma: 'Gemma architecture', 'supertonic-htp-steps': 'Supertonic → HTP · walkthrough' };
       const branchPoint = document.querySelector('[data-branch-point]').id;
       const resumePoint = document.querySelector('[data-resume-point]').id;
       const branchMeta = Object.fromEntries(Object.entries(routes)

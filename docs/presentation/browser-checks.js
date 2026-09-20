@@ -13,7 +13,7 @@ async (page) => {
   const supertonic = config.routes.supertonic;
   const gemma = config.routes.gemma;
   const longform = config.routes['supertonic-length'];
-  const htpOverview = config.routes['supertonic-htp'];
+  const htpOverview = ['slide-supertonic-htp'];
   const htpSteps = config.routes['supertonic-htp-steps'];
   const deployment = await page.locator('.deployment-slide').getAttribute('id');
   const models = await page.locator('.models-slide').getAttribute('id');
@@ -21,12 +21,12 @@ async (page) => {
   const current = () => page.evaluate(() => window.presentation.state.id);
   const go = id => page.evaluate(id => window.presentation.navigate(id), id);
   const wordCount = selector => page.locator(selector).innerText().then(text => text.trim().split(/\s+/).length);
-  check(ids.length === 23, 'Expected six main slides, five original details, one HTP overview and eleven walkthrough slides');
-  check(JSON.stringify(main) === JSON.stringify(['slide-1', 'slide-2', 'slide-3', 'slide-4', 'slide-5', 'slide-models']), 'Default story must continue from deployment to models and benchmark links');
+  check(ids.length === 23, 'Expected seven main slides, five original details and eleven walkthrough slides');
+  check(JSON.stringify(main) === JSON.stringify(['slide-1', 'slide-2', 'slide-3', 'slide-4', 'slide-5', 'slide-models', 'slide-supertonic-htp']), 'HTP one-pager must close the main story as slide7 after Models & results');
   check(await page.locator('#slide-6, .experiment-slide').count() === 0, 'Removed experiment-questions slide must not remain in the deck');
-  check(hardware.length === 1 && backends.length === 1 && supertonic.length === 1 && gemma.length === 1 && longform.length === 1 && Object.keys(config.routes).length === 8, 'Preserve the five original detours and add two HTP routes');
-  check(htpOverview.length === 1 && htpSteps.length === 11, 'HTP needs one optional overview and eleven detail slides');
-  check(config.branchMeta['supertonic-htp'].origin === deployment && config.branchMeta['supertonic-htp'].resume === deployment, 'HTP overview returns to deployment at both boundaries');
+  check(hardware.length === 1 && backends.length === 1 && supertonic.length === 1 && gemma.length === 1 && longform.length === 1 && Object.keys(config.routes).length === 7, 'Preserve five original detours and add only the eleven-step HTP detail route');
+  check(htpSteps.length === 11 && await page.locator('.htp-overview').getAttribute('data-branch') === null, 'HTP overview is a main slide; only the eleven details are optional');
+  check(await page.locator('.deployment-slide [data-enter-branch="supertonic-htp"]').count() === 0, 'Remove the obsolete optional-overview shortcut from deployment');
   check(config.branchMeta['supertonic-htp-steps'].origin === htpOverview[0] && config.branchMeta['supertonic-htp-steps'].resume === htpOverview[0], 'Both walkthrough boundaries must return to its overview');
   check(config.branchMeta['supertonic-length'].origin === supertonic[0] && config.branchMeta['supertonic-length'].resume === supertonic[0], 'Both nested long-input boundaries must return to Supertonic architecture');
   check(config.branchMeta.supertonic.origin === models && config.branchMeta.supertonic.resume === models, 'Supertonic must return to Models & results at either boundary');
@@ -130,10 +130,12 @@ async (page) => {
   check(await current() === main[0], 'Home should reach the first main slide');
   await page.keyboard.press('End');
   check(await current() === main.at(-1), 'End should reach the last main slide, not a detour');
-  check(await current() === models && await page.locator('#next').isDisabled(), 'Models and results must close the main story');
+  check(await current() === htpOverview[0] && await page.locator('#next').isDisabled(), 'HTP overview must close the main story');
   await page.keyboard.press('ArrowRight');
-  check(await current() === models, 'Right at the end must stay on the models slide');
-  check(await page.locator('.models-slide .model-family').count() === 2, 'Closing slide needs separate TTS and LLM columns');
+  check(await current() === htpOverview[0], 'Right at the end stays on slide7, not in the walkthrough');
+  await page.keyboard.press('ArrowLeft');
+  check(await current() === models, 'Previous from the one-pager returns to Models & results');
+  check(await page.locator('.models-slide .model-family').count() === 2, 'Models slide needs separate TTS and LLM columns');
   check(await wordCount('.models-slide') <= 70, 'Keep the model/results slide short');
   check(await page.locator('.models-slide .model-lead .model-deep-dive').count() === 2, 'Both architecture entries must stay prominent');
   check(await page.locator('.models-slide .model-family-art[aria-hidden="true"]').count() === 2, 'Keep speech/text artwork decorative');
@@ -301,17 +303,19 @@ async (page) => {
     check(await current() === models, 'Gemma branch works offline');
   } finally { await page.context().setOffline(false); }
 
-  // One optional one-pager and an eleven-slide nested route; the main story stays six slides.
-  await go(deployment);
-  const htpEntry = page.locator('.deployment-slide [data-enter-branch="supertonic-htp"]');
+  // The one-pager is root slide7; only its eleven-slide walkthrough is optional.
+  await go(models);
+  const htpEntry = page.locator('.models-slide [data-go-slide="slide-supertonic-htp"]');
   await htpEntry.focus(); await page.keyboard.press('Enter');
-  check(await current() === htpOverview[0], 'Deployment opens the HTP one-pager');
-  check(await page.locator('#counter').innerText() === '1 / 1', 'HTP overview owns a one-slide route');
+  check(await current() === htpOverview[0], 'Models continuation opens root slide7');
+  check(await page.locator('#counter').innerText() === '7 / 7', 'HTP overview is the final main-story slide');
+  check(await page.locator('.htp-overview .page').innerText() === '07', 'One-pager shows root page7, not Optional');
+  check(await page.locator('#route-label').innerText() === 'Main story', 'One-pager belongs to the main route');
   check(await page.locator('.htp-overview .htp-source-link').getAttribute('href') === '../supertonic-android-htp-reconstruction.md', 'One-pager links the source Markdown');
   await page.keyboard.press('ArrowRight');
-  check(await current() === deployment, 'Overview right returns to deployment, never forces details');
-  await htpEntry.click(); await page.keyboard.press('ArrowLeft');
-  check(await current() === deployment, 'Overview left returns to deployment');
+  check(await current() === htpOverview[0], 'Overview right stays at the root ending and never forces details');
+  await page.keyboard.press('ArrowLeft');
+  check(await current() === models, 'Overview left returns to slide6');
   await htpEntry.click();
   const walkthroughEntry = page.locator('.htp-overview [data-enter-branch="supertonic-htp-steps"]');
   await walkthroughEntry.focus(); await page.keyboard.press('Space');
@@ -385,8 +389,8 @@ async (page) => {
   await page.context().setOffline(true);
   try { await walkthroughEntry.click(); await page.keyboard.press('ArrowRight'); await page.locator('.slide.active [data-back-story]').first().click(); check(await current() === htpOverview[0], 'Nested walkthrough works offline'); }
   finally { await page.context().setOffline(false); }
-  await page.locator('.htp-overview [data-back-story]').click();
-  check(await current() === deployment, 'One-pager return reaches the original model path');
+  await page.locator('.htp-overview [data-go-slide="slide-models"]').click();
+  check(await current() === models, 'One-pager return reaches Models & results');
 
   await go('slide-2');
   check(await wordCount('#slide-2') <= 80, 'The GPU/NPU overview should remain concise');
@@ -435,13 +439,13 @@ async (page) => {
   }
   await page.locator('.hardware-slide .branch-choices [data-resume-story]').click();
   check(await current() === deployment, 'Skipping hardware details must still show deployment');
-  check(await page.locator('#counter').innerText() === '5 / 6', 'Deployment must remain before models on the main path');
+  check(await page.locator('#counter').innerText() === '5 / 7', 'Deployment must remain before models on the main path');
   check(!(await page.locator('.deployment-slide').innerText()).includes('Optional'), 'Deployment must not carry an optional label');
   await page.keyboard.press('ArrowRight');
   check(await current() === models, 'Right from deployment should reach models and results');
   await page.keyboard.press('ArrowLeft');
   check(await current() === deployment, 'Left from models returns to deployment');
-  check(await page.locator('.deployment-slide .branch-choices button').count() === 3, 'Deployment offers the optional backend catalog, HTP reconstruction or unchanged models continuation');
+  check(await page.locator('.deployment-slide .branch-choices button').count() === 2, 'Deployment offers the backend catalog or models continuation, not an optional HTP overview');
   await page.locator('.deployment-slide [data-enter-branch="backends"]').click();
   check(await current() === backends[0], 'Backend catalog branch choice failed');
   check((await page.locator('#route-label').innerText()).includes('QNN backend'), 'Show the backend detour label');
@@ -550,5 +554,5 @@ async (page) => {
   check(!errors.length, `JavaScript errors: ${errors.join('; ')}`);
   if (failures.length) throw new Error(failures.join('\n'));
   await go(config.branchPoint);
-  return 'PASS: 23 slides × six viewport sizes; unchanged six-slide main story; optional Supertonic HTP overview and eleven-step nested walkthrough with working controls, exact startup ratio and preserved failure/causality boundaries; existing architecture and long-input detours; benchmarks; map; notes; keyboard/focus; deep links/history/reload; fullscreen; offline; print; no overflow, overlap or JS errors.';
+  return 'PASS: 23 slides × six viewport sizes; seven-slide main story ending with the Supertonic HTP overview; eleven-step nested walkthrough with working controls, exact startup ratio and preserved failure/causality boundaries; existing architecture and long-input detours; benchmarks; map; notes; keyboard/focus; deep links/history/reload; fullscreen; offline; print; no overflow, overlap or JS errors.';
 }
