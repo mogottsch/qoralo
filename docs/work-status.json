@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-20T09:25:56+00:00",
+  "updated_at": "2026-09-20T09:34:50+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -30,13 +30,13 @@
     },
     {
       "id": "app-ui-minimal",
-      "title": "App UI simplification",
-      "status": "active",
+      "title": "App copy simplification (completed)",
+      "status": "released",
       "owner": "Nik",
-      "now": "Nik has started an isolated app-wide copy and UI simplification pass: remove repeated hints and explanations, shorten actions and status, and reveal technical detail only when needed.",
-      "next": "Keep generation, player, deletion, warnings, metric meaning, data, and branding safe. Build/test, then use one bounded non-neural visual check—not an open-ended polish loop. No phone or model work.",
-      "reported_at": "2026-09-14T17:33:41+00:00",
-      "reported_by": "Nik — direct Moritz UI minimalism assignment/start",
+      "now": "The copy and density pass is merged. Confirmations ask once, long explanations moved behind optional detail rows, and labels and statuses are shorter; nothing was removed from the record.",
+      "next": "Validated on the phone in nine owned non-neural cases and six inspected captures at normal and large-text sizes, with no model calls, no new jobs, and no user data changes. The tested pair is installed under the old app identity; the Qoralo identity is not installed.",
+      "reported_at": "2026-09-20T09:34:50+00:00",
+      "reported_by": "Kate — from committed UI copy handoff",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -131,13 +131,13 @@
     },
     {
       "id": "app-rename",
-      "title": "App name change",
+      "title": "App name and identity change",
       "status": "completed",
-      "owner": "Janek",
-      "now": "The app is now called Qoralo. This changed only names and labels in the app code and its theme, verified by an offline build and the built app label.",
-      "next": "Colours, layout, behaviour, the installed app identity, and all existing device episodes and installed-app evidence stay exactly as before. A repository, link, and installed-identity change is still open for Moritz and would need a data-preserving plan.",
-      "reported_at": "2026-09-20T09:00:39+00:00",
-      "reported_by": "Janek — completed offline rename/no device action",
+      "owner": "Moritz",
+      "now": "The app is named Qoralo, and a later step also changed its Android identity, so a Qoralo build is a separate app from the installed one. Its native bridge had to be rebuilt.",
+      "next": "The existing app and all of its episodes and data stay untouched; a Qoralo build would start empty. Moritz decided no data migration is authorized and none was performed. Earlier installed-app evidence still describes the old app correctly, and the new build is not installed or verified on the phone.",
+      "reported_at": "2026-09-20T09:34:50+00:00",
+      "reported_by": "Kate — corrected from committed rebrand record",
       "stale_after_seconds": "persistent",
       "links": []
     }
