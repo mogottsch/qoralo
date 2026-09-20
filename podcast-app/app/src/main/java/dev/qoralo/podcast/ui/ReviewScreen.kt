@@ -105,11 +105,10 @@ fun ReviewScreen(
             bottomBar = {
                 Surface(color = MaterialTheme.colorScheme.surfaceContainer, tonalElevation = 3.dp) {
                     Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilledTonalButton(onClick = onOpenAgent, modifier = Modifier.align(Alignment.End).heightIn(min = 48.dp)) {
-                            Icon(Icons.Default.AutoAwesome, null)
-                            Text("Edit with agent", Modifier.padding(start = 8.dp), softWrap = true)
+                        TextButton(onClick = onOpenAgent, modifier = Modifier.align(Alignment.End).heightIn(min = 48.dp)) {
+                            Text("Edit script", softWrap = true)
                         }
-                        PrimaryAction("Lock script & create audio", onShowLock, enabled = canLock, icon = Icons.Default.Lock)
+                        PrimaryAction("Create audio", onShowLock, enabled = canLock, icon = Icons.Default.Lock)
                     }
                 }
             },
@@ -120,34 +119,24 @@ fun ReviewScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {
-                    Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(14.dp), modifier = Modifier.fillMaxWidth()) {
-                        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Text("Draft", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                            Text("${chapters.size} chapters")
-                        }
-                    }
+                    Text("${chapters.size} chapters", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(vertical = 8.dp))
                 }
-                if (capacity == null) item { Text("Checking voice input capacity…", style = MaterialTheme.typography.bodySmall) }
+                if (capacity == null) item { Text("Checking voice…", style = MaterialTheme.typography.bodySmall) }
                 else if (!capacity.fits) item {
                     Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(14.dp), modifier = Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("Audio unavailable for this draft", style = MaterialTheme.typography.titleSmall)
-                            Text(capacity.message, style = MaterialTheme.typography.bodyMedium)
-                            capacity.chapters.filter { !it.fits }.forEach { part ->
+                            val blocked = capacity.chapters.filter { !it.fits }
+                            Text(if (capacity.unavailableReason != null || capacity.textLength == null) "Voice setup needs attention. Your draft is unchanged."
+                                else "Edit chapters ${blocked.joinToString { (it.position + 1).toString() }} to fit this voice.", style = MaterialTheme.typography.bodyMedium)
+                            DetailsDisclosure("Voice limits", chapters.map { it.rowId }) {
+                            Text(capacity.message)
+                            blocked.forEach { part ->
                                 Text(if (capacity.providerPipeline) "Chapter ${part.position + 1}: ${part.segmentCount} segments; largest processed segment ${part.largestSegment?.toString() ?: "unavailable"} (limit ${capacity.textLength})"
                                     else "Chapter ${part.position + 1}: ${part.normalizedCodePoints?.toString() ?: "no speakable text"} normalized characters" +
                                     (capacity.maxNormalizedCodePoints?.let { " (limit $it)" } ?: ""), style = MaterialTheme.typography.bodySmall)
                             }
-                            Text("This checks input capability. Native duration limits, runtime checks and speech quality still apply.", style = MaterialTheme.typography.bodySmall)
-                        }
-                    }
-                }
-                if (capacity?.providerPipeline == true && capacity.fits) item {
-                    Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(14.dp)) {
-                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text("Provider speech pipeline", style = MaterialTheme.typography.titleSmall)
-                            Text(capacity.message, style = MaterialTheme.typography.bodyMedium)
-                            Text("Sentences are grouped toward 300 characters before normalization, with 0.3-second gaps between speech segments. Your script is not rewritten. Listening becomes available after the first complete speech segment; full-episode export waits for completion.", style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
                 }
@@ -189,7 +178,7 @@ fun ReviewScreen(
         onDismissRequest = onDismissLock,
         icon = { Icon(Icons.Default.Lock, null, tint = MaterialTheme.colorScheme.tertiary) },
         title = { Text("Ready to create audio?") },
-        text = { Text("These ${chapters.size} chapters can’t be changed once audio generation starts.") },
+        text = { Text("Your script can’t be edited after audio generation starts.") },
         confirmButton = { Button(onClick = onLock) { Text("Lock & create") } },
         dismissButton = { TextButton(onClick = onDismissLock) { Text("Cancel") } },
     )
@@ -218,7 +207,6 @@ internal fun AgentEditorSheet(
                 Text("Edit the script", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
                 IconButton(onClick = close) { Icon(Icons.Default.Close, "Close agent editor") }
             }
-            Text("I can rewrite, shorten, remove, split, combine, or rename chapters.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             LazyColumn(
                 modifier = Modifier.fillMaxWidth().weight(1f).padding(top = 16.dp),
                 state = history,
@@ -231,8 +219,8 @@ internal fun AgentEditorSheet(
                     Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(16.dp)) {
                         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text("Change wasn’t applied", style = MaterialTheme.typography.titleSmall)
-                            Text(job.errorMessage ?: "The editing request could not finish.", style = MaterialTheme.typography.bodyMedium)
                             Text("Your draft is unchanged.", style = MaterialTheme.typography.bodySmall)
+                            DetailsDisclosure("Error details", job.id) { Text(job.errorMessage ?: "The editing request could not finish.") }
                         }
                     }
                 }
@@ -241,13 +229,7 @@ internal fun AgentEditorSheet(
                 if (working) item { LinearProgressIndicator(Modifier.fillMaxWidth()); Text(job.statusText, style = MaterialTheme.typography.labelMedium) }
                 val changed = messages.lastOrNull { it.role == AgentRole.AGENT && it.resultRevisionId != null }
                 if (changed != null && job?.status != JobStatus.FAILED && submission.feedback?.accepted != false) item {
-                    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer), shape = RoundedCornerShape(16.dp)) {
-                        Column(Modifier.padding(14.dp)) {
-                            Text("Changes ready", fontWeight = FontWeight.Bold)
-                            Text(changed.text, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
-                            TextButton(onClick = close) { Text("Review changes") }
-                        }
-                    }
+                    TextButton(onClick = close, modifier = Modifier.heightIn(min = 48.dp)) { Text("Review changes") }
                 }
             }
             OutlinedTextField(

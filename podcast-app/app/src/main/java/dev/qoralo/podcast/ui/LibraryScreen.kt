@@ -190,11 +190,11 @@ private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> 
         EpisodePhase.SOURCES -> "Add sources"
         EpisodePhase.INSTRUCTIONS -> "Add instructions"
         EpisodePhase.GENERATING_SCRIPT -> "Creating script"
-        EpisodePhase.SCRIPT_DRAFT -> "Draft ready to review"
-        EpisodePhase.LOCKED -> "Waiting to create audio"
+        EpisodePhase.SCRIPT_DRAFT -> "Draft ready"
+        EpisodePhase.LOCKED -> "Audio queued"
         EpisodePhase.GENERATING_AUDIO -> "Creating audio"
         EpisodePhase.FAILED -> "Generation stopped"
-        "DELETING" -> "Deleting when files are released"
+        "DELETING" -> "Deletion pending"
         else -> episode.phase.lowercase().replace('_', ' ')
     }
     Surface(

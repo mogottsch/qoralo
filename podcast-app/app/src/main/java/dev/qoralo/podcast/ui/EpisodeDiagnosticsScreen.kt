@@ -23,9 +23,12 @@ internal fun EpisodeDiagnosticsScreen(title: String, attempts: List<Pair<Generat
             LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 item {
                     Text(title, style = MaterialTheme.typography.headlineSmall)
-                    Text("Local generation diagnostics", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp))
-                    Text("Only timings and runtime counters are saved here. No prompt or response text. Missing measurements are not estimated, and opening these details never runs a model.",
-                        style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp))
+                    DetailsDisclosure("About measurements") {
+                        Text("Saved locally. No prompt or response text. Missing values are not estimated; opening this screen never runs a model.")
+                        Text("Job wall time includes teardown and publication, but not queue wait. Request wall time includes conversation close and JSON parsing.")
+                        Text("Token counts, rates, TTFT and initialization come from LiteRT-LM for each fresh conversation. Aggregate rates require every request’s counters; they are not end-to-end speed.")
+                        Text("RTF = elapsed time ÷ audio duration; lower is faster. Duration includes prescribed gaps. Render time includes publication callbacks. Recovered audio has no new synthesis RTF.")
+                    }
                 }
                 if (error != null) item { Text(error, color = MaterialTheme.colorScheme.error) }
                 else if (attempts == null) item { Text("Loading diagnostics…") }
@@ -47,14 +50,13 @@ private fun AttemptDiagnostics(number: Int, job: GenerationJobEntity, data: JSON
         Text("Attempt $number · $kind", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
         Text("${job.status.lowercase().replaceFirstChar { it.titlecase() }} · ${job.id.take(12)}", style = MaterialTheme.typography.bodySmall)
         if (data == null) {
-            Text("Measurements were not recorded for this attempt. Existing history is kept without replaying generation.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("No measurements recorded.", color = MaterialTheme.colorScheme.onSurfaceVariant)
         } else {
-            if (recovered) Text("Saved audio was published without new synthesis. No new synthesis throughput or RTF is claimed.")
+            if (recovered) Text("Recovered saved audio · no new synthesis.")
             if (data.optString("outcome") == "running" && job.status !in setOf("QUEUED", "RUNNING")) {
-                Text("Recording ended before a final timing was saved. Partial measurements below are retained.")
+                Text("Partial measurements · recording was interrupted.")
             }
             Metric("Job wall time", data.time("wallMs"))
-            Text("Coordinator entry through teardown and publication; queue wait excluded.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Metric("Model setup", data.time("setupMs"))
             if (job.kind == "AUDIO") {
                 Metric("Chapter render time", data.time("renderMs"))
@@ -65,11 +67,9 @@ private fun AttemptDiagnostics(number: Int, job: GenerationJobEntity, data: JSON
                     Metric("Wall RTF", data.number("wallRtf", "", "Not recorded"))
                     Metric("Render RTF", data.number("renderRtf", "", "Not recorded"))
                 }
-                Text("RTF = elapsed time ÷ actual audio duration. Lower is faster. Duration includes prescribed silence between segments and chapters; render time includes publication callbacks.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } else {
                 Metric("Prefill throughput · job aggregate", data.number("llmPrefillTokensPerSecond", " tokens/s", "Runtime doesn't report"))
                 Metric("Decode throughput · job aggregate", data.number("llmDecodeTokensPerSecond", " tokens/s", "Runtime doesn't report"))
-                Text("Aggregated from each request's runtime-reported token counts and rates. Unavailable if any request lacks counters; not an end-to-end job speed.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 val requests = data.optJSONArray("requests")
                 var expanded by remember(job.id) { mutableStateOf(false) }
                 var requestPage by remember(job.id) { mutableIntStateOf(0) }
@@ -92,7 +92,6 @@ private fun AttemptDiagnostics(number: Int, job: GenerationJobEntity, data: JSON
                         Metric("Decoded tokens", request.number("decodeTokens", "", "Runtime doesn't report", 0))
                         Metric("Runtime TTFT", request.time("runtimeTtftMs", "Runtime doesn't report"))
                         Metric("Runtime initialization", request.time("runtimeInitMs", "Runtime doesn't report"))
-                        Text("TTFT/init and last-prefill/decode counters are reported by LiteRT-LM for this fresh conversation. Request wall time also includes conversation close and JSON parsing.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (start > 0) TextButton(onClick = { requestPage-- }) { Text("Previous requests") }
                     if (end < requests.length()) TextButton(onClick = { requestPage++ }) { Text("Next requests") }

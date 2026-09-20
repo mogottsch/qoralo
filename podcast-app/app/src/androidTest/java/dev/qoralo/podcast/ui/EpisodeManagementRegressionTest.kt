@@ -62,11 +62,11 @@ class EpisodeManagementRegressionTest {
         rule.onNodeWithText("Delete episode?").assertIsDisplayed()
         captureOwnedRoot("owned-delete-confirmation", "Delete episode?")
         assertNotNull(runBlocking { db.podcastDao().episode(a) })
-        rule.onNodeWithText("Keep episode").performClick()
+        rule.onNodeWithText("Cancel").performClick()
         assertNotNull(runBlocking { db.podcastDao().episode(a) })
         rule.onNodeWithContentDescription("Episode actions: Owned draft B").performClick()
         rule.onNodeWithText("Delete episode").performClick()
-        rule.onNodeWithText("Delete episode").performClick()
+        rule.onNodeWithText("Delete").performClick()
         assertEquals(b, captured)
         assertNull(runBlocking { db.podcastDao().episode(b) })
         assertNotNull(runBlocking { db.podcastDao().episode(a) })
@@ -142,7 +142,7 @@ class EpisodeManagementRegressionTest {
         }
         val attempts = runBlocking { repo.episodeDiagnostics(id) }
         rule.setContent { QoraloTheme { EpisodeDiagnosticsScreen("Owned diagnostics fixture", attempts, null, {}) } }
-        val missing = "Measurements were not recorded for this attempt. Existing history is kept without replaying generation."
+        val missing = "No measurements recorded."
         // A lazy item below a large-font header does not exist in the semantics tree yet.
         // Search by scrolling the container; retain the identical visible-text assertion.
         rule.onNode(hasScrollAction()).performScrollToNode(hasText(missing))

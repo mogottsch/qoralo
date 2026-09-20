@@ -68,15 +68,17 @@ class ScreenSemanticsTest {
         setNarrow { LibraryScreen(listOf(unfinished), {}, {}, {}) }
         rule.onNodeWithText("Continue creating").assertExists()
         rule.onNodeWithText("Draft episode").assertExists().assertHasClickAction()
-        rule.onNodeWithText("Draft ready to review").assertExists()
+        rule.onNodeWithText("Draft ready").assertExists()
     }
 
     @Test fun instructionsHaveOneEditableFieldHintChipsReviewToggleAndCreate() {
         val episode = episode(EpisodePhase.INSTRUCTIONS)
         setNarrow { InstructionsScreen(episode, {}, { _, _ -> }) }
         assertEquals(1, rule.onAllNodes(hasSetTextAction()).fetchSemanticsNodes().size)
-        rule.onNodeWithText("Initial instructions", useUnmergedTree = true).assertExists()
+        rule.onNodeWithText("What should it cover?", useUnmergedTree = true).assertExists()
         rule.onNodeWithText("Create").assertIsDisplayed()
+        rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Suggestions"))
+        rule.onNodeWithText("Suggestions").performClick()
         rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Length"))
         rule.onNodeWithText("Length").assertIsDisplayed().performClick()
         rule.onNodeWithText("Create").assertIsDisplayed().assertIsEnabled()
@@ -89,15 +91,16 @@ class ScreenSemanticsTest {
         var agent by mutableStateOf(false)
         var lock by mutableStateOf(false)
         setNarrow {
-            ReviewScreen(chapters(), emptyList(), null, agent, lock, {}, { agent = true }, { agent = false }, {}, { lock = true }, { lock = false }, {})
+            ReviewScreen(chapters(), emptyList(), null, agent, lock, {}, { agent = true }, { agent = false }, {}, { lock = true }, { lock = false }, {},
+                audioCapacity = { texts -> dev.qoralo.podcast.runtime.SupertonicTextCapacity.assess(texts, 2_048) })
         }
         assertEquals(0, rule.onAllNodes(hasSetTextAction()).fetchSemanticsNodes().size)
-        rule.onNodeWithText("Edit with agent").performClick()
-        rule.onNodeWithText("I can rewrite, shorten, remove, split, combine, or rename chapters.").assertIsDisplayed()
+        rule.onNodeWithText("Edit script").performClick()
+        rule.onNodeWithText("Edit the script").assertIsDisplayed()
         rule.onNodeWithText("Ask for a change…").assertIsDisplayed()
         agent = false; lock = true
         rule.onNodeWithText("Ready to create audio?").assertIsDisplayed()
-        rule.onNodeWithText("These 2 chapters can’t be changed once audio generation starts.").assertIsDisplayed()
+        rule.onNodeWithText("Your script can’t be edited after audio generation starts.").assertIsDisplayed()
         rule.onNodeWithText("Lock & create").assertHasClickAction()
     }
 
@@ -106,10 +109,13 @@ class ScreenSemanticsTest {
         var current by mutableStateOf(episode(EpisodePhase.GENERATING_AUDIO))
         setNarrow { GeneratingScreen(current, job, {}) }
         assertReadableText("Creating episode")
-        rule.onNodeWithText("CHAPTER 1 OF 2").assertIsDisplayed()
-        rule.onNodeWithText("The selected inference route must succeed; no fallback will be used.").performScrollTo().assertIsDisplayed()
+        rule.onNodeWithText("Chapter 1 of 2").assertIsDisplayed()
         rule.runOnIdle { current = current.copy(phase = EpisodePhase.FAILED, failureMessage = "Synthetic failure") }
         assertReadableText("Episode stopped")
+        rule.onNodeWithText("Synthetic failure").assertDoesNotExist()
+        rule.onNodeWithText("Error details").performScrollTo().performClick()
+        rule.onNodeWithText("Synthetic failure").assertIsDisplayed()
+        rule.onNode(hasText("No alternate model, CPU fallback", substring = true)).performScrollTo().assertIsDisplayed()
     }
 
     @Test fun readyHeroUsesReadableFullWidthMetadataAndNoEmptyRecentHeading() {

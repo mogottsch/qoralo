@@ -113,8 +113,8 @@ class ProviderAppIntegrationTest {
             scenario?.close();scenario = ActivityScenario.launch(MainActivity::class.java)
             rule.waitUntil(15_000) { rule.onAllNodes(hasText(title)).fetchSemanticsNodes().isNotEmpty() }
             rule.onNodeWithText(title).performClick()
-            rule.waitUntil(15_000) { rule.onAllNodes(hasText("Provider speech pipeline")).fetchSemanticsNodes().isNotEmpty() }
-            rule.onNodeWithText("Lock script & create audio").assertIsEnabled().performClick()
+            rule.waitUntil(15_000) { rule.onAllNodes(hasText("Create audio") and isEnabled()).fetchSemanticsNodes().isNotEmpty() }
+            rule.onNodeWithText("Create audio").assertIsEnabled().performClick()
             retainedEpisodeId=id
             val lockRequestedNs = System.nanoTime()
             audioDeadlineNs=lockRequestedNs+600_000_000_000L
@@ -136,20 +136,20 @@ class ProviderAppIntegrationTest {
             if (progressive) {
                 rule.waitUntil(90_000) {
                     val current=db { app.repository.latestJob(id) }
-                    when(OwnedAudioWaitPolicy.listen(id,audioId,current,rule.onAllNodes(hasText("Listen")).fetchSemanticsNodes().isNotEmpty())) {
+                    when(OwnedAudioWaitPolicy.listen(id,audioId,current,rule.onAllNodes(hasText("Open player")).fetchSemanticsNodes().isNotEmpty())) {
                         OwnedListenDecision.WAIT -> false
                         OwnedListenDecision.LISTEN -> true
                         else -> {
                             json("listen-stopped-original-cause.json",JSONObject().put("episodeId",id).put("expectedJobId",audioId)
                                 .put("observedJobId",current?.id).put("status",current?.status).put("failureStage",current?.failureStage)
                                 .put("originalErrorMessage",current?.errorMessage).put("monotonicNs",System.nanoTime()))
-                            error("Owned AUDIO ended or changed before Listen; inspect its bound original cause")
+                            error("Owned AUDIO ended or changed before the player opened; inspect its bound original cause")
                         }
                     }
                 }
                 val firstListenObservedNs = System.nanoTime()
                 require(db { app.repository.latestJob(id) }?.status == JobStatus.RUNNING)
-                rule.onNodeWithText("Listen").performScrollTo().performClick()
+                rule.onNodeWithText("Open player").performScrollTo().performClick()
                 rule.waitUntil(15_000) { rule.onAllNodes(hasContentDescription("Play")).fetchSemanticsNodes().isNotEmpty() && playerEvents().isNotEmpty() }
                 val beforePlay = playerEvents().last()
                 require(beforePlay.getBoolean("muted") && !beforePlay.getBoolean("playing") && !beforePlay.getBoolean("wantsPlayback") && beforePlay.getLong("absolutePositionMs") == 0L)
