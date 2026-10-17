@@ -38,3 +38,5 @@ Disposition: finish at this scope for Moritz to edit and review. Final app demo/
 ## Agenda update
 
 Approved by Moritz: title, intro and question frozen; demo video right after them (missing-asset notice until the file exists); then what we tried and a small benchmark table (RTF explained in a small note box, plain values within comparable groups only); then the full-system flow diagram (computer preparation separate from phone inference); then the Pocket TTS failure; the ending is "If you wanna take a look, here it is" (private repository link). No "what is left" section. Everything condensed; numbers only if a reader would care (RTF yes, frame cap no).
+
+Status: the merged "What we tried" section is in (five-row CPU/NPU table from `evidence/benchmark-table.json`, small RTF note, separate Gemma sentence; wording vetted by Pi). Still to come: the system flow diagram, then moving the Pocket TTS section after it.

@@ -1,5 +1,9 @@
 # Article review record
 
+## "What we tried" table (story v4, latest)
+
+Thomas built the benchmark packet read-only from the registry (10 rows in 7 named workload groups, with exact-sample verdicts and a caveat list). Pi reviewed it independently (all six numeric rows match their registry warm medians; the verdicts bind to each row's own WAV). For the page I condensed it to five rows, one per model, CPU and NPU side by side, and Pi approved that with four wording fixes, all applied: no "after the bug hunt" on the Pocket row (canonical-v2 0.41/0.18 are different, 13.04 s recordings, so the page says the table samples differ from the Pocket clips below); the MOSS blocker reads "HTP runtime failed to initialize" (a CreateDevice failure, not proven model loading); the speed claim is "in these warm short-input tests, the prepared HTP versions were over twice as fast"; the Gemma line says separate text benchmarks measured 12-16 tokens per second on the GPU and that the app uses it for scripts (no app throughput claim). The note box says "Workloads differ between models". Dropped on purpose: the Supertonic chapter rows and their derived first-run RTFs, the omitted routes, the group headings. The system flow diagram (nik) is still pending.
+
 ## Agenda and structure (story v4, latest)
 
 Moritz approved everything up to the "So I wondered" question as final and agreed the agenda (question, demo video, what we tried, the numbers, the system diagram, the Pocket TTS failure, then a "here it is" link), dropping the "what's left" section. Added the demo-video slot (explicit missing-asset notice, no synthetic footage), the closing line, and a test that freezes his opening text. Benchmark table and system diagram were delegated to Thomas and nik through Pi, with Pi's review vetoes passed to them (see README). The Pocket TTS section moves after the system section once that exists.

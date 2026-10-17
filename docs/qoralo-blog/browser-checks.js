@@ -28,6 +28,33 @@ async (page) => {
   check(await page.locator('.closing').evaluate(c=>c===document.querySelector('article').lastElementChild),'Closing is the last thing in the article');
   check(!/What.s left|one voice instead|final demo/i.test(await page.locator('main').innerText()),'No "what is left" section');
 
+  // 'What we tried': the table must equal the evidence packet, in both directions.
+  const mainText=await page.locator('main').innerText();
+  const tbl=await getJson('evidence/benchmark-table.json');
+  const byId=Object.fromEntries(tbl.rows.map(r=>[r.id,r]));
+  const shown=await page.locator('.bench tbody tr').evaluateAll(trs=>trs.map(tr=>({model:tr.querySelector('th').textContent,cells:[...tr.querySelectorAll('td')].map(td=>({text:td.textContent.trim(),rtf:td.dataset.rtf===undefined?null:Number(td.dataset.rtf),cls:td.className}))})));
+  check(shown.length===5&&shown.map(r=>r.model).join('|')==='Supertonic 3|Pocket TTS|Kokoro|MOSS-TTS-Nano|VibeVoice 1.5B','Table has the five models in order: '+shown.map(r=>r.model));
+  const expect={'Supertonic 3':['supertonic-short-cpu','supertonic-short-htp'],'Pocket TTS':['pocket-short-cpu','pocket-short-htp'],'Kokoro':['kokoro-fixed-cpu',null],'MOSS-TTS-Nano':['moss-short-cpu',null]};
+  for(const r of shown){
+    const ids=expect[r.model]; if(!ids)continue;
+    ids.forEach((id,i)=>{const c=r.cells[i];
+      if(id){const j=byId[id].speed.rtf; check(c.rtf!==null&&Math.abs(c.rtf-j)<1e-9&&c.text===j.toFixed(2),`${r.model} ${i?'NPU':'CPU'} equals the packet (${id}): ${c.text}`); check(/warm$/.test(byId[id].speed.display),`${id} is a warm median`);}
+      else check(c.rtf===null&&/blocked/.test(c.text),`${r.model} NPU is shown as a word, never a number: ${c.text}`);});
+  }
+  const vv=shown[4]; check(vv.cells[0].rtf===null&&vv.cells[1].rtf===null&&/no speech/.test(vv.cells[0].text),'VibeVoice shows no speed, only words');
+  check(byId['moss-htp-blocked'].speed.rtf===null&&byId['vibevoice-incomplete'].speed.rtf===null,'Packet agrees: blocked and incomplete rows have no RTF');
+  const ratio=(a,b)=>byId[a].speed.rtf/byId[b].speed.rtf;
+  check(ratio('supertonic-short-cpu','supertonic-short-htp')>2&&ratio('pocket-short-cpu','pocket-short-htp')>2,'"More than twice as fast" holds within the two rows that ran on the NPU');
+  const llm=tbl.llm_side_separate_from_tts.lines[0];
+  check(/12\.3\u201316\.3/.test(llm)&&/Separate text benchmarks measured Gemma 4 E2B at 12\u201316 tokens per second on the GPU; the app uses it to write the scripts/.test(mainText),'Gemma line matches the packet (12.3-16.3 shown as 12-16) and does not claim app throughput');
+  check(!/RTF.{0,40}(Gemma|tokens)/.test(mainText.replace(/\n/g,' '))&&!/tokens.{0,60}RTF/.test(mainText.replace(/\n/g,' ')),'LLM rate and TTS RTF are not mixed');
+  check(/generation time divided by audio length/.test(mainText)&&/below 1 is faster than playback/.test(mainText)&&/warm medians with setup excluded/.test(mainText)&&/Workloads differ between models, so compare across a row, not down a column/.test(mainText)&&/rewritten graphs/.test(mainText)&&/checked by ear/.test(mainText)&&/table samples differ from the Pocket clips below/.test(mainText),'RTF note states the definition, the limits and that the Pocket samples differ');
+  check(/In these warm short-input tests, the prepared HTP versions were over twice as fast/.test(mainText)&&!/NPU is (about )?(2|two)/.test(mainText),'Speed claim is qualified to these tests');
+  check(!/bug hunt|after the bug/.test(mainText),'Table does not borrow the Pocket bug story');
+  check(shown[3].cells[2].text==='The HTP runtime failed to initialize on the phone'&&/Both tested samples sounded good/.test(shown[1].cells[2].text),'MOSS and Pocket notes use the reviewed wording');
+  check(await page.locator('.note-box').evaluate(n=>parseFloat(getComputedStyle(n).fontSize)>=12&&parseFloat(getComputedStyle(n).fontSize)<=14),'RTF note box is small');
+  check(await page.locator('[data-edit="tried-copy"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('.bench'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#tried-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#phone-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Order: demo, what we tried (text, table), then the phone section');
+
   // Gist first, plain, and free of numbers nobody needs.
   const body=await page.locator('main').innerText();
   check(/swaps in its learned start vector/.test(body)&&/freed that buffer too early/.test(body)&&/never found the end/.test(body)&&/the voice went wrong too/i.test(body),'Gist states the cause, the missing stop and the changed voice');
@@ -59,7 +86,7 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.model,.model-path,.chart,.legend,.phone,.editor,pre,.axis-name,.note,.demo video,.demo-status,.closing')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.model,.model-path,.chart,.legend,.phone,.editor,pre,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         preOverflow:[...document.querySelectorAll('pre')].some(p=>p.scrollWidth>p.clientWidth+1),
         modelOverlap:[...document.querySelectorAll('.model')].some(e=>{const[a,b]=[...e.children].map(x=>x.getBoundingClientRect());return a.right>b.left+.5;}),
         tickOverlap:xt.some((a,i)=>xt.some((b,j)=>j>i&&overlaps(a,b)))||xt.some(a=>[...document.querySelectorAll('.axis-name')].some(n=>overlaps(a,box(n))))||xt.some(a=>a.height>20),
@@ -68,7 +95,9 @@ async (page) => {
         neverBetween:never.top>=thr.top-1&&never.bottom<=orig.top+2,
         axisInside:[...document.querySelectorAll('.axis-name')].every(n=>{const r=box(n);return r.left>=-1&&r.right<=innerWidth+1;}),
         chartW:chart.width, chartH:chart.height,
-        legendVisible:box(document.querySelector('.legend')).height>0
+        legendVisible:box(document.querySelector('.legend')).height>0,
+        tableFits:(()=>{const w=document.querySelector('.table-wrap');return w.scrollWidth<=w.clientWidth+1;})(),
+        tableCellsClipped:[...document.querySelectorAll('.bench td,.bench th')].some(e=>{const r=box(e);return r.width>0&&(r.right>innerWidth+1||r.left<-1);})
       };
     });
     check(!layout.overflow&&!layout.bad.length,`${width} overflow: ${layout.bad}`);
@@ -77,6 +106,7 @@ async (page) => {
     check(!layout.tickOverlap&&!layout.noteOverlap,`${width} tick/annotation overlap`);
     check(layout.notesInChart,`${width} annotation leaves the chart`);
     check(layout.neverBetween,`${width} "never reaches" label is not between the stop line and the original line`);
+    check(layout.tableFits&&!layout.tableCellsClipped,`${width} benchmark table fits without sideways scrolling or clipped cells`);
     check(layout.axisInside&&layout.legendVisible&&layout.chartW>200&&layout.chartH>200,`${width} axis names/legend/chart size`);
     await page.locator('#records > summary').focus();await page.keyboard.press('Enter');
     check(await page.locator('.records-body').isVisible(),`${width} keyboard sources`);
@@ -119,7 +149,7 @@ async (page) => {
   try {
     await page.locator('#edit-copy').click();
     check(await page.locator('[data-edit="intro"]').getAttribute('contenteditable')==='plaintext-only','Inline plain-text edit mode');
-    check(await page.locator('[data-edit]').count()>=12,'Prose and headings are editable');
+    check(await page.locator('[data-edit]').count()>=15,'Prose and headings are editable');
     await page.locator('[data-edit="intro"]').fill('My own intro <b>stays plain text</b>.');
     await page.locator('#edit-copy').click();
     await page.reload();
