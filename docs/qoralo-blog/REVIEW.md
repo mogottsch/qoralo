@@ -1,5 +1,11 @@
 # Article review record
 
+## Explaining the path to the stop check (story v4, later)
+
+Moritz understood NaN versus zero but not how that changes the sound or ends up in the stop check. Added a one-step diagram (start vector or previous frame, model and cache, one internal state, next frame and stop score) and two short paragraphs: the frames are the audio and the length is frames × 80 ms; the stop score is read from the same state as the next frame; zeros put the first state and frame far off, the correct run's score rises at the end of the sentence (frame 53), the zero run's never passes -7.4. The scrubber readout now gives audio time and the stop-check verdict.
+
+Checking the claim with data changed the story: the first internal state differs by about its own size (1.05) and the first frame by 0.76 from the correct run, so the difference is large immediately. The earlier sentence "the difference compounds" was dropped; the browser suite now fails if it returns, and checks the page's numbers against `bos-zero-replay.json`. What is not shown: what the failing audio actually says after the sentence, and why the model's stop head does not fire in the zero run beyond the score trajectory itself.
+
 ## Phone check (story v4, later): inference became observation
 
 Moritz called "zeros are inferred, not observed" unacceptable and offered to connect the phone. One bounded CPU-only window ran four builds of the retained runner twice (unmodified, BOS-dump, buffer-kept-alive, both). Results, protocol record and limits: `evidence/phone-bos-check/README.md`. The page now states the observation with its exact limits (instrumented build only; old binary and original graph missing; second unmodified run differed; no allocator explanation; no new listening verdict).

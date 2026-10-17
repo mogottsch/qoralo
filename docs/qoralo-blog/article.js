@@ -57,11 +57,12 @@
   const data = JSON.parse($('#trajectories').textContent);
   const marker = $('#step-marker'), range = $('#why-step'), readout = $('#why-readout');
   const fmt = v => (v < 0 ? '\u2212' : '+') + Math.abs(v).toFixed(2);
+  const verdict = v => v > -4 ? 'stop' : 'continue';
   function readFrame() {
     const i = Number(range.value);
     marker.setAttribute('x1', i); marker.setAttribute('x2', i); marker.removeAttribute('hidden');
-    const nan = i < data.nan.length ? 'NaN-input replay ' + fmt(data.nan[i]) : 'NaN-input replay: stopped';
-    readout.textContent = 'Frame ' + i + ' \u00b7 phone ' + fmt(data.android[i]) + ' \u00b7 zero-input replay ' + fmt(data.zero[i]) + ' \u00b7 ' + nan;
+    const nan = i < 56 ? 'NaN-input replay ' + fmt(data.nan[i]) + ', ' + verdict(data.nan[i]) : 'NaN-input replay: ended at 4.48 s';
+    readout.textContent = 'Frame ' + i + ' (' + ((i + 1) * 0.08).toFixed(2) + ' s) \u00b7 phone ' + fmt(data.android[i]) + ', ' + verdict(data.android[i]) + ' \u00b7 zero-input replay ' + fmt(data.zero[i]) + ', ' + verdict(data.zero[i]) + ' \u00b7 ' + nan;
   }
   range.addEventListener('input', readFrame);
   $$('.variant-controls [data-input]').forEach(b => b.addEventListener('click', () => {

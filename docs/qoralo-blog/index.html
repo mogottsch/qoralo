@@ -53,6 +53,21 @@
       <section aria-labelledby="why-heading">
         <h2 id="why-heading" data-edit="why-title">Why it went wrong</h2>
         <p data-edit="why-input">The first generation step takes a special input. The graph checks it with <code>Where(IsNaN(x), bos_emb, x)</code>: if the values are NaN, it swaps in the learned start-of-sequence vector. The C++ runner passed 32 NaNs to mean “start here.”</p>
+        <figure id="step-figure" class="loop" aria-label="One generation step. The start vector, or the previous frame, goes into the model. One internal state produces the next frame and the stop score.">
+          <div class="loop-row">
+            <div class="loop-box start"><strong>Start vector</strong><span>first step only</span></div>
+            <div class="loop-box"><strong>Previous frame</strong><span>every later step</span></div>
+          </div>
+          <svg class="loop-arrow" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 0v19m-6-6 6 6 6-6"/></svg>
+          <div class="loop-box core"><strong>Model and cache</strong><span>voice, text and every earlier frame. One internal state comes out.</span></div>
+          <div class="loop-arrows" aria-hidden="true"><svg class="loop-arrow" viewBox="0 0 24 22"><path d="M12 0v19m-6-6 6 6 6-6"/></svg><svg class="loop-arrow" viewBox="0 0 24 22"><path d="M12 0v19m-6-6 6 6 6-6"/></svg></div>
+          <div class="loop-row">
+            <div class="loop-box frame"><strong>Next frame</strong><span>80 ms of speech. It becomes the next step's input.</span></div>
+            <div class="loop-box stop"><strong>Stop score</strong><span>Above −4: add a few trailing frames and finish. Otherwise: next step.</span></div>
+          </div>
+        </figure>
+        <p data-edit="why-chain">Each step reads one input and makes two things from the same internal state: the next 80 ms frame of speech and a stop score. Decoded in order, the frames are the audio. Without a stop, the model runs until the 134-frame cap. That is the whole difference in length: 56 frames × 80 ms is 4.48 seconds, and 134 frames × 80 ms is 10.72.</p>
+        <p data-edit="why-start">The start vector is the very first input, so everything after it is built on it. With zeros, the first internal state already differs from the correct one by about its own size, and the first frame by about three quarters of its size. The stop score is read from that same state, so it is off too. At first that barely shows: both runs say “not finished,” at −9.9 and −10.3. In the correct run the score rises as the sentence ends and passes −4 at frame 53. In the zero run it never rises above −7.4, so the stop check never passes.</p>
         <figure id="why-figure" data-input="both" aria-label="Which first input reproduces the phone's stop scores">
           <div class="input-paths">
             <div class="input-path intended"><b>Buffer kept alive: the phone passes NaN (instrumented build)</b><div class="model-path"><span class="data-object">32 × NaN</span><svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg><div class="model"><strong>IsNaN is true</strong><span>use bos_emb</span></div><svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg><span class="data-object">Learned start</span></div></div>
@@ -88,7 +103,6 @@
   inputs.push_back(TV(mi, bos, {1, 1, 32}));
 } // bos is freed here
 Run(main, inputs); // the tensor still points at it</code></pre>
-        <p data-edit="why-compounding">The learned start vector is small, with an L2 norm of 0.17, so zeros move the first stop score by only 0.39. But every later frame is conditioned on that step's cache and on the previous frame. The difference compounds, the stop score never crosses −4, and the model keeps talking until the 134-frame cap.</p>
       </section>
 
       <section aria-labelledby="fix-heading">
@@ -101,7 +115,7 @@ Run(main, inputs); // the tensor still points at it</code></pre>
       <summary>Sources &amp; technical notes</summary>
       <div class="records-body">
         <p>Phone check: on the Galaxy S23 Ultra, CPU only, ONNX Runtime 1.27.1, I rebuilt the retained runner and ran four versions twice in one window. They were the unmodified source, a build that prints the 32 start values to stderr right before inference, a build that only keeps the buffer alive, and both changes. With the original lifetime the printed values were all zero, 2 of 2 runs. With the buffer kept alive they were all NaN, 2 of 2. The four kept-alive runs gave identical stop scores and audio, with a stop at frame 53. Their audio correlates 0.999996 with the earlier accepted fixed-cache recording. I made no new listening judgment.</p>
-        <p>Desktop replay: the old runner's loop on ONNX Runtime 1.22.1 on a desktop CPU, changing only the first autoregressive input, with the retained fixed-Alba cache, token IDs and noise. All zeros gives 134 stop scores within 0.074 of the retained Android run (mean 0.006) with no stop. NaN gives scores that differ by up to 16.4 over the 57 frames before it stops. I also tried 62 inputs with only a prefix or suffix zeroed, and none matched.</p>
+        <p>Desktop replay: the old runner's loop on ONNX Runtime 1.22.1 on a desktop CPU, changing only the first autoregressive input, with the retained fixed-Alba cache, token IDs and noise. All zeros gives 134 stop scores within 0.074 of the retained Android run (mean 0.006) with no stop. NaN gives scores that differ by up to 16.4 over the 57 frames before it stops. I also tried 62 inputs with only a prefix or suffix zeroed, and none matched. Measured as the difference divided by the correct run's size, the zero-input internal state is off by 1.05 at the first frame (median 1.21 over the 56 frames) and the frame itself by 0.76 (median 1.36). The stop score and the next frame are both read from that internal state in the model's source, and each frame is fed back as the next input in the runner's loop.</p>
         <p>Limits: the old phone executable is not retained, so the unmodified source was rebuilt with NDK 27. The exact original <code>flow_lm_main</code> graph is also missing. I used a same-size reconstruction with a different hash. It reproduced the old desktop run, and on the phone it reproduced the old failure recording byte for byte. The dump build may change allocation, and the unmodified build's start values were never printed. The second unmodified run gave a different result (first stop score −4.37, still no stop), so this failure is not deterministic. I have no explanation for why this allocator returned zeros. The earlier invalid-voice-clone failure is a different cause.</p>
         <ul>
           <li><a href="evidence/phone-bos-check/README.md">Phone check: setup, results and limits</a> · <a href="evidence/phone-bos-check/results.json">results.json</a> · <a href="evidence/phone-bos-check/runner_variants.patch">Runner patch</a></li>

@@ -64,6 +64,17 @@ audio { display:block; width:100%; height:42px; }
 pre { max-width:100%; padding:20px; border:1px solid var(--line); margin:22px 0; overflow-x:auto; line-height:1.7; font-size:14px; color:var(--ink); tab-size:2; }
 pre code, code { font-family:ui-monospace,"Cascadia Code",monospace; }
 code { color:var(--ink); font-size:.9em; }
+.loop { display:grid; gap:10px; max-width:760px; margin:24px 0 26px; }
+.loop-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.loop-box { min-width:0; border:1px solid #526175; padding:14px 16px; }
+.loop-box strong { display:block; font-size:16px; font-weight:550; }
+.loop-box span { display:block; margin-top:5px; color:var(--muted); font-size:14px; line-height:1.5; }
+.loop-box.start { border-color:var(--failed); border-style:dashed; }
+.loop-box.start strong { color:var(--failed); }
+.loop-box.stop { border-color:#497b66; background:var(--htp-wash); }
+.loop-box.stop strong { color:var(--htp); }
+.loop-arrow { display:block; width:24px; height:22px; margin:0 auto; fill:none; stroke:var(--muted); stroke-width:1.5; }
+.loop-arrows { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .input-paths { display:grid; gap:20px; margin:0 0 22px; }
 .input-path { border-top:1px solid var(--line); padding-top:14px; transition:opacity 200ms; }
 .input-path > b { display:block; font-size:13px; font-weight:550; color:var(--muted); }
@@ -101,7 +112,7 @@ code { color:var(--ink); font-size:.9em; }
 .scrub { display:flex; align-items:center; gap:14px; }
 .scrub label { font-size:13px; color:var(--muted); }
 .scrub input { flex:1; min-width:0; min-height:44px; accent-color:var(--htp); }
-.readout { min-height:3.4em; margin-top:8px; color:var(--ink); font-size:14px; line-height:1.6; font-variant-numeric:tabular-nums; }
+.readout { min-height:3.4em; margin:8px 0 24px; color:var(--ink); font-size:14px; line-height:1.6; font-variant-numeric:tabular-nums; }
 .takeaway { color:var(--ink); font-weight:550; }
 .editing [data-edit] { outline:1px dashed var(--htp); outline-offset:6px; cursor:text; overflow-wrap:anywhere; }
 .editing [data-edit]:focus { outline:2px solid var(--htp); }
@@ -136,6 +147,10 @@ summary { cursor:pointer; color:var(--muted); font-size:13px; padding:8px 0; wid
   .chart { height:240px; margin:32px 18px 58px 42px; }
   .axis-name.y { left:-42px; }
   .legend { flex-direction:column; gap:6px; }
+  .loop-row, .loop-arrows { gap:8px; }
+  .loop-box { padding:11px 10px; }
+  .loop-box strong { font-size:15px; }
+  .loop-box span { font-size:13px; }
 }
 @media (prefers-reduced-motion:reduce) {
   .packet { animation:none !important; }

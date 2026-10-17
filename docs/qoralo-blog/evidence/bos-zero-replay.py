@@ -69,6 +69,17 @@ def replay(bos, max_frames=134):
         cur = (n + d).astype(np.float32)
     return logits, eos
 
+def replay_states(bos, frames):
+    """Like replay(), but also returns the hidden state c (what the frame and stop heads both read) and each frame."""
+    state = [x.copy() for x in STATE0]; cur = np.zeros(32, np.float32); cs, lat = [], []
+    for step in range(frames):
+        seq = bos.reshape(1, 1, 32).astype(np.float32) if step == 0 else cur.reshape(1, 1, 32)
+        cond, logit, state = run_main(seq, empty_text, state); cs.append(cond.reshape(-1).copy())
+        n = noise[step]
+        d = flow.run(None, {"c": cond, "s": np.zeros((1, 1), np.float32), "t": np.ones((1, 1), np.float32), "x": n.reshape(1, 32)})[0].reshape(-1)
+        cur = (n + d).astype(np.float32); lat.append(cur.copy())
+    return np.array(cs), np.array(lat)
+
 def diff(a, b):
     m = min(len(a), len(b)); d = np.abs(np.array(a[:m]) - np.array(b[:m]))
     return {"steps_compared": m, "max_abs": round(float(d.max()), 4), "mean_abs": round(float(d.mean()), 5), "step0_abs": round(float(d[0]), 5)}
@@ -93,6 +104,16 @@ for k in range(1, 33):
 target = round(android_orig[0], 4)
 matches = sorted(k for k, v in scan.items() if abs(v - target) < 5e-4)
 
+FR = 56   # frames the correct run produces before it stops
+cn, ln = replay_states(nan, FR); cz, lz = replay_states(zero, FR)
+rel = lambda x, y: np.linalg.norm(x - y, axis=1) / np.linalg.norm(x, axis=1)   # ||zero - correct|| / ||correct||
+rc, rl = rel(cn, cz), rel(ln, lz)
+frame_drift = {
+  "definition": "||zero-input - correct-input|| / ||correct-input||, per frame, same text, voice cache and noise; frames 0..55 of the correct run",
+  "hidden_state_c": {"frame0": round(float(rc[0]), 3), "median": round(float(np.median(rc)), 3), "per_frame": [round(float(x), 3) for x in rc]},
+  "latent_frame": {"frame0": round(float(rl[0]), 3), "median": round(float(np.median(rl)), 3), "per_frame": [round(float(x), 3) for x in rl]},
+  "note": "The stop score and the next frame are both read from c (flow_lm_main outputs conditioning and eos_logit; see tools/export_flow_qnn_static.py: c=out_norm(x)[:,-1]; return (c, out_eos(c))). Each frame is the next step's input (runner loop).",
+}
 result = {
   "schema_version": 1,
   "purpose": "Which first-step BOS input reproduces the retained original-dynamic Android CPU failure?",
@@ -125,6 +146,7 @@ result = {
     "correct_nan_bos_vs_android_original": diff(correct, android_orig),
     "all_zero_replay_eos_step": eos_z, "android_original_eos_step": -1, "frame_cap": 134,
     "max_logit": {"all_zero_replay": round(max(zeros), 3), "android_original": round(max(android_orig), 3), "eos_threshold": -4}},
+  "frame_drift": frame_drift,
   "logits": {"correct_nan_bos_replay": [round(x, 3) for x in correct], "all_zero_bos_replay": [round(x, 3) for x in zeros],
              "android_original_retained": [round(x, 3) for x in android_orig]},
 }

@@ -7,7 +7,8 @@ async (page) => {
   page.on('request',r=>{const u=r.url();if(!u.startsWith(origin)&&!u.startsWith('data:')&&!u.startsWith('blob:')&&!u.startsWith('file:'))external.push(u);});
   page.on('pageerror',e=>errors.push(e.message));
   await page.reload();
-  check(await page.locator('figure').count()===2,'Two figures: processor route and stop-score replay');
+  check(await page.locator('figure').count()===3,'Three figures: processor route, one generation step, stop-score replay');
+  check(await page.locator('#step-figure .loop-box').count()===5,'One-step diagram has five boxes');
   check(await page.locator('#chapter-figure,#lifetime-figure,#state-figure,.segment').count()===0,'Removed chapter, lifetime stepper and logit-only diagrams');
   check(await page.locator('audio[autoplay]').count()===0,'No autoplay audio');
 
@@ -39,6 +40,9 @@ async (page) => {
         return {
           overflow:document.documentElement.scrollWidth>innerWidth,
           bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.model,.model-path,.chart,.legend,.scrub,.phone,.editor,pre')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+          loopClipped:[...document.querySelectorAll('.loop-box')].some(e=>e.scrollWidth>e.clientWidth+1||e.scrollHeight>e.clientHeight+1),
+          loopOverlap:(()=>{const b=[...document.querySelectorAll('.loop-box')].map(box);return b.some((x,i)=>b.some((y,j)=>j>i&&overlaps(x,y)));})(),
+          loopOrder:(()=>{const t=n=>box(document.querySelector('#step-figure .loop-box.'+n)).top;return t('start')<t('core')&&t('core')<t('frame')&&t('core')<t('stop');})(),
           preOverflow:[...document.querySelectorAll('pre')].some(p=>p.scrollWidth>p.clientWidth+1),
           modelOverlap:[...document.querySelectorAll('.model')].some(e=>{const[a,b]=[...e.children].map(x=>x.getBoundingClientRect());return a.right>b.left+.5;}),
           tickOverlap:yt.some((a,i)=>yt.some((b,j)=>j>i&&overlaps(a,b)))||xt.some((a,i)=>xt.some((b,j)=>j>i&&overlaps(a,b))),
@@ -53,6 +57,7 @@ async (page) => {
       check(!layout.overflow&&!layout.bad.length&&!layout.noteOutside.length,`${id} overflow: ${layout.bad} ${layout.noteOutside}`);
       check(!layout.preOverflow||width<=390,`${id} code excerpt overflows (horizontal scroll is acceptable only on phones)`);
       check(!layout.modelOverlap,`${id} model label overlap`);
+      check(!layout.loopClipped&&!layout.loopOverlap&&layout.loopOrder,`${id} one-step diagram clipped/overlapping/out of order`);
       check(!layout.tickOverlap,`${id} axis tick overlap`);
       check(layout.stopNoteInChart,`${id} stop note leaves chart`);
       check(!layout.thresholdNoteVsStop,`${id} chart annotations overlap`);
@@ -73,13 +78,13 @@ async (page) => {
   await page.locator('#why-step').focus();
   await page.locator('#why-step').evaluate(r=>{r.value=53;r.dispatchEvent(new Event('input',{bubbles:true}));});
   let readout=await page.locator('#why-readout').innerText();
-  check(/Frame 53/.test(readout)&&/phone \u22129\.10/.test(readout)&&/NaN-input replay \+0\.40/.test(readout),'Frame 53 readout: '+readout);
+  check(/Frame 53 \(4\.32 s\)/.test(readout)&&/phone \u22129\.10, continue/.test(readout)&&/zero-input replay \u22129\.10, continue/.test(readout)&&/NaN-input replay \+0\.40, stop/.test(readout),'Frame 53 readout: '+readout);
   await page.keyboard.press('ArrowRight');
   readout=await page.locator('#why-readout').innerText();
-  check(/Frame 54/.test(readout)&&/\+8\.26/.test(readout),'Keyboard ArrowRight to frame 54: '+readout);
+  check(/Frame 54 \(4\.40 s\)/.test(readout)&&/\+8\.26, stop/.test(readout),'Keyboard ArrowRight to frame 54: '+readout);
   await page.locator('#why-step').evaluate(r=>{r.value=100;r.dispatchEvent(new Event('input',{bubbles:true}));});
   readout=await page.locator('#why-readout').innerText();
-  check(/Frame 100/.test(readout)&&/stopped/.test(readout),'After NaN replay stops: '+readout);
+  check(/Frame 100 \(8\.08 s\)/.test(readout)&&/ended at 4\.48 s/.test(readout)&&/phone [\u2212+][0-9.]+, continue/.test(readout),'After NaN replay ends: '+readout);
   check(await page.locator('#step-marker').getAttribute('x1')==='100','Marker tracks frame');
 
   // Wording must match the retained receipts, in both directions: no stale "inferred", no claim beyond the evidence.
@@ -92,6 +97,14 @@ async (page) => {
   const fixedRuns=phone.runs.filter(r=>/fixed/.test(r.run));
   check(fixedRuns.length===4&&ob.fixed_runs_all_stop_at_53&&ob.fixed_runs_identical_wav,'Receipt: four fixed runs stop at 53 with identical audio');
   check(phone.runs.length===8&&phone.runs.every(r=>r.exit===0),'Receipt: eight planned runs, all exited 0');
+  const fd=(await (await page.request.get(base.split('#')[0].replace(/index\.html$/,'')+'evidence/bos-zero-replay.json')).json());
+  const dr=fd.frame_drift, ft=fd.full_trajectory;
+  check(dr.hidden_state_c.frame0>0.9&&dr.hidden_state_c.frame0<1.2&&dr.latent_frame.frame0>0.7&&dr.latent_frame.frame0<0.8,'Receipt supports "about its own size" and "about three quarters": '+dr.hidden_state_c.frame0+' / '+dr.latent_frame.frame0);
+  check(Math.abs(fd.step0_logit.correct_nan+9.8847)<1e-3&&Math.abs(fd.step0_logit.all_zeros+10.2709)<1e-3&&ft.max_logit.all_zero_replay<-7.3&&ft.max_logit.all_zero_replay>-7.5,'Receipt supports -9.9, -10.3 and never above -7.4');
+  check(fd.validation.correct_nan_bos.eos_step===53&&ft.frame_cap===134,'Receipt supports stop at 53 and the 134-frame cap');
+  check(Math.round(56*80)/1000===4.48&&Math.round(134*80)/1000===10.72,'Frame arithmetic: 56 and 134 frames of 80 ms');
+  check(/same internal state/.test(body)&&/80 ms/.test(body)&&/never rises above \u22127\.4/.test(body)&&/about its own size/.test(body)&&/about three quarters/.test(body),'Chain explanation is present with its numbers');
+  check(!/compounds/i.test(body),'Dropped the unsupported "compounds" claim');
   check(/a build that prints the 32 start values/.test(body)&&/32 zeros, in both runs/.test(body),'Zero observation is labelled as the instrumented build');
   check(/four of four runs/.test(body)&&/byte for byte/.test(body)&&/different wrong answer on its second run/.test(body),'Main text states the exact run counts and the nondeterminism');
   check(!/inferred|closest match|didn.t read the phone.s memory/i.test(body),'No stale inference wording');
