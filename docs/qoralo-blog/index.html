@@ -93,7 +93,7 @@ Run(main, inputs); // the tensor still points at it</code></pre>
 
       <section aria-labelledby="fix-heading">
         <h2 id="fix-heading" data-edit="fix-title">The fix we applied</h2>
-        <p data-edit="fix-copy">We didn't find this bug at the time. The fixed-cache graphs were built for the NPU: static 256-slot caches, explicit positions and a separate first-step graph with the start vector built in. That version has no NaN marker to lose. Its stop scores on the same phone CPU match the desktop replay's within 0.002.</p>
+        <p data-edit="fix-copy">We didn't find this bug at the time. The fixed-cache graphs were built for the NPU: static 256-slot caches, explicit positions and a separate first-step graph with the start vector built in. That version has no NaN marker to lose. Its stop scores on the same phone CPU match the desktop replay's within 0.0021.</p>
         <p class="takeaway" data-edit="lesson">One different input at the first step produced a valid-looking file that sounded wrong. Compare first-step inputs and scores across devices, not only the finished audio.</p>
       </section>
     </article></main>
