@@ -81,89 +81,90 @@
       <section aria-labelledby="system-heading">
         <h2 id="system-heading" data-edit="system-title">Where it ends up</h2>
         <p data-edit="system-copy">The whole thing runs on my Galaxy S23 Ultra. Only the one-time model preparation happens on a computer.</p>
-        <figure class="qflow" id="system-figure" aria-label="Full system flow: model preparation on the computer, then sources to audio on the phone" aria-describedby="qflow-caption qflow-alt">
-
-          <section class="qflow-host" aria-labelledby="qflow-prep-heading">
-            <h3 id="qflow-prep-heading">Speech preparation · computer</h3>
-            <ol class="qflow-grid" aria-label="Prepare speech models before phone use">
-              <li class="qflow-node qflow-host-adapt" id="qflow-h1">
-                <strong class="qflow-title">Adapt ONNX graphs</strong>
-                <span class="qflow-tag">CPU</span>
-                <span class="qflow-detail">Fixed shapes, supported ops</span>
-                <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-              </li>
-              <li class="qflow-node qflow-host-compile" id="qflow-h2">
-                <strong class="qflow-title">Compile HTP contexts</strong>
-                <span class="qflow-tag">CPU</span>
-                <span class="qflow-detail">Built once, reused</span>
-              </li>
-            </ol>
-          </section>
-
-          <div class="qflow-bridge">
-            <svg viewBox="0 0 800 106" preserveAspectRatio="none" aria-hidden="true">
-              <path class="qflow-divider" d="M0 24H800"/>
-              <path class="qflow-provision" d="M500 0V48H450V103M500 48H550V103"/>
-              <path d="M447 98l3 5 3-5M547 98l3 5 3-5"/>
-            </svg>
-            <span class="qflow-bridge-label">Provision speech contexts</span>
-            <h3 class="qflow-phone-heading" id="qflow-phone-heading">Episode generation · phone</h3>
-          </div>
-          <p class="qflow-mobile-transfer">Computer contexts feed both<br>“Predict + encode” and<br>“Generate one voice” below.</p>
-
-          <ol class="qflow-grid qflow-phone" aria-labelledby="qflow-phone-heading">
-            <li class="qflow-node" id="qflow-p1">
-              <strong class="qflow-title">Add sources</strong>
-              <span class="qflow-tag">CPU</span>
-              <span class="qflow-detail">Paste, TXT, Markdown, JSON<br>Plus your instructions</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node qflow-gpu" id="qflow-p2">
-              <strong class="qflow-title">Write script</strong>
-              <span class="qflow-tag">GPU</span>
-              <span class="qflow-detail">Gemma 4 E2B · LiteRT-LM<br>Notes, outline, chapters</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node qflow-optional" id="qflow-p3">
-              <strong class="qflow-title">Review or edit</strong>
-              <span class="qflow-tag">CPU · app UI</span>
-              <span class="qflow-detail">Your review · optional<br>Lock before audio</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node" id="qflow-p4">
-              <strong class="qflow-title">Group sentences</strong>
-              <span class="qflow-tag">CPU</span>
-              <span class="qflow-detail">Whole sentences<br>Then normalized text</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node qflow-npu" id="qflow-p5">
-              <strong class="qflow-title">Predict + encode</strong>
-              <span class="qflow-tag">NPU (HTP)</span>
-              <span class="qflow-detail">Supertonic 3<br>Speech length + features</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node qflow-npu" id="qflow-p6">
-              <strong class="qflow-title">Generate one voice</strong>
-              <span class="qflow-tag">NPU (HTP)</span>
-              <span class="qflow-detail">Refine, then vocoder</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node" id="qflow-p7">
-              <strong class="qflow-title">Join audio</strong>
-              <span class="qflow-tag">CPU</span>
-              <span class="qflow-detail">Keep full segments<br>Add pauses</span>
-              <svg class="qflow-arrow" viewBox="0 0 16 12" aria-hidden="true"><path d="M0 6H14M10 2l4 4-4 4"/></svg>
-            </li>
-            <li class="qflow-node" id="qflow-p8">
-              <strong class="qflow-title">Play / export WAV</strong>
-              <span class="qflow-tag">CPU</span>
-              <span class="qflow-detail">One narrated episode</span>
-            </li>
+        <!-- flow:start (generated by evidence/build-system-flow.py) -->
+        <figure class="qflow" id="system-figure" aria-label="Full system flow: one lane per device, from the computer to the phone's CPU, GPU and NPU" aria-describedby="qflow-caption qflow-alt">
+          <div class="qflow-swim">
+          <div class="qflow-lane qflow-lane-computer" aria-hidden="true" style="grid-row:1"><span class="qflow-lane-name">Computer</span></div>
+          <div class="qflow-lane qflow-lane-cpu" aria-hidden="true" style="grid-row:2"><span class="qflow-lane-name"><small>Phone</small>CPU</span></div>
+          <div class="qflow-lane qflow-lane-gpu" aria-hidden="true" style="grid-row:3"><span class="qflow-lane-name"><small>Phone</small>GPU</span></div>
+          <div class="qflow-lane qflow-lane-npu" aria-hidden="true" style="grid-row:4"><span class="qflow-lane-name"><small>Phone</small>NPU</span></div>
+          <div class="qflow-box" aria-hidden="true" style="grid-column:10 / 13;grid-row:4"></div>
+          <div class="qflow-prov-h" aria-hidden="true" style="grid-column:5 / 12;grid-row:1"></div>
+          <div class="qflow-prov-v" aria-hidden="true" style="grid-column:11;grid-row:1 / 5"></div>
+          <p class="qflow-prov-label" aria-hidden="true" style="grid-column:6 / 11;grid-row:1">Supertonic 3, prepared once and copied to the phone</p>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-h1" data-to="qflow-h2" data-y1="48" data-y2="48" style="grid-column:3;grid-row:1 / span 1"><svg viewBox="0 0 14 96" preserveAspectRatio="none"><path d="M0 48H13"/><path d="M9 44.5L13.5 48L9 51.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p1" data-to="qflow-p2" data-y1="56" data-y2="168" style="grid-column:3;grid-row:2 / span 2"><svg viewBox="0 0 14 224" preserveAspectRatio="none"><path d="M0 56H7V168H13"/><path d="M9 164.5L13.5 168L9 171.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p2" data-to="qflow-p3" data-y1="168" data-y2="56" style="grid-column:5;grid-row:2 / span 2"><svg viewBox="0 0 14 224" preserveAspectRatio="none"><path d="M0 168H7V56H13"/><path d="M9 52.5L13.5 56L9 59.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p3" data-to="qflow-p5" data-y1="56" data-y2="56" style="grid-column:7;grid-row:2 / span 1"><svg viewBox="0 0 14 112" preserveAspectRatio="none"><path d="M0 56H13"/><path d="M9 52.5L13.5 56L9 59.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p5" data-to="qflow-p6" data-y1="56" data-y2="280" style="grid-column:9;grid-row:2 / span 3"><svg viewBox="0 0 14 336" preserveAspectRatio="none"><path d="M0 56H7V280H13"/><path d="M9 276.5L13.5 280L9 283.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p6" data-to="qflow-p7" data-y1="56" data-y2="56" style="grid-column:11;grid-row:4 / span 1"><svg viewBox="0 0 14 112" preserveAspectRatio="none"><path d="M0 56H13"/><path d="M9 52.5L13.5 56L9 59.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p7" data-to="qflow-p8" data-y1="280" data-y2="56" style="grid-column:13;grid-row:2 / span 3"><svg viewBox="0 0 14 336" preserveAspectRatio="none"><path d="M0 280H7V56H13"/><path d="M9 52.5L13.5 56L9 59.5"/></svg></div>
+          <div class="qflow-edge" aria-hidden="true" data-from="qflow-p8" data-to="qflow-p9" data-y1="56" data-y2="56" style="grid-column:15;grid-row:2 / span 1"><svg viewBox="0 0 14 112" preserveAspectRatio="none"><path d="M0 56H13"/><path d="M9 52.5L13.5 56L9 59.5"/></svg></div>
+          <div class="qflow-loop" aria-hidden="true" style="grid-column:6;grid-row:2 / span 2"><svg viewBox="0 0 14 224" preserveAspectRatio="none"><path d="M7 104V120"/><path d="M3.5 107.5L7 103L10.5 107.5"/><path d="M3.5 116.5L7 121L10.5 116.5"/></svg><span class="qflow-loop-label">optional loop</span></div>
+          <ol class="qflow-steps" role="list" aria-label="Steps in order">
+          <li class="qflow-node qflow-computer" id="qflow-h1" data-lane="computer" data-step="1" style="--row:1;--col:2">
+            <strong class="qflow-title">Adapt ONNX graphs</strong>
+            <span class="qflow-detail">Fixed shapes</span>
+            <span class="qflow-where">Computer</span>
+          </li>
+          <li class="qflow-node qflow-computer" id="qflow-h2" data-lane="computer" data-step="2" style="--row:1;--col:4">
+            <strong class="qflow-title">Compile HTP contexts</strong>
+            <span class="qflow-detail">Built once</span>
+            <span class="qflow-mobile-only">Copied to the phone for the two NPU steps</span>
+            <span class="qflow-where">Computer</span>
+          </li>
+          <li class="qflow-node qflow-cpu" id="qflow-p1" data-lane="cpu" data-step="1" style="--row:2;--col:2">
+            <strong class="qflow-title">Add sources</strong>
+            <span class="qflow-detail">Text + instructions</span>
+            <span class="qflow-where">Phone CPU</span>
+          </li>
+          <li class="qflow-node qflow-gpu" id="qflow-p2" data-lane="gpu" data-step="2" style="--row:3;--col:4">
+            <strong class="qflow-title">Write script</strong>
+            <span class="qflow-detail">Gemma 4 E2B</span>
+            <span class="qflow-where">Phone GPU</span>
+          </li>
+          <li class="qflow-node qflow-cpu qflow-optional" id="qflow-p3" data-lane="cpu" data-step="3" style="--row:2;--col:6">
+            <strong class="qflow-title">Review &amp; edit</strong>
+            <span class="qflow-detail">Chat with Gemma</span>
+            <span class="qflow-where">Phone CPU</span>
+          </li>
+          <li class="qflow-node qflow-gpu qflow-optional" id="qflow-p4" data-lane="gpu" data-step="3" style="--row:3;--col:6">
+            <strong class="qflow-title">Revise script</strong>
+            <span class="qflow-detail">Applies your request</span>
+            <span class="qflow-mobile-only">Optional loop back to review</span>
+            <span class="qflow-where">Phone GPU</span>
+          </li>
+          <li class="qflow-node qflow-cpu" id="qflow-p5" data-lane="cpu" data-step="4" style="--row:2;--col:8">
+            <strong class="qflow-title">Split into chunks</strong>
+            <span class="qflow-detail">Sized for the voice model</span>
+            <span class="qflow-where">Phone CPU</span>
+          </li>
+          <li class="qflow-node qflow-npu" id="qflow-p6" data-lane="npu" data-step="5" style="--row:4;--col:10">
+            <strong class="qflow-title">Predict + encode</strong>
+            <span class="qflow-detail">Length + text features</span>
+            <span class="qflow-where">Phone NPU</span>
+          </li>
+          <li class="qflow-node qflow-npu" id="qflow-p7" data-lane="npu" data-step="6" style="--row:4;--col:12">
+            <strong class="qflow-title">Generate one voice</strong>
+            <span class="qflow-detail">Refine, then vocoder</span>
+            <span class="qflow-where">Phone NPU</span>
+          </li>
+          <li class="qflow-node qflow-cpu" id="qflow-p8" data-lane="cpu" data-step="7" style="--row:2;--col:14">
+            <strong class="qflow-title">Join audio</strong>
+            <span class="qflow-detail">Adds pauses</span>
+            <span class="qflow-where">Phone CPU</span>
+          </li>
+          <li class="qflow-node qflow-cpu" id="qflow-p9" data-lane="cpu" data-step="8" style="--row:2;--col:16">
+            <strong class="qflow-title">Play / export WAV</strong>
+            <span class="qflow-detail">One episode</span>
+            <span class="qflow-where">Phone CPU</span>
+          </li>
           </ol>
-
-            <p class="sr-only" id="qflow-alt">Before phone use, computer-side tools adapt Supertonic's existing ONNX graphs and compile reusable HTP contexts. Those contexts are provisioned to both Supertonic neural stages on the phone. On the phone, the user pastes text or imports a plain-text, Markdown or JSON file. Gemma 4 E2B on the GPU writes the script. An optional review and edit step follows. The text is grouped into whole sentences. Supertonic on the NPU predicts each sentence's length and encodes its text, then generates one fixed voice. The CPU joins the audio with pauses and plays or exports the episode as a WAV file.</p>
-          <figcaption class="qflow-caption" id="qflow-caption">Speech models are prepared on a computer; episodes are generated on the phone. GPU and NPU labels mark the model routes, with CPU preparation and app code around them.</figcaption>
+          </div>
+          <p class="sr-only" id="qflow-alt">Swimlane diagram with one lane per device. On the computer, Supertonic&#x27;s existing ONNX graphs are adapted and compiled into reusable HTP contexts, once, before use; they are copied to the phone and used by the two NPU steps. On the phone, the CPU runs the app: you add text or Markdown or JSON sources and instructions. The GPU runs Gemma 4 E2B, which writes the script. Back on the CPU you can review and edit the script by chatting with Gemma; each request goes to the GPU, which revises the script, and you can repeat this as often as you like. The CPU splits the script into chunks sized for the voice model. The NPU runs Supertonic 3 to predict each chunk&#x27;s length and encode its text, then generate one fixed voice. The CPU joins the audio with pauses and plays or exports the episode as a WAV file.</p>
+          <figcaption class="qflow-caption" id="qflow-caption">Speech models are prepared once on a computer; episodes are generated on the phone. The GPU and NPU lanes hold the models, and the CPU lane is the app code around them.</figcaption>
         </figure>
+<!-- flow:end -->
       </section>
 
       <section aria-labelledby="pocket-heading">
@@ -217,7 +218,7 @@
           <li><a href="evidence/source-audit.md">Source audit and AddressSanitizer reproduction</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
           <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/tools/pocket_alba_cpu_runner.cc">Original retained runner</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json">Android run and listening verdict</a></li>
         </ul>
-        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses LiteRT-LM for Gemma on GPU and ONNX Runtime with QNN for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not timing. The final app demonstration and listening review are pending. This is not a NotebookLM quality match or a public release. The closing link points to the repository, which is private, so it will not open for anyone else until that changes.</p>
+        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses LiteRT-LM for Gemma on GPU and ONNX Runtime with QNN for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not timing. The final app demonstration and listening review are pending. This is not a NotebookLM quality match.</p>
       </div>
     </details>
   </div>

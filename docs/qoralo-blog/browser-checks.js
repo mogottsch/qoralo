@@ -30,27 +30,32 @@ async (page) => {
   check(await page.locator('#fix-heading,pre,.takeaway,[data-edit="fix-copy"],[data-edit="lesson"],[data-edit="why-cause"]').count()===0&&!/The fix we applied|freed before|undefined behavior|bos is freed|One different input/.test(await page.locator('main').innerText()),'No code excerpt, cause paragraph, fix section or takeaway');
   check(await page.locator('#why-figure').evaluate(f=>f.closest('section').nextElementSibling===null||f.closest('section').nextElementSibling.classList.contains('closing')),'Why it went wrong is the last section before the closing line');
 
-  // 'Where it ends up': the system diagram says only what the app really does.
+  // 'Where it ends up': swimlanes, one lane per device; the diagram says only what the app really does.
   const sys=await page.evaluate(()=>{
     const f=document.querySelector('#system-figure');
-    const node=id=>f.querySelector('#'+id);
-    const info=id=>{const n=node(id);return {title:n.querySelector('.qflow-title').textContent.trim(),tag:n.querySelector('.qflow-tag').textContent.trim(),detail:n.querySelector('.qflow-detail').textContent.trim(),cls:n.className};};
-    const ids=[...f.querySelectorAll('.qflow-node')].map(n=>n.id);
-    const visible=[...f.querySelectorAll('.qflow-node,.qflow-grid ~ *,h3,.qflow-bridge-label,.qflow-mobile-transfer,figcaption')].filter(e=>!e.classList.contains('sr-only')).map(e=>e.textContent).join(' ');
-    return {ids,nodes:Object.fromEntries(ids.map(i=>[i,info(i)])),lanes:[...f.querySelectorAll('h3')].map(h=>h.textContent.trim()),caption:f.querySelector('figcaption').textContent.trim(),alt:f.querySelector('#qflow-alt')?.textContent||'',described:f.getAttribute('aria-describedby'),visible,order:(()=>{const pos=id=>f.querySelector('#'+id);const a=['qflow-h1','qflow-h2','qflow-p1','qflow-p2','qflow-p3','qflow-p4','qflow-p5','qflow-p6','qflow-p7','qflow-p8'].map(pos);return a.every((e,i)=>i===0||(a[i-1].compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)>0);})()};
+    const nodes=[...f.querySelectorAll('.qflow-node')].map(n=>({id:n.id,lane:n.dataset.lane,step:Number(n.dataset.step),title:n.querySelector('.qflow-title').textContent.trim(),detail:n.querySelector('.qflow-detail').textContent.trim(),where:n.querySelector('.qflow-where').textContent.trim(),optional:n.classList.contains('qflow-optional'),mobile:n.querySelector('.qflow-mobile-only')?.textContent.trim()||''}));
+    return {nodes,visible:[...f.querySelectorAll('.qflow-node,.qflow-lane,.qflow-prov-label,.qflow-loop-label,figcaption')].map(e=>e.textContent).join(' '),
+      caption:f.querySelector('figcaption').textContent.trim(),alt:f.querySelector('#qflow-alt')?.textContent||'',described:f.getAttribute('aria-describedby'),
+      lanes:[...f.querySelectorAll('.qflow-lane-name')].map(l=>l.innerText.replace(/\s+/g,' ').trim()),loop:f.querySelector('.qflow-loop-label')?.textContent.trim()||'',prov:f.querySelector('.qflow-prov-label')?.textContent.trim()||'',
+      edges:f.querySelectorAll('.qflow-edge').length,html:f.outerHTML};
   });
-  check(sys.ids.length===10&&sys.order,'System diagram has ten nodes in flow order: '+sys.ids.join(','));
-  check(Object.values(sys.nodes).every(n=>n.title.split(/\s+/).length<=4),'Node titles are four words or fewer');
-  const tg=Object.fromEntries(Object.entries(sys.nodes).map(([k,v])=>[k,v.tag]));
-  check(tg['qflow-p2']==='GPU'&&tg['qflow-p5']==='NPU (HTP)'&&tg['qflow-p6']==='NPU (HTP)'&&tg['qflow-p3']==='CPU \u00b7 app UI'&&['qflow-h1','qflow-h2','qflow-p1','qflow-p4','qflow-p7','qflow-p8'].every(k=>tg[k]==='CPU'),'Processor tags: one GPU step, two NPU steps, the rest CPU, review is app UI: '+JSON.stringify(tg));
-  check(/Your review \u00b7 optional/.test(sys.nodes['qflow-p3'].detail)&&/optional/.test(sys.nodes['qflow-p3'].cls+' qflow-optional'),'Review is shown as a human, optional step');
-  check(sys.lanes.join('|')==='Speech preparation \u00b7 computer|Episode generation \u00b7 phone','Computer preparation and phone generation are separate lanes: '+sys.lanes);
-  check(sys.caption==='Speech models are prepared on a computer; episodes are generated on the phone. GPU and NPU labels mark the model routes, with CPU preparation and app code around them.','Caption is the reviewed two sentences');
+  const N=Object.fromEntries(sys.nodes.map(n=>[n.id,n]));
+  check(sys.nodes.map(n=>n.id).join(',')==='qflow-h1,qflow-h2,qflow-p1,qflow-p2,qflow-p3,qflow-p4,qflow-p5,qflow-p6,qflow-p7,qflow-p8,qflow-p9'&&sys.edges===8,'Swimlane diagram has eleven steps in flow order and eight connectors: '+sys.nodes.map(n=>n.id));
+  check(sys.nodes.every(n=>n.title.split(/\s+/).length<=4),'Step titles are four words or fewer');
+  check(sys.lanes.join('|')==='Computer|Phone CPU|Phone GPU|Phone NPU','One lane per device, computer first: '+sys.lanes);
+  const laneOf=Object.fromEntries(sys.nodes.map(n=>[n.id,n.lane]));
+  check(JSON.stringify(laneOf)===JSON.stringify({'qflow-h1':'computer','qflow-h2':'computer','qflow-p1':'cpu','qflow-p2':'gpu','qflow-p3':'cpu','qflow-p4':'gpu','qflow-p5':'cpu','qflow-p6':'npu','qflow-p7':'npu','qflow-p8':'cpu','qflow-p9':'cpu'}),'Each step sits in the lane of the device it runs on: Gemma on the GPU, Supertonic on the NPU, app code on the CPU: '+JSON.stringify(laneOf));
+  check(sys.nodes.every(n=>n.where===({computer:'Computer',cpu:'Phone CPU',gpu:'Phone GPU',npu:'Phone NPU'})[n.lane]),'Every step names its device in text (read by screen readers and shown on narrow screens)');
+  check(N['qflow-p3'].title==='Review & edit'&&N['qflow-p3'].lane==='cpu'&&/Chat with Gemma/.test(N['qflow-p3'].detail)&&N['qflow-p4'].title==='Revise script'&&N['qflow-p4'].lane==='gpu'&&N['qflow-p3'].step===N['qflow-p4'].step&&N['qflow-p3'].optional&&N['qflow-p4'].optional&&sys.loop==='optional loop','Review and edit is a chat with Gemma and an optional loop: you on the CPU, Gemma revising on the GPU, same column, marked optional');
+  check(/Optional loop back to review/.test(N['qflow-p4'].mobile),'The loop is also stated in words on narrow screens');
+  check(N['qflow-p5'].title==='Split into chunks'&&/Sized for the voice model/.test(N['qflow-p5'].detail)&&!/Group sentences|Whole sentences|Then normalized/.test(sys.visible),'The chunking step says what it does in plain words');
+  check(sys.caption==='Speech models are prepared once on a computer; episodes are generated on the phone. The GPU and NPU lanes hold the models, and the CPU lane is the app code around them.','Caption describes the lanes');
   check(!/PDF|URL|web|transcri|retriev|conversation|two voices|\b300\b|native|four|1\.5|FP16|INT8/i.test(sys.visible),'Diagram has no invented ingestion, no meaningless numbers and no jargon: '+(sys.visible.match(/PDF|URL|web|transcri|retriev|conversation|two voices|\b300\b|native|four/i)||[''])[0]);
-  check(/Paste, TXT, Markdown, JSON/.test(sys.visible)&&/Gemma 4 E2B/.test(sys.visible)&&/Whole sentences/.test(sys.visible),'Diagram shows the real inputs, the real script model and whole-sentence grouping');
-  check(/qflow-caption/.test(sys.described)&&/qflow-alt/.test(sys.described)&&/computer/.test(sys.alt)&&/phone/.test(sys.alt)&&/GPU/.test(sys.alt)&&/NPU/.test(sys.alt)||/HTP/.test(sys.alt),'Diagram has a screen-reader description');
+  check(/Text \+ instructions/.test(N['qflow-p1'].detail)&&/Gemma 4 E2B/.test(N['qflow-p2'].detail)&&/Supertonic 3/.test(sys.prov)&&/prepared once and copied to the phone/.test(sys.prov),'Diagram shows the real inputs, the real script model, and that Supertonic is prepared once and copied to the phone');
+  check(/qflow-caption/.test(sys.described)&&/qflow-alt/.test(sys.described)&&/computer/.test(sys.alt)&&/phone/.test(sys.alt)&&/GPU/.test(sys.alt)&&/NPU/.test(sys.alt)&&/chatting with Gemma/.test(sys.alt)&&/repeat this as often as you like/.test(sys.alt),'Diagram has a screen-reader description that includes the review chat loop');
   check(await page.locator('#system-figure details').count()===0,'No visible collapsible in the diagram');
   check(await page.locator('#system-figure script,#system-figure img,#system-figure link').count()===0,'Diagram has no scripts or external assets');
+  check(await page.locator('#system-figure .qflow-lane,#system-figure .qflow-edge,#system-figure .qflow-loop,#system-figure .qflow-box,#system-figure .qflow-prov-h,#system-figure .qflow-prov-v,#system-figure .qflow-prov-label').evaluateAll(e=>e.every(x=>x.getAttribute('aria-hidden')==='true')),'Lanes, connectors and the dotted preparation line are decorative for screen readers (the description carries the meaning)');
 
   // 'What I tried': the tables must equal the evidence packet, in both directions.
   const mainText=await page.locator('main').innerText();
@@ -155,20 +160,43 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-bridge,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-swim,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         flow:(()=>{
-          const nodes=[...document.querySelectorAll('#system-figure .qflow-node')], r=nodes.map(box);
-          const lane=n=>n.closest('.qflow-host')?'host':'phone';
+          const fig=document.querySelector('#system-figure');
+          const nodes=[...fig.querySelectorAll('.qflow-node')], r=nodes.map(box), byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
+          const near=(x,y,t=1.5)=>Math.abs(x-y)<=t, ctr=e=>{const b=box(e);return {x:(b.left+b.right)/2,y:(b.top+b.bottom)/2};};
           const overlap=r.some((a,i)=>r.some((b,j)=>j>i&&overlaps(a,b)));
-          const clipped=nodes.some(n=>[...n.querySelectorAll('.qflow-title,.qflow-tag,.qflow-detail')].some(e=>e.scrollWidth>e.clientWidth+1||e.getBoundingClientRect().right>n.getBoundingClientRect().right+0.5||e.getBoundingClientRect().left<n.getBoundingClientRect().left-0.5));
-          const small=[...document.querySelectorAll('#system-figure *')].filter(e=>e.children.length===0&&e.textContent.trim()&&!e.closest('.sr-only')&&getComputedStyle(e).display!=='none').some(e=>parseFloat(getComputedStyle(e).fontSize)<11.99);
-          const hostBottom=Math.max(...nodes.filter(n=>lane(n)==='host').map(n=>box(n).bottom)), phoneTop=Math.min(...nodes.filter(n=>lane(n)==='phone').map(n=>box(n).top));
-          const horizontal=innerWidth>=1000;
-          let bridgeOk=true;
-          if(horizontal){const svg=box(document.querySelector('.qflow-bridge > svg')),p5=box(document.querySelector('#qflow-p5')),p6=box(document.querySelector('#qflow-p6'));const x1=svg.left+svg.width*450/800,x2=svg.left+svg.width*550/800;bridgeOk=x1>p5.left&&x1<p5.right&&x2>p6.left&&x2<p6.right;}
-          else {bridgeOk=getComputedStyle(document.querySelector('.qflow-mobile-transfer')).display!=='none'&&/Predict \+ encode/.test(document.querySelector('.qflow-mobile-transfer').textContent);}
-          const rows=new Set(nodes.filter(n=>lane(n)==='phone').map(n=>Math.round(box(n).top)));
-          return {overlap,clipped,small,lanesOrdered:hostBottom<phoneTop,bridgeOk,rows:rows.size,minNodeW:Math.min(...r.map(x=>x.width)),horizontal};
+          const clipped=nodes.some(n=>{const nb=box(n);return (getComputedStyle(n).overflow==='hidden'&&n.scrollHeight>n.clientHeight+1)||[...n.querySelectorAll('.qflow-title,.qflow-detail,.qflow-where,.qflow-mobile-only')].some(e=>{if(getComputedStyle(e).position==='absolute')return false;const eb=box(e);return eb.width>0&&(e.scrollWidth>e.clientWidth+1||eb.right>nb.right+0.5||eb.left<nb.left-0.5||eb.bottom>nb.bottom+0.5||eb.top<nb.top-0.5);});});
+          const small=[...fig.querySelectorAll('*')].filter(e=>e.children.length===0&&e.textContent.trim()&&!e.closest('.sr-only')&&getComputedStyle(e).display!=='none').some(e=>parseFloat(getComputedStyle(e).fontSize)<11.99);
+          const horizontal=innerWidth>=1040, why=[];
+          if(horizontal){
+            const lanes=['computer','cpu','gpu','npu'].map(k=>box(fig.querySelector('.qflow-lane-'+k))), ln={computer:0,cpu:1,gpu:2,npu:3};
+            if(!lanes.every((l,i)=>i===0||l.top>=lanes[i-1].bottom-1))why.push('lane order');
+            nodes.forEach(n=>{const b=box(n),l=lanes[ln[n.dataset.lane]];if(!(b.top>=l.top&&b.bottom<=l.bottom&&near((b.top+b.bottom)/2,(l.top+l.bottom)/2)))why.push(n.id+' is not centred in its lane');});
+            const st=nodes.map(n=>({id:n.id,step:Number(n.dataset.step),b:box(n)}));
+            st.forEach(a=>st.forEach(b=>{if(a.step<b.step&&!(a.b.right<=b.b.left-10))why.push(a.id+' is not left of '+b.id);if(a.step===b.step&&a.id<b.id&&!near(a.b.left,b.b.left,1))why.push('steps in one column differ');}));
+            const edges=[...fig.querySelectorAll('.qflow-edge')];
+            if(edges.length!==8)why.push('edge count');
+            edges.forEach(e=>{const s=byId[e.dataset.from],d=byId[e.dataset.to],eb=box(e),t=e.dataset.from+'->'+e.dataset.to;
+              if(!near(eb.left,box(s).right)||!near(eb.right,box(d).left))why.push(t+' does not run from the right edge of one step to the left edge of the next');
+              if(!near(eb.top+Number(e.dataset.y1),ctr(s).y)||!near(eb.top+Number(e.dataset.y2),ctr(d).y))why.push(t+' does not leave and enter at the centres of its steps');});
+            const p3=box(byId['qflow-p3']),p4=box(byId['qflow-p4']),lp=box(fig.querySelector('.qflow-loop')),ll=box(fig.querySelector('.qflow-loop-label'));
+            const aTop=lp.top+112-9, aBot=lp.top+112+9;
+            if(!(lp.left>=p3.left&&lp.right<=p3.right&&p3.bottom<=aTop+1&&aBot<=p4.top+1&&ll.top>=p3.bottom-1&&ll.bottom<=p4.top+1&&ll.right<=p3.right+14))why.push('loop arrow or label is not between Review and Revise');
+            const bx=box(fig.querySelector('.qflow-box')),n6=box(byId['qflow-p6']),n7=box(byId['qflow-p7']),ph=box(fig.querySelector('.qflow-prov-h')),pv=box(fig.querySelector('.qflow-prov-v')),h2=box(byId['qflow-h2']),pl=box(fig.querySelector('.qflow-prov-label'));
+            const vx=(pv.left+pv.right)/2;
+            if(!(bx.left<=n6.left&&bx.right>=n7.right&&bx.top<=n6.top&&bx.bottom>=n6.bottom&&bx.top>=lanes[3].top&&bx.bottom<=lanes[3].bottom))why.push('the NPU box does not enclose both NPU steps inside the NPU lane');
+            if(!(vx>n6.right&&vx<n7.left))why.push('the dotted line does not land between the two NPU steps');
+            if(!near(ph.left,h2.right)||!(ph.right>=vx))why.push('the dotted line does not start at Compile');
+            if(!(pl.left>=h2.right&&pl.right<=vx&&pl.top>=lanes[0].top&&pl.bottom<=lanes[0].bottom))why.push('provision label placement');
+          } else {
+            const tops=nodes.map(n=>box(n).top);
+            if(!tops.every((t,i)=>i===0||t>tops[i-1]+20))why.push('not a single column in order');
+            if(!nodes.every(n=>{const w=n.querySelector('.qflow-where');return box(w).width>8&&getComputedStyle(w).clipPath==='none';}))why.push('device chips are not visible');
+            if(!['qflow-h2','qflow-p4'].every(id=>box(byId[id].querySelector('.qflow-mobile-only')).width>8))why.push('the two notes are hidden');
+            if(!['.qflow-lane','.qflow-edge','.qflow-loop','.qflow-box','.qflow-prov-h','.qflow-prov-v','.qflow-prov-label'].every(q=>[...fig.querySelectorAll(q)].every(e=>getComputedStyle(e).display==='none')))why.push('desktop-only parts are still visible');
+          }
+          return {overlap,clipped,small,horizontal,why,minNodeW:Math.min(...r.map(x=>x.width))};
         })(),
         tickOverlap:xt.some((a,i)=>xt.some((b,j)=>j>i&&overlaps(a,b)))||xt.some(a=>[...document.querySelectorAll('.axis-name')].some(n=>overlaps(a,box(n))))||xt.some(a=>a.height>20),
         noteOverlap:notes.some((a,i)=>notes.some((b,j)=>j>i&&overlaps(a,b))),
@@ -182,9 +210,8 @@ async (page) => {
       };
     });
     check(!layout.overflow&&!layout.bad.length,`${width} overflow: ${layout.bad}`);
-    check(!layout.flow.overlap&&!layout.flow.clipped&&!layout.flow.small&&layout.flow.lanesOrdered,`${width} system diagram overlap/clipping/size/lane order: ${JSON.stringify(layout.flow)}`);
-    check(layout.flow.bridgeOk,`${width} the computer-to-NPU dependency lands on the two NPU steps (or is stated in text on narrow screens)`);
-    check(layout.flow.horizontal?layout.flow.rows===1&&layout.flow.minNodeW>=100:layout.flow.rows===8,`${width} diagram layout: ${layout.flow.horizontal?'one row on wide screens':'vertical list on narrow screens'} ${JSON.stringify(layout.flow)}`);
+    check(!layout.flow.overlap&&!layout.flow.clipped&&!layout.flow.small,`${width} system diagram overlap/clipping/size: ${JSON.stringify(layout.flow)}`);
+    check(!layout.flow.why.length&&(!layout.flow.horizontal||layout.flow.minNodeW>=96),`${width} system diagram ${layout.flow.horizontal?'swimlanes: steps centred in lanes, connectors exact, loop and NPU box placed':'single-column list with device chips'}: ${JSON.stringify(layout.flow)}`);
     check(!layout.tickOverlap&&!layout.noteOverlap,`${width} tick/annotation overlap`);
     check(layout.notesInChart,`${width} annotation leaves the chart`);
     check(layout.neverBetween,`${width} "never reaches" label is not between the stop line and the original line`);
