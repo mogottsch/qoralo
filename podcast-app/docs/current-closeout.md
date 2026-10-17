@@ -8,46 +8,53 @@ separate permission question, once device work is authorized again.
 
 ## Candidate and last actual device evidence
 
-**Frozen source:** combined commit `33fbfb4d73460b690496eeabfa05fc28e18778da`,
-`app/src` tree `abe2e3ebcc5e2e07470a3e08843440d86102801a`. Thomas verified his
-candidate bytes against that commit; it also contains this closeout's docs/test
-repairs after a shared-index collision. No source was rewritten to separate it.
+**Frozen source:** `1a089581a3a0e8e11c92ebb6f5d56ca07b1ef330`, `app/src` tree
+`e0fb66126fb16bad6f4f1ae22741fa01ef93130d`. It retains Thomas's verified round3
+candidate from combined commit `33fbfb4d` and adds only the debug export-cursor
+lifecycle fix and eight focused host tests. No production policy/UI change.
 
 **Immutable local bundle:**
-`.local/closeout/20261017T074832Z-33fbfb4d7346/` (read-only; `SHA256SUMS` verified).
-It includes APKs, a 294-file source binding plus source archive, effective local
+`.local/closeout/20261017T075644Z-1a089581a3a0/` (read-only; `SHA256SUMS` verified).
+It includes APKs, a 295-file source binding plus source archive, effective local
 configuration/toolchain/pack hashes, generated BuildConfig, JUnit XML, lint,
 signature/package/native proofs and command logs. No payload was added to Git.
 
 | Frozen file | SHA-256 |
 | --- | --- |
-| `app.apk` (131,693,737 B) | `677f8d6fbe25d4ed8b438af1f55f198c0cf7cd135dceaf2a66fbe40151eec46d` |
+| `app.apk` (131,740,380 B) | `cc1f6436969eb1b27499e6d7e09bbb34feba4983369dff7a00aa79cfda65dd44` |
 | `test.apk` (3,423,901 B) | `9c40d9187668f73d2687b12823f816b5751fe7de11b970c70fc9c41925324fbf` |
-| `manifest.json` | `e5e95013014bc1f02d0ccf4873edecc4fc2e95974f214b68b5de016964b3ad8e` |
+| `manifest.json` | `3ea8814210bbb932baae3351e3813f18d6055e2ebcd64bede45aed189ce05465` |
 
-**Result: assembled, not fully host-green.** One serialized Gradle invocation
-assembled both APKs and compiled androidTest, checked release Kotlin, and reran
-JVM tests: **293 discovered / 280 executed / 13 skipped / 0 failures or errors**.
-Provider Python **15/15**, promptlab **5/5**, eight promptlab checksums, signatures,
-package/target identities and trusted packaged runtime-byte verification passed.
-The native-policy target was **UP-TO-DATE**, not a new native-test execution.
-Eleven skips are `ProviderAudioPlanTest` local-pack-gated cases; the other two are
-the private frontend-reference and long-pack reconstruction tests. Exact skip
-names are in `manifest.json`; skipped cases are not passes.
+**Result: active Gradle build/lint green; historical Python scope suite red.**
+The serialized final Gradle invocation exited **0**: both APKs assembled,
+androidTest compiled, release Kotlin checked and lint passed without a suppression
+or baseline. JVM: **301 discovered / 288 executed / 13 skipped / 0 failures or
+errors**, including all **8/8** new cursor tests. Provider Python **15/15**,
+promptlab **5/5**, eight promptlab checksums, signatures, package/target identities
+and trusted packaged runtime-byte verification passed. The native-policy target
+was **UP-TO-DATE**, not a new native-test execution. Eleven skips are
+`ProviderAudioPlanTest` local-pack-gated cases; the other two are the private
+frontend-reference and long-pack reconstruction tests. Exact names are retained
+in `manifest.json`; skipped cases are not passes.
 
-The aggregate Gradle command **exited 1** at `:app:lintDebug`: **Recycle**, one
-error/no warnings, `app/src/debug/java/dev/qoralo/podcast/e2e/ShortProductDiagnostics.kt:56`
-(`contentResolver.query(...).use { cursor ->`). This unresolved lint diagnostic
-is retained verbatim in `logs/gradle-build.log` and `lint-results-debug.*`; the
-presence of `.use` is not a reason to suppress/disable it to claim green. No
-runtime edit, lint baseline or second build was made. The eight general Python
-scope failures below also remain red.
+The first freeze remains unchanged at
+`.local/closeout/20261017T074832Z-33fbfb4d7346/`, manifest SHA
+`e5e95013014bc1f02d0ccf4873edecc4fc2e95974f214b68b5de016964b3ad8e`.
+Its Gradle run failed only at lint **Recycle**, `ShortProductDiagnostics.kt:56`.
+Pi authorized the follow-up fix: query validation now owns the nullable cursor in
+an explicit `try/finally { cursor?.close() }`. URI/authority/document-ID/name/empty
+checks and receipt-after-validation ordering are unchanged. Thomas's read-only
+review found no blocking issue; focused Robolectric tests verify query arguments,
+success, null/empty/wrong-name/unknown-size/nonzero/negative-size rejection and
+close-once behavior after a metadata-read exception. The simple finally form does
+not preserve `use()`'s suppressed-exception behavior if both reading and closing
+throw; that rare dual-failure case is not covered or claimed equivalent.
 
-The app APK is byte-identical to the retained phone app; Gradle reused its
-up-to-date output. The **test APK is new and uninstalled**. Byte equality is not
-a fresh device observation or qualification of this newly paired candidate.
-Future rebuilding need not yield identical ZIP/signature bytes: use the frozen
-hashes as the identity, not a promise of bit-for-bit reproducible builds.
+**The final app has changed from phone-proven `677f8d6f…`; neither APK in this
+final pairing was installed or device-tested during closeout.** The test APK is
+byte-identical to the first offline freeze; the app is not. Rebuilding need not
+yield identical ZIP/signature bytes: use these frozen hashes as the identity,
+not a promise of bit-for-bit reproducible builds.
 
 | Evidence | What it establishes | Boundary |
 | --- | --- | --- |
@@ -74,7 +81,7 @@ proof of numerical equivalence to `44a41cd4…`.
 - [x] Java 17; SDK 35; NDK `28.1.13356709`; CMake `3.22.1`; Gradle cache and
   authorized runtime inputs present. No network/model acquisition implied.
 - [x] Normal provider selectors, **not** legacy application ID or short plumbing.
-- [x] Run the host command below once, retaining exit codes, logs and XML; record
+- [x] Run the host command below for each frozen source revision, retaining exit codes, logs and XML; record
   tests **discovered/executed/skipped**, never call skipped cases passed.
 - [x] Copy matching APKs immediately into a new `.local/closeout/<stamp>-<commit>/`
   directory. Retain source-file/config/toolchain/native-library hashes,
@@ -93,8 +100,9 @@ cd podcast-app
   :app:compileReleaseKotlin :app:lintDebug :app:testNativePolicies
 python3 -m unittest discover -s tools/tests -v
 python3 -m unittest discover -s tools/provider_pipeline -p test_pipeline.py -v
+mkdir -p .local/closeout-audit
 python3 tools/verify_apk_runtime.py --apk "$FROZEN/app.apk" \
-  --output "$FROZEN/runtime-proof.json"
+  --output .local/closeout-audit/runtime-proof-recheck.json  # never rewrite the frozen bundle
 ```
 
 The general Python command is expected to return **nonzero**, not be ignored:
@@ -184,8 +192,8 @@ alone provisions the current app.
 
 ## Genuine remaining gaps
 
-- Host aggregate remains blocked by the single lint Recycle diagnostic above;
-  13 JVM cases skipped, including all 11 pack-gated provider-plan cases.
+- Active Gradle/lint checks now pass, but 13 JVM cases skipped, including all
+  11 pack-gated provider-plan cases; historical Python scope failures remain.
 - No final-candidate device install, instrumentation, playback, system-picker
   export, accessibility or neural replay in this offline window.
 - Historical device counter coverage is incomplete: both recorded failed SCRIPT

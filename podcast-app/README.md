@@ -20,12 +20,14 @@ point for build identities, delivery steps, evidence and remaining gaps.
   unproven system-picker hop. Later prompt round3/3b records and the final
   offline candidate have distinct provenance — see the runbook, not an old
   handoff's “current” heading.
-- Frozen offline source **`33fbfb4d`**, bundle
-  `.local/closeout/20261017T074832Z-33fbfb4d7346/`: app **`677f8d6f…`** (same
-  bytes as retained phone app), new test **`9c40d918…`**. JVM **293 discovered /
-  280 executed / 13 skipped**, no failures/errors; APK assembly and native-byte
-  verification pass. **Lint is blocked** by one `Recycle` diagnostic in
-  `ShortProductDiagnostics.kt:56`; the full host build is not green.
+- Frozen offline source **`1a089581`**, bundle
+  `.local/closeout/20261017T075644Z-1a089581a3a0/`: app **`cc1f6436…`**, test
+  **`9c40d918…`**. Active Gradle build/**lint pass**, JVM **301 discovered /
+  288 executed / 13 skipped**, no failures/errors; APK assembly and native-byte
+  verification pass. The earlier lint failure was fixed with explicit debug
+  cursor cleanup, reviewed by Thomas and covered by eight passing host tests.
+  Native bytes are unchanged; app bytes differ from the last phone-tested app.
+  The prior `33fbfb4d` freeze is preserved, not overwritten.
 - The weekend closeout is **host-only**: Moritz has the phone. No install,
   instrumentation, model inference or new listening verdict is authorized in
   this window. The frozen pair is not a new device pass.
