@@ -1,23 +1,29 @@
 # Article review record
 
-## Current revision (story v3): source-audited, chapter removed, editable
+## Current revision (story v4): the WHY is the article
 
-Moritz's critique of story v2: too much subtext, the logit explanation did not answer WHY, the whole-chapter section was uninteresting, and the intro was not his voice.
+Moritz's latest direction: he does not care about the buffer-lifetime finding as a fix. He wants to explain where the divergence comes from, then quickly mention the fix actually applied. The WHY is the main thing.
 
 What changed:
 
-- Removed the chapter explorer, the setup chart and the three-stage EOS diagram. The old three-figure requirement was superseded by Moritz's request.
-- Re-read the retained 0014 runner instead of repeating the logit observation. Found a definite C++ lifetime bug: `TV()` wraps `bos.data()` in a non-owning `Ort::Value`, and `bos` is destroyed before `Run()`. Details, hash, ORT API documentation and limits: `evidence/source-audit.md`.
-- Built a host-only reproducer (`evidence/bos-lifetime-repro.cc`) using the real ORT tensor API under AddressSanitizer. No model, session, inference or phone. Original scope: heap-use-after-free. Buffer kept alive: passes. Two early launch failures were environment problems (library soname; an API22 mismatch on a const accessor) and were fixed before the valid comparison.
-- The article states plainly that this is a source finding, not a proved cause of the 10.72 s clip. The retained phone binary hash is not bound to the retained source, the old model was not replayed with only the lifetime fixed, and the fixed-cache graph changed more than this. The invalid-Bria/zero-encoder cause is a separate failure.
-- Added inline plain-text editing, local restore and `Save HTML copy`. The saved copy is built from original source text, strips editor state, and keeps working assets through a `<base>`. Nothing writes to the repository.
-- The intro is deliberately plain placeholder text for Moritz to rewrite. It is not a new attempt at his voice.
+- Rebuilt the article around the explanation. The graph treats a NaN first input as "use the learned start vector". A host-only replay of the old loop, changing only that input, shows that all zeros reproduces the retained Android stop scores over all 134 frames (max 0.074, mean 0.006, no stop) and NaN does not (differs by up to 16.4, stops at 53). The retained Android fixed-cache run matches the correct-input replay within 0.0021. 62 partly zeroed inputs did not match.
+- The earlier buffer-lifetime finding is now the likely way the NaN marker was lost, shown as a short source excerpt, not as my fix. The applied fix is one section: the NPU-oriented fixed-cache graphs, which have no NaN marker.
+- Removed the buffer-lifetime stepper, the chapter section, the logit-only diagram and the setup chart.
+- Added a baked-in SVG stop-score chart (generated from the evidence JSON), an input toggle and a keyboard frame scrubber with exact readouts.
+- Fixed a real editor bug found by the new tests: an edit used to store and export every paragraph as plain text, which stripped inline `<code>`. Now only edited paragraphs are stored or exported.
+- The intro remains deliberately plain placeholder text for Moritz to rewrite.
 
-Provenance: Pi independently read the source and confirmed the lifetime defect and the ORT ownership semantics, and advised the claim limits above. Pi did not review the final rewritten copy, and the earlier Thomas/Pi/nik passes belong to `cdfdfb0c`. This revision has no new three-pass review. Hermes style guidance (concise, direct, human, no invented quotes) still applies.
+Claim discipline (applied after Pi's independent review): zeros are **inferred, not observed**; the phone's memory was not read. The retained source-to-binary binding is unverified. The exact original graph is missing and a same-size reconstruction was used, validated against the retained host run (first score -9.8847, stop at 53) and the retained Android fixed-cache scores. The 65-pattern scan includes one duplicate (all-zero) and the correct all-NaN case, so the page says 62 partly zeroed inputs, and it is not exhaustive. No audio was generated from the replay and no listening claim is made. The invalid-Bria/zero-encoder failure is a different cause.
 
-Verification: browser suite passed five widths × two scopes × four stages, keyboard sources, bounded replay/interruption, reduced motion, muted decoding of both exact WAVs with exclusive play, inline editing, local restore, an exported copy reopened from disk with working CSS/script/diagram, and script-failure fallback. Desktop 1440×1000 and mobile 390×844 captures inspected before and after one fix (a wider title measure). Main text is about 314 words including labels; editable copy about 208. Captures and logs: `/tmp/qoralo-story-v3/`.
+Provenance: Pi independently reran the replay (reproduced -9.8847/stop 53, zero first score -10.2709, 134-step max 0.0736/mean 0.00577/no stop, fixed-cache max 0.0021) and read the source, and directed the wording above. Pi did not review the final rewritten copy. This revision has no new three-pass review; the original Thomas/Pi/nik passes belong to `cdfdfb0c`. Pi separately added the `0014/RESULTS.md` correction.
+
+Verification: browser suite passed chart data against the evidence JSON; five widths × three input modes; chart, tick and annotation geometry; keyboard scrubber exact readouts; wording guards; reduced motion; both exact WAVs decoded with exclusive playback; inline editing, restore and an exported copy reopened from disk with a working chart; print; script-failure fallback; no external requests or page errors. Desktop 1440×1000 and mobile 390×844/320×740 captures inspected; one corrective pass moved the stop-note, dimmed it in zero mode and widened the mobile chart margin. Local captures and logs: `/tmp/qoralo-story-v3/`.
 
 Disposition: ready for Moritz to edit and review. Final app UI-to-audio demo and listening review remain pending; NotebookLM quality parity is not shown.
+
+### Story v3 (superseded)
+
+Moritz asked to drop the chapter, reduce subtext, explain why, and make the text editable. v3 answered with the buffer-lifetime stepper alone and said the exact cause was unproved; v4 replaces that with the replay evidence.
 
 ## Previous revision (story v2, superseded)
 

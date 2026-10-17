@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="A local source-to-podcast experiment, a strange Pocket TTS recording, and a C++ tensor-lifetime bug found in the old runner.">
+  <meta name="description" content="A local source-to-podcast experiment and why an early Android port of Pocket TTS produced a runaway voice.">
   <title>Building a NotebookLM-like podcast on my phone</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1017'/%3E%3Cpath d='M7 17h4l3-9 5 17 3-8h3' fill='none' stroke='%238ee8c2' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
@@ -42,47 +42,73 @@
 
       <section aria-labelledby="pocket-heading">
         <h2 id="pocket-heading" data-edit="pocket-title">The first Android port</h2>
-        <p data-edit="pocket-copy">Before Supertonic, we tried Pocket TTS. This is the same test sentence on the original Android port and the later fixed-cache version.</p>
+        <p data-edit="pocket-copy">Before Supertonic, we tried Pocket TTS. It spoke this sentence normally on the desktop. On the phone's CPU the audio ran 10.72 seconds instead of 4.48 and sounded unhinged.</p>
         <blockquote>Pocket TTS runs entirely on this Android phone using the original floating point model.</blockquote>
         <div class="listening-pair">
-          <div class="listening"><h3>Original CPU port <span>10.72 s</span></h3><audio controls preload="none" aria-label="Rejected Pocket TTS original Android CPU recording"><source src="../android-benchmarks/media/0014-pocket-alba-original-dynamic-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-original-dynamic-cpu.wav">WAV</a><p class="audio-status" role="status" hidden></p></div>
-          <div class="listening recovered"><h3>Fixed-cache CPU port <span>4.48 s</span></h3><audio controls preload="none" aria-label="Accepted Pocket TTS fixed-cache Android CPU recording"><source src="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav">WAV</a><p class="audio-status" role="status" hidden></p></div>
+          <div class="listening"><h3>Original Android port <span>10.72 s</span></h3><audio controls preload="none" aria-label="Rejected Pocket TTS original Android CPU recording"><source src="../android-benchmarks/media/0014-pocket-alba-original-dynamic-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-original-dynamic-cpu.wav">WAV</a><p class="audio-status" role="status" hidden></p></div>
+          <div class="listening recovered"><h3>Fixed-cache port <span>4.48 s</span></h3><audio controls preload="none" aria-label="Accepted Pocket TTS fixed-cache Android CPU recording"><source src="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav">WAV</a><p class="audio-status" role="status" hidden></p></div>
         </div>
       </section>
 
-      <section aria-labelledby="lifetime-heading">
-        <h2 id="lifetime-heading" data-edit="cause-title">The tensor outlived its data</h2>
-        <p data-edit="cause-copy">Re-reading the old runner, I found a C++ lifetime bug. Its start-of-sequence buffer is destroyed before Run(), but the ONNX tensor only borrows that buffer. Inference then reads freed memory.</p>
-        <figure id="lifetime-figure" data-step="3" data-variant="broken" aria-label="Non-owning tensor and backing buffer lifetime">
-          <div class="variant-controls enhanced" hidden><button type="button" data-variant="broken" aria-pressed="true">Original scope</button><button type="button" data-variant="kept" aria-pressed="false">Keep buffer alive</button></div>
-          <pre><code id="scope-code">if (step == 0) {
+      <section aria-labelledby="why-heading">
+        <h2 id="why-heading" data-edit="why-title">Why it went wrong</h2>
+        <p data-edit="why-input">The first generation step takes a special input. The graph checks it with <code>Where(IsNaN(x), bos_emb, x)</code>: if the values are NaN, it swaps in the learned start-of-sequence vector. The C++ runner passed 32 NaNs to mean “start here.”</p>
+        <figure id="why-figure" data-input="both" aria-label="Which first input reproduces the phone's stop scores">
+          <div class="input-paths">
+            <div class="input-path intended"><b>Intended</b><div class="model-path"><span class="data-object">32 × NaN</span><svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg><div class="model"><strong>IsNaN is true</strong><span>use bos_emb</span></div><svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg><span class="data-object">Learned start</span></div></div>
+            <div class="input-path actual"><b>Zero input: closest match to the phone</b><div class="model-path"><span class="data-object">32 × 0</span><svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg><div class="model"><strong>IsNaN is false</strong><span>keep input</span></div><svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg><span class="data-object">Zero vector</span></div></div>
+          </div>
+          <div class="variant-controls enhanced" hidden><button type="button" data-input="both" aria-pressed="true">Show both</button><button type="button" data-input="nan" aria-pressed="false">NaN marker</button><button type="button" data-input="zero" aria-pressed="false">Zeros</button></div>
+<!-- chart:start -->
+          <div class="chart-wrap">
+            <div class="chart" role="img" aria-label="Stop score for each generated frame. The phone's retained run stays between about minus 14 and minus 7 for all 134 frames. A zero-input desktop replay follows it. A NaN-input replay rises above the minus 4 threshold at frame 53 and stops.">
+              <svg viewBox="0 0 133 24" preserveAspectRatio="none" aria-hidden="true">
+                <line class="threshold" x1="0" x2="133" y1="13" y2="13"/>
+                <polyline class="series android" points="0,19.271 1,16.535 2,16.357 3,16.872 4,16.802 5,17.166 6,17.653 7,17.760 8,18.728 9,18.682 10,19.465 11,19.245 12,19.920 13,21.016 14,20.028 15,19.644 16,20.258 17,21.050 18,23.252 19,21.546 20,19.896 21,21.145 22,21.309 23,20.366 24,20.151 25,19.929 26,19.660 27,21.178 28,20.792 29,19.997 30,19.229 31,20.721 32,20.604 33,20.576 34,18.696 35,19.518 36,20.149 37,19.231 38,19.589 39,18.127 40,19.130 41,19.154 42,18.696 43,19.242 44,18.630 45,19.566 46,19.277 47,18.963 48,19.184 49,18.477 50,18.153 51,18.284 52,18.289 53,18.100 54,17.112 55,16.557 56,18.375 57,17.824 58,17.607 59,18.703 60,19.849 61,19.507 62,19.442 63,18.926 64,18.819 65,19.152 66,20.177 67,20.659 68,21.081 69,20.987 70,21.353 71,19.684 72,18.797 73,19.961 74,21.119 75,20.442 76,20.648 77,19.345 78,18.758 79,19.147 80,18.831 81,18.799 82,19.081 83,19.840 84,21.521 85,19.450 86,20.322 87,19.797 88,19.931 89,20.600 90,20.482 91,20.049 92,20.457 93,20.577 94,19.290 95,20.198 96,20.694 97,20.282 98,18.566 99,18.724 100,19.093 101,19.183 102,19.561 103,18.515 104,17.543 105,18.335 106,17.527 107,17.783 108,19.338 109,18.227 110,18.375 111,18.613 112,19.805 113,19.790 114,19.524 115,18.470 116,17.439 117,18.922 118,19.664 119,18.427 120,18.680 121,19.771 122,18.372 123,18.477 124,18.932 125,18.238 126,19.861 127,18.094 128,17.589 129,17.655 130,17.867 131,18.714 132,19.565 133,18.111"/>
+                <polyline class="series zero" points="0,19.271 1,16.535 2,16.357 3,16.872 4,16.802 5,17.166 6,17.653 7,17.760 8,18.728 9,18.682 10,19.465 11,19.245 12,19.920 13,21.016 14,20.028 15,19.644 16,20.258 17,21.049 18,23.252 19,21.546 20,19.896 21,21.145 22,21.310 23,20.366 24,20.151 25,19.929 26,19.660 27,21.178 28,20.792 29,19.997 30,19.229 31,20.721 32,20.604 33,20.576 34,18.696 35,19.518 36,20.150 37,19.231 38,19.590 39,18.127 40,19.130 41,19.154 42,18.694 43,19.244 44,18.630 45,19.566 46,19.278 47,18.963 48,19.184 49,18.478 50,18.151 51,18.283 52,18.288 53,18.098 54,17.111 55,16.556 56,18.374 57,17.823 58,17.607 59,18.704 60,19.849 61,19.506 62,19.442 63,18.926 64,18.819 65,19.154 66,20.176 67,20.661 68,21.083 69,20.986 70,21.352 71,19.690 72,18.796 73,19.960 74,21.119 75,20.442 76,20.649 77,19.345 78,18.754 79,19.146 80,18.831 81,18.801 82,19.078 83,19.842 84,21.521 85,19.448 86,20.325 87,19.800 88,19.930 89,20.607 90,20.485 91,20.051 92,20.464 93,20.577 94,19.292 95,20.205 96,20.693 97,20.292 98,18.573 99,18.732 100,19.101 101,19.189 102,19.558 103,18.514 104,17.557 105,18.337 106,17.519 107,17.766 108,19.317 109,18.277 110,18.355 111,18.603 112,19.754 113,19.802 114,19.481 115,18.517 116,17.470 117,18.995 118,19.639 119,18.451 120,18.695 121,19.772 122,18.401 123,18.466 124,18.933 125,18.231 126,19.855 127,18.101 128,17.580 129,17.659 130,17.841 131,18.738 132,19.573 133,18.063"/>
+                <polyline class="series nan" points="0,18.885 1,19.037 2,18.477 3,19.097 4,21.000 5,21.101 6,20.477 7,20.438 8,21.266 9,21.097 10,22.474 11,22.487 12,21.746 13,22.397 14,21.660 15,20.609 16,20.460 17,20.334 18,19.375 19,20.638 20,20.467 21,21.369 22,20.785 23,21.524 24,20.440 25,20.181 26,20.661 27,21.031 28,20.836 29,20.821 30,20.931 31,21.087 32,21.624 33,23.236 34,20.396 35,19.476 36,19.808 37,20.166 38,20.271 39,19.746 40,19.154 41,19.360 42,19.610 43,20.930 44,20.166 45,19.826 46,19.845 47,18.674 48,18.819 49,19.375 50,16.918 51,16.393 52,14.394 53,8.601 54,0.741 55,1.461 56,2.492"/>
+                <line id="step-marker" class="marker" x1="53" x2="53" y1="0" y2="24" hidden/>
+              </svg>
+              <span class="tick y" style="top:87.5%">−12</span><span class="tick y" style="top:70.83%">−8</span><span class="tick y" style="top:54.17%">−4</span><span class="tick y" style="top:37.5%">0</span><span class="tick y" style="top:20.83%">4</span><span class="tick y" style="top:4.17%">8</span><span class="tick x" style="left:0.0%">0</span><span class="tick x" style="left:39.85%">53</span><span class="tick x" style="left:100.0%">133</span>
+              <span class="note threshold-note" style="top:54.17%">stop threshold</span>
+              <span class="note stop-note" style="left:39.85%">stops at frame 53</span>
+              <span class="axis-name y">Stop score</span><span class="axis-name x">Generated frame (cap 134)</span>
+            </div>
+          </div>
+          <ul class="legend"><li class="android">Phone, retained run</li><li class="zero">Desktop replay, zero first input</li><li class="nan">Desktop replay, NaN first input</li></ul>
+          <div class="scrub enhanced" hidden><label for="why-step">Frame</label><input id="why-step" type="range" min="0" max="133" value="53" step="1" aria-describedby="why-readout"></div>
+          <script type="application/json" id="trajectories">{"android":[-10.271,-7.535,-7.357,-7.872,-7.802,-8.166,-8.653,-8.76,-9.728,-9.682,-10.465,-10.245,-10.92,-12.016,-11.028,-10.644,-11.258,-12.05,-14.252,-12.546,-10.896,-12.145,-12.309,-11.366,-11.151,-10.929,-10.66,-12.178,-11.792,-10.997,-10.229,-11.721,-11.604,-11.576,-9.696,-10.518,-11.149,-10.231,-10.589,-9.127,-10.13,-10.154,-9.696,-10.242,-9.63,-10.566,-10.277,-9.963,-10.184,-9.477,-9.153,-9.284,-9.289,-9.1,-8.112,-7.557,-9.375,-8.824,-8.607,-9.703,-10.849,-10.507,-10.442,-9.926,-9.819,-10.152,-11.177,-11.659,-12.081,-11.987,-12.353,-10.684,-9.797,-10.961,-12.119,-11.442,-11.648,-10.345,-9.758,-10.147,-9.831,-9.799,-10.081,-10.84,-12.521,-10.45,-11.322,-10.797,-10.931,-11.6,-11.482,-11.049,-11.457,-11.577,-10.29,-11.198,-11.694,-11.282,-9.566,-9.724,-10.093,-10.183,-10.561,-9.515,-8.543,-9.335,-8.527,-8.783,-10.338,-9.227,-9.375,-9.613,-10.805,-10.79,-10.524,-9.47,-8.439,-9.922,-10.664,-9.427,-9.68,-10.771,-9.372,-9.477,-9.932,-9.238,-10.861,-9.094,-8.589,-8.655,-8.867,-9.714,-10.565,-9.111],"zero":[-10.271,-7.535,-7.357,-7.872,-7.802,-8.166,-8.653,-8.76,-9.728,-9.682,-10.465,-10.245,-10.92,-12.016,-11.028,-10.644,-11.258,-12.049,-14.252,-12.546,-10.896,-12.145,-12.31,-11.366,-11.151,-10.929,-10.66,-12.178,-11.792,-10.997,-10.229,-11.721,-11.604,-11.576,-9.696,-10.518,-11.15,-10.231,-10.59,-9.127,-10.13,-10.154,-9.694,-10.244,-9.63,-10.566,-10.278,-9.963,-10.184,-9.478,-9.151,-9.283,-9.288,-9.098,-8.111,-7.556,-9.374,-8.823,-8.607,-9.704,-10.849,-10.506,-10.442,-9.926,-9.819,-10.154,-11.176,-11.661,-12.083,-11.986,-12.352,-10.69,-9.796,-10.96,-12.119,-11.442,-11.649,-10.345,-9.754,-10.146,-9.831,-9.801,-10.078,-10.842,-12.521,-10.448,-11.325,-10.8,-10.93,-11.607,-11.485,-11.051,-11.464,-11.577,-10.292,-11.205,-11.693,-11.292,-9.573,-9.732,-10.101,-10.189,-10.558,-9.514,-8.557,-9.337,-8.519,-8.766,-10.317,-9.277,-9.355,-9.603,-10.754,-10.802,-10.481,-9.517,-8.47,-9.995,-10.639,-9.451,-9.695,-10.772,-9.401,-9.466,-9.933,-9.231,-10.855,-9.101,-8.58,-8.659,-8.841,-9.738,-10.573,-9.063],"nan":[-9.885,-10.037,-9.477,-10.097,-12.0,-12.101,-11.477,-11.438,-12.266,-12.097,-13.474,-13.487,-12.746,-13.397,-12.66,-11.609,-11.46,-11.334,-10.375,-11.638,-11.467,-12.369,-11.785,-12.524,-11.44,-11.181,-11.661,-12.031,-11.836,-11.821,-11.931,-12.087,-12.624,-14.236,-11.396,-10.476,-10.808,-11.166,-11.271,-10.746,-10.154,-10.36,-10.61,-11.93,-11.166,-10.826,-10.845,-9.674,-9.819,-10.375,-7.918,-7.393,-5.394,0.399,8.259,7.539,6.508]}</script>
+<!-- chart:end -->
+          <p id="why-readout" class="readout" aria-live="polite"></p>
+        </figure>
+        <p data-edit="why-evidence">The phone's stop scores stay below the stop threshold for all 134 frames. I replayed the model on a desktop with the same text, voice cache and noise, changing only the first input. All zeros reproduces the phone's scores closely. NaN doesn't. I also tried 62 inputs with only a prefix or suffix zeroed, and none matched.</p>
+        <p data-edit="why-cause">Zeros are inferred, not observed: I didn't read the phone's memory. They are consistent with the old runner, which builds the NaN buffer inside an <code>if</code> block, wraps it in a tensor that doesn't own it, and frees it before calling <code>Run()</code>.</p>
+        <pre><code>if (step == 0) {
   std::vector&lt;float&gt; bos(32, NaN);
   inputs.push_back(TV(mi, bos, {1, 1, 32}));
-} // bos is destroyed here
-Run(main, inputs);</code></pre>
-          <div class="figure-controls enhanced" id="lifetime-controls" aria-label="Step through buffer lifetime" hidden><button type="button" data-step="0" aria-pressed="false">1. Allocate</button><button type="button" data-step="1" aria-pressed="false">2. Wrap</button><button type="button" data-step="2" aria-pressed="false">3. Leave scope</button><button type="button" data-step="3" aria-pressed="true">4. Consume</button><button type="button" id="play-explanation" aria-pressed="false">Play</button></div>
-          <div class="ownership">
-            <div class="buffer"><strong>bos</strong><span>32 floats · 128 bytes</span><b id="buffer-state">Freed</b></div>
-            <svg viewBox="0 0 80 30" aria-hidden="true"><path d="M78 15H3m7-6-7 6 7 6"/></svg>
-            <div class="tensor"><strong>Ort::Value</strong><span>Borrows the pointer</span><b id="tensor-state">Dangling input</b></div>
-          </div>
-          <p id="lifetime-status" aria-live="polite">Run() receives a tensor whose backing buffer has already been freed.</p>
-        </figure>
-        <p data-edit="cause-limit">Keeping the buffer alive fixes the AddressSanitizer test. I haven't replayed the historical recording, so this isn't a confirmed diagnosis of that clip.</p>
-        <p class="takeaway" data-edit="takeaway">Check the port's memory ownership, not just its model outputs. Producing a valid audio file doesn't mean the inference was valid.</p>
+} // bos is freed here
+Run(main, inputs); // the tensor still points at it</code></pre>
+        <p data-edit="why-compounding">The learned start vector is small, with an L2 norm of 0.17, so zeros move the first stop score by only 0.39. But every later frame is conditioned on that step's cache and on the previous frame. The difference compounds, the stop score never crosses −4, and the model keeps talking until the 134-frame cap.</p>
+      </section>
+
+      <section aria-labelledby="fix-heading">
+        <h2 id="fix-heading" data-edit="fix-title">The fix we applied</h2>
+        <p data-edit="fix-copy">We didn't find this bug at the time. The fixed-cache graphs were built for the NPU: static 256-slot caches, explicit positions and a separate first-step graph with the start vector built in. That version has no NaN marker to lose. Its stop scores on the same phone CPU match the desktop replay's within 0.002.</p>
+        <p class="takeaway" data-edit="lesson">One different input at the first step produced a valid-looking file that sounded wrong. Compare first-step inputs and scores across devices, not only the finished audio.</p>
       </section>
     </article></main>
     <details id="records">
       <summary>Sources &amp; technical notes</summary>
       <div class="records-body">
-        <p>The lifetime bug is confirmed in the retained C++ source and a host-only AddressSanitizer reproduction using real ORT non-owning tensors. No model was loaded. We have not bound that exact source to the old phone executable or replayed the recording with only the lifetime fix. The old first-logit difference does not establish a runtime-only defect when the input lifetime is invalid.</p>
+        <p>The replay ports the old runner's loop to ONNX Runtime 1.22.1 on a desktop CPU and changes only the first autoregressive input. It reuses the retained fixed-Alba cache, token IDs and noise fixture, whose hashes are checked. The exact original <code>flow_lm_main</code> graph is not retained. The replay uses a same-size reconstruction with a different hash. It reproduces the original desktop run: first stop score −9.8847 and stop at step 53. It also matches the Android fixed-cache stop scores within 0.0021.</p>
+        <p>With all-zero input the replay's 134 stop scores differ from the retained Android run by at most 0.074, mean 0.006, and never reach the threshold. With the correct NaN input they differ by up to 16.4 over the 57 frames before it stops. The replay produced no audio and makes no listening claim.</p>
+        <p>Not shown: the phone's freed-buffer contents, which were not read, and that the retained source is exactly what was built into the old phone executable. The dangling read itself is confirmed in source and by a host AddressSanitizer test that uses ONNX Runtime's real non-owning tensor API and no model. The earlier invalid-voice-clone failure is a different cause.</p>
         <ul>
-          <li><a href="evidence/source-audit.md">Source audit, proof, limits and reproduction command</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
-          <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/tools/pocket_alba_cpu_runner.cc">Original retained runner</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json">Historical exact-file listening verdicts</a></li>
+          <li><a href="evidence/bos-zero-replay.py">Replay script</a> · <a href="evidence/bos-zero-replay.json">Replay results and stop scores</a></li>
+          <li><a href="evidence/source-audit.md">Source audit and AddressSanitizer reproduction</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
+          <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/tools/pocket_alba_cpu_runner.cc">Original retained runner</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json">Android run and listening verdict</a></li>
         </ul>
-        <p>The diagram shortens the original code around its relevant scope. TV() calls Ort::Value::CreateTensor() with a user-owned buffer. It wraps the pointer without copying its contents. Keep that storage alive through consumption, or use an allocator-owned tensor and copy into it.</p>
-        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic app output. The fixed-cache graph avoided this BOS input path, but changed more than this one lifetime. The separate invalid Bria/zero-encoder issue is not the explanation for this clip.</p>
-        <p>The current prototype, Qoralo, uses LiteRT-LM for Gemma/GPU and ONNX Runtime + QNN for Supertonic/HTP. HTP is Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not measured timing. The final app demonstration and listening review remain pending. This is not a NotebookLM quality match or public release.</p>
+        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses LiteRT-LM for Gemma on GPU and ONNX Runtime with QNN for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not timing. The final app demonstration and listening review are pending. This is not a NotebookLM quality match or a public release.</p>
       </div>
     </details>
   </div>

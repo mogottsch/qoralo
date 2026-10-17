@@ -50,12 +50,14 @@ LD_LIBRARY_PATH="$WORK" ASAN_OPTIONS=detect_leaks=0 "$WORK/repro" keep-alive
 
 No downloads are part of the command. These local header/runtime caches must exist. Raw local diagnostic logs: `/tmp/qoralo-story-v3/{broken.asan.txt,kept.stdout,kept.stderr}`. Initial environment/API compatibility errors were resolved before the valid sanitizer comparison; those failed launches were not evidence of the source defect.
 
+## Later host replay: what the dangling input could have become
+
+`bos-zero-replay.py` / `bos-zero-replay.json` test the consequence rather than the defect. The graph does `Where(IsNaN(sequence), flow_lm.bos_emb, sequence)`. Replaying the old loop on host CPU and changing only the first autoregressive input shows an all-zero input reproduces the retained Android original-graph stop scores (step 0: -10.2709; 134 steps: max difference 0.0736, mean 0.00577; no stop), while the correct NaN input does not (up to 16.4 over 57 steps; stop at 53). 62 partly zeroed prefix/suffix inputs did not match. The retained Android fixed-cache run matches the correct-input replay within 0.0021. Pi independently reran it and reproduced those numbers.
+
+Limits that remain: the contents of the phone's freed buffer were never read, so zeros are **inferred** from the match, not observed. The exact original graph (`021288bd…`) is missing; the replay uses a same-size reconstruction (`ce8d8701…`) that reproduces the retained host first score and stop step. The retained source hash is not bound to the old executable hash. The scan covered prefix/suffix patterns, not all possible inputs. No audio was generated.
+
 ## What this changes, and what remains unproved
 
-The old article presented the first EOS-logit difference as a meaningful device/runtime localization despite identical input conditions. The source defect means that inference input validity is not established by having matching token/cache/noise files. A tensor that points at freed storage is not a guaranteed identical input. **Runtime-only blame is not established.**
+The old article presented the first EOS-logit difference as runtime localization despite "identical input". The source defect means matching fixture files do not establish identical input memory, and the replay shows a zero first input accounts for the retained trajectory. Runtime-only blame is not supported.
 
-The historical JSON records the phone executable SHA-256 as `a11685f5635efdca81c07a12794a9e4d103e86f82b631e3b45dc893b17f57257`. That is a binary hash, not the source hash above. This audit has not verified a source-to-binary binding for that old executable and has not replayed the old model after changing only buffer lifetime. It therefore does not prove that this defect caused the exact old recording, its first logit difference, or every later error.
-
-The fixed-cache runner uses a dedicated BOS graph and avoids this particular borrowed BOS-buffer path, but also changes the graph/state layout. Its accepted recording is not a controlled lifetime-only intervention. The separate zero-voice-encoder/invalid-Bria root cause belongs to different failed samples.
-
-The source-level conclusion is concrete: this runner has undefined input-memory behavior; retain backing storage through consumption or use an owning tensor/copy. Exact audio causality remains untested. The blog now explains this actual ownership mechanism instead of decorating the logit symptom as a cause.
+Still unproved: that this defect, rather than another route to an all-zero input, produced the phone's input; the exact contents of the freed buffer; and any binding of the audited source to the old binary. The fixed-cache runner avoids the borrowed BOS input (its `ArBos` graph builds the learned start vector in) but also changes graph and cache layout, so its recovery is not a controlled test of this defect alone. The separate zero-voice-encoder/invalid-Bria finding concerns other recordings.
