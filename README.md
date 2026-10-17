@@ -1,71 +1,64 @@
-# Offline-first mobile podcast inference on Android
+# Qoralo
 
-This repository builds and validates the local inference components needed for an offline-first, NotebookLM-like listening experience on Android.
+Qoralo is an Android prototype that turns source material into a script and narrated audio using models running on the phone. The current target is a **Galaxy S23 Ultra** with Snapdragon 8 Gen 2.
 
-The technical scope has two component layers:
+**[App source and status](podcast-app/README.md)** · **[Setup guide](podcast-app/docs/getting-started.md)** · **[Visual article draft](docs/qoralo-blog/index.html)** · **[Presentation](docs/presentation/index.html)**
 
-1. **Local language-model inference** — run candidate LLMs on a modern phone and measure model setup, prompt processing, token generation, memory, and operational behavior. Transcript generation is the eventual use, but the first comparable experiments are performance and execution benchmarks rather than script-quality evaluations.
-2. **Local text-to-speech** — select, deploy, and measure speech models that can render long-form material naturally and practically on a phone.
+## From sources to an episode
 
-A convincing two-speaker result is useful but not required. A strong single narrator or persistent voices generated turn by turn can also work. Source acquisition, retrieval infrastructure, application UI, script editing, episode assembly, export, and episode management are outside this repository's current component-inference scope.
+Import source material, give the app instructions, then review or edit the generated script before creating audio. The app has a library, persistent player, WAV export and episode diagnostics/deletion. Script review can also be turned off.
 
-Historical TTS experiments remain unchanged. New LLM experiments use the same numbered, evidence-first workflow without reusing TTS-specific transcript, WAV, RTF, or listening fields.
-
-## Repository structure
-
-- [`docs/history.md`](docs/history.md) and its [HTML mirror](docs/history.html): completed experiments, results, and decisions carried forward.
-- [`docs/plan.md`](docs/plan.md) and its [HTML mirror](docs/plan.html): the current goal and unfinished work.
-- [`docs/handovers/`](docs/handovers/): persistent dated snapshots for cross-device and cross-session continuation.
-- [`docs/wiki/`](docs/wiki/): repository-backed explanatory wiki; open this directory as its own Obsidian vault if desired.
-- [`docs/devices/`](docs/devices/): target-device baselines and constraints.
-- [`docs/architectures/index.html`](docs/architectures/index.html): preserved interactive architecture reference for the compared TTS families.
-- [`docs/android-benchmarks/`](docs/android-benchmarks/): normalized Android TTS registry and dashboard.
-- [`docs/android-llm-benchmarks/`](docs/android-llm-benchmarks/): separate normalized Android LLM registry and dashboard.
-- [`protocols/android-tts-benchmark/`](protocols/android-tts-benchmark/) and [`protocols/android-llm-benchmark/`](protocols/android-llm-benchmark/): component-specific comparable benchmark contracts.
-- [`experiments/`](experiments/): numbered, reproducible investigations and their canonical evidence.
-- [`scripts/`](scripts/): shared inventory, validation, reporting, and benchmark helpers.
-- `artifacts/` and experiment-local `.local/` or `work/` directories: ignored storage for models, generated media, builds, profiles, logs, and other large or restricted material.
-
-The published TTS results dashboard is at <https://preview.moket-home.de/vibevoice-android/>. The LLM dashboard starts empty and will publish only committed normalized evidence.
-
-## Way of working
-
-### Experiments record the past; plans describe the future
-
-Numbered experiment directories preserve what was actually attempted and measured. Their results remain historical evidence even when the preferred model or technical direction changes. Future work is described as gated work in the plan rather than as if its outcome were already known.
-
-Every phase links to the experiment that owns its detailed evidence. When a phase finishes, the experiment keeps the full record, the condensed outcome moves to the history, and completed work leaves the current plan.
-
-### Evidence before claims
-
-Each result records exact model, artifact, tokenizer, runtime, input, configuration, device, timing, memory, output-hash, and limitation provenance as applicable. Host tests, physical-phone runs, component probes, and complete routes remain distinct.
-
-For LLM work, successful execution, output sanity, measured performance, and later quality evaluation are separate claims. `looks_sensible` is only a superficial corruption/gibberish smoke check on one exact output hash; it is not correctness, grounding, quality, or acceptance.
-
-For TTS work, technical execution, structural audio validity, objective comparison, and exact-hash listening review remain separate. Plausible output never overrides a failed numerical, reproducibility, or provider gate.
-
-### Small gated steps
-
-Work starts with the smallest test that can answer the next uncertainty. A phase proceeds only when its entry conditions are met and its evidence justifies additional complexity. Negative and blocked results are retained when reproducible.
-
-For accelerator work, CPU fallback is disabled whenever full delegation is part of the claim. Thresholds are frozen before inspecting corresponding accelerated output.
-
-### Reproducible source, local artifacts
-
-Scripts, prompts, manifests, schemas, hashes, bounded measurements, raw text outputs, and conclusions belong in Git. Model weights, generated audio, converted models, SDK binaries, APKs, tensors, raw profiles, and large build trees remain ignored and local.
-
-Proprietary terms, account logins, export attestations, paid services, privileged changes, and personal-device access require explicit human approval.
-
-### Two records, multiple benchmark views
-
-[`docs/history.md`](docs/history.md) is the source for completed work. [`docs/plan.md`](docs/plan.md) is the source for unfinished work. Detailed plans remain with their experiments. Adjacent HTML files provide human-readable views.
-
-TTS and LLM metrics remain in separate registries because their performance and output-evidence contracts are not interchangeable. A future landing page may link TTS, LLM, and end-to-end integration views; that integration view would combine the two component layers rather than add a third charter layer.
-
-Regenerate the plan and history mirrors with:
-
-```bash
-python3 scripts/build_docs_html.py
+```mermaid
+flowchart LR
+    A["Source material"] --> B["Gemma 4 E2B IT<br/>GPU · LiteRT-LM"]
+    B --> C["Review or edit script<br/>(optional)"]
+    C --> D["Supertonic 3<br/>HTP · QNN / ONNX Runtime"]
+    D --> E["Episode audio<br/>Play or export WAV"]
 ```
 
-Keep shared documents concise. Detailed commands, measurements, failures, and resume instructions belong in the relevant experiment.
+Gemma writes the script on the GPU. Supertonic generates speech on Qualcomm's **Hexagon Tensor Processor (HTP)**, the phone's NPU route. The CPU still runs the app, prepares model inputs and manages audio files. These are the selected model routes, not a claim that every operation runs on an accelerator or that both models run simultaneously.
+
+Long narration follows Supertonic's recipe: process shorter pieces separately, then assemble the audio. The app keeps complete chapters and a final episode WAV; it does not silently switch to a CPU model if a route fails.
+
+## Prototype status
+
+- The app is developed for the **SM8550 / HTP V73** target above, not validated across Android phones generally. It is not a public app release.
+- Earlier phone runs established real GPU script generation and HTP speech generation. The **latest frozen app is host-tested, not newly device-tested**; the final normal UI-to-audio demo and listening review remain pending. See the [current closeout and exact build identities](podcast-app/docs/current-closeout.md).
+- Experimental recordings are not samples of the current app's output. [Writing-quality observations](podcast-app/promptlab/README.md) and [remaining historical test failures](podcast-app/docs/host-scope-test-baseline.md) are recorded separately.
+
+## Build and run
+
+Start with the **[setup guide](podcast-app/docs/getting-started.md)** for prerequisites, local artifacts and licensing constraints. The [app README](podcast-app/README.md) links the build commands, runtime routes and delivery runbook.
+
+A clone alone is not a runnable neural deployment. Model weights, prepared context files and licensed native runtime libraries must be provisioned separately; they are not supplied by this repository. APKs and large local build/model artifacts remain outside Git.
+
+## Read the article and presentation locally
+
+The links above open **HTML source on GitHub**, not hosted pages. No public article destination has been chosen. After cloning, serve the repository root:
+
+```bash
+python3 -m http.server 8766 --bind 127.0.0.1
+```
+
+Then open:
+
+- **[Visual article draft](http://127.0.0.1:8766/docs/qoralo-blog/)**: the private visual write-up. Moritz is still revising its prose.
+- **[Presentation](http://127.0.0.1:8766/docs/presentation/)**: the model choices, GPU/NPU architecture and speech deployment work, with optional technical detail.
+
+Keep the repository's relative files together so diagrams, recordings and evidence links resolve. Any audio on those pages is labelled experimental evidence, not a current-app demo.
+
+## Research and evidence
+
+The app grew out of model and accelerator experiments. This repository keeps that research alongside the app, including failed attempts; it is still named `vibevoice-android-spike` for historical reasons. The active app uses Gemma and Supertonic, not VibeVoice.
+
+| Start here | Contents |
+| --- | --- |
+| [Experiments](experiments/) | Numbered investigations, tools, measurements and limitations |
+| [History](docs/history.md) and [plan](docs/plan.md) | Completed work and unfinished research |
+| [Wiki](docs/wiki/README.md) | Model, runtime and hardware explanations |
+| [Speech deployment reconstruction](docs/supertonic-android-htp-reconstruction.md) | The recorded steps from speech models to Android HTP execution |
+| [TTS benchmarks](docs/android-benchmarks/) | Speech measurements and listening records |
+| [LLM benchmarks](docs/android-llm-benchmarks/) | Separate language-model execution and performance evidence |
+| [TTS protocol](protocols/android-tts-benchmark/) and [LLM protocol](protocols/android-llm-benchmark/) | Workloads, measurement rules and required evidence |
+
+Component benchmarks, host tests, phone runs and complete app workflows support different claims. Their records retain that distinction; an accepted recording does not turn a failed numerical comparison into a pass.

@@ -78,8 +78,10 @@ proof of numerical equivalence to `44a41cd4…`.
 
 - [x] Thomas's round3 runtime, JVM tests and prompt-bench source committed; no
   further runtime/config edits or concurrent Gradle/native builds during freeze.
-- [x] Java 17; SDK 35; NDK `28.1.13356709`; CMake `3.22.1`; Gradle cache and
-  authorized runtime inputs present. No network/model acquisition implied.
+- [x] Tested Gradle runtime: OpenJDK **21.0.12.1+1**, Gradle **8.9** (both
+  launcher and daemon used JDK21). Java/Kotlin bytecode target: **17**, not the
+  JDK used for this build. SDK 35; NDK `28.1.13356709`; CMake `3.22.1`; Gradle
+  cache and authorized runtime inputs present. No network/model acquisition implied.
 - [x] Normal provider selectors, **not** legacy application ID or short plumbing.
 - [x] Run the host command below for each frozen source revision, retaining exit codes, logs and XML; record
   tests **discovered/executed/skipped**, never call skipped cases passed.
