@@ -64,6 +64,9 @@ blockquote { max-width:52ch; font-size:23px; line-height:1.5; margin:24px 0; let
 .formula mfrac mtext { padding:.1em .25em; }
 .sub { margin:38px 0 8px; font-size:17px; font-weight:600; letter-spacing:-.01em; line-height:1.4; }
 .sub:first-of-type { margin-top:22px; }
+.tldr { margin:14px 0 0; font-size:16px; line-height:1.6; }
+.tldr a { color:var(--htp); }
+.tldr a:hover { color:var(--ink); }
 .demo { margin:8px 0 12px; }
 .demo video { display:block; width:100%; max-height:min(78vh,720px); background:#05080c; border:1px solid var(--line); }
 .demo-status { max-width:none; padding:56px 24px; border:1px dashed #526175; text-align:center; font-size:15px; }
@@ -189,7 +192,6 @@ summary { cursor:pointer; color:var(--muted); font-size:13px; padding:8px 0; wid
   .qflow-prov-v::before { content:""; position:absolute; left:calc(50% - 1px); top:48px; height:calc(100% - 48px - 112px + 6px - 2px); border-left:2px dotted var(--q-npu); }
   .qflow-prov-v::after { content:""; position:absolute; left:calc(50% - 5px); bottom:106px; border:5px solid transparent; border-top:7px solid var(--q-npu); border-bottom:0; }
   .qflow-prov-label { z-index:1; align-self:start; margin:56px 0 0; padding:0; max-width:none; font-size:12px; line-height:1.4; color:var(--q-npu); }
-  .qflow-caption { max-width:94ch; margin:22px 0 0; color:var(--q-muted); font-size:13px; line-height:1.75; }
   @media (max-width:1039px) {
     /* Narrow screens: the same steps as a plain ordered list, each tagged with the device it runs on. */
     .qflow { max-width:660px; }
@@ -205,8 +207,7 @@ summary { cursor:pointer; color:var(--muted); font-size:13px; padding:8px 0; wid
     .qflow-mobile-only { position:static; grid-column:1 / -1; width:auto; height:auto; clip-path:none; overflow:visible; white-space:normal; font-size:12px; line-height:1.6; color:var(--q-npu); }
     .qflow-p4 .qflow-mobile-only, #qflow-p4 .qflow-mobile-only { color:var(--q-muted); }
     .qflow-node:not(:last-child)::after { content:"\2193"; content:"\2193" / ""; position:absolute; left:18px; bottom:-24px; font-size:15px; line-height:1; color:var(--q-muted); }
-    .qflow-caption { margin:25px 0 0; }
-  }
+    }
   @media print {
     .qflow { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
     .qflow-node { break-inside:avoid; }

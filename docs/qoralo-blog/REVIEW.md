@@ -1,5 +1,9 @@
 # Article review record
 
+## Headings, no diagram caption, demo at the end, tl;dr (story v4, latest)
+
+Moritz liked "Building a NotebookLM-like podcast on my phone" and "What I tried" and found the rest AI-ish. Headings are now "Where I ended up", "Pocket TTS on my phone", "So what went wrong?", "The demo" and, for the clips, "The one that works" / "The one that doesn't"; "Speech" and "Script writing" are his own words and stay, the notes disclosure is "Notes and sources". The diagram caption is removed (the lanes carry the meaning; the screen-reader description stays). The demo moved to the end, right before the closing line, and a one-line "tl;dr" under the frozen question links to it. Tests pin the headings, the order (question, tl;dr, what I tried, where I ended up, Pocket TTS, what went wrong, the demo, closing), the link target and that clicking it scrolls the demo into view.
+
 ## Reference links (story v4, latest)
 
 Moritz approved the suggested links except the deep dives. Thirteen links added: NotebookLM (Audio Overviews post, because Google renamed it Gemini Notebook in July 2026), the eight models' Hugging Face pages (Supertonic's GitHub repository is archived; Pocket links its weights variant in the table and Kyutai's repository in the prose), Qualcomm's AI Engine Direct SDK for HTP, LiteRT-LM and ONNX Runtime's QNN page in the notes. Each URL returned 200 when added. The editor was changed so that rewriting a paragraph keeps its links (round-tripped as `[label](url)`, rebuilt as DOM anchors, http(s) only) and the suite tests the round trip and the export. A stale notes sentence ("Processor traces are schematic") that referred to a removed figure now says the system flow is a schematic, not a timing trace.

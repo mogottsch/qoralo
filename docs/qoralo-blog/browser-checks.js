@@ -16,6 +16,10 @@ async (page) => {
   // Moritz's approved opening is frozen: title, intro and question must not drift.
   const frozen={title:'Building a NotebookLM-like podcast on my phone',intro:"You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.",question:'So I wondered: how good could this be with all inference running on my phone?'};
   for(const [k,v] of Object.entries(frozen)) check((await page.locator(`[data-edit="${k}"]`).textContent())===v,`Frozen opening text changed: ${k}`);
+  // Headings in Moritz's voice: his two kept as they were, the rest plain and first person.
+  const headText=await page.evaluate(()=>({h1:document.querySelector('h1').textContent,h2:[...document.querySelectorAll('main h2')].map(h=>h.textContent.trim()),sub:[...document.querySelectorAll('main h3.sub')].map(h=>h.textContent.trim()),clips:[...document.querySelectorAll('.listening h3')].map(h=>h.firstChild.textContent.trim()),notes:document.querySelector('#records > summary').textContent.trim()}));
+  check(headText.h1==='Building a NotebookLM-like podcast on my phone'&&headText.h2.join('|')==='What I tried|Where I ended up|Pocket TTS on my phone|So what went wrong?|The demo'&&headText.sub.join('|')==='Speech|Script writing'&&headText.clips.join('|')==="The one that works|The one that doesn't"&&headText.notes==='Notes and sources','Headings: '+JSON.stringify(headText));
+  check(!/Where it ends up|The first Android port|Why it went wrong|Fixed-cache port|Original Android port|technical notes/i.test(await page.locator('main h2,main h3,#records > summary').allInnerTexts().then(a=>a.join(' | '))),'No leftover old headings');
   // Reference links: exactly these, each verified to resolve when added; none to a redirecting or archived address.
   const expectedLinks={
     'NotebookLM':'https://blog.google/innovation-and-ai/products/notebooklm-audio-overviews/',
@@ -38,26 +42,33 @@ async (page) => {
   check(await page.locator('.bench.llm tbody tr').evaluateAll(trs=>{const names=trs.map(t=>t.querySelector('th').textContent.trim());return names.every((n,i)=>(trs[i].querySelectorAll('th a').length===1)===(names.indexOf(n)===i));}),'In the script-writing table a model name is a link on its first row only');
   check(await page.locator('.bench:not(.llm) tbody tr th a').count()===5,'All five speech models are linked');
   check(await page.locator('[data-edit="tried-copy"] a.ref').count()===1&&await page.locator('[data-edit="pocket-copy"] a.ref').count()===1&&await page.locator('[data-edit="intro"] a.ref').count()===1,'Links in editable paragraphs: intro, speech, Pocket');
-  check(await page.locator('[data-edit="question"]').evaluate(q=>q.compareDocumentPosition(document.querySelector('#demo-figure'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Demo video sits between the question and the first section');
+  const after=(a,b)=>page.evaluate(([a,b])=>(document.querySelector(a).compareDocumentPosition(document.querySelector(b))&Node.DOCUMENT_POSITION_FOLLOWING)>0,[a,b]);
+  check(await after('[data-edit="question"]','.tldr')&&await after('.tldr','#tried-heading'),'The tl;dr line sits right under the question, before the first section');
+  check((await page.locator('[data-edit="tldr"]').textContent())==="tl;dr, if you don't care about the details:"&&await page.locator('.tldr a').textContent()==='jump to the demo'&&(await page.locator('.tldr a').getAttribute('href'))==='#demo-heading'&&await page.locator('#demo-heading').count()===1,'tl;dr line links to the demo section');
+  check(await after('#why-heading','#demo-heading')&&await after('#demo-heading','.closing')&&await page.locator('#demo-figure').evaluate(d=>d.closest('section').querySelector('#demo-heading')!==null),'The demo is at the end: after the story, before the closing line');
   // Demo video: it plays if the file exists; otherwise the page says where to put it. Never a silent broken player.
   await page.waitForTimeout(800);
   const demoState=await page.evaluate(()=>{const v=document.querySelector('#demo-video'),s=document.querySelector('.demo-status');return {loaded:v.readyState>=1&&!v.hidden,duration:v.duration,statusShown:!s.hidden,videoHidden:v.hidden,autoplay:v.autoplay};});
   check(demoState.loaded!==demoState.statusShown,'Demo: exactly one of player or missing-file notice is shown: '+JSON.stringify(demoState));
   check(!demoState.autoplay,'Demo video does not autoplay');
   if(demoState.loaded)check(demoState.duration>0&&demoState.duration<180,'Demo video is a short clip: '+demoState.duration);
+  await page.locator('.tldr a').click();
+  await page.waitForTimeout(900);
+  check(await page.evaluate(()=>{const r=document.querySelector('#demo-heading').getBoundingClientRect();return r.top>=-1&&r.top<innerHeight-40;}),'Clicking the tl;dr link scrolls the demo into view');
+  await page.evaluate(()=>scrollTo(0,0));
   // Closing line.
   check((await page.locator('[data-edit="closing"]').textContent())==='If you wanna take a look,'&&await page.locator('.closing a').textContent()==='here it is'&&(await page.locator('.closing a').getAttribute('href'))==='https://github.com/mogottsch/vibevoice-android-spike','Closing: "If you wanna take a look, here it is" linking the repository');
   check(await page.locator('.closing').evaluate(c=>c===document.querySelector('article').lastElementChild),'Closing is the last thing in the article');
   check(!/What.s left|one voice instead|final demo/i.test(await page.locator('main').innerText()),'No "what is left" section');
   check(await page.locator('#fix-heading,pre,.takeaway,[data-edit="fix-copy"],[data-edit="lesson"],[data-edit="why-cause"]').count()===0&&!/The fix we applied|freed before|undefined behavior|bos is freed|One different input/.test(await page.locator('main').innerText()),'No code excerpt, cause paragraph, fix section or takeaway');
-  check(await page.locator('#why-figure').evaluate(f=>f.closest('section').nextElementSibling===null||f.closest('section').nextElementSibling.classList.contains('closing')),'Why it went wrong is the last section before the closing line');
+  check(await page.locator('#demo-figure').evaluate(f=>f.closest('section').nextElementSibling.classList.contains('closing'))&&await page.locator('#why-figure').evaluate(f=>f.closest('section').nextElementSibling.querySelector('#demo-heading')!==null),'The demo is the last section before the closing line, right after the explanation');
 
   // 'Where it ends up': swimlanes, one lane per device; the diagram says only what the app really does.
   const sys=await page.evaluate(()=>{
     const f=document.querySelector('#system-figure');
     const nodes=[...f.querySelectorAll('.qflow-node')].map(n=>({id:n.id,lane:n.dataset.lane,step:Number(n.dataset.step),title:n.querySelector('.qflow-title').textContent.trim(),detail:n.querySelector('.qflow-detail').textContent.trim(),where:n.querySelector('.qflow-where').textContent.trim(),optional:n.classList.contains('qflow-optional'),mobile:n.querySelector('.qflow-mobile-only')?.textContent.trim()||''}));
     return {nodes,visible:[...f.querySelectorAll('.qflow-node,.qflow-lane,.qflow-prov-label,.qflow-loop-label,figcaption')].map(e=>e.textContent).join(' '),
-      caption:f.querySelector('figcaption').textContent.trim(),alt:f.querySelector('#qflow-alt')?.textContent||'',described:f.getAttribute('aria-describedby'),
+      caption:f.querySelector('figcaption')?.textContent.trim()||'',children:[...f.children].map(c=>c.className||c.tagName),alt:f.querySelector('#qflow-alt')?.textContent||'',described:f.getAttribute('aria-describedby'),
       lanes:[...f.querySelectorAll('.qflow-lane-name')].map(l=>l.innerText.replace(/\s+/g,' ').trim()),loop:f.querySelector('.qflow-loop-label')?.textContent.trim()||'',prov:f.querySelector('.qflow-prov-label')?.textContent.trim()||'',
       edges:f.querySelectorAll('.qflow-edge').length,html:f.outerHTML};
   });
@@ -71,10 +82,10 @@ async (page) => {
   check(N['qflow-p3'].title==='Review & edit'&&N['qflow-p3'].lane==='cpu'&&/Chat with Gemma/.test(N['qflow-p3'].detail)&&N['qflow-p4'].title==='Revise script'&&N['qflow-p4'].lane==='gpu'&&N['qflow-p3'].step===N['qflow-p4'].step&&N['qflow-p3'].optional&&N['qflow-p4'].optional&&sys.loop==='optional loop','Review and edit is a chat with Gemma and an optional loop: you on the CPU, Gemma revising on the GPU, same column, marked optional');
   check(/Optional loop back to review/.test(N['qflow-p4'].mobile),'The loop is also stated in words on narrow screens');
   check(N['qflow-p5'].title==='Split into chunks'&&/Sized for the voice model/.test(N['qflow-p5'].detail)&&!/Group sentences|Whole sentences|Then normalized/.test(sys.visible),'The chunking step says what it does in plain words');
-  check(sys.caption==='Speech models are prepared once on a computer; episodes are generated on the phone. The GPU and NPU lanes hold the models, and the CPU lane is the app code around them.','Caption describes the lanes');
+  check(sys.caption===''&&!/Speech models are prepared once|lanes hold the models|app code around them/.test(sys.visible)&&sys.children.join('|')==='qflow-swim|sr-only','The diagram has no caption: only the lanes and the screen-reader description: '+sys.children);
   check(!/PDF|URL|web|transcri|retriev|conversation|two voices|\b300\b|native|four|1\.5|FP16|INT8/i.test(sys.visible),'Diagram has no invented ingestion, no meaningless numbers and no jargon: '+(sys.visible.match(/PDF|URL|web|transcri|retriev|conversation|two voices|\b300\b|native|four/i)||[''])[0]);
   check(/Text \+ instructions/.test(N['qflow-p1'].detail)&&/Gemma 4 E2B/.test(N['qflow-p2'].detail)&&/Supertonic 3/.test(sys.prov)&&/prepared once and copied to the phone/.test(sys.prov),'Diagram shows the real inputs, the real script model, and that Supertonic is prepared once and copied to the phone');
-  check(/qflow-caption/.test(sys.described)&&/qflow-alt/.test(sys.described)&&/computer/.test(sys.alt)&&/phone/.test(sys.alt)&&/GPU/.test(sys.alt)&&/NPU/.test(sys.alt)&&/chatting with Gemma/.test(sys.alt)&&/repeat this as often as you like/.test(sys.alt),'Diagram has a screen-reader description that includes the review chat loop');
+  check(sys.described==='qflow-alt'&&/computer/.test(sys.alt)&&/phone/.test(sys.alt)&&/GPU/.test(sys.alt)&&/NPU/.test(sys.alt)&&/chatting with Gemma/.test(sys.alt)&&/repeat this as often as you like/.test(sys.alt),'Diagram has a screen-reader description that includes the review chat loop');
   check(await page.locator('#system-figure details').count()===0,'No visible collapsible in the diagram');
   check(await page.locator('#system-figure script,#system-figure img,#system-figure link').count()===0,'Diagram has no scripts or external assets');
   check(await page.locator('#system-figure .qflow-lane,#system-figure .qflow-edge,#system-figure .qflow-loop,#system-figure .qflow-box,#system-figure .qflow-prov-h,#system-figure .qflow-prov-v,#system-figure .qflow-prov-label').evaluateAll(e=>e.every(x=>x.getAttribute('aria-hidden')==='true')),'Lanes, connectors and the dotted preparation line are decorative for screen readers (the description carries the meaning)');
@@ -145,7 +156,7 @@ async (page) => {
   check(!/bug hunt|after the bug/.test(mainText),'Table does not borrow the Pocket bug story');
   check(shown[3].cells[2].text==='The HTP runtime failed to initialize on the phone'&&/Both tested samples sounded good/.test(shown[1].cells[2].text),'MOSS and Pocket notes use the reviewed wording');
   check(await page.locator('.note-box').first().evaluate(n=>parseFloat(getComputedStyle(n).fontSize)>=12&&parseFloat(getComputedStyle(n).fontSize)<=14),'RTF note box is small');
-  check(await page.locator('[data-edit="tried-copy"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('.bench'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#tried-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#system-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#system-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#pocket-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#pocket-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#why-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Order: demo, what we tried, where it ends up, the Pocket clips, why it went wrong');
+  check(await after('[data-edit="tried-copy"]','.bench')&&await after('#tried-heading','#system-heading')&&await after('#system-heading','#pocket-heading')&&await after('#pocket-heading','#why-heading')&&await after('#why-heading','#demo-heading'),'Order: what I tried, where I ended up, the Pocket clips, what went wrong, the demo');
 
   check(await page.locator('#tried-heading').textContent()==='What I tried'&&/I tried five speech models on my phone/.test(mainText)&&/For the script I need a language model/.test(mainText),'The tried section is written from Moritz\'s perspective');
   check(!/\b(we|our|ours|us)\b/i.test(mainText),'No "we" or "our" anywhere in the article text: '+(mainText.match(/.{20}\b(we|our|us)\b.{20}/i)||[''])[0]);
@@ -182,7 +193,7 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-swim,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-swim,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.tldr,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         flow:(()=>{
           const fig=document.querySelector('#system-figure');
           const nodes=[...fig.querySelectorAll('.qflow-node')], r=nodes.map(box), byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
