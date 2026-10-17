@@ -12,7 +12,7 @@ A short technical article about a source-to-podcast workflow with local phone in
 ## What the page contains
 
 1. **Phone placement:** Gemma on GPU, Supertonic on NPU/HTP, CPU orchestration. The route buttons show one illustrative signal; they are not timing.
-2. **The first Android port:** the exact historical Pocket TTS Android CPU recordings, original dynamic graph (10.72 s) and fixed-cache derivative (4.48 s). No audio was generated, trimmed, normalized or re-encoded for the page.
+2. **The first Android port:** the exact historical Pocket TTS Android CPU recordings, listed working clip first (fixed-cache derivative, 4.48 s) and then the broken one (original dynamic graph, 10.72 s). No audio was generated, trimmed, normalized or re-encoded for the page.
 3. **Why it went wrong (the main section):** the graph replaces a NaN first input with a learned start-of-sequence vector (`Where(IsNaN(x), bos_emb, x)`). A desktop replay of the old loop that changes only that first input reproduces the retained Android stop scores when the input is all zeros, and does not when it is NaN. The page shows the three score trajectories, a frame scrubber with exact readouts, and the source excerpt that explains how a freed buffer could turn the NaN marker into something else.
 4. **The fix we applied:** the fixed-cache graphs, built for the NPU, take no NaN marker; one sentence.
 

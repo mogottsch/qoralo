@@ -99,7 +99,8 @@ async (page) => {
   await page.locator('audio').evaluateAll(es=>es.forEach(e=>{e.muted=true;e.load();}));
   await page.waitForFunction(()=>[...document.querySelectorAll('audio')].every(a=>a.readyState>=1));
   const durations=await page.locator('audio').evaluateAll(es=>es.map(e=>e.duration));
-  check(Math.abs(durations[0]-10.72)<.001&&Math.abs(durations[1]-4.48)<.001,'Exact recording durations');
+  check(Math.abs(durations[0]-4.48)<.001&&Math.abs(durations[1]-10.72)<.001,'Exact recording durations, working clip first');
+  check(await page.locator('.listening').nth(0).evaluate(e=>e.classList.contains('recovered'))&&/Accepted/.test(await page.locator('audio').nth(0).getAttribute('aria-label')),'Working recording is listed before the broken one');
   await page.locator('audio').nth(0).evaluate(a=>a.play());await page.locator('audio').nth(1).evaluate(a=>a.play());
   check(await page.locator('audio').nth(0).evaluate(a=>a.paused),'No overlapping audio');
   await page.locator('audio').evaluateAll(es=>es.forEach(e=>e.pause()));
