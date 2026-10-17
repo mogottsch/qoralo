@@ -5,7 +5,9 @@ Gradle configuration, tests, small fixtures and artifact hashes. Model weights,
 licensed native runtime libraries, prepared QNN contexts, local configuration,
 dependency caches and frozen APKs are supplied separately. The measured target
 is a Galaxy S23 Ultra (SM-S918B, SM8550/V73, arm64-v8a); other phones are not
-qualified by these results. Own-code licensing is [still a decision](licensing-recommendation.md).
+qualified by these results. Our original app code, tests and tools are
+[Apache-2.0 licensed](licensing-recommendation.md); third-party material retains
+its own terms.
 
 The [current closeout](current-closeout.md) is the authority for candidate hashes,
 exact test coverage and delivery. Its final APK is **host-tested, not a new phone

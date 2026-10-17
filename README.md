@@ -62,3 +62,15 @@ The app grew out of model and accelerator experiments. This repository keeps tha
 | [TTS protocol](protocols/android-tts-benchmark/) and [LLM protocol](protocols/android-llm-benchmark/) | Workloads, measurement rules and required evidence |
 
 Component benchmarks, host tests, phone runs and complete app workflows support different claims. Their records retain that distinction; an accepted recording does not turn a failed numerical comparison into a pass.
+
+## Licensing
+
+Our original Qoralo app code, tests and tools under `podcast-app/` are licensed
+under [Apache-2.0](LICENSE), copyright 2026 Moritz Gottschling. [NOTICE](NOTICE)
+identifies the scope and retained upstream attribution.
+
+This is not a blanket relicensing of models, vendor binaries, imported/ported
+code or data, recordings, source documents, external art or the historical
+archive. Their existing terms and notices still apply. The source-code license
+does not clear APK or vendor-payload redistribution. See the
+[recorded licensing decision](podcast-app/docs/licensing-recommendation.md).

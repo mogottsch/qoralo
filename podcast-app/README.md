@@ -39,8 +39,8 @@ point for build identities, delivery steps, evidence and remaining gaps.
 
 Start with the [fresh-clone setup guide](docs/getting-started.md) for what is
 included, separately authorized inputs and the current provisioning/helper gaps.
-[Own-code licensing remains a proposal](docs/licensing-recommendation.md), not a
-blanket license for model/vendor payloads or third-party assets.
+[Apache-2.0 covers our original app code, tests and tools](docs/licensing-recommendation.md),
+not model/vendor payloads, imported/ported material or other third-party assets.
 
 The final host build used **OpenJDK 21.0.12.1+1 / Gradle 8.9**; Java/Kotlin
 bytecode target **17** is separate. Requires Android compile/target SDK 35

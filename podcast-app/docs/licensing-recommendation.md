@@ -1,35 +1,31 @@
-# Own-code licensing recommendation
+# Qoralo own-code licensing decision
 
-**Decision proposal only. No project license has been selected or granted by this
-page.** No `LICENSE` file or repository visibility change is part of this work.
-Existing third-party notices remain in force. This is a focused review of the
-Qoralo app route, not a legal clearance of every historical experiment or asset.
+**Chosen: Apache-2.0.** On 2026-10-17 Moritz approved the license: “yeah apache is
+fine.” Copyright **2026 Moritz Gottschling**. This records the decision in place
+of the earlier proposal; no further license-choice approval is pending.
 
-## Recommendation and alternatives
+## Licensed work and scope
 
-Recommend **Apache-2.0 for the original Qoralo application code, original tests and
-original tooling under `podcast-app/` that Moritz has authority to license**.
-It permits commercial and noncommercial reuse and includes an express contributor
-patent grant with a patent-litigation termination provision. That is useful for
-reusable Android/native integration code; it does not grant Qualcomm or model
-vendor patents, waive SDK terms, or require downstream applications to open their
-own code. Preserve required upstream licenses/attribution alongside our license.
+The unmodified root [Apache License 2.0](../../LICENSE) applies to **our original
+Qoralo application code, tests and tools under `podcast-app/`**. Root
+[NOTICE](../../NOTICE) identifies that work and retained third-party attribution;
+it does not alter the Apache license terms.
 
-| Option | Reason to choose it | Tradeoff |
-| --- | --- | --- |
-| **Apache-2.0 (recommended)** | Permissive reuse with explicit contributor patent terms. | Longer license; preserve applicable notices and modification notices. |
-| **MIT** | Prefer the shortest, familiar permissive license. | No express patent-license clause; the copyright/permission notice must accompany copies or substantial portions. Does not replace any upstream notice. |
-| **Keep own-code licensing undecided** | Moritz does not yet want to grant broad reuse rights. | No general project permission to reuse is provided. Public visibility alone would not make the original code open source. |
+This is **not a blanket relicensing of the repository**. Model weights, vendor
+binaries and compiled payloads, imported/ported code and data, recordings, source
+documents, external art and the historical experiment archive are not covered by
+this project grant. Their applicable existing licenses, agreements and notices
+remain in force. In particular, the Supertonic frontend port retains Supertone's
+MIT terms and Unicode data retains Unicode License V3.
 
-**Only needed input from Moritz:** choose Apache-2.0, MIT, or hold; confirm the
-copyright holder name/year and that he can authorize licensing the original work
-(including any employer/other-contributor interests). Agent-session names and Git
-authorship are not proof of ownership. If chosen, a follow-up can add the scoped
-license, attribution inventory and appropriate file notices. Do not apply a
-repository-wide blanket to the archive, model derivatives, data or external art.
-The setup guide can be published independently of this decision.
+Apache-2.0 permits commercial and noncommercial reuse of the licensed work and
+includes an express contributor patent grant with a patent-litigation termination
+provision. It does not grant independent vendor rights or clear redistribution of
+an APK, model pack or Qualcomm payload. This is a focused record of the Qoralo
+code decision, not a complete repository/dependency rights audit. No per-file
+boilerplate sweep or third-party notice removal accompanies the decision.
 
-## What stays separate, whichever option is chosen
+## Existing upstream terms and distribution boundaries
 
 | Material inspected | Existing terms/evidence | Consequence |
 | --- | --- | --- |
