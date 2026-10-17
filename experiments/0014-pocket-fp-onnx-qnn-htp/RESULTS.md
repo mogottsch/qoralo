@@ -181,6 +181,30 @@ this defect alone. The separate invalid-Bria/zero-encoder finding concerns
 other recordings. Original outputs, listening verdicts and raw result records
 remain unchanged.
 
+**Subsequent bounded host replay strengthens this explanation.** The graph
+selects its learned BOS embedding using
+`Where(IsNaN(sequence), flow_lm.bos_emb, sequence)`. In the retained 0024
+reconstruction of the dynamic graph (`ce8d8701…b3bff2`, not the missing original
+`021288bd…d9a95e`), a valid NaN start input reproduces the recorded host first
+logit `-9.8847` and EOS step 53. Replacing only that start input with zeros gives
+`-10.2709` to the recorded precision and closely tracks all 134 retained Android
+EOS logits: maximum absolute difference `0.0736`, mean `0.00577`, and no EOS
+before the cap. The NaN control also agrees with 57 retained fixed-cache CPU
+logits to maximum absolute difference `0.0021`. Pi independently reran the
+host-only script with ORT 1.22.1 and reproduced these results, without a phone,
+model change or audio decode.
+
+This is strong support for a wrong start input, consistent with the confirmed
+buffer-lifetime defect, rather than a runtime-only explanation. It is **not an
+observation of zeros in the phone's freed buffer**, proof of the old executable's
+source binding, or a replay of the exact old graph/WAV. The prefix/suffix
+partial-zero scan covers only its stated patterns, not every possible corrupt
+input. See the [replay script](../../docs/qoralo-blog/evidence/bos-zero-replay.py)
+and [saved result](../../docs/qoralo-blog/evidence/bos-zero-replay.json) for the
+controlled inputs, graph identity and full trajectory comparisons. Exact
+historical audio causality remains unverified, but the source bug now has a
+specific, replay-supported failure mechanism.
+
 ## Accepted physical QNN/HTP path
 
 The observed fixed-Alba path invoked:
