@@ -37,10 +37,16 @@ point for build identities, delivery steps, evidence and remaining gaps.
 
 ## Build on an authorized, provisioned host
 
-Requires Java 17, Android compile/target SDK 35 (min 29), SDK build tools,
-NDK **28.1.13356709**, CMake **3.22.1**, Python 3 and the Gradle dependency cache
-for offline builds. Native deployment target: Galaxy S23 Ultra, SM8550 / V73,
-arm64-v8a. Gradle's wrapper pins the build tool; do not run parallel builds in
+Start with the [fresh-clone setup guide](docs/getting-started.md) for what is
+included, separately authorized inputs and the current provisioning/helper gaps.
+[Own-code licensing remains a proposal](docs/licensing-recommendation.md), not a
+blanket license for model/vendor payloads or third-party assets.
+
+The final host build used **OpenJDK 21.0.12.1+1 / Gradle 8.9**; Java/Kotlin
+bytecode target **17** is separate. Requires Android compile/target SDK 35
+(min 29), build-tools **35.0.0**, NDK **28.1.13356709**, CMake **3.22.1**,
+Python 3 and the Gradle dependency cache for offline builds. Native deployment
+target: Galaxy S23 Ultra, SM8550 / V73, arm64-v8a. Gradle's wrapper pins the build tool; do not run parallel builds in
 this shared checkout.
 
 ```bash
