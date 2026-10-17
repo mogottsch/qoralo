@@ -200,18 +200,6 @@
           <ul class="legend"><li class="orig">Original code</li><li class="kept">Buffer kept alive</li></ul>
 <!-- chart:end -->
         </figure>
-        <p data-edit="why-cause">The old runner builds the NaN buffer inside an <code>if</code> block, hands the model a pointer to it, and frees it before <code>Run()</code>. Reading freed memory is undefined behavior. On the phone it read as zeros.</p>
-        <pre><code>if (step == 0) {
-  std::vector&lt;float&gt; bos(32, NaN);
-  inputs.push_back(TV(mi, bos, {1, 1, 32}));
-} // bos is freed here
-Run(main, inputs); // the tensor still points at it</code></pre>
-      </section>
-
-      <section aria-labelledby="fix-heading">
-        <h2 id="fix-heading" data-edit="fix-title">The fix we applied</h2>
-        <p data-edit="fix-copy">We didn't find this bug at the time. The fix came with porting the graphs to the NPU: that version has the start vector built in, so there is no NaN marker to lose.</p>
-        <p class="takeaway" data-edit="lesson">One different input at the first step produced a valid-looking file that sounded wrong. Compare first-step inputs and scores across devices, not only the finished audio.</p>
       </section>
       <p class="closing"><span data-edit="closing">If you wanna take a look,</span> <a href="https://github.com/mogottsch/vibevoice-android-spike">here it is</a>.</p>
     </article></main>

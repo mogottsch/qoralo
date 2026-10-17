@@ -1,5 +1,9 @@
 # Article review record
 
+## Removed on request (story v4, latest)
+
+Moritz asked to remove the cause paragraph and the five-line code excerpt in "Why it went wrong", and the whole "The fix we applied" section with its takeaway. The article now ends on the chart and his closing line. The explanation of how the NaN marker was lost lives only in the technical notes and `evidence/` (the source audit, the AddressSanitizer reproduction, the phone check). The browser suite now fails if a code excerpt, cause paragraph, fix section or takeaway returns. The README and the surface brief were rewritten to describe the page as it is, removing stale descriptions of the earlier processor-route figure, toggles and scrubber.
+
 ## "Script writing" LLM table (story v4, latest)
 
 Thomas built the packet read-only from `docs/android-llm-benchmarks/registry.json` (seven routes: Gemma 4 E2B on CPU, GPU and NPU; Qwen3.5-2B and LFM2.5-2.6B on CPU and GPU) using the long-prompt tier, because it is the closest generic test to reading a substantial source. Pi recalculated all fourteen medians and nulls independently (exact agreement) and set conditions, all applied: the generic-text caption stays visible; the Gemma NPU row says it is a different build and that it repeated itself on long prompts, and its missing writing rate is words, not a number, with first-token accounting kept separate from the repetition; grouped by model with no overall winner, bars or "15x faster" headline from the prefill ratio. I removed my own earlier sentence that headlined that ratio. The page never mentions RTF in this subsection, and a test fails if a ratio, "fastest" or "winner" appears in the section. Qwen and LFM have no NPU rows in the registry, so none were invented.

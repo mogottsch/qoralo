@@ -1,46 +1,37 @@
 ---
-version: 3
+version: 4
 slug: docs-qoralo-blog-index-html
 primary_target: docs/qoralo-blog/index.html
-related_targets: [docs/qoralo-blog/style.css, docs/qoralo-blog/article.js, docs/qoralo-blog/README.md, docs/qoralo-blog/REVIEW.md, docs/qoralo-blog/evidence/source-audit.md, docs/qoralo-blog/evidence/bos-zero-replay.json]
+related_targets: [docs/qoralo-blog/style.css, docs/qoralo-blog/article.js, docs/qoralo-blog/browser-checks.js, docs/qoralo-blog/README.md, docs/qoralo-blog/REVIEW.md, docs/qoralo-blog/evidence/]
 ---
 
 # Local source-to-podcast technical article
 
-Mode: Read. Audience is technical. Keep the narrative short, explain a real engineering mechanism, and give one concrete takeaway. NotebookLM-inspired local phone inference is the subject; Qoralo is the prototype name, not the headline. Moritz rejects subtext, repeated qualifications and AI-sounding copy, and wants to edit the text himself. No new phone activity, model inference, app/runtime/deck changes or public publication.
+Mode: Read. Technical but general blog readers. Short, condensed, no subtext, no meaningless values (a number stays only if a reader would act on or understand it: RTF yes, frame cap no). NotebookLM-inspired local phone inference is the subject; Qoralo is the prototype name, not the headline. Moritz wants to edit the text himself and dislikes AI-sounding copy. No public publication, no new phone activity, model runs or app/runtime/deck changes without his go-ahead.
 
 ## Direction contract
 
-THESIS (gist first in plain words; no meaningless values; the step-by-step explanation was cut on request): Explain WHY the early Pocket TTS Android port went wrong, as the main point. The graph treats a NaN first input as "use the learned start vector"; on the phone the first input was observed to be zeros; zeros compound over the autoregressive loop until the stop score never crosses its threshold. The fix actually applied (NPU-oriented fixed-cache graphs) gets one short section. Moritz does not want the buffer-lifetime finding presented as "my fix".
+THESIS: How close can a NotebookLM-like source-to-podcast workflow get with all inference on a phone? Show what we tried, what we ended up with, and one instructive failure.
 
-OWN-WORLD: Inherit the presentation's #0b1017 canvas, mint #8ee8c2 HTP, lilac #c2a9f4 GPU and blue #9bbdff CPU, plus a warm amber for the failing zero input. Flat technical drawings, restrained local sans. No decorative gradients/cards/hero metrics/eyebrows, generated mockups or invented data.
+OWN-WORLD: Inherit the presentation's #0b1017 canvas, mint #8ee8c2 NPU/HTP, lilac #c2a9f4 GPU, blue #9bbdff CPU, amber #efb578 for failures. Flat technical drawings, restrained system sans. No decorative gradients, cards, hero metrics, eyebrows, generated imagery or invented data.
 
-STORY: NotebookLM prompts the phone question; the intro is plain placeholder text for Moritz to rewrite. Phone placement, the first Android port with exact historical recordings, then the WHY with a real stop-score chart, then the applied fix and one takeaway.
+STRUCTURE (agreed with Moritz):
+1. Title, intro and the "So I wondered" question: **approved and frozen** (a test fails if the text changes).
+2. Demo video slot (explicit missing-asset notice until `media/demo.mp4` exists; no synthetic footage).
+3. What we tried: Speech (five-row table, "CPU RTF" / "NPU RTF", a rendered RTF formula, one footnote) and Script writing (seven-row reads/writes tokens-per-second table grouped by model, generic-text caption, no ratio headline).
+4. Where it ends up: the full-system flow diagram (computer preparation lane, phone lane, selected neural routes tagged GPU / NPU / CPU).
+5. The first Android port: the exact historical Pocket TTS clips, working one first.
+6. Why it went wrong: a plain gist and one chart (stop score over seconds of speech, both lines from the same controlled phone window).
+7. Close: "If you wanna take a look, here it is" linking the (private) repository. No fix section, no code excerpt, no takeaway, no "what is left".
 
-CLAIM LIMITS: the phone check is observed, so no "inferred" hedging in the main text; zeros are labelled as seen in the instrumented build (2 of 2), NaNs with the buffer kept alive (2 of 2), the four kept-alive runs stop at 53, and the second unmodified run differed (nondeterministic). Keep in the notes, not in the way of the explanation: old executable not retained (rebuilt, NDK 27); original graph missing (reconstruction reproduced the failing recording byte for byte); dump build may perturb allocation; no explanation of why this allocator returned zeros; no listening verdict on new audio; the zero-encoder/invalid-Bria failure is a separate cause. The 10.72 s clip is Android CPU, not HTP.
+CLAIM LIMITS: the phone check observed the first input as zeros in the instrumented build and NaNs with the buffer kept alive; the old executable and the original graph are not retained; the second unmodified run differed (the failure is nondeterministic); no allocator explanation; no listening verdict on new audio. These live in the technical notes and `evidence/`, not in the way of the explanation. Review vetoes: RTF only within comparable rows and as plain values; "sounds good" only for a row's own exact reviewed output; a package size is not measured memory; LLM rates never mixed with TTS RTF and never presented as script speed or quality; the Gemma NPU row shows its different build and its repetition failure; flow tags describe the selected neural routes, not every operation.
 
-FORM: Three progressively enhanced figures: processor route; one generation step (start vector or previous frame in, one internal state out, read twice as the next 80 ms frame and the stop score; the stop-check rule); and the WHY figure (input-path rows, a baked-in SVG stop-score chart generated from `evidence/bos-zero-replay.json`, an input toggle and a keyboard frame scrubber whose readout gives audio time and the stop-check verdict). Native exact-file players, inline plain-text editing with local restore, `Save HTML copy`. The static chart and all text stay meaningful when JavaScript fails. No external fonts, UI dependencies, analytics or raster assets.
+FORM: Static figures (no animation): the system flow (HTML/CSS) and the stop-score chart (baked-in SVG from the phone raw results); two tables generated from committed packets (`evidence/build-table.py`, `build-llm-table.py`); a MathML formula; native exact-file audio players that never autoplay and never overlap; a video slot. Inline plain-text editing with local restore and `Save HTML copy`. Everything works without JavaScript except editing. No external fonts, libraries, analytics or runtime requests.
 
 ## Editing contract
 
-`[data-edit]` text becomes `contenteditable="plaintext-only"` on request. Only edited paragraphs are stored (localStorage keyed by path) or exported, so untouched text keeps inline `<code>`. Saving builds from the original page source, not the live DOM, strips editor state, and adds a `<base>` so the copy finds its assets. Never writes into the repository.
+`[data-edit]` text becomes `contenteditable="plaintext-only"` on request. Only edited paragraphs are stored (localStorage keyed by path) or exported. Saving builds from the original page source, strips editor state, and adds a `<base>` so the copy finds its assets. It never writes into the repository.
 
-## Motion and interaction thesis
+## Verification
 
-Focal moment: the user flips the first input between NaN and zeros and watches which stop-score line the retained phone run follows; a scrubber gives exact per-frame values. Transitions are short opacity changes, removed under reduced motion. Route buttons emit one illustrative signal. Meaning survives reduced motion and failed JavaScript through the static chart, text and border/colour states. No endless animation; audio never autoplays and players do not overlap.
-
-## Finish record
-
-See REVIEW.md. Browser suite passed chart data against the evidence JSON, five widths × three input modes with geometry checks, keyboard scrubber exact readouts, wording guards against overclaiming, reduced motion, exact WAV decoding, editing, local restore, a saved copy reopened from disk with a working chart, print and script-failure fallback. Pi independently reran the replay and directed the claim limits; no new three-pass review of this copy.
-
-Disposition: finish at this scope for Moritz to edit and review. Final app demo/audio and any public publication remain separate.
-
-## Agenda update
-
-Approved by Moritz: title, intro and question frozen; demo video right after them (missing-asset notice until the file exists); then what we tried and a small benchmark table (RTF explained in a small note box, plain values within comparable groups only); then the full-system flow diagram (computer preparation separate from phone inference); then the Pocket TTS failure; the ending is "If you wanna take a look, here it is" (private repository link). No "what is left" section. Everything condensed; numbers only if a reader would care (RTF yes, frame cap no).
-
-Status: the merged "What we tried" section is in (five-row CPU/NPU table from `evidence/benchmark-table.json`, small RTF note, separate Gemma sentence; wording vetted by Pi). Still to come: the system flow diagram, then moving the Pocket TTS section after it.
-
-Status: the system flow diagram is in (nik's, Pi-reviewed, replaces the earlier processor-route figure); order is demo, What we tried, Where it ends up, the Pocket clips, Why it went wrong, the fix, the closing link. Figures: demo video slot, system flow (HTML/CSS, no script), stop-score chart; plus the five-row table.
-
-Status: "What we tried" has two subsections: Speech (five-row CPU RTF / NPU RTF table, rendered RTF formula, one footnote) and Script writing (seven-row reads/writes tokens-per-second table grouped by model, generic-text caption, the Gemma NPU repetition failure visible, no ratio headline). Both tables are generated from committed packets and checked value by value in the browser suite.
+`browser-checks.js` (Playwright via the Chrome wrapper) checks: the frozen opening, the demo slot and closing line, the gist, the chart against the phone raw results, both tables value by value against their packets, the formula as a rendered fraction, the system diagram (ten nodes, tags, lanes, caption, banned content, dependency-arrow geometry), receipts against the notes in both directions, five widths (320 to 1440) of layout, exact WAV order and decoding, editing and export, print, script-failure fallback, and no external requests. See REVIEW.md for provenance and review history.

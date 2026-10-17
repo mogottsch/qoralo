@@ -27,6 +27,8 @@ async (page) => {
   check((await page.locator('[data-edit="closing"]').textContent())==='If you wanna take a look,'&&await page.locator('.closing a').textContent()==='here it is'&&(await page.locator('.closing a').getAttribute('href'))==='https://github.com/mogottsch/vibevoice-android-spike','Closing: "If you wanna take a look, here it is" linking the repository');
   check(await page.locator('.closing').evaluate(c=>c===document.querySelector('article').lastElementChild),'Closing is the last thing in the article');
   check(!/What.s left|one voice instead|final demo/i.test(await page.locator('main').innerText()),'No "what is left" section');
+  check(await page.locator('#fix-heading,pre,.takeaway,[data-edit="fix-copy"],[data-edit="lesson"],[data-edit="why-cause"]').count()===0&&!/The fix we applied|freed before|undefined behavior|bos is freed|One different input/.test(await page.locator('main').innerText()),'No code excerpt, cause paragraph, fix section or takeaway');
+  check(await page.locator('#why-figure').evaluate(f=>f.closest('section').nextElementSibling===null||f.closest('section').nextElementSibling.classList.contains('closing')),'Why it went wrong is the last section before the closing line');
 
   // 'Where it ends up': the system diagram says only what the app really does.
   const sys=await page.evaluate(()=>{
@@ -131,8 +133,7 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-bridge,.chart,.legend,.editor,pre,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap,.table-foot')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
-        preOverflow:[...document.querySelectorAll('pre')].some(p=>p.scrollWidth>p.clientWidth+1),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-bridge,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap,.table-foot')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         flow:(()=>{
           const nodes=[...document.querySelectorAll('#system-figure .qflow-node')], r=nodes.map(box);
           const lane=n=>n.closest('.qflow-host')?'host':'phone';
@@ -159,7 +160,6 @@ async (page) => {
       };
     });
     check(!layout.overflow&&!layout.bad.length,`${width} overflow: ${layout.bad}`);
-    check(!layout.preOverflow||width<=390,`${width} code excerpt overflows (horizontal scroll is acceptable only on phones)`);
     check(!layout.flow.overlap&&!layout.flow.clipped&&!layout.flow.small&&layout.flow.lanesOrdered,`${width} system diagram overlap/clipping/size/lane order: ${JSON.stringify(layout.flow)}`);
     check(layout.flow.bridgeOk,`${width} the computer-to-NPU dependency lands on the two NPU steps (or is stated in text on narrow screens)`);
     check(layout.flow.horizontal?layout.flow.rows===1&&layout.flow.minNodeW>=100:layout.flow.rows===8,`${width} diagram layout: ${layout.flow.horizontal?'one row on wide screens':'vertical list on narrow screens'} ${JSON.stringify(layout.flow)}`);
@@ -206,6 +206,7 @@ async (page) => {
   const key=await page.evaluate(()=>`phone-podcast-copy-v3:${location.pathname}`);
   const previous=await page.evaluate(key=>localStorage.getItem(key),key);
   try {
+    const triedBefore=await page.locator('[data-edit="tried-copy"]').innerHTML();
     await page.locator('#edit-copy').click();
     check(await page.locator('[data-edit="intro"]').getAttribute('contenteditable')==='plaintext-only','Inline plain-text edit mode');
     check(await page.locator('[data-edit]').count()>=19,'Prose and headings are editable');
@@ -214,7 +215,7 @@ async (page) => {
     await page.reload();
     check((await page.locator('[data-edit="intro"]').innerText())==='My own intro <b>stays plain text</b>.','Local edit restore');
     check(await page.locator('[data-edit="intro"] b').count()===0,'Edits must not inject HTML');
-    check((await page.locator('[data-edit="why-cause"] code').count())===2,'Untouched paragraphs keep inline code');
+    check((await page.locator('[data-edit="tried-copy"]').innerHTML())===triedBefore,'Untouched paragraphs are unchanged after an edit and reload');
     const download=page.waitForEvent('download');await page.locator('#save-copy').click();
     await(await download).saveAs('/tmp/qoralo-story-v3/phone-podcast-edited.html');
     await page.goto('file:///tmp/qoralo-story-v3/phone-podcast-edited.html');
