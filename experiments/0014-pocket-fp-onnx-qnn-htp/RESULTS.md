@@ -154,6 +154,33 @@ The recovered Android CPU derivative:
 - WAV SHA-256 `e0638f35…1c9a`;
 - independently accepted as “sounds good.”
 
+### Later source-audit correction: borrowed BOS input
+
+The retained original CPU runner has a concrete input-lifetime defect. In
+[`pocket_alba_cpu_runner.cc`](tools/pocket_alba_cpu_runner.cc), `TV()` wraps a
+vector's data using ORT's non-owning user-buffer tensor API. The first-step
+`bos` vector is destroyed at the end of its `if` block, before `Run(main,
+inputs)` consumes the tensor outside that block. Its backing pointer is
+therefore dangling. Source SHA-256:
+`a2c833b2ac8fc85f676b1aff8203cc1ada452be87699a65543033136897c45cd`.
+
+A bounded host reproducer using the real ORT tensor API reports
+`heap-use-after-free` under AddressSanitizer; keeping the vector alive through
+consumption passes. It creates no session, loads no model and runs no inference.
+See the [source audit and reproduction procedure](../../docs/qoralo-blog/evidence/source-audit.md).
+
+This qualifies the runtime-localization interpretation above: matching fixture
+files do not establish valid, identical inputs when a tensor can point at freed
+storage. **The first-logit difference does not establish an Android/ORT runtime
+or operator fault.** The historical executable hash `a11685f5…f57257` has not
+been bound to the audited source by this later check, and no lifetime-only model
+replay was performed. The exact old WAV's cause is therefore still unproved.
+The successful fixed-cache runner avoids this borrowed BOS input, but also
+changes the graph and cache layout; its recovery is not a controlled test of
+this defect alone. The separate invalid-Bria/zero-encoder finding concerns
+other recordings. Original outputs, listening verdicts and raw result records
+remain unchanged.
+
 ## Accepted physical QNN/HTP path
 
 The observed fixed-Alba path invoked:
