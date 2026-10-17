@@ -1,26 +1,44 @@
-# Qoralo visual article
+# Building a NotebookLM-like podcast on my phone
 
-Open `index.html` directly, or serve the repository root and visit `/docs/qoralo-blog/`. Static HTML, CSS and inline SVG; no build, CDN, analytics, API, audio playback or model execution.
+Open `index.html`, or serve the repository root:
 
-This replaces `../qoralo-linkedin-draft.md`. It is a short article draft committed to the private repository, not a LinkedIn post or public release.
+```sh
+python3 -m http.server 8766 --bind 127.0.0.1
+# http://127.0.0.1:8766/docs/qoralo-blog/
+```
 
-## Confirmed brief and scope
+A short technical article about a source-to-podcast workflow with local phone inference. Qoralo is the experiment's app name, not the article's subject. The prototype generates a script and narrates it in one voice; this is not a reproduction of NotebookLM's conversational format or an established quality match.
 
-Moritz requested a very short, beautifully designed article with at least two or three custom visualizations, more visuals than prose, simple human wording and no marketing voice. He explicitly authorized three real reviewer passes. Pi instructed no phone/model work and requested consultation with the existing owner Hermes if accessible. Reader assumption: technically curious people encountering this project for the first time. The final app demo and exact-output listening review remain pending.
+## Three explanatory interactions
 
-The article extends the existing presentation's dark canvas, mint HTP, lilac GPU and blue CPU roles into a responsive reading layout. It is not a deck or a replacement app design. No global product/design files are changed. Its three evidence-based visuals explain compute placement, four-session setup, and emitted chapter audio. The last two have real proportional geometry; symbolic document/audio icons in the first are diagrams, not model captures.
+1. **Processor routes:** trace Gemma/GPU or Supertonic/NPU HTP through the phone. CPU orchestration stays visible. One-shot signal motion is illustrative, not measured timing.
+2. **Runtime divergence:** step through inputs, first AR end-of-speech scores and outcomes, or play a bounded explanation. Desktop/original Android share inputs; the recovered Android route has a different fixed-cache graph. Two native players use the exact historical original/fixed Android CPU recordings already retained under `docs/android-benchmarks/media/`.
+3. **Chapter assembly:** explore all 15 actual Supertonic CPU pieces using a keyboard-accessible range control. Bar extents use real sample counts, including fourteen actual 0.3-second gaps. Audio duration is not synthesis latency.
 
-## Source boundaries
+The narrative is **253 words**. The main article at the default outcome state is **561 visible words including all controls, figure labels, captions and explanations**. Deeper source details are collapsed.
 
-- Gemma GPU and Supertonic HTP are separate model routes, with CPU orchestration. The diagram does not assert all operations run on one accelerator or that both models run simultaneously.
-- Startup bars: experiment 0023, source `21.6129s` versus context `0.497816s`, medians of three fresh processes per arm, same fixed legacy input/runtime. This is four speech-session construction only, excluding offline compilation and speech generation. Source/context HTP output equality is not CPU/HTP numerical equality.
-- Chapter bars: CPU outputs for the same 487-word input. Experiment 0036: `1,304,030` frames, rejected. Experiment 0037: fifteen native outputs total `9,077,760` frames plus fourteen `13,230`-frame gaps, total `9,262,980` at `44,100Hz`, accepted. HTP's corresponding experimental file was also accepted, but is not the plotted bar. Multiple recipe settings changed together. No fixed 30-second model cap, isolated segmentation causality or general quality guarantee follows.
-- Original numerical failures remain unchanged. Experimental acceptance is exact-file acceptance; no verdict is transferred to a new app WAV. Later complete headless SCRIPT results do not constitute a final normal-UI-to-audio demonstration.
+`article.js` is a small local progressive enhancement. No external libraries, fonts, analytics or remote runtime requests. Nothing starts playing automatically. Audio files load only on request; starting one pauses the other. Reduced motion removes spatial effects. With JavaScript unavailable, all three figures retain meaningful static content and the native players/source disclosure still work. No audio was generated, trimmed, normalized or re-encoded for this page.
 
-## Reviews and verification
+## Evidence and review
 
-See `REVIEW.md` for the actual review passes, incorporated edits, Hermes consultation and browser results. The page's expanded records provide concise links to the owning source/result files. Private repository links are internal references, not an offered public code release.
+- Pocket sources: `experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md` and `results/{android-alba-original-cpu,quality-recovery-listening}.json` beneath that experiment.
+- Chapter sources: experiments 0036 and 0037. Earlier threshold failures and exact-file acceptance remain distinct.
+- The 21.6129→0.497816-second four-session setup result is now an expandable detail, not the headline or an episode-latency claim.
+- All inference is on the phone. Model preparation/context compilation happened on a computer. No final app UI-to-audio demonstration or new listening approval is implied.
 
-The final page has 299 main-article words including diagram labels/captions. Three actual peer reviews were performed by Thomas, Pi and nik; no new reviewer agent was launched after the launcher failed. The original author alone applied edits. Hermes supplied narrow style guidance through the existing gateway.
+`REVIEW.md` distinguishes the initial version's three peer reviews from Pi's later factual/copy review of this revised story. It does not claim the new copy received the old review passes unchanged.
 
-To repeat the browser checks, serve the repository root and open the article using the Chrome skill wrapper, then pass `browser-checks.js` to its `run-code` command. The callback checks five widths, exact data geometry, source-disclosure keyboard operation, loaded-page offline operation and print presence. Static file/data checks additionally compare the bars with the owning experiment JSON. No model or phone is involved.
+## Browser checks
+
+Serve the root, then use the Chrome skill wrapper:
+
+```sh
+PW="$HOME/.pi/agent/skills/chrome-browser/scripts/pw"
+"$PW" -s=qoralo-story open http://127.0.0.1:8766/docs/qoralo-blog/
+"$PW" -s=qoralo-story run-code "$(python3 -c 'from pathlib import Path; print(Path("docs/qoralo-blog/browser-checks.js").read_text())')"
+"$PW" -s=qoralo-story close
+```
+
+Checks cover five widths × three diagnostic states, exact sample geometry, keyboard interaction, bounded playback/interruption, muted WAV decoding/playback, reduced motion, loaded-page offline interaction, print and script-failure fallback. Browser playback tests are not human listening verdicts. Static validation additionally checks retained source values and hashes.
+
+Private draft only. No public article, Google integration or app release is announced.

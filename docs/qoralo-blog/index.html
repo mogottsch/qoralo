@@ -4,60 +4,87 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="Building Qoralo on a Galaxy S23 Ultra: where the models run, preparing speech models ahead of time, and a whole-chapter failure.">
-  <title>Qoralo, on my phone</title>
+  <meta name="description" content="Building a NotebookLM-like source-to-podcast workflow with inference on a Galaxy S23 Ultra. Hear a failed port and explore what changed.">
+  <title>Building a NotebookLM-like podcast on my phone</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1017'/%3E%3Cpath d='M7 17h4l3-9 5 17 3-8h3' fill='none' stroke='%238ee8c2' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
+  <script defer src="article.js"></script>
 </head>
 <body>
   <a class="skip" href="#article">Skip to article</a>
   <div class="page">
-    <header class="masthead"><a class="wordmark" href="#article">Qoralo</a><a href="#records">Notes &amp; records</a></header>
+    <header class="masthead"><a class="wordmark" href="#article">Local inference / field notes</a><a href="#records">Sources &amp; details</a></header>
     <main id="article">
       <article>
         <header class="intro">
-          <h1>Qoralo, on my phone</h1>
-          <p>I'm building Qoralo, an Android app for turning source material into podcasts. The models run on my Galaxy S23 Ultra.</p>
+          <h1>Building a NotebookLM-like podcast on my phone</h1>
+          <p><a href="https://notebook.google/">NotebookLM's Audio Overviews</a> turn your sources into a conversation between AI hosts. They impress me, even when the result gives me AI-slop vibes rather than feeling like a real podcast.</p>
+          <p>How close could we get with <strong>all inference running on a phone?</strong></p>
         </header>
 
         <section class="route-section" aria-labelledby="route-heading">
-          <div class="route-copy"><h2 id="route-heading">Where the work runs</h2><p>Gemma writes the script on the GPU. Supertonic makes the speech on the phone's NPU. The CPU runs the app and prepares the inputs.</p></div>
+          <div class="route-copy"><h2 id="route-heading">Two models, one phone</h2><p>On my Galaxy S23 Ultra, Gemma writes scripts on the GPU; Supertonic makes speech on the NPU. The CPU handles orchestration. For now, mine writes a script and reads it in one voice. Model preparation and compilation happen on a computer.</p></div>
           <figure id="compute-figure" aria-labelledby="route-heading compute-caption">
+            <div class="figure-controls enhanced" id="route-controls" aria-label="Explore processor routes" hidden>
+              <button type="button" data-route="script" aria-pressed="false">Trace script generation</button>
+              <button type="button" data-route="speech" aria-pressed="false">Trace speech synthesis</button>
+            </div>
             <div class="phone">
               <div class="phone-heading">Galaxy S23 Ultra <span>Snapdragon 8 Gen 2</span></div>
               <div class="model-path script">
                 <div class="data-object"><svg viewBox="0 0 36 42" aria-hidden="true"><path d="M5 2h18l8 8v29H5zM23 2v9h8M11 18h14M11 24h14M11 30h9"/></svg><span>Source<br>material</span></div>
-                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg>
+                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/><circle class="packet" cx="5" cy="7" r="3"/></svg>
                 <div class="model"><strong>Gemma 4 E2B IT</strong><span>GPU</span></div>
-                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg>
+                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/><circle class="packet" cx="5" cy="7" r="3"/></svg>
                 <div class="data-object"><svg viewBox="0 0 36 42" aria-hidden="true"><path d="M5 2h26v37H5zM11 11h14M11 18h14M11 25h14M11 32h8"/></svg><span>Podcast<br>script</span></div>
               </div>
               <div class="path-link">Review the script before creating audio</div>
               <div class="model-path speech">
                 <div class="data-object"><svg viewBox="0 0 36 42" aria-hidden="true"><path d="M5 2h26v37H5zM11 11h14M11 18h14M11 25h14M11 32h8"/></svg><span>Reviewed<br>script</span></div>
-                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg>
+                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/><circle class="packet" cx="5" cy="7" r="3"/></svg>
                 <div class="model"><strong>Supertonic 3</strong><span>NPU · HTP</span></div>
-                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg>
+                <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/><circle class="packet" cx="5" cy="7" r="3"/></svg>
                 <div class="data-object"><svg viewBox="0 0 36 42" aria-hidden="true"><path d="M3 18v6m6-14v22m6-28v34m6-24v14m6-18v22m6-14v6"/></svg><span>Spoken<br>audio</span></div>
               </div>
               <div class="cpu-line"><strong>CPU</strong><span>App control · input preparation · audio files</span></div>
             </div>
-            <figcaption id="compute-caption" class="figure-note">Model routes, not simultaneous execution. HTP is Qualcomm's Hexagon Tensor Processor.</figcaption>
+            <figcaption id="compute-caption">HTP is Qualcomm's Hexagon Tensor Processor. Arrows show routes, not timing or simultaneous execution.</figcaption>
+            <p class="interaction-status enhanced" id="route-status" aria-live="polite" hidden>Select a route to trace it through the phone.</p>
           </figure>
         </section>
 
-        <section class="result-section" aria-labelledby="setup-heading">
-          <div class="section-copy"><h2 id="setup-heading">Preparing the<br>speech models</h2><p>We compiled the speech models ahead of time, on a computer. The phone then loaded the prepared files.</p></div>
-          <figure class="benchmark" id="setup-figure" aria-labelledby="setup-heading setup-caption">
-            <div class="measurement source"><div class="measure-heading"><span class="label">Compile on phone during setup</span><span class="duration">21.6 s</span></div><div class="track"><span class="bar" data-seconds="21.6129" style="width:100%"></span></div></div>
-            <div class="measurement precompiled"><div class="measure-heading"><span class="label">Load precompiled files</span><span class="duration">0.50 s</span></div><div class="track"><span class="bar" data-seconds="0.497816" style="width:calc(100% * 0.497816 / 21.6129)"></span></div></div>
-            <div class="setup-axis" aria-hidden="true"><span>0</span><span>Set up four speech models</span><span>21.6 s</span></div>
-            <figcaption id="setup-caption">Same fixed input on the same phone. Median of three fresh runs per method. Speech generation and compilation on the computer are excluded.</figcaption>
+        <section class="pocket-section" aria-labelledby="pocket-heading">
+          <div class="section-opening"><h2 id="pocket-heading">First, make it say one sentence</h2><p>An earlier Pocket TTS port worked on desktop. On Android CPU, the same sentence sounded like this.</p></div>
+          <blockquote class="test-sentence">Pocket TTS runs entirely on this Android phone using the original floating point model.</blockquote>
+          <div class="listening-pair" aria-label="Historical Pocket TTS failure and recovery, same sentence">
+            <div class="listening failed-audio"><h3>Original Android port <span>10.72 s · rejected</span></h3><audio controls preload="none" aria-label="Rejected Pocket TTS original dynamic graph, Android CPU"><source src="../android-benchmarks/media/0014-pocket-alba-original-dynamic-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-original-dynamic-cpu.wav">Open original WAV</a><p class="audio-status" role="status" hidden></p></div>
+            <div class="listening recovered-audio"><h3>Fixed-cache Android port <span>4.48 s · accepted</span></h3><audio controls preload="none" aria-label="Accepted Pocket TTS fixed-cache graph, Android CPU"><source src="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav">Open recovered WAV</a><p class="audio-status" role="status" hidden></p></div>
+          </div>
+          <p class="technical-copy">Pocket reuses attention keys and values, its <strong>KV cache</strong>, at each autoregressive step. Identical inputs didn't guarantee identical runtime behavior. The first stop prediction already differed, before the first sampled audio latent. We replaced that path with a fixed 256-slot cache, explicit positions and a mask for valid entries.</p>
+          <figure id="state-figure" data-stage="2" aria-labelledby="pocket-heading state-caption">
+            <div class="figure-controls enhanced" id="stage-controls" aria-label="Step through the runtime comparison" hidden>
+              <button type="button" data-stage="0" aria-pressed="false">1. Inputs</button><button type="button" data-stage="1" aria-pressed="false">2. First step</button><button type="button" data-stage="2" aria-pressed="true">3. Outcome</button><button type="button" class="play-explanation" id="play-explanation" aria-pressed="false">Play explanation</button>
+            </div>
+            <div class="recurrent-flow" aria-label="Attention cache is read and updated by each autoregressive step; the step also predicts an end-of-speech score">
+              <div class="cache-node"><strong>KV cache</strong><span>Attention state</span></div>
+              <svg viewBox="0 0 60 50" class="cache-arrows" aria-hidden="true"><path d="M0 13h56m-6-5 6 5-6 5M60 36H4m6-5-6 5 6 5"/></svg>
+              <div class="ar-node"><strong>Autoregressive step</strong><span>Read state, predict, update state</span></div>
+              <svg class="connector" viewBox="0 0 48 14" aria-hidden="true"><path d="M0 7h45m-6-5 6 5-6 5"/></svg>
+              <div class="stop-node"><strong>Stop score</strong><span>End of speech?</span></div>
+            </div>
+            <div class="trace-lanes">
+              <div class="trace-lane desktop-lane"><h3>Desktop CPU<small>Dynamic ONNX</small></h3><div class="lane-input">Same weights, tokens,<br>voice state and noise</div><div class="lane-step"><span>First stop logit</span><strong>−9.8847</strong></div><div class="lane-outcome"><span>EOS at step 53</span><strong>4.48 s</strong><small>Normal speech</small></div></div>
+              <div class="trace-lane broken-lane"><h3>Android CPU<small>Original dynamic ONNX</small></h3><div class="lane-input">Same weights, tokens,<br>voice state and noise</div><div class="lane-step"><span>First stop logit</span><strong>−10.2709</strong></div><div class="lane-outcome"><span>No EOS before frame cap 134</span><strong>10.72 s</strong><small>Rejected recording</small></div></div>
+              <div class="trace-lane fixed-lane"><h3>Android CPU, recovered<small>Fixed-cache derivative</small></h3><div class="lane-input">Same text, voice and noise;<br>different cache layout</div><div class="lane-step"><span>Explicit state layout</span><strong>256 slots</strong><small>Positions + validity mask</small></div><div class="lane-outcome"><span>EOS at step 53</span><strong>4.48 s</strong><small>Accepted recording</small></div></div>
+            </div>
+            <p class="interaction-status" id="state-status" aria-live="polite">Desktop stops at step 53. The original Android run never reaches end-of-speech before the 134-frame limit. The fixed-cache Android route stops at step 53 and its recording was accepted in listening.</p>
+            <figcaption id="state-caption">EOS means end of speech. Durations are audio lengths. This shows an observed divergence and a successful graph replacement, not a proved faulty operator. The low stop score alone does not explain the strange voice.</figcaption>
           </figure>
+          <p class="takeaway"><strong>Test complete generation, not just graph execution.</strong> State updates, stopping behavior and listening all belong in a port's acceptance test.</p>
         </section>
 
         <section class="result-section chapter-section" aria-labelledby="chapter-heading">
-          <div class="section-copy"><h2 id="chapter-heading">A whole chapter<br>came out wrong</h2><p>Short clips worked. A 487-word chapter produced about 30 seconds of unusable audio on both CPU and HTP.</p></div>
+          <div class="section-copy"><h2 id="chapter-heading">Then, a whole chapter</h2><p>Later, with Supertonic, a 487-word input produced about 30 seconds of unusable audio on both CPU and HTP. After following Supertonic's full recipe, the new CPU and HTP recordings sounded good.</p></div>
           <figure class="audio-chart" id="chapter-figure" aria-labelledby="chapter-heading chapter-caption" data-sample-rate="44100" data-total-frames="9262980">
             <div class="measurement whole"><div class="measure-heading"><span class="label">Whole chapter · rejected<small>1 input</small></span><span class="duration">29.57 s</span></div><div class="track"><span class="bar" data-frames="1304030" style="width:calc(100% * 1304030 / 9262980)"></span></div></div>
             <div class="measurement segmented"><div class="measure-heading"><span class="label">Supertonic recipe · accepted<small>15 pieces</small></span><span class="duration">210.04 s</span></div><div class="track"><div class="segments" aria-label="Fifteen actual audio segments with fourteen 0.3-second gaps">
@@ -78,34 +105,39 @@
               <span class="segment" data-frames="764928" style="width:calc(100% * 764928 / 9262980)"></span>
             </div></div></div>
             <div class="audio-axis" aria-hidden="true"><span>0</span><span>CPU audio length</span><span>210.04 s</span></div>
-            <figcaption id="chapter-caption">Both recordings: CPU. Bars show audio length, not generation time. The lower bar includes fourteen 0.3-second gaps.</figcaption>
+            <div class="segment-controls enhanced" hidden><label for="segment-picker">Explore the pieces</label><input id="segment-picker" type="range" min="1" max="15" step="1" value="1" aria-describedby="segment-status"><output id="segment-status" for="segment-picker"></output></div>
+            <figcaption id="chapter-caption">Both recordings: CPU. Bars show audio length, not generation time. Fourteen 0.3-second gaps are included.</figcaption>
           </figure>
-          <p class="recipe-copy">We used Supertonic's recipe on the same chapter: 15 shorter pieces, processed separately and joined with short gaps. We changed the generation settings too. I listened to the new CPU and HTP recordings. Both sounded good.</p>
+          <p class="recipe-copy">The same chapter was split into 15 pieces, synthesized separately and joined. Generation settings changed too. <strong>Port the text preparation and synthesis loop too, not just the neural graphs.</strong></p>
         </section>
-
-        <div class="endnote"><p>Coding agents wrote much of the code. I had to reconstruct the steps to understand what we'd built.</p><p class="pending">I still need to run the final app demo and listen to its output.</p></div>
+        <p class="endnote">These are standalone experiments, not a NotebookLM quality match. The app is called Qoralo; its final UI-to-audio demo and listening review are still pending.</p>
       </article>
     </main>
     <details class="records" id="records">
-      <summary>Notes &amp; experiment records</summary>
+      <summary>Technical details &amp; experiment records</summary>
       <div class="records-body">
-        <p>The charts use retained experiments, not measurements of a new app build. The setup comparison is experiment 0023's fixed T239/L238 input. It measures construction of four QNN sessions, excluding speech generation, offline preparation and compilation. It is not an app-launch measurement or a claim that speech became 43 times faster.</p>
-        <p>The chapter chart compares CPU output from experiments 0036 and 0037 on the same text. Segment widths use actual sample counts at 44,100 Hz. The corresponding 0037 HTP recording was also accepted in listening. That acceptance belongs to those experimental files; it does not transfer to an unreviewed app recording. About 30 seconds was observed in the failed attempt, not established as a hard model cap.</p>
-        <p>The provider recipe groups raw sentences toward 300 code points before normalization, keeps individually overlong sentences intact, uses English/M1, eight steps and speed 1.05, and joins full native waveforms with 0.3-second gaps. Several settings changed together, so this does not isolate segmentation as the cause. The earlier CPU/HTP waveform comparison and the later HTP source numerical comparison failed their respective thresholds. Listening results do not turn them into numerical passes.</p>
-        <p>Gemma uses LiteRT-LM's GPU route; Supertonic uses ONNX Runtime with QNN's HTP backend. CPU work remains. The FP32 speech source graphs do not imply FP32 accelerator arithmetic: the pinned runtime requested FP16. Per-operation precision was not measured. Recent headless tests completed multi-chapter scripts through the production queue; those are separate from the final UI-to-audio demo still to be done.</p>
+        <h2>Pocket TTS: state and runtime parity</h2>
+        <p>The August 20 Pocket clips are both Android CPU, fixed Alba voice, temperature 0.3, same short text and seed 0. They predate the later Supertonic pipeline. The original Android dynamic graph's first AR end-of-speech logit differs from the host after identical text tokens and initial Alba caches, before a sampled latent can feed back. The 0.3862 logit difference is a diagnostic observation, not a probability difference or an established cause of the audible failure.</p>
+        <p>The replacement has twelve right-aligned KV tensors (six layers, keys and values), explicit absolute positions and an additive validity mask. Its 256 slots retain 126 voice + 26 text + up to 100 generated positions = 252, without rolling away voice context. The diagram's recovery lane is a different graph, not a claim that the original graph became correct unchanged. Audio lengths include decoder tail frames; EOS step 53 and 56 emitted latent frames are therefore not interchangeable counts. The broader per-operator cause was not proved.</p>
+        <p>The rejected original CPU WAV is SHA-256 <code>cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6</code>. The accepted fixed-cache CPU WAV is <code>e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a</code>. These are byte-identical retained recordings, not recreated demos. The fixed-cache HTP route was accepted separately; neither player here is an HTP sample. No voice-cloning claim follows.</p>
+        <h2>Supertonic: whole-input versus full recipe</h2>
+        <p>The chapter chart compares CPU output from experiments 0036 and 0037 on the same text. Widths use actual sample counts at 44,100 Hz. The corresponding 0037 HTP recording was also accepted in listening. Acceptance belongs to those experimental files, not an unreviewed app recording. About 30 seconds was observed in the failed attempt, not established as a hard model cap.</p>
+        <p>The recipe groups raw sentences toward 300 code points before normalization, keeps individually overlong sentences intact, uses English/M1, eight steps and speed 1.05, and joins full native waveforms with 0.3-second gaps. Several settings changed together; this does not isolate segmentation as the cause. The earlier CPU/HTP waveform comparison and the later HTP source numerical comparison failed their thresholds. Listening does not turn those into numerical passes.</p>
+        <h2>Preparation and placement</h2>
+        <p>Gemma uses LiteRT-LM's GPU route; Supertonic uses ONNX Runtime + QNN's HTP backend. CPU work remains. The FP32 speech source graphs do not imply FP32 accelerator arithmetic: the pinned runtime requested FP16; per-operation precision was not measured. Models and compiled contexts were prepared on a computer, not trained or compiled entirely on the phone.</p>
+        <p>Precompilation also reduced median construction of four QNN sessions from 21.6129 s to 0.497816 s: experiment 0023, fixed T239/L238 input, three fresh processes per method. Those measurements exclude generation and offline compilation. They are not app-launch or current episode-latency measurements.</p>
         <ul>
-          <li><a href="../supertonic-android-htp-reconstruction.md">The deployment reconstruction</a></li>
-          <li><a href="../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json">0023: setup measurements and timing boundary</a></li>
-          <li><a href="../../experiments/0036-supertonic-whole-chapter-cpu-htp/README.md">0036: whole-input failure and both rejected recordings</a></li>
-          <li><a href="../../experiments/0037-supertonic-provider-pipeline/README.md">0037: provider recipe, sample counts and listening results</a></li>
-          <li><a href="../../experiments/0037-supertonic-provider-pipeline/results/listening-review-20260911.json">The two accepted experimental files</a></li>
-          <li><a href="../presentation/evidence/qnn-precision-policy.json">FP32 source and the FP16 precision request</a></li>
-          <li><a href="../../podcast-app/promptlab/README.md">Later script-generation observations</a></li>
+          <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md">0014: Pocket failure, cache replacement and recovery</a></li>
+          <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json">Original Android CPU diagnostic</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json">Exact-file listening verdicts</a></li>
+          <li><a href="../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json">0023: setup measurements</a></li>
+          <li><a href="../../experiments/0036-supertonic-whole-chapter-cpu-htp/README.md">0036: rejected whole-input recordings</a> · <a href="../../experiments/0037-supertonic-provider-pipeline/README.md">0037: full recipe and sample counts</a></li>
+          <li><a href="../../experiments/0037-supertonic-provider-pipeline/results/listening-review-20260911.json">Accepted experimental chapter files</a></li>
+          <li><a href="../presentation/evidence/qnn-precision-policy.json">FP32 source / FP16 precision request</a> · <a href="../supertonic-android-htp-reconstruction.md">Deployment reconstruction</a></li>
         </ul>
-        <p>These links point to internal repository records. This draft does not announce an app release or offer public repository access.</p>
+        <p>Experiment links are internal repository records, not an offered public code release. This draft explores a source-to-podcast workflow inspired by NotebookLM; it does not reproduce Google's product or establish equivalent quality.</p>
       </div>
     </details>
-    <footer class="site-footer">Qoralo · Android prototype</footer>
+    <footer class="site-footer">A local source-to-podcast experiment · Galaxy S23 Ultra</footer>
   </div>
 </body>
 </html>

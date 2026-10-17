@@ -1,5 +1,38 @@
 # Article review record
 
+## Current story revision: technical phone experiment
+
+Moritz replaced the brand-led story with a NotebookLM-inspired question: how close can a source-to-podcast workflow get with all inference on the phone? He explicitly wants a technical audience, useful engineering explanations, interactive/animated figures and the funny historical short-sentence Pocket TTS recording. The central portability point is that working on one device does not establish correct generation on another.
+
+The current narrative is 253 words; default main content including figure labels/controls/captions is 561 visible words. The setup optimization moved to expandable details. Coding agents are no longer a main story point. One-voice narration is stated explicitly rather than implying NotebookLM's conversational format has been reproduced.
+
+### Revised-copy review: Pi
+
+Pi read the revised HTML/JS and the owning 0014 source records. His actual review is `/tmp/qoralo-article-reviews/story-v2-pi-review.md`; he made no repository edits, model run, browser run or listening judgment.
+
+All three edits were applied before the visual pass:
+
+1. State the engineering action in visible prose: fixed 256-slot cache, explicit positions and validity mask. Describe the recovery input as same text/voice/noise with a different cache layout, not identical input tensor layouts.
+2. Replace the generic chapter moral with the specific takeaway to port text preparation and the synthesis loop, not only neural graphs. Use plain listening wording for the later exact CPU/HTP recordings.
+3. State visibly that the current prototype writes a script and reads it in one voice.
+
+The original three reviews below belong to the earlier article at `cdfdfb0c`. This revised copy received the additional Pi review, not three newly invented review passes.
+
+### Revised implementation and verification
+
+- Added three interactive figures: user-triggered route traces, a three-stage KV-state/EOS diagnostic with a bounded playable explanation, and a real-sample-length chapter-piece explorer.
+- Both Pocket players are **historical Android CPU** recordings: original dynamic graph 10.72 s, fixed-cache derivative 4.48 s. Verified SHA-256 against the owning records; no regeneration or audio editing. The fixed graph is a different implementation. First stop-score divergence is not asserted to be the cause of the voice or a proved faulty operator. This is not labelled a Supertonic or NPU failure.
+- Inspected desktop1440×1000 and mobile390×844 together, including all three diagnostic states. One corrective batch widened the desktop heading and made hover colors media-aware. Final desktop/mobile captures were inspected; no clipping or overlap. Desktop columns become readable rows on mobile.
+- Final browser suite passed five widths (1440,1280,768,390,320) × three diagnostic states, exact audio/gap geometry, native keyboard sources, keyboard range exploration, bounded explanation/replay interruption, muted decoding/playback of both actual WAVs with exclusive playback, reduced-motion behavior, loaded-page offline interaction, print and script-failure fallback. No external runtime requests or page exceptions.
+- One detector run: cross-media button-hover warnings addressed with an explicit print hover token; direct screen-style checks retain light text on the dark ground. Two trace-lane padding warnings correspond to intentional open row/column separators, not cramped boxed text; inspected actual insets and layouts. No second detector run.
+- Local captures/test reports: `/tmp/qoralo-story-v2/`. No shipping raster assets. No phone/model run, new listening acceptance, app/runtime/deck edits or public publishing.
+
+Disposition: ready for Moritz's story/design review. The final app UI-to-audio demonstration and exact-output listening review remain pending. NotebookLM quality parity has not been tested.
+
+## Original article review history (cdfdfb0c)
+
+The following records the superseded brand-led version, not current word counts, JavaScript behavior or a claim that its reviewers saw the revised story.
+
 Scope: a short HTML article, not a LinkedIn post. No phone access, inference, public publishing or changes to the presentation/app/runtime. The final main article has 299 words, including diagram labels and captions; source notes are collapsed.
 
 ## Hermes style consultation
