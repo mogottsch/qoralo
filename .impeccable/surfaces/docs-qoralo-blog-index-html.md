@@ -1,42 +1,36 @@
 ---
-version: 1
+version: 2
 slug: docs-qoralo-blog-index-html
 primary_target: docs/qoralo-blog/index.html
-related_targets: [docs/qoralo-blog/style.css, docs/qoralo-blog/article.js, docs/qoralo-blog/README.md, docs/qoralo-blog/REVIEW.md]
+related_targets: [docs/qoralo-blog/style.css, docs/qoralo-blog/article.js, docs/qoralo-blog/README.md, docs/qoralo-blog/REVIEW.md, docs/qoralo-blog/evidence/source-audit.md]
 ---
 
 # Local source-to-podcast technical article
 
-Mode: Read. Moritz explicitly identifies the audience as technical. Keep the narrative short, but explain selected engineering problems and give concrete takeaways. NotebookLM-inspired local phone inference is the subject; Qoralo is the prototype name, not the headline. Use the funny exact historical Pocket TTS failure as a real engineering example, not an invented anecdote. No new phone activity, model inference, app/runtime/deck changes or public publication.
+Mode: Read. Audience is technical. Keep the narrative short, explain a real engineering mechanism, and give one concrete takeaway. NotebookLM-inspired local phone inference is the subject; Qoralo is the prototype name, not the headline. Moritz rejects subtext, repeated qualifications and AI-sounding copy, and wants to edit the text himself. No new phone activity, model inference, app/runtime/deck changes or public publication.
 
 ## Direction contract
 
-THESIS: Explain local compute placement, why a working desktop model was not a faithful Android port, and why long-form speech requires the full preparation/synthesis pipeline. Let the reader hear the original and recovered short sentence.
+THESIS: A port that produces a valid-looking audio file has not shown its inference was valid. Show the phone placement, let the reader hear the original and recovered Pocket TTS clips, then explain a concrete source defect found in the old runner: a non-owning tensor outliving its buffer.
 
-OWN-WORLD: Inherit the presentation's #0b1017 canvas, mint #8ee8c2 HTP, lilac #c2a9f4 GPU and blue #9bbdff CPU. Flat technical drawings, restrained local sans, strong hierarchy. No decorative gradients/cards/hero metrics/eyebrows, generated mockups or invented waveforms. This is a refinement of the existing visual identity, not a new brand exercise.
+OWN-WORLD: Inherit the presentation's #0b1017 canvas, mint #8ee8c2 HTP, lilac #c2a9f4 GPU and blue #9bbdff CPU. Flat technical drawings, restrained local sans. No decorative gradients/cards/hero metrics/eyebrows, generated mockups or invented waveforms.
 
-STORY: NotebookLM's impressive but imperfect source-to-conversation output prompts the phone question. Show current GPU/Gemma and NPU/Supertonic routes, then the earlier Pocket CPU failure/recovery, then the later Supertonic chapter recipe. Technical takeaways: test state/stopping/listening rather than execution alone; port text preparation and the synthesis loop. One-voice format is explicit. Setup21.6→.5 is an expandable detail. Final UI-to-audio demo/listening remains pending.
+STORY: NotebookLM prompts the phone question; the intro is plain placeholder text for Moritz to rewrite. Phone placement, then the first Android port with exact historical recordings, then the lifetime bug. The one-voice format is explicit. The whole-chapter section, setup chart and EOS-logit diagram are removed.
 
-FIRST VIEWPORT: A direct NotebookLM-like podcast heading and concise personal question, followed by the phone-routing schematic. Sources/deep records collapse out of the first reading. Responsive article geometry, never a tiny scaled slide.
+CLAIM LIMITS (must stay visible): the lifetime bug is confirmed in retained source and a host ASAN test; it is not proved to have caused the 10.72 s clip. The old binary is not bound to the source, the old model was not replayed with only the fix, and the fixed-cache graph changed more than this. The zero-encoder/invalid-Bria failure is a separate cause. The 10.72 s clip is Android CPU, not HTP.
 
-FORM: Three custom, progressively enhanced HTML/SVG/CSS figures. Native exact-file audio players, keyboard-operable stage buttons and range control. Static results remain useful with failed JavaScript. No external fonts, UI dependencies, analytics or raster assets. No root DESIGN.md change.
+FORM: Two custom progressively enhanced figures (processor route; buffer/tensor lifetime with a keep-alive variant), native exact-file players, inline plain-text editing with local restore, and `Save HTML copy`. Static content stays meaningful when JavaScript fails. No external fonts, UI dependencies, analytics or raster assets.
+
+## Editing contract
+
+`[data-edit]` text becomes `contenteditable="plaintext-only"` on request. Edits persist in localStorage keyed by path. Saving builds from the original page source, not the live DOM, strips editor state, and adds a `<base>` so the copy finds its assets. Never writes into the repository.
 
 ## Motion and interaction thesis
 
-Focal moment: a user-controlled three-stage state/stop comparison: held input conditions; first raw EOS score divergence; observed output/stop behavior. Optional bounded automatic progression has pause, manual interruption, offscreen/hidden cancellation and no automatic audio.
-
-Continuity: stable lane geometry while changing evidence stage; desktop columns become mobile rows. A different fixed-cache graph remains visibly distinct from the original desktop/Android dynamic graphs.
-
-Feedback: route buttons emit one illustrative signal through the selected processor path. Segment range control highlights one real sample extent and reports its length/gap. Meaning survives reduced motion through text, selection and border/color states.
-
-Budget: local static DOM and tiny script only; no endless animation, heavy graphics, streaming, measured-time simulation or invented state trajectories. Audio loads on request and players do not overlap.
+Focal moment: the four-step buffer lifetime (allocate, wrap, leave scope, consume), user-stepped, with an optional bounded replay that stops at the last step and cancels on manual input, hidden tab or offscreen. Route buttons emit one illustrative signal. Meaning survives reduced motion through text and border/color states. No endless animation; audio never autoplays and players do not overlap.
 
 ## Finish record
 
-The original brand-led version had three actual peer reviews (Thomas, Pi, nik) and narrow remembered style guidance from existing owner Hermes. Those records remain historical. For this story revision, Pi provided an additional source-grounded factual/copy review and all three edits were applied. See REVIEW.md; no claim that the old reviewers saw this revised copy.
+See REVIEW.md. Browser suite passed five widths × two scopes × four stages, keyboard sources, bounded replay, reduced motion, exact WAV decoding, editing, local restore, a saved copy reopened from disk, and script-failure fallback. Desktop and mobile captures inspected; one measure fix to the title. Pi independently confirmed the source defect and claim limits; no new three-pass review of this copy.
 
-Narrative253words; default visible main561words including controls/captions/diagram labels. First and final full-page captures inspected at1440×1000 and390×844, plus all three diagnostic states. One corrective batch widened the desktop heading and made button hover colors media-aware. Final browser suite passed five widths × three states, exact geometry, keyboard, bounded replay/interruption, muted WAV decode/playback, motion reduction, loaded offline, print and script failure. One detector run; no extra polish loop.
-
-Exact Pocket recordings and chapter sample counts were checked against retained experiment records. The historical Pocket failure is Android CPU, not HTP/current Supertonic. The fixed cache is a replacement graph, not a proved operator fix. All inference is on phone; preparation/compilation was on computer. No fresh quality/latency claim.
-
-Disposition: finish at this scope for Moritz's story/design review. Final app demo/audio and any public publication remain separate.
+Disposition: finish at this scope for Moritz to edit and review. Final app demo/audio and any public publication remain separate.

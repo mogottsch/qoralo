@@ -7,30 +7,29 @@ python3 -m http.server 8766 --bind 127.0.0.1
 # http://127.0.0.1:8766/docs/qoralo-blog/
 ```
 
-A short technical article about a source-to-podcast workflow with local phone inference. Qoralo is the experiment's app name, not the article's subject. The prototype generates a script and narrates it in one voice; this is not a reproduction of NotebookLM's conversational format or an established quality match.
+A short technical article about a source-to-podcast workflow with local phone inference. Qoralo is the experiment's app name, not the article's subject. The prototype generates a script and narrates it in one voice; this is not NotebookLM's conversational format or an established quality match.
 
-## Three explanatory interactions
+## What the page contains
 
-1. **Processor routes:** trace Gemma/GPU or Supertonic/NPU HTP through the phone. CPU orchestration stays visible. One-shot signal motion is illustrative, not measured timing.
-2. **Runtime divergence:** step through inputs, first AR end-of-speech scores and outcomes, or play a bounded explanation. Desktop/original Android share inputs; the recovered Android route has a different fixed-cache graph. Two native players use the exact historical original/fixed Android CPU recordings already retained under `docs/android-benchmarks/media/`.
-3. **Chapter assembly:** explore all 15 actual Supertonic CPU pieces using a keyboard-accessible range control. Bar extents use real sample counts, including fourteen actual 0.3-second gaps. Audio duration is not synthesis latency.
+1. **Phone placement:** Gemma on GPU, Supertonic on NPU/HTP, CPU orchestration. The route buttons show one illustrative signal; they are not timing.
+2. **The first Android port:** the exact historical Pocket TTS Android CPU recordings, original dynamic graph (10.72 s) and fixed-cache derivative (4.48 s). No audio was generated, trimmed, normalized or re-encoded for the page.
+3. **A tensor lifetime bug:** the retained original runner wraps `bos.data()` in a non-owning `Ort::Value`, then lets `bos` go out of scope before `Run()`. The interactive diagram steps through allocate, wrap, leave scope and consume, with a keep-alive variant.
 
-The narrative is **253 words**. The main article at the default outcome state is **561 visible words including all controls, figure labels, captions and explanations**. Deeper source details are collapsed.
+The whole-chapter section, the EOS-logit comparison and the setup-time chart were removed. The first-logit difference was an observation, not an explanation, and the lifetime bug makes "identical input" unproven for that run.
 
-`article.js` is a small local progressive enhancement. No external libraries, fonts, analytics or remote runtime requests. Nothing starts playing automatically. Audio files load only on request; starting one pauses the other. Reduced motion removes spatial effects. With JavaScript unavailable, all three figures retain meaningful static content and the native players/source disclosure still work. No audio was generated, trimmed, normalized or re-encoded for this page.
+## What is and is not established
 
-## Evidence and review
+Established: the source defect (`evidence/source-audit.md`), and a host-only AddressSanitizer reproduction using the real ORT non-owning tensor API (`evidence/bos-lifetime-repro.cc`). No model was loaded; no phone was used.
 
-- Pocket sources: `experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md` and `results/{android-alba-original-cpu,quality-recovery-listening}.json` beneath that experiment.
-- Chapter sources: experiments 0036 and 0037. Earlier threshold failures and exact-file acceptance remain distinct.
-- The 21.6129→0.497816-second four-session setup result is now an expandable detail, not the headline or an episode-latency claim.
-- All inference is on the phone. Model preparation/context compilation happened on a computer. No final app UI-to-audio demonstration or new listening approval is implied.
+Not established: that this defect caused the exact historical recording. The old phone binary hash is not bound to the retained source, and nobody has replayed the old model with only the lifetime fixed. The fixed-cache graph changed more than this one lifetime. The separate invalid-Bria/zero-encoder failure is a different cause. The article says this on the page.
 
-`REVIEW.md` distinguishes the initial version's three peer reviews from Pi's later factual/copy review of this revised story. It does not claim the new copy received the old review passes unchanged.
+## Editing the copy
+
+`Edit text` makes the outlined paragraphs and headings editable as **plain text**. Edits persist in this browser's local storage so a reload keeps them. `Save HTML copy` downloads `phone-podcast-edited.html`, built from the original page source rather than the live DOM, so it carries your text but no editor state. It adds a `<base>` pointing at the original folder, so the saved copy still finds `style.css`, `article.js` and the WAVs if you move it. Nothing writes into the repository; to keep a revision, copy that file in yourself. Escape leaves edit mode; Ctrl/Cmd+S saves while editing.
+
+The intro is placeholder wording, not Moritz's voice. Replace it.
 
 ## Browser checks
-
-Serve the root, then use the Chrome skill wrapper:
 
 ```sh
 PW="$HOME/.pi/agent/skills/chrome-browser/scripts/pw"
@@ -39,6 +38,8 @@ PW="$HOME/.pi/agent/skills/chrome-browser/scripts/pw"
 "$PW" -s=qoralo-story close
 ```
 
-Checks cover five widths × three diagnostic states, exact sample geometry, keyboard interaction, bounded playback/interruption, muted WAV decoding/playback, reduced motion, loaded-page offline interaction, print and script-failure fallback. Browser playback tests are not human listening verdicts. Static validation additionally checks retained source values and hashes.
+Covers five widths × two scopes × four lifetime stages, keyboard sources, bounded replay and interruption, reduced motion, muted decoding of both WAVs with exclusive playback, inline editing with local restore, an exported copy reopened from disk with working styles, script and diagram, and script-failure fallback. Browser playback is not a human listening verdict.
 
-Private draft only. No public article, Google integration or app release is announced.
+`article.js` is local only: no libraries, fonts, analytics or remote requests. Nothing autoplays.
+
+Private draft. No public article or app release is announced.

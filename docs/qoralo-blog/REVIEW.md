@@ -1,6 +1,27 @@
 # Article review record
 
-## Current story revision: technical phone experiment
+## Current revision (story v3): source-audited, chapter removed, editable
+
+Moritz's critique of story v2: too much subtext, the logit explanation did not answer WHY, the whole-chapter section was uninteresting, and the intro was not his voice.
+
+What changed:
+
+- Removed the chapter explorer, the setup chart and the three-stage EOS diagram. The old three-figure requirement was superseded by Moritz's request.
+- Re-read the retained 0014 runner instead of repeating the logit observation. Found a definite C++ lifetime bug: `TV()` wraps `bos.data()` in a non-owning `Ort::Value`, and `bos` is destroyed before `Run()`. Details, hash, ORT API documentation and limits: `evidence/source-audit.md`.
+- Built a host-only reproducer (`evidence/bos-lifetime-repro.cc`) using the real ORT tensor API under AddressSanitizer. No model, session, inference or phone. Original scope: heap-use-after-free. Buffer kept alive: passes. Two early launch failures were environment problems (library soname; an API22 mismatch on a const accessor) and were fixed before the valid comparison.
+- The article states plainly that this is a source finding, not a proved cause of the 10.72 s clip. The retained phone binary hash is not bound to the retained source, the old model was not replayed with only the lifetime fixed, and the fixed-cache graph changed more than this. The invalid-Bria/zero-encoder cause is a separate failure.
+- Added inline plain-text editing, local restore and `Save HTML copy`. The saved copy is built from original source text, strips editor state, and keeps working assets through a `<base>`. Nothing writes to the repository.
+- The intro is deliberately plain placeholder text for Moritz to rewrite. It is not a new attempt at his voice.
+
+Provenance: Pi independently read the source and confirmed the lifetime defect and the ORT ownership semantics, and advised the claim limits above. Pi did not review the final rewritten copy, and the earlier Thomas/Pi/nik passes belong to `cdfdfb0c`. This revision has no new three-pass review. Hermes style guidance (concise, direct, human, no invented quotes) still applies.
+
+Verification: browser suite passed five widths × two scopes × four stages, keyboard sources, bounded replay/interruption, reduced motion, muted decoding of both exact WAVs with exclusive play, inline editing, local restore, an exported copy reopened from disk with working CSS/script/diagram, and script-failure fallback. Desktop 1440×1000 and mobile 390×844 captures inspected before and after one fix (a wider title measure). Main text is about 314 words including labels; editable copy about 208. Captures and logs: `/tmp/qoralo-story-v3/`.
+
+Disposition: ready for Moritz to edit and review. Final app UI-to-audio demo and listening review remain pending; NotebookLM quality parity is not shown.
+
+## Previous revision (story v2, superseded)
+
+### Story v2 details
 
 Moritz replaced the brand-led story with a NotebookLM-inspired question: how close can a source-to-podcast workflow get with all inference on the phone? He explicitly wants a technical audience, useful engineering explanations, interactive/animated figures and the funny historical short-sentence Pocket TTS recording. The central portability point is that working on one device does not establish correct generation on another.
 
