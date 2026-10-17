@@ -14,21 +14,31 @@ by = {(r["model"].split(" (")[0].replace(" IT", ""), r["backend"]): r for r in r
 
 # (model shown, backend key in packet, backend label, css class, note). Notes only where a reader needs one.
 LINES = [
-    ("Gemma 4 E2B", "CPU", "CPU", "cpu", ""),
-    ("Gemma 4 E2B", "GPU", "GPU", "gpu", "What the app uses"),
-    ("Gemma 4 E2B", "NPU(HTP)", "NPU", "npu", "Different build. Repeated itself on long prompts"),
-    ("Qwen3.5-2B", "CPU", "CPU", "cpu", ""),
-    ("Qwen3.5-2B", "GPU", "GPU", "gpu", ""),
     ("LFM2.5-2.6B", "CPU", "CPU", "cpu", ""),
+    ("Qwen3.5-2B", "GPU", "GPU", "gpu", ""),
+    ("Gemma 4 E2B", "NPU(HTP)", "NPU", "npu", "Different build. Repeated itself on long prompts"),
+    ("Gemma 4 E2B", "CPU", "CPU", "cpu", ""),
     ("LFM2.5-2.6B", "GPU", "GPU", "gpu", ""),
+    ("Gemma 4 E2B", "GPU", "GPU", "gpu", "What the app uses"),
+    ("Qwen3.5-2B", "CPU", "CPU", "cpu", ""),
 ]
+APP_MODEL = "Gemma 4 E2B"
+
+def sort_key(line):
+    """Group by model, the app's model first, then the others by name. Inside a model, fastest decode first;
+    a route without a comparable decode rate goes last. Models are never ranked against each other."""
+    model, key, *_ = line
+    decode = by[(model, key)]["writes"]
+    return (model != APP_MODEL, model, decode is None, -(decode or 0.0))
+
+LINES.sort(key=sort_key)
 
 def cells(r):
-    reads = f'<td data-label="Reads" data-reads="{r["reads"]}">{r["reads"]:.0f}</td>'
+    reads = f'<td data-label="Prefill" data-prefill="{r["reads"]}">{r["reads"]:.0f}</td>'
     if r["writes"] is None:
-        writes = '<td class="blocked" data-label="Writes">not comparable</td>'
+        writes = '<td class="blocked" data-label="Decode">not comparable</td>'
     else:
-        writes = f'<td data-label="Writes" data-writes="{r["writes"]}">{r["writes"]:.1f}</td>'
+        writes = f'<td data-label="Decode" data-decode="{r["writes"]}">{r["writes"]:.1f}</td>'
     return reads, writes
 
 body = []
@@ -40,8 +50,8 @@ assert len(body) == len(rows) == 7
 html = '''<!-- llm-table:start -->
         <div class="table-wrap">
           <table class="bench llm" role="table">
-            <caption class="sr-only">Reading and writing speed in tokens per second for three language models on the phone, on CPU, GPU and NPU</caption>
-            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader">Backend</th><th scope="col" role="columnheader">Reads, tokens/s</th><th scope="col" role="columnheader">Writes, tokens/s</th><th scope="col" role="columnheader">Note</th></tr></thead>
+            <caption class="sr-only">Prefill and decode speed in tokens per second for three language models on the phone, on CPU, GPU and NPU</caption>
+            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader">Backend</th><th scope="col" role="columnheader">Prefill, tokens/s</th><th scope="col" role="columnheader">Decode, tokens/s</th><th scope="col" role="columnheader">Note</th></tr></thead>
             <tbody>
 ''' + "\n".join(body) + '''
             </tbody>

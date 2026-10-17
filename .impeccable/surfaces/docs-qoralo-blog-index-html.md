@@ -18,7 +18,7 @@ OWN-WORLD: Inherit the presentation's #0b1017 canvas, mint #8ee8c2 NPU/HTP, lila
 STRUCTURE (agreed with Moritz):
 1. Title, intro and the "So I wondered" question: **approved and frozen** (a test fails if the text changes).
 2. Demo video slot (explicit missing-asset notice until `media/demo.mp4` exists; no synthetic footage).
-3. What we tried: Speech (five-row table, "CPU RTF" / "NPU RTF", a rendered RTF formula, one footnote) and Script writing (seven-row reads/writes tokens-per-second table grouped by model, generic-text caption, no ratio headline).
+3. What I tried (first person; the whole article is first person): Speech (five-row table, "CPU RTF" / "NPU RTF", a rendered RTF formula) and Script writing (seven-row Prefill / Decode tokens-per-second table, grouped by model). Tables are sorted by explicit rules in the generators. No footnotes under the tables; their caveats are in the technical notes.
 4. Where it ends up: the full-system flow diagram (computer preparation lane, phone lane, selected neural routes tagged GPU / NPU / CPU).
 5. The first Android port: the exact historical Pocket TTS clips, working one first.
 6. Why it went wrong: a plain gist and one chart (stop score over seconds of speech, both lines from the same controlled phone window).

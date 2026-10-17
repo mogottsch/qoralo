@@ -18,12 +18,26 @@ def rtf(i):
 
 # (model, cpu cell, npu cell, what happened). A number cell is ("rtf", row id); a word cell is ("word", text, css class).
 LINES = [
-    ("Supertonic 3", ("rtf", "supertonic-short-cpu"), ("rtf", "supertonic-short-htp"), "Both tested samples sounded good"),
     ("Pocket TTS", ("rtf", "pocket-short-cpu"), ("rtf", "pocket-short-htp"), "Both tested samples sounded good"),
     ("Kokoro", ("rtf", "kokoro-fixed-cpu"), ("word", "blocked", "blocked"), "The HTP version failed a check before it reached the phone"),
-    ("MOSS-TTS-Nano", ("rtf", "moss-short-cpu"), ("word", "blocked", "blocked"), "The HTP runtime failed to initialize on the phone"),
     ("VibeVoice 1.5B", ("word", "no speech", "blocked"), ("word", "not tried", "muted"), "Silent, incomplete output; the package alone was 9.1 GB"),
+    ("MOSS-TTS-Nano", ("rtf", "moss-short-cpu"), ("word", "blocked", "blocked"), "The HTP runtime failed to initialize on the phone"),
+    ("Supertonic 3", ("rtf", "supertonic-short-cpu"), ("rtf", "supertonic-short-htp"), "Both tested samples sounded good"),
 ]
+
+def sort_key(line):
+    """Sort by how far each model got, then by speed within that group.
+    0 = ran on the NPU too (fastest NPU RTF first), 1 = ran on the CPU only (fastest CPU RTF first), 2 = produced no speech.
+    The groups are the point; speeds are only ordered inside a group, never ranked across groups.
+    """
+    _, cpu, npu, _ = line
+    if npu[0] == "rtf":
+        return (0, rtf(npu[1]))
+    if cpu[0] == "rtf":
+        return (1, rtf(cpu[1]))
+    return (2, 0.0)
+
+LINES.sort(key=sort_key)
 for _, c, n, _ in LINES:
     for cell in (c, n):
         if cell[0] == "rtf":

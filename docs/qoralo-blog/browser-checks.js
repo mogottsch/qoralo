@@ -52,7 +52,7 @@ async (page) => {
   check(await page.locator('#system-figure details').count()===0,'No visible collapsible in the diagram');
   check(await page.locator('#system-figure script,#system-figure img,#system-figure link').count()===0,'Diagram has no scripts or external assets');
 
-  // 'What we tried': the table must equal the evidence packet, in both directions.
+  // 'What I tried': the tables must equal the evidence packet, in both directions.
   const mainText=await page.locator('main').innerText();
   const tbl=await getJson('evidence/benchmark-table.json');
   const byId=Object.fromEntries(tbl.rows.map(r=>[r.id,r]));
@@ -69,21 +69,34 @@ async (page) => {
   check(byId['moss-htp-blocked'].speed.rtf===null&&byId['vibevoice-incomplete'].speed.rtf===null,'Packet agrees: blocked and incomplete rows have no RTF');
   const ratio=(a,b)=>byId[a].speed.rtf/byId[b].speed.rtf;
   check(ratio('supertonic-short-cpu','supertonic-short-htp')>2&&ratio('pocket-short-cpu','pocket-short-htp')>2,'"More than twice as fast" holds within the two rows that ran on the NPU');
+  const notes0=await page.locator('#records').evaluate(e=>e.textContent);
   const lt=await getJson('evidence/llm-table.json');
-  const lrows=await page.locator('.bench.llm tbody tr').evaluateAll(trs=>trs.map(tr=>({model:tr.querySelector('th').textContent,cells:[...tr.querySelectorAll('td')].map(td=>({text:td.textContent.trim(),reads:td.dataset.reads===undefined?null:Number(td.dataset.reads),writes:td.dataset.writes===undefined?null:Number(td.dataset.writes),cls:td.className}))})));
-  check(lrows.length===7&&lrows.map(r=>r.model+'/'+r.cells[0].text).join('|')==='Gemma 4 E2B/CPU|Gemma 4 E2B/GPU|Gemma 4 E2B/NPU|Qwen3.5-2B/CPU|Qwen3.5-2B/GPU|LFM2.5-2.6B/CPU|LFM2.5-2.6B/GPU','LLM table: seven routes grouped by model: '+lrows.map(r=>r.model+'/'+r.cells[0].text));
-  const pk=lt.rows.map(r=>({reads:r.reads,writes:r.writes}));
-  lrows.forEach((r,i)=>{const rd=r.cells[1],wr=r.cells[2];
-    check(rd.reads!==null&&Math.abs(rd.reads-pk[i].reads)<1e-9&&rd.text===pk[i].reads.toFixed(0),`LLM row ${i} reads equals the packet: ${rd.text}`);
-    if(pk[i].writes===null)check(wr.writes===null&&/not comparable/.test(wr.text)&&!/\d/.test(wr.text),`LLM row ${i} writes is words, never a number: ${wr.text}`);
-    else check(wr.writes!==null&&Math.abs(wr.writes-pk[i].writes)<1e-9&&wr.text===pk[i].writes.toFixed(1),`LLM row ${i} writes equals the packet: ${wr.text}`);});
-  check(lt.rows[2].writes===null&&/mobile QAT/i.test(lt.rows[2].model)&&lt.htp_registry_audit[0].registry_attempt_status==='ran'&&/repetition collapse/.test(lt.htp_registry_audit[0].recorded_outcome),'Packet agrees: the NPU row is a different (mobile QAT) build that ran, has no normalized writes, and failed with repetition');
-  check(lrows[2].cells[3].text==='Different build. Repeated itself on long prompts'&&lrows[1].cells[3].text==='What the app uses','NPU row shows its different build and its repetition failure; the app row says what the app uses');
-  check(/We also tried it on the NPU, where it ran but repeated itself on long prompts/.test(mainText)&&/The app uses Gemma 4 E2B on the GPU/.test(mainText),'Script-writing intro states the app route and the NPU outcome');
+  const lrows=await page.locator('.bench.llm tbody tr').evaluateAll(trs=>trs.map(tr=>({model:tr.querySelector('th').textContent,cells:[...tr.querySelectorAll('td')].map(td=>({text:td.textContent.trim(),prefill:td.dataset.prefill===undefined?null:Number(td.dataset.prefill),decode:td.dataset.decode===undefined?null:Number(td.dataset.decode),cls:td.className}))})));
+  const pkey=r=>r.model.split(' (')[0].replace(' IT','')+'/'+(r.backend==='NPU(HTP)'?'NPU':r.backend);
+  const packet=Object.fromEntries(lt.rows.map(r=>[pkey(r),r]));
+  check(lrows.length===7&&new Set(lrows.map(r=>r.model+'/'+r.cells[0].text)).size===7&&lrows.every(r=>packet[r.model+'/'+r.cells[0].text]),'LLM table has the seven packet routes, each once: '+lrows.map(r=>r.model+'/'+r.cells[0].text));
+  lrows.forEach(r=>{const k=r.model+'/'+r.cells[0].text,pk=packet[k],pf=r.cells[1],dc=r.cells[2];
+    check(pf.prefill!==null&&Math.abs(pf.prefill-pk.reads)<1e-9&&pf.text===pk.reads.toFixed(0),`LLM ${k} prefill equals the packet: ${pf.text}`);
+    if(pk.writes===null)check(dc.decode===null&&/not comparable/.test(dc.text)&&!/\d/.test(dc.text),`LLM ${k} decode is words, never a number: ${dc.text}`);
+    else check(dc.decode!==null&&Math.abs(dc.decode-pk.writes)<1e-9&&dc.text===pk.writes.toFixed(1),`LLM ${k} decode equals the packet: ${dc.text}`);});
+  const lheads=await page.locator('.bench.llm thead th').allInnerTexts();
+  check(lheads.join('|')==='Model|Backend|Prefill, tokens/s|Decode, tokens/s|Note','LLM column headers say prefill and decode: '+lheads.join('|'));
+  check(await page.locator('.bench.llm td[data-prefill]').evaluateAll(t=>t.every(x=>x.dataset.label==='Prefill'))&&await page.locator('.bench.llm td[data-decode]').evaluateAll(t=>t.every(x=>x.dataset.label==='Decode')),'Mobile labels say Prefill and Decode');
+  check(!/\b(reads|writes)\b/i.test(await page.locator('[aria-labelledby=tried-heading]').innerText()),'The page says prefill and decode, not reads and writes');
+  // Sorting rule: models grouped (contiguous), the app model first, the others by name; inside a model fastest decode first, no-rate last.
+  const order=lrows.map(r=>r.model), uniq=[...new Set(order)];
+  check(uniq.length===3&&uniq[0]==='Gemma 4 E2B'&&uniq.slice(1).join('|')==='LFM2.5-2.6B|Qwen3.5-2B'&&order.every((m,i)=>i===0||m===order[i-1]||!order.slice(0,i).includes(m)),'LLM models are grouped, the app model first, then by name: '+uniq);
+  const inside=uniq.every(m=>{const d=lrows.filter(r=>r.model===m).map(r=>r.cells[2].decode);const nn=d.filter(v=>v!==null);return d.slice(nn.length).every(v=>v===null)&&nn.every((v,i)=>i===0||nn[i-1]>=v);});
+  check(inside,'Inside each model: fastest decode first, a route without a decode rate last: '+lrows.map(r=>r.model+'/'+r.cells[0].text+':'+r.cells[2].text).join(' | '));
+  check(lt.rows.find(r=>pkey(r)==='Gemma 4 E2B/NPU').writes===null&&/mobile QAT/i.test(lt.rows.find(r=>pkey(r)==='Gemma 4 E2B/NPU').model)&&lt.htp_registry_audit[0].registry_attempt_status==='ran'&&/repetition collapse/.test(lt.htp_registry_audit[0].recorded_outcome),'Packet agrees: the NPU row is a different (mobile QAT) build that ran, has no normalized decode rate, and failed with repetition');
+  const npuRow=lrows.find(r=>r.cells[0].text==='NPU'), gpuApp=lrows.find(r=>r.model==='Gemma 4 E2B'&&r.cells[0].text==='GPU');
+  check(npuRow.cells[3].text==='Different build. Repeated itself on long prompts'&&gpuApp.cells[3].text==='What the app uses','NPU row shows its different build and its repetition failure; the app row says what the app uses');
+  check(/I also tried it on the NPU, where it ran but repeated itself on long prompts/.test(mainText)&&/The app uses Gemma 4 E2B on the GPU/.test(mainText),'Script-writing intro states the app route and the NPU outcome');
   check(!/\b\d+(\.\d+)?\s*(\u00d7|x|times)\b|faster than on the CPU|fastest|winner/i.test(await page.locator('[aria-labelledby=tried-heading]').innerText()),'No ratio headline, winner or ranking in the section');
-  check(/Reads is how fast the model takes in the prompt, writes is how fast it produces text\. Both in tokens per second, higher is faster; a token is a piece of text, not a word\./.test(mainText),'LLM note explains reads, writes and tokens in one line');
-  check(/Generic long-text tests, not the app's script pipeline and not script quality\. Medians of five requests with the model already loaded, the same input for every row; compare backends within a model, since tokenizers differ\./.test(mainText),'LLM footnote says these are generic text tests');
-  check(await page.locator('.bench:not(.llm)').evaluate(t=>t.compareDocumentPosition(document.querySelector('.bench.llm'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('[data-edit="llm-title"]').evaluate(h=>h.compareDocumentPosition(document.querySelector('.bench.llm'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('.table-foot').first().evaluate(f=>f.compareDocumentPosition(document.querySelector('[data-edit="llm-title"]'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Speech and script-writing tables are separate: speech first, then the script-writing subsection');
+  check(/Prefill is how fast the model takes in the prompt, decode is how fast it produces text\. Both in tokens per second, higher is faster; a token is a piece of text, not a word\./.test(mainText),'LLM note explains prefill, decode and tokens in one line');
+  check(!/Generic long-text tests|Medians of five requests|compare backends within a model, since tokenizers differ/.test(mainText),'The LLM footnote is gone from the page body');
+  check(/generic long-text tests, not the app's script pipeline and not script quality/.test(notes0)&&/the median of five loaded long-prompt requests|Each row is the median of five loaded long-prompt requests/.test(notes0)&&/sorted by decode speed inside each model/.test(notes0),'The LLM caveats live in the technical notes');
+  check(await page.locator('.bench:not(.llm)').evaluate(t=>t.compareDocumentPosition(document.querySelector('.bench.llm'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('[data-edit="llm-title"]').evaluate(h=>h.compareDocumentPosition(document.querySelector('.bench.llm'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('.note-box').first().evaluate(f=>f.compareDocumentPosition(document.querySelector('[data-edit="llm-title"]'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Speech and script-writing tables are separate: speech first, then the script-writing subsection');
   check(!/RTF/.test(await page.evaluate(()=>[document.querySelector('.bench.llm').closest('.table-wrap'),...document.querySelectorAll('[data-edit="llm-copy"],[data-edit="llm-note"],[data-edit="llm-foot"],[data-edit="llm-title"]')].map(e=>e.textContent).join(' '))),'The script-writing section never mentions RTF');
   check(!/RTF.{0,40}(Gemma|tokens)/.test(mainText.replace(/\n/g,' '))&&!/tokens.{0,60}RTF/.test(mainText.replace(/\n/g,' ')),'LLM rate and TTS RTF are not mixed');
   const heads=await page.locator('.bench:not(.llm) thead th').allInnerTexts();
@@ -94,13 +107,21 @@ async (page) => {
   check(/RTF equals generation time divided by audio length/.test(fm.label)&&fm.mathHidden==='true'&&/RTF\s*=\s*generation time\s*audio length/.test(fm.txt),'Formula has one accessible name and reads RTF = generation time over audio length: '+fm.txt);
   check(fm.noteLen<140,'RTF note box is short: '+fm.noteLen+' characters');
   check(/Below 1 is faster than playback: at 0\.5, ten seconds of speech takes five\./.test(mainText),'One-line RTF example');
-  check(/Warm medians without setup; workloads differ by model, so compare across a row\. HTP versions are rewritten graphs, checked by ear\. Pocket's samples differ from the clips below\./.test(mainText),'One footnote carries the reviewed limits');
+  check(!/Warm medians without setup|compare across a row|rewritten graphs, checked by ear|Pocket's samples differ/.test(mainText),'The speech footnote is gone from the page body');
+  check(/Speech table: warm medians of five runs after setup/.test(notes0)&&/rewritten graphs/.test(notes0)&&/not the clips in the next section/.test(notes0)&&/sorted by how far each model got/.test(notes0),'The speech caveats live in the technical notes');
+  const tier=r=>r.cells[1].rtf!==null?0:(r.cells[0].rtf!==null?1:2);
+  const rowKey=r=>[tier(r),tier(r)===0?r.cells[1].rtf:tier(r)===1?r.cells[0].rtf:0];
+  check(shown.every((r,i)=>i===0||(rowKey(shown[i-1])[0]<rowKey(r)[0]||(rowKey(shown[i-1])[0]===rowKey(r)[0]&&rowKey(shown[i-1])[1]<=rowKey(r)[1]))),'Speech rows sort by how far the model got (NPU, CPU only, no speech), then by speed inside the group: '+shown.map(r=>r.model+':'+tier(r)+':'+rowKey(r)[1].toFixed(2)).join(' | '));
   check(!/generation time divided by audio length/.test(mainText),'No long prose definition of RTF');
   check(/In these warm short-input tests, the prepared HTP versions were over twice as fast/.test(mainText)&&!/NPU is (about )?(2|two)/.test(mainText),'Speed claim is qualified to these tests');
   check(!/bug hunt|after the bug/.test(mainText),'Table does not borrow the Pocket bug story');
   check(shown[3].cells[2].text==='The HTP runtime failed to initialize on the phone'&&/Both tested samples sounded good/.test(shown[1].cells[2].text),'MOSS and Pocket notes use the reviewed wording');
   check(await page.locator('.note-box').first().evaluate(n=>parseFloat(getComputedStyle(n).fontSize)>=12&&parseFloat(getComputedStyle(n).fontSize)<=14),'RTF note box is small');
   check(await page.locator('[data-edit="tried-copy"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('.bench'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#tried-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#system-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#system-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#pocket-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#pocket-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#why-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Order: demo, what we tried, where it ends up, the Pocket clips, why it went wrong');
+
+  check(await page.locator('#tried-heading').textContent()==='What I tried'&&/I tried five speech models on my phone/.test(mainText)&&/For the script I need a language model/.test(mainText),'The tried section is written from Moritz\'s perspective');
+  check(!/\b(we|our|ours|us)\b/i.test(mainText),'No "we" or "our" anywhere in the article text: '+(mainText.match(/.{20}\b(we|our|us)\b.{20}/i)||[''])[0]);
+  check(/My phone code freed that buffer too early/.test(mainText)&&/until I cut it off/.test(mainText)&&/The second is my first port/.test(mainText),'The Pocket story is also first person');
 
   // Gist first, plain, and free of numbers nobody needs.
   const body=await page.locator('main').innerText();
@@ -133,7 +154,7 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-bridge,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap,.table-foot')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-bridge,.chart,.legend,.editor,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         flow:(()=>{
           const nodes=[...document.querySelectorAll('#system-figure .qflow-node')], r=nodes.map(box);
           const lane=n=>n.closest('.qflow-host')?'host':'phone';
@@ -209,7 +230,7 @@ async (page) => {
     const triedBefore=await page.locator('[data-edit="tried-copy"]').innerHTML();
     await page.locator('#edit-copy').click();
     check(await page.locator('[data-edit="intro"]').getAttribute('contenteditable')==='plaintext-only','Inline plain-text edit mode');
-    check(await page.locator('[data-edit]').count()>=19,'Prose and headings are editable');
+    check(await page.locator('[data-edit]').count()>=17,'Prose and headings are editable');
     await page.locator('[data-edit="intro"]').fill('My own intro <b>stays plain text</b>.');
     await page.locator('#edit-copy').click();
     await page.reload();

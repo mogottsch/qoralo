@@ -1,5 +1,9 @@
 # Article review record
 
+## Tables, voice and sorting (story v4, latest)
+
+Moritz asked to: remove both table footnotes; say prefill and decode, not reads and writes; always sort tables meaningfully; and write the "what we tried" section from his perspective ("What I tried"). Applied: both footnotes are gone from the page body and their caveats are in the technical notes (the speech footnote's Pi-required boundaries, and the LLM "generic text tests, not script quality" caption Pi asked to keep visible; this is Moritz's call as the owner, flagged to Pi). Columns and mobile labels read Prefill and Decode. The sort rules are code, not hand ordering, and tested: speech rows by how far each model got, then speed inside the group; LLM rows grouped by model with the app's model first, then fastest decode first, no-rate rows last. The whole article is now first person (my, I), and a test fails if "we", "our" or "us" appears.
+
 ## Removed on request (story v4, latest)
 
 Moritz asked to remove the cause paragraph and the five-line code excerpt in "Why it went wrong", and the whole "The fix we applied" section with its takeaway. The article now ends on the chart and his closing line. The explanation of how the NaN marker was lost lives only in the technical notes and `evidence/` (the source audit, the AddressSanitizer reproduction, the phone check). The browser suite now fails if a code excerpt, cause paragraph, fix section or takeaway returns. The README and the surface brief were rewritten to describe the page as it is, removing stale descriptions of the earlier processor-route figure, toggles and scrubber.
