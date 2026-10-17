@@ -20,9 +20,15 @@ point for build identities, delivery steps, evidence and remaining gaps.
   unproven system-picker hop. Later prompt round3/3b records and the final
   offline candidate have distinct provenance — see the runbook, not an old
   handoff's “current” heading.
+- Frozen offline source **`33fbfb4d`**, bundle
+  `.local/closeout/20261017T074832Z-33fbfb4d7346/`: app **`677f8d6f…`** (same
+  bytes as retained phone app), new test **`9c40d918…`**. JVM **293 discovered /
+  280 executed / 13 skipped**, no failures/errors; APK assembly and native-byte
+  verification pass. **Lint is blocked** by one `Recycle` diagnostic in
+  `ShortProductDiagnostics.kt:56`; the full host build is not green.
 - The weekend closeout is **host-only**: Moritz has the phone. No install,
   instrumentation, model inference or new listening verdict is authorized in
-  this window. The frozen final candidate is not a new device pass.
+  this window. The frozen pair is not a new device pass.
 - The Python historical scope suite is **not green**: eight retained source/hash
   drift failures after two obsolete behavioral checks were repaired.
   [Exact audit and reproducer](docs/host-scope-test-baseline.md).
@@ -37,8 +43,9 @@ this shared checkout.
 
 ```bash
 cd podcast-app
-./gradlew --offline -Ppodcast.legacyApplicationId=false -Ppodcast.shortProductE2e=false \
-  :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest \
+./gradlew --offline --no-daemon --max-workers=2 \
+  -Ppodcast.legacyApplicationId=false -Ppodcast.shortProductE2e=false \
+  :app:testDebugUnitTest --rerun :app:assembleDebug :app:assembleDebugAndroidTest \
   :app:compileReleaseKotlin :app:lintDebug :app:testNativePolicies
 python3 -m unittest discover -s tools/tests -v  # eight documented failures, not green
 python3 -m unittest discover -s tools/provider_pipeline -p test_pipeline.py -v

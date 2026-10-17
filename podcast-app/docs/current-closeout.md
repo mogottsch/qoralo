@@ -8,9 +8,46 @@ separate permission question, once device work is authorized again.
 
 ## Candidate and last actual device evidence
 
-Final offline APK identity and host results will be recorded here after the
-single serialized build of Thomas's committed round3 candidate. Shared Gradle
-output is not an immutable artifact or evidence binding.
+**Frozen source:** combined commit `33fbfb4d73460b690496eeabfa05fc28e18778da`,
+`app/src` tree `abe2e3ebcc5e2e07470a3e08843440d86102801a`. Thomas verified his
+candidate bytes against that commit; it also contains this closeout's docs/test
+repairs after a shared-index collision. No source was rewritten to separate it.
+
+**Immutable local bundle:**
+`.local/closeout/20261017T074832Z-33fbfb4d7346/` (read-only; `SHA256SUMS` verified).
+It includes APKs, a 294-file source binding plus source archive, effective local
+configuration/toolchain/pack hashes, generated BuildConfig, JUnit XML, lint,
+signature/package/native proofs and command logs. No payload was added to Git.
+
+| Frozen file | SHA-256 |
+| --- | --- |
+| `app.apk` (131,693,737 B) | `677f8d6fbe25d4ed8b438af1f55f198c0cf7cd135dceaf2a66fbe40151eec46d` |
+| `test.apk` (3,423,901 B) | `9c40d9187668f73d2687b12823f816b5751fe7de11b970c70fc9c41925324fbf` |
+| `manifest.json` | `e5e95013014bc1f02d0ccf4873edecc4fc2e95974f214b68b5de016964b3ad8e` |
+
+**Result: assembled, not fully host-green.** One serialized Gradle invocation
+assembled both APKs and compiled androidTest, checked release Kotlin, and reran
+JVM tests: **293 discovered / 280 executed / 13 skipped / 0 failures or errors**.
+Provider Python **15/15**, promptlab **5/5**, eight promptlab checksums, signatures,
+package/target identities and trusted packaged runtime-byte verification passed.
+The native-policy target was **UP-TO-DATE**, not a new native-test execution.
+Eleven skips are `ProviderAudioPlanTest` local-pack-gated cases; the other two are
+the private frontend-reference and long-pack reconstruction tests. Exact skip
+names are in `manifest.json`; skipped cases are not passes.
+
+The aggregate Gradle command **exited 1** at `:app:lintDebug`: **Recycle**, one
+error/no warnings, `app/src/debug/java/dev/qoralo/podcast/e2e/ShortProductDiagnostics.kt:56`
+(`contentResolver.query(...).use { cursor ->`). This unresolved lint diagnostic
+is retained verbatim in `logs/gradle-build.log` and `lint-results-debug.*`; the
+presence of `.use` is not a reason to suppress/disable it to claim green. No
+runtime edit, lint baseline or second build was made. The eight general Python
+scope failures below also remain red.
+
+The app APK is byte-identical to the retained phone app; Gradle reused its
+up-to-date output. The **test APK is new and uninstalled**. Byte equality is not
+a fresh device observation or qualification of this newly paired candidate.
+Future rebuilding need not yield identical ZIP/signature bytes: use the frozen
+hashes as the identity, not a promise of bit-for-bit reproducible builds.
 
 | Evidence | What it establishes | Boundary |
 | --- | --- | --- |
@@ -22,32 +59,37 @@ output is not an immutable artifact or evidence binding.
 
 Pre-closeout outputs were copied **before** Gradle could overwrite them to
 `.local/closeout-audit/prior-device-candidate/{app.apk,test.apk,manifest.json}`.
-The retained app's packaged bridge is `2d9ece14775d86528cd658995ad09a770ddc3b083f2db7c0b91c19521d3b414a`,
-not the earlier accepted `44a41cd4…`. Keep that native-byte difference explicit;
-source-built or successful smoke does not mean identical old bridge bytes.
+Both the retained and frozen app's packaged bridge is
+`2d9ece14775d86528cd658995ad09a770ddc3b083f2db7c0b91c19521d3b414a`, not the
+earlier accepted `44a41cd4…`. CMake configure/build ran with pinned NDK28.1 and
+existing local inputs; the packaged bridge did **not** change. The six injected
+vendor libraries and Maven LiteRT JNI matched their reviewed authorities. This
+is deliberate incremental reuse, not a fresh independent bridge compilation or
+proof of numerical equivalence to `44a41cd4…`.
 
 ## Offline build / freeze checklist
 
-- [ ] Thomas's round3 runtime, JVM tests and prompt-bench source committed; no
+- [x] Thomas's round3 runtime, JVM tests and prompt-bench source committed; no
   further runtime/config edits or concurrent Gradle/native builds during freeze.
-- [ ] Java 17; SDK 35; NDK `28.1.13356709`; CMake `3.22.1`; Gradle cache and
+- [x] Java 17; SDK 35; NDK `28.1.13356709`; CMake `3.22.1`; Gradle cache and
   authorized runtime inputs present. No network/model acquisition implied.
-- [ ] Normal provider selectors, **not** legacy application ID or short plumbing.
-- [ ] Run the host command below once, retaining exit codes, logs and XML; record
+- [x] Normal provider selectors, **not** legacy application ID or short plumbing.
+- [x] Run the host command below once, retaining exit codes, logs and XML; record
   tests **discovered/executed/skipped**, never call skipped cases passed.
-- [ ] Copy matching APKs immediately into a new `.local/closeout/<stamp>-<commit>/`
+- [x] Copy matching APKs immediately into a new `.local/closeout/<stamp>-<commit>/`
   directory. Retain source-file/config/toolchain/native-library hashes,
   effective generated `BuildConfig`, source commit/tree and build/test logs.
-- [ ] Verify APK signatures, package/target IDs and trusted native runtime bytes;
+- [x] Verify APK signatures, package/target IDs and trusted native runtime bytes;
   re-hash frozen files, make the completed bundle read-only. No APK/model/vendor
   payload goes to Git. Commit only docs/tests owned by this closeout.
-- [ ] Mark device verification **pending**. Installation is a real blocker while
+- [x] Mark device verification **pending**. Installation is a real blocker while
   the phone is away; host success never silently inherits an older device pass.
 
 ```bash
 cd podcast-app
-./gradlew --offline -Ppodcast.legacyApplicationId=false -Ppodcast.shortProductE2e=false \
-  :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest \
+./gradlew --offline --no-daemon --max-workers=2 \
+  -Ppodcast.legacyApplicationId=false -Ppodcast.shortProductE2e=false \
+  :app:testDebugUnitTest --rerun :app:assembleDebug :app:assembleDebugAndroidTest \
   :app:compileReleaseKotlin :app:lintDebug :app:testNativePolicies
 python3 -m unittest discover -s tools/tests -v
 python3 -m unittest discover -s tools/provider_pipeline -p test_pipeline.py -v
@@ -142,6 +184,8 @@ alone provisions the current app.
 
 ## Genuine remaining gaps
 
+- Host aggregate remains blocked by the single lint Recycle diagnostic above;
+  13 JVM cases skipped, including all 11 pack-gated provider-plan cases.
 - No final-candidate device install, instrumentation, playback, system-picker
   export, accessibility or neural replay in this offline window.
 - Historical device counter coverage is incomplete: both recorded failed SCRIPT
