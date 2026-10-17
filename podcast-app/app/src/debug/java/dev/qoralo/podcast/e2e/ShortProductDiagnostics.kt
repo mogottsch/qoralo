@@ -2,6 +2,7 @@ package dev.qoralo.podcast.e2e
 
 import android.app.Application
 import android.content.Context
+import android.content.ContentResolver
 import android.net.Uri
 import android.os.Process
 import android.os.SystemClock
@@ -53,13 +54,19 @@ internal object ShortProductDiagnostics {
         val expected = "podcast-${root.name}.wav"
         val docId = android.provider.DocumentsContract.getDocumentId(uri)
         if (uri.authority == "com.android.externalstorage.documents") require(docId == "primary:Download/$expected")
-        context.contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME, android.provider.OpenableColumns.SIZE), null, null, null).use { cursor ->
+        requireEmptyOwnedExportDocument(context.contentResolver, uri, expected)
+        json(File(root, "export-before-write.json"), JSONObject().put("episodeId", episode).put("uri", uri.toString())
+            .put("expectedName", expected).put("emptyBeforeWrite", true).put("localAuthorityCheckedBeforeStream", true))
+    }
+    internal fun requireEmptyOwnedExportDocument(resolver: ContentResolver, uri: Uri, expected: String) {
+        val cursor = resolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME, android.provider.OpenableColumns.SIZE), null, null, null)
+        try {
             require(cursor != null && cursor.moveToFirst() && cursor.getString(0) == expected && !cursor.isNull(1) && cursor.getLong(1) == 0L) {
                 "Owned export must be the new empty uniquely named local document; no stream opened"
             }
+        } finally {
+            cursor?.close()
         }
-        json(File(root, "export-before-write.json"), JSONObject().put("episodeId", episode).put("uri", uri.toString())
-            .put("expectedName", expected).put("emptyBeforeWrite", true).put("localAuthorityCheckedBeforeStream", true))
     }
     fun exportFinished(episode: String, uri: Uri) {
         if (episode != uiEpisode) return
