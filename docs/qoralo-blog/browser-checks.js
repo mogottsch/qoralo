@@ -12,6 +12,19 @@ async (page) => {
   check(await page.locator('#chapter-figure,#lifetime-figure,#state-figure,.segment').count()===0,'Removed chapter, lifetime stepper and logit-only diagrams');
   check(await page.locator('audio[autoplay]').count()===0,'No autoplay audio');
 
+  // The gist comes first and is readable without opening anything; the step-by-step detail is collapsed by default.
+  const firstView=await page.locator('main').innerText();
+  check(/swaps in its learned start vector/.test(firstView)&&/freed that buffer too early/.test(firstView)&&/10\.72 seconds instead of 4\.48/.test(firstView),'Gist is visible without opening the detail');
+  check(!/same internal state/.test(firstView)&&!/Model and cache/.test(firstView),'Step-by-step detail is not in the default view');
+  check(await page.locator('#more-detail').evaluate(d=>!d.open),'Detail is collapsed by default');
+  check(await page.locator('[data-edit="why-gist"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('#why-figure'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Gist comes before the chart');
+  check(await page.locator('[data-edit="why-gist"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('#more-detail'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Detail comes after the gist');
+  await page.locator('#more-detail > summary').focus();await page.keyboard.press('Enter');
+  check(await page.locator('#more-detail').evaluate(d=>d.open)&&await page.locator('#step-figure').isVisible(),'Detail opens from the keyboard');
+  await page.keyboard.press('Enter');
+  check(await page.locator('#more-detail').evaluate(d=>!d.open),'Detail closes again');
+  await page.locator('#more-detail').evaluate(d=>{d.open=true;});
+
   // Chart data: embedded arrays must equal the retained evidence, and drawn polylines must carry every point.
   const embedded=await page.evaluate(()=>JSON.parse(document.querySelector('#trajectories').textContent));
   const evidence=await (await page.request.get(base.split('#')[0].replace(/index\.html$/,'')+'evidence/bos-zero-replay.json')).json();
@@ -67,7 +80,7 @@ async (page) => {
       if(input==='nan')check(Number(o.zero)<.2&&o.nan==='1'&&Number(o.actual)<.5&&o.intended==='1',`${id} NaN emphasis`);
       if(input==='zero')check(Number(o.nan)<.2&&o.zero==='1'&&Number(o.intended)<.5&&o.actual==='1',`${id} zero emphasis`);
     }
-    await page.locator('summary').focus();await page.keyboard.press('Enter');
+    await page.locator('#records > summary').focus();await page.keyboard.press('Enter');
     check(await page.locator('.records-body').isVisible(),`${width} keyboard sources`);
     await page.keyboard.press('Enter');
   }
@@ -169,7 +182,7 @@ async (page) => {
   check(await page.locator('.chart').isVisible()&&await page.locator('.series').count()===3,'Static chart remains');
   check(!(await page.locator('.editor').isVisible())&&!(await page.locator('.scrub').isVisible())&&!(await page.locator('.variant-controls').isVisible()),'Unavailable controls hidden');
   check((await page.locator('#why-readout').innerText())==='','No stale readout without script');
-  await page.locator('summary').click();check(await page.locator('.records-body').isVisible(),'Native sources without script');
+  await page.locator('#records > summary').click();check(await page.locator('.records-body').isVisible(),'Native sources without script');
   await page.unroute('**/article.js');await page.reload();
   await page.setViewportSize({width:1440,height:1000});
   check(!external.length,'External runtime requests: '+external.join(','));

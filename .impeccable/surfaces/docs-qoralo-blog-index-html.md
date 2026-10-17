@@ -11,7 +11,7 @@ Mode: Read. Audience is technical. Keep the narrative short, explain a real engi
 
 ## Direction contract
 
-THESIS: Explain WHY the early Pocket TTS Android port went wrong, as the main point. The graph treats a NaN first input as "use the learned start vector"; on the phone the first input was observed to be zeros; zeros compound over the autoregressive loop until the stop score never crosses its threshold. The fix actually applied (NPU-oriented fixed-cache graphs) gets one short section. Moritz does not want the buffer-lifetime finding presented as "my fix".
+THESIS (gist first, three plain sentences; detail after, one-step explanation collapsed): Explain WHY the early Pocket TTS Android port went wrong, as the main point. The graph treats a NaN first input as "use the learned start vector"; on the phone the first input was observed to be zeros; zeros compound over the autoregressive loop until the stop score never crosses its threshold. The fix actually applied (NPU-oriented fixed-cache graphs) gets one short section. Moritz does not want the buffer-lifetime finding presented as "my fix".
 
 OWN-WORLD: Inherit the presentation's #0b1017 canvas, mint #8ee8c2 HTP, lilac #c2a9f4 GPU and blue #9bbdff CPU, plus a warm amber for the failing zero input. Flat technical drawings, restrained local sans. No decorative gradients/cards/hero metrics/eyebrows, generated mockups or invented data.
 

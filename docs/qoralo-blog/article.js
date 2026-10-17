@@ -16,6 +16,7 @@
   function setEditing(on) {
     editing = on;
     document.body.classList.toggle('editing', on);
+    if (on) $$('details.more').forEach(d => { d.open = true; });
     fields.forEach(e => { if (on) e.setAttribute('contenteditable', 'plaintext-only'); else e.removeAttribute('contenteditable'); });
     $('#edit-copy').textContent = on ? 'Done editing' : 'Edit text';
     $('#edit-copy').setAttribute('aria-pressed', String(on));
