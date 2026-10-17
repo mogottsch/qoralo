@@ -16,7 +16,7 @@ async (page) => {
   // Moritz's approved opening is frozen: title, intro and question must not drift.
   const frozen={title:'Building a NotebookLM-like podcast on my phone',intro:"You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.",question:'So I wondered: how good could this be with all inference running on my phone?'};
   for(const [k,v] of Object.entries(frozen)) check((await page.locator(`[data-edit="${k}"]`).textContent())===v,`Frozen opening text changed: ${k}`);
-  check(await page.locator('[data-edit="question"]').evaluate(q=>q.compareDocumentPosition(document.querySelector('#demo-figure'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#phone-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Demo video sits between the question and the first section');
+  check(await page.locator('[data-edit="question"]').evaluate(q=>q.compareDocumentPosition(document.querySelector('#demo-figure'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Demo video sits between the question and the first section');
   // Demo video: it plays if the file exists; otherwise the page says where to put it. Never a silent broken player.
   await page.waitForTimeout(800);
   const demoState=await page.evaluate(()=>{const v=document.querySelector('#demo-video'),s=document.querySelector('.demo-status');return {loaded:v.readyState>=1&&!v.hidden,duration:v.duration,statusShown:!s.hidden,videoHidden:v.hidden,autoplay:v.autoplay};});
@@ -27,6 +27,28 @@ async (page) => {
   check((await page.locator('[data-edit="closing"]').textContent())==='If you wanna take a look,'&&await page.locator('.closing a').textContent()==='here it is'&&(await page.locator('.closing a').getAttribute('href'))==='https://github.com/mogottsch/vibevoice-android-spike','Closing: "If you wanna take a look, here it is" linking the repository');
   check(await page.locator('.closing').evaluate(c=>c===document.querySelector('article').lastElementChild),'Closing is the last thing in the article');
   check(!/What.s left|one voice instead|final demo/i.test(await page.locator('main').innerText()),'No "what is left" section');
+
+  // 'Where it ends up': the system diagram says only what the app really does.
+  const sys=await page.evaluate(()=>{
+    const f=document.querySelector('#system-figure');
+    const node=id=>f.querySelector('#'+id);
+    const info=id=>{const n=node(id);return {title:n.querySelector('.qflow-title').textContent.trim(),tag:n.querySelector('.qflow-tag').textContent.trim(),detail:n.querySelector('.qflow-detail').textContent.trim(),cls:n.className};};
+    const ids=[...f.querySelectorAll('.qflow-node')].map(n=>n.id);
+    const visible=[...f.querySelectorAll('.qflow-node,.qflow-grid ~ *,h3,.qflow-bridge-label,.qflow-mobile-transfer,figcaption')].filter(e=>!e.classList.contains('sr-only')).map(e=>e.textContent).join(' ');
+    return {ids,nodes:Object.fromEntries(ids.map(i=>[i,info(i)])),lanes:[...f.querySelectorAll('h3')].map(h=>h.textContent.trim()),caption:f.querySelector('figcaption').textContent.trim(),alt:f.querySelector('#qflow-alt')?.textContent||'',described:f.getAttribute('aria-describedby'),visible,order:(()=>{const pos=id=>f.querySelector('#'+id);const a=['qflow-h1','qflow-h2','qflow-p1','qflow-p2','qflow-p3','qflow-p4','qflow-p5','qflow-p6','qflow-p7','qflow-p8'].map(pos);return a.every((e,i)=>i===0||(a[i-1].compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)>0);})()};
+  });
+  check(sys.ids.length===10&&sys.order,'System diagram has ten nodes in flow order: '+sys.ids.join(','));
+  check(Object.values(sys.nodes).every(n=>n.title.split(/\s+/).length<=4),'Node titles are four words or fewer');
+  const tg=Object.fromEntries(Object.entries(sys.nodes).map(([k,v])=>[k,v.tag]));
+  check(tg['qflow-p2']==='GPU'&&tg['qflow-p5']==='NPU (HTP)'&&tg['qflow-p6']==='NPU (HTP)'&&tg['qflow-p3']==='CPU \u00b7 app UI'&&['qflow-h1','qflow-h2','qflow-p1','qflow-p4','qflow-p7','qflow-p8'].every(k=>tg[k]==='CPU'),'Processor tags: one GPU step, two NPU steps, the rest CPU, review is app UI: '+JSON.stringify(tg));
+  check(/Your review \u00b7 optional/.test(sys.nodes['qflow-p3'].detail)&&/optional/.test(sys.nodes['qflow-p3'].cls+' qflow-optional'),'Review is shown as a human, optional step');
+  check(sys.lanes.join('|')==='Speech preparation \u00b7 computer|Episode generation \u00b7 phone','Computer preparation and phone generation are separate lanes: '+sys.lanes);
+  check(sys.caption==='Speech models are prepared on a computer; episodes are generated on the phone. GPU and NPU labels mark the model routes, with CPU preparation and app code around them.','Caption is the reviewed two sentences');
+  check(!/PDF|URL|web|transcri|retriev|conversation|two voices|\b300\b|native|four|1\.5|FP16|INT8/i.test(sys.visible),'Diagram has no invented ingestion, no meaningless numbers and no jargon: '+(sys.visible.match(/PDF|URL|web|transcri|retriev|conversation|two voices|\b300\b|native|four/i)||[''])[0]);
+  check(/Paste, TXT, Markdown, JSON/.test(sys.visible)&&/Gemma 4 E2B/.test(sys.visible)&&/Whole sentences/.test(sys.visible),'Diagram shows the real inputs, the real script model and whole-sentence grouping');
+  check(/qflow-caption/.test(sys.described)&&/qflow-alt/.test(sys.described)&&/computer/.test(sys.alt)&&/phone/.test(sys.alt)&&/GPU/.test(sys.alt)&&/NPU/.test(sys.alt)||/HTP/.test(sys.alt),'Diagram has a screen-reader description');
+  check(await page.locator('#system-figure details').count()===0,'No visible collapsible in the diagram');
+  check(await page.locator('#system-figure script,#system-figure img,#system-figure link').count()===0,'Diagram has no scripts or external assets');
 
   // 'What we tried': the table must equal the evidence packet, in both directions.
   const mainText=await page.locator('main').innerText();
@@ -53,7 +75,7 @@ async (page) => {
   check(!/bug hunt|after the bug/.test(mainText),'Table does not borrow the Pocket bug story');
   check(shown[3].cells[2].text==='The HTP runtime failed to initialize on the phone'&&/Both tested samples sounded good/.test(shown[1].cells[2].text),'MOSS and Pocket notes use the reviewed wording');
   check(await page.locator('.note-box').evaluate(n=>parseFloat(getComputedStyle(n).fontSize)>=12&&parseFloat(getComputedStyle(n).fontSize)<=14),'RTF note box is small');
-  check(await page.locator('[data-edit="tried-copy"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('.bench'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#tried-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#phone-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Order: demo, what we tried (text, table), then the phone section');
+  check(await page.locator('[data-edit="tried-copy"]').evaluate(g=>g.compareDocumentPosition(document.querySelector('.bench'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#tried-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#system-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#system-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#pocket-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#pocket-heading').evaluate(h=>h.compareDocumentPosition(document.querySelector('#why-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Order: demo, what we tried, where it ends up, the Pocket clips, why it went wrong');
 
   // Gist first, plain, and free of numbers nobody needs.
   const body=await page.locator('main').innerText();
@@ -86,9 +108,22 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.model,.model-path,.chart,.legend,.phone,.editor,pre,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.qflow-node,.qflow-bridge,.chart,.legend,.editor,pre,.axis-name,.note,.demo video,.demo-status,.closing,.bench,.note-box,.table-wrap')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         preOverflow:[...document.querySelectorAll('pre')].some(p=>p.scrollWidth>p.clientWidth+1),
-        modelOverlap:[...document.querySelectorAll('.model')].some(e=>{const[a,b]=[...e.children].map(x=>x.getBoundingClientRect());return a.right>b.left+.5;}),
+        flow:(()=>{
+          const nodes=[...document.querySelectorAll('#system-figure .qflow-node')], r=nodes.map(box);
+          const lane=n=>n.closest('.qflow-host')?'host':'phone';
+          const overlap=r.some((a,i)=>r.some((b,j)=>j>i&&overlaps(a,b)));
+          const clipped=nodes.some(n=>[...n.querySelectorAll('.qflow-title,.qflow-tag,.qflow-detail')].some(e=>e.scrollWidth>e.clientWidth+1||e.getBoundingClientRect().right>n.getBoundingClientRect().right+0.5||e.getBoundingClientRect().left<n.getBoundingClientRect().left-0.5));
+          const small=[...document.querySelectorAll('#system-figure *')].filter(e=>e.children.length===0&&e.textContent.trim()&&!e.closest('.sr-only')&&getComputedStyle(e).display!=='none').some(e=>parseFloat(getComputedStyle(e).fontSize)<11.99);
+          const hostBottom=Math.max(...nodes.filter(n=>lane(n)==='host').map(n=>box(n).bottom)), phoneTop=Math.min(...nodes.filter(n=>lane(n)==='phone').map(n=>box(n).top));
+          const horizontal=innerWidth>=1000;
+          let bridgeOk=true;
+          if(horizontal){const svg=box(document.querySelector('.qflow-bridge > svg')),p5=box(document.querySelector('#qflow-p5')),p6=box(document.querySelector('#qflow-p6'));const x1=svg.left+svg.width*450/800,x2=svg.left+svg.width*550/800;bridgeOk=x1>p5.left&&x1<p5.right&&x2>p6.left&&x2<p6.right;}
+          else {bridgeOk=getComputedStyle(document.querySelector('.qflow-mobile-transfer')).display!=='none'&&/Predict \+ encode/.test(document.querySelector('.qflow-mobile-transfer').textContent);}
+          const rows=new Set(nodes.filter(n=>lane(n)==='phone').map(n=>Math.round(box(n).top)));
+          return {overlap,clipped,small,lanesOrdered:hostBottom<phoneTop,bridgeOk,rows:rows.size,minNodeW:Math.min(...r.map(x=>x.width)),horizontal};
+        })(),
         tickOverlap:xt.some((a,i)=>xt.some((b,j)=>j>i&&overlaps(a,b)))||xt.some(a=>[...document.querySelectorAll('.axis-name')].some(n=>overlaps(a,box(n))))||xt.some(a=>a.height>20),
         noteOverlap:notes.some((a,i)=>notes.some((b,j)=>j>i&&overlaps(a,b))),
         notesInChart:notes.every(n=>n.left>=chart.left-1&&n.right<=chart.right+2),
@@ -102,7 +137,9 @@ async (page) => {
     });
     check(!layout.overflow&&!layout.bad.length,`${width} overflow: ${layout.bad}`);
     check(!layout.preOverflow||width<=390,`${width} code excerpt overflows (horizontal scroll is acceptable only on phones)`);
-    check(!layout.modelOverlap,`${width} model label overlap`);
+    check(!layout.flow.overlap&&!layout.flow.clipped&&!layout.flow.small&&layout.flow.lanesOrdered,`${width} system diagram overlap/clipping/size/lane order: ${JSON.stringify(layout.flow)}`);
+    check(layout.flow.bridgeOk,`${width} the computer-to-NPU dependency lands on the two NPU steps (or is stated in text on narrow screens)`);
+    check(layout.flow.horizontal?layout.flow.rows===1&&layout.flow.minNodeW>=100:layout.flow.rows===8,`${width} diagram layout: ${layout.flow.horizontal?'one row on wide screens':'vertical list on narrow screens'} ${JSON.stringify(layout.flow)}`);
     check(!layout.tickOverlap&&!layout.noteOverlap,`${width} tick/annotation overlap`);
     check(layout.notesInChart,`${width} annotation leaves the chart`);
     check(layout.neverBetween,`${width} "never reaches" label is not between the stop line and the original line`);
@@ -130,10 +167,8 @@ async (page) => {
   check([dr.hidden_state_c.frame0,dr.hidden_state_c.median,dr.latent_frame.frame0,dr.latent_frame.median].every(v=>notes.includes(v.toFixed(2))),'Notes quote the replay drift numbers');
   check(Math.abs(replay.step0_logit.all_zeros-orig[0])<2e-3&&replay.full_trajectory.all_zero_bos_vs_android_original.max_abs<0.08,'Replay agrees with the phone run the chart shows');
 
-  await page.locator('#route-controls [data-route="script"]').click();
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.locator('#route-controls [data-route="speech"]').click();
-  check(await page.locator('.speech .packet').first().evaluate(e=>getComputedStyle(e).animationName)==='none','Reduced motion');
+  check(await page.evaluate(()=>document.getAnimations().length)===0,'Nothing animates, including under reduced motion');
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.locator('audio').evaluateAll(es=>es.forEach(e=>{e.muted=true;e.load();}));
   await page.waitForFunction(()=>[...document.querySelectorAll('audio')].every(a=>a.readyState>=1));

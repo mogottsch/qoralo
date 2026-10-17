@@ -1,0 +1,120 @@
+# Qoralo system flow — article figure
+
+## Point of the figure
+
+The interesting part is the handoff between **Gemma on GPU**, an optional human review, and **the complete Supertonic recipe on HTP**. Short, sentence-grouped inputs retain their own predicted native lengths inside reusable compiled contexts; this is not a single model producing a finished podcast. Graph adaptation/compilation happens on the computer, not each time someone presses Create audio on the phone.
+
+Omit plumbing: Room, dispatchers, service/PID ownership, JNI, hashes, diagnostic receipts, library packaging, UI navigation and individual file-publication transactions. They matter to the implementation but not to this explanation. The diagram is an authored schematic of implemented behavior, not an observed timing trace or a new successful end-to-end run.
+
+**Deliverable:** `/tmp/qoralo-article-reviews/system-flow/system-flow.html`. Standalone HTML/CSS with small inline connector SVGs; no JavaScript, external assets, fonts or model work. Ten nodes total: two computer-preparation nodes and eight phone nodes. Node titles and individual supporting labels use at most four words; processor tags are additional. The desktop graph is horizontal and the phone graph vertical below 1000px. The dotted preparation connector is a dependency/provisioning edge, not source content and not a network inference call.
+
+## Exact nodes
+
+CPU tags mean CPU-side preparation/app code or the UI hosting a human action. GPU/NPU tags identify the selected neural routes, not all operations in a box or a measured execution partition. Computer compilation targets HTP but is not itself phone HTP inference.
+
+| ID | Visible title · processor | Meaning / condensed detail | Proof |
+| --- | --- | --- | --- |
+| H1 | **Adapt ONNX graphs · CPU** | Speech source is already official FP32 ONNX. Fix shapes, lower unsupported operations and preserve native sequence edges. This is graph adaptation, **not a new PyTorch-to-ONNX export, retraining or an INT8 conversion**. | S1, S2, S3 |
+| H2 | **Compile HTP contexts · CPU** | Computer-side tools export four reusable, fixed-capacity speech contexts for the specific phone backend. CPU denotes host tooling; NPU is the eventual target. | S4, S5; reconstruction §7 and §11 |
+| P1 | **Add sources · CPU** | Paste text or choose TXT/plain text, Markdown or JSON documents. They are read as text. Instructions enter with this input handoff. No URL crawling, PDF extraction, audio transcription or retrieval pipeline is implied. | S6, S7, S8 |
+| P2 | **Gemma writes script · GPU** | Gemma 4 E2B / LiteRT-LM GPU makes source notes, an outline and complete chapters. One condensed box, not an invented single inference request. | S9, S10, S11 |
+| P3 | **Review or edit · CPU** | Optional human review/edit in the app before immutable audio lock. Review-OFF can auto-lock only if admission succeeds; otherwise the full draft remains editable. CPU is the UI, **not a CPU model reviewing the script**. Manual editing is represented; the optional Gemma agent-edit detour is omitted. | S12, S13 |
+| P4 | **Group sentences · CPU** | Provider grouping happens on raw paragraphs/sentences, then normalization/indexing. Target about 300 Unicode codepoints, not forced 300-character cuts; an overlong sentence remains whole and may be rejected by actual capacity. | S14, S15 |
+| P5 | **Predict + encode · NPU (HTP)** | Duration predictor and text encoder both receive text/voice inputs. They are independent neural components; the diagram does not claim duration feeds text encoding or that they execute concurrently. Native length is calculated from predicted duration under the configured recipe. | S16, S17 |
+| P6 | **Generate one voice · NPU (HTP)** | Vector estimator/refinement plus vocoder, using the text features, predicted native length and fixed voice. One M1/SID5 voice; no two-speaker conversation. | S16, S18 |
+| P7 | **Join audio · CPU** | Preserve full native segment output, add prescribed 0.3s between-segment gaps, assemble chapters and the final episode. No stretching to a requested episode duration or cropping to raw predicted seconds. Chapter gaps are separately 0.7s. | S15, S17, S19 |
+| P8 | **Play / export WAV · CPU** | App player and completed episode WAV export. This is implemented capability, not a new listening verdict or proof of the system file-picker hop. Progressive playback is not denied, but omitted from this small diagram. | S19, S20, S21 |
+
+## Exact edges
+
+The only neural stages are P2 and P5–P6. Data flows left-to-right (desktop) or top-to-bottom (phone). All edges below have implementation or documentary backing.
+
+| Edge | Meaning | Proof |
+| --- | --- | --- |
+| H1 → H2 | Adapted ONNX becomes the source input to context compilation. | S2–S4: graph transformation output; compiler verifies `request['source']` then constructs its QNN session. |
+| H2 ⇢ P5 | Provision duration/text context descriptors and external binaries; load them on the phone. | S4–S5, S16: `create("duration")`, `create("text")`. |
+| H2 ⇢ P6 | Same preparation supplies vector/vocoder contexts. This is one branched provisioning dependency, not repeat compilation per segment. | S4–S5, S16: `create("vector")`, `create("vocoder")`. |
+| P1 → P2 | Persisted source text plus instructions reach source-note/outline/chapter generation. | S7–S11. |
+| P2 → P3 | Complete generated chapters are committed as an editable draft when review is on (or automatic audio admission fails). | S9, S12. |
+| P3 → P4 | Reviewed/edited draft is locked; its frozen chapter text reaches the selected provider frontend. | S12–S15, S19. |
+| P2 → P4, conditional shortcut | With review off and admission successful, locking is automatic. The visible P3 “Optional” label represents this shortcut; a second crossing arrow is intentionally omitted. | S12, especially the `!episode.reviewEnabled` branch. |
+| P4 → P5 | Segment character IDs/voice/masks reach the duration and text graphs. | S14–S16: `prepare`, `renderSegment`, independent duration/text input lists. |
+| P5 → P6 | Text embeddings and that segment's own native latent length determine refinement inputs and output extent. CPU glue constructs masks/noise/edge arrays between these neural calls. | S16–S17. **This edge is not GPU→NPU and does not claim every intermediate calculation is on NPU.** |
+| P6 → P7 | Full `native_length * 3072` segment waveform is written and joined without time-forcing. | S15–S17. |
+| P7 → P8 | Completed chapter/episode publication exposes audio to the player; export copies the completed WAV. | S19–S21. |
+
+## Source index
+
+Repository: `/home/moritz/dev/vibevoice-android-spike`. Read against the active source during this pass (HEAD observed at start: `e0dda05b4ada95ef5aab9ba80bf0a8b9d245cc53`); no repository edits or runtime qualification were made. Paths below are repository-relative.
+
+- **S1** `docs/supertonic-android-htp-reconstruction.md`, §§1, 3, 5, 7, 10–11: already-ONNX source, supported rewrites, offline context export, recipe and reusable app contexts.
+- **S2** `podcast-app/tools/provider_pipeline/text_buckets.py:18–58`: static text buckets, native-edge Gather inputs, no initializer changes.
+- **S3** `experiments/0037-supertonic-provider-pipeline/htp/tools/materialize.py:1–7,58–137`: stable-Softplus/native-latent boundary adaptations; S1 §5 links the original exact Softplus rewrite tool.
+- **S4** `podcast-app/tools/provider_pipeline/compile_context.py:42–103`: computer ORT/QNN constructor/export, EPContext descriptor plus external binary; `session_Run_calls:0` and `constructor_export_passed_not_execution_proof`.
+- **S5** `podcast-app/tools/provider_pipeline/prepare_pack.py`: `contexts` selection and recipe contract; packages two newly exported text contexts plus accepted shared vector/vocoder contexts. `podcast-app/docs/getting-started.md` §§2,4 documents separate local provisioning, not a turnkey download.
+- **S6** `podcast-app/app/src/main/java/dev/qoralo/podcast/ui/CreationScreens.kt:80–121`: Paste text and document MIME allow-list; instruction/review control later in the same file.
+- **S7** `podcast-app/app/src/main/java/dev/qoralo/podcast/ui/PodcastViewModel.kt:172–184`: pasted text and Android document input streams.
+- **S8** `podcast-app/app/src/main/java/dev/qoralo/podcast/data/ArtifactStore.kt:18–41`: bounded UTF-8 text reading and persistence; not format-specific PDF/JSON extraction.
+- **S9** `podcast-app/app/src/main/java/dev/qoralo/podcast/generation/GenerationCoordinator.kt:36–83`: selected Gemma GPU route, prepared sources, outline, chapters, commit and engine close.
+- **S10** `podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/SourcePreparer.kt:3–36`: source chunk notes and bounded note reduction.
+- **S11** `podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/NativeEngines.kt:1–124`: `GemmaLiteRtGpuEngine` loading/backend and source-notes/outline/chapter calls; `podcast-app/README.md`, “Two accelerator routes”.
+- **S12** `podcast-app/app/src/main/java/dev/qoralo/podcast/data/PodcastRepository.kt:180–224,282–310`: preserve generated draft; conditional review-OFF auto-lock and manual lock/admission.
+- **S13** `podcast-app/app/src/main/java/dev/qoralo/podcast/ui/ReviewScreen.kt:82–181,225–250`: script review/manual editing and Create audio confirmation. `podcast-app/docs/ui-minimal-handoff-2026-09-20.md` supplies historical literal action labels, not current identity authority.
+- **S14** `podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/ProviderTextFrontend.kt:3–4,49–77,134–154`: group raw sentences first, then validate/normalize/index; no forced word split.
+- **S15** `podcast-app/app/src/main/java/dev/qoralo/podcast/runtime/ProviderQnnEngine.kt:43–108,135–164`: prepare chapter segments, render each, require native output extent, join full waveforms with fixed gaps.
+- **S16** `podcast-app/app/src/main/cpp/provider_runtime.cpp:48–83,106–139`: four resident QNN/HTP sessions, fallback disabled, duration/text inputs, vector loop, vocoder and output extent.
+- **S17** `podcast-app/app/src/main/cpp/provider_math.h:10–30`: configured speed, duration-to-native-length calculation and edge handling; out-of-capacity rejection rather than a duration override.
+- **S18** `podcast-app/app/src/main/java/dev/qoralo/podcast/generation/GenerationCoordinator.kt:148–150` and `ProviderQnnEngine.kt:27–30`: single fixed `M1/SID5` voice; `provider_runtime.cpp:56–62` loads its styles.
+- **S19** `podcast-app/app/src/main/java/dev/qoralo/podcast/generation/GenerationCoordinator.kt:143–202`: each segment's immutable playback publication, complete chapters, separate interchapter gap and final WAV assembly.
+- **S20** `podcast-app/app/src/main/java/dev/qoralo/podcast/ui/PodcastViewModel.kt:257–274`: completed owned audio export; `podcast-app/app/src/main/java/dev/qoralo/podcast/ui/EpisodePlayerSession.kt`: persistent player.
+- **S21** `podcast-app/evidence/progressive-playback/README.md` links the final additive physical handoff; `podcast-app/docs/progressive-player-handoff-2026-09-13.md` distinguishes genuine generation/concurrency observations from same-audio replay.
+
+Additional requested cross-checks read: `podcast-app/docs/provider-htp-integration.md`; `podcast-app/docs/runtime-wiring-gate.md`; `podcast-app/evidence/provider-integration/README.md`; `docs/presentation/index.html#slide-supertonic-htp` and the nested reconstruction story documented in `docs/presentation/README.md`.
+
+## Uncertainties and boundaries to retain
+
+1. This is the **implemented normal provider architecture**, not a current end-to-end device or quality verdict. Latest frozen app `cc1f6436…` / source `1a089581` is host-qualified, not newly phone-qualified by this diagram work. Earlier exact phone evidence remains separate.
+2. `runtime-wiring-gate.md` describes an earlier, short T239/L238 pack and deliberate chapter rejection. It is not the current provider recipe authority. Its session/process tests must not replace the normal product flow.
+3. `provider-htp-integration.md`'s original “streaming playback is not implemented” statement predates the active segment callback path and progressive-player handoff. We do not repeat that stale statement; the compact diagram simply leaves progressive publication mechanics out.
+4. Likewise the first UI-minimal handoff's old application-ID/current-install assertions are historical. Literal action labels can be checked there; today's package/identity must come from the app README/current closeout.
+5. HTP tags describe the selected four neural graph route. CPU still prepares text, voice input buffers, masks, RNG and native-edge arrays, drives the calls and writes files. P5/P6 aggregation does not hide that CPU responsibility. Internal arithmetic precision is not established by FP32 source files.
+6. The raw duration is speed-adjusted and quantized to a supported latent extent; output is the full native extent, not a waveform cropped to an exact predicted second count. Unsupported native lengths fail, rather than being clipped or stretched.
+7. One fixed English voice is supported here. No invented web/PDF ingestion, RAG, ASR, simultaneous GPU/HTP execution or two-voice conversation is shown.
+8. Computer adaptation/compilation excludes compilation from phone inference. It does not claim clean-clone reproducibility, vendor redistribution rights or that all host compiler internals were profiled as CPU instructions. Gemma's separately acquired `.litertlm`, runtime libraries and pack provisioning are necessary setup but deliberately not additional diagram nodes.
+9. Existing accepted experimental clips are not this app's audio. Provider app synthesis/publication recovery is composed proof; the retained new app waveform is `not_reviewed`. Original strict numerical failures remain failures. System picker export is not newly proven.
+
+## Text alternative
+
+Before phone use, computer-side tools adapt Supertonic's existing ONNX graphs and compile four reusable HTP contexts. Those contexts are provisioned to both Supertonic neural stages on the phone. The user pastes text or imports a plain-text, Markdown or JSON file and supplies instructions. Gemma 4 E2B uses the selected GPU route to make source notes, an outline and chapter scripts. The user may review/edit the script, or skip review if audio admission passes. CPU-side provider code groups whole sentences and prepares each segment. HTP duration prediction and text encoding supply that segment's native length and text features to HTP refinement/vocoder synthesis using one fixed voice. CPU-side code retains each full native segment, inserts pauses and assembles chapter/episode audio for playback and completed WAV export. GPU/NPU labels identify selected neural routes, not the hardware of every operation; CPU labels include the app UI and preparation/glue code.
+
+## Two-sentence caption proposal
+
+On the computer, speech graphs become reusable HTP contexts; on the phone, source text becomes a Gemma script, optional review and one-voice audio, with sentences grouped and each segment's full native output preserved. GPU and NPU tags identify the selected neural routes, not every operation's hardware; CPU marks the preparation and app code around them.
+
+## Visual contract and verification
+
+- Read mode; inherit the article's pinned dark palette and system typography. Two visibly separate lanes, not a chronology that implies offline compilation runs on each episode.
+- Main shape: a compact computer-preparation lane over the source-to-audio row; two mint NPU blocks are the only recipients of the dotted provisioning branch. On small screens the input flow becomes a vertical ordered list and the provisioning dependency is stated explicitly above it.
+- No new repo design files, generated imagery, recordings, phone/model runs or extra agents. The participant-session authorization prohibits spawning independent reviewers; perform one bounded in-session desktop/mobile inspection and disclose that scope.
+- Browser checks passed at **320, 390, 768, 1000, 1280 and 1440px**: ten nodes, titles ≤4 words, visible text ≥12px, no horizontal or text overflow, vertical phone/horizontal desktop layout, no scripts/external asset elements. Keyboard Enter opens the native text-alternative disclosure. Raw/parsed results: `browser-results.txt`, `browser-results.json`; reusable check: `browser-checks.js`.
+- Visually opened the final `desktop.png` (1440px), `mobile.png` (390px) and `mobile-320.png` after one mobile-density correction. All show the intended figure, full-page from the top, with readable tags/labels and correct lane ordering. A test-only false positive from deliberately protruding connector SVGs was narrowed to actual text overflow; no layout guard was disabled.
+- Text contrast against the pinned background: body 17.47:1, muted 9.69:1, CPU 10.10:1, GPU 9.34:1, NPU 13.15:1. Mechanical detector ran once: `detector.json` is `[]`.
+
+### In-session finish review
+
+`disposition: ship` — scoped to this standalone diagram, **not an independent reviewer or a whole-article review**. No new agent was spawned.
+
+- **persistence:** Spec/source map and inherited article palette are recorded here. No PRODUCT/DESIGN/system files were created: this is a precisely assigned article addition under a no-repository-write boundary, not a new identity exercise.
+- **fidelity:** TYPE matches the article's Segoe UI/Aptos/system stack; MATERIAL is explicitly requested flat HTML/SVG; GROUND uses the exact pinned #0b1017. Computer/phone separation, ten nodes, actual source formats, optional review, sentence grouping, native output and one voice match the brief. Mobile uses an explicit provisioning note in place of a long crossing branch, as recorded above.
+- **ceiling:** Reached for the requested small explanatory snippet; no animation, controls or generated media added beyond a keyboard-accessible text alternative.
+- **material_fixes:** None remain from the bounded inspection. Source proof is implementation/document evidence, not a new physical run.
+- **keep:** Preserve the selected-route caption and the separation of offline compiler output from phone inference.
+
+### Documentation reconciliation
+
+No repository design changes. Checked `docs/qoralo-blog/style.css` against the final snippet: inherited seven pinned color roles; same system sans family; 12px minimum detail/tag size; flat 1px rectangular node outlines; named GPU/NPU colors remain route semantics rather than decorative claims. The standalone preview has a global `body` background reset; when integrating, copy the `.qflow` styles and `<figure>` rather than replacing the article's document/body styles. Processor tags do not establish internal HTP precision or eliminate CPU glue. No pre-existing article/design drift was repaired.
+
+## Integration into the article (Luke)
+
+The article uses this figure with these changes, all reviewed by Pi (`pi-review.md`, approve with three copy cuts): its own heading and the visible "Text alternative" collapsible were removed (the text alternative is now an invisible screen-reader description); the caption is Pi's two sentences; "Own predicted length" became "Speech length + features"; the second line under "Generate one voice" was dropped; the review box is tagged "CPU · app UI" with "Your review · optional"; and meaning-poor numbers and jargon were trimmed ("Around 300 characters" became "Whole sentences", "Four reusable contexts" became "Built once, reused", "4 E2B" became "Gemma 4 E2B", "Fixed shapes, native edges" became "Fixed shapes, supported ops"). The node set, edges, processor tags and computer/phone separation are unchanged. The browser suite checks ten nodes in flow order, the tags, the lanes, the caption, banned content, and the geometry at five widths.
+

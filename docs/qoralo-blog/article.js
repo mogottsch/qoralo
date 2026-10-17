@@ -48,11 +48,6 @@
     if (editing && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveCopy(); }
   });
 
-  $$('#route-controls button').forEach(button => button.addEventListener('click', () => {
-    $('#compute-figure').dataset.route = button.dataset.route;
-    $$('#route-controls button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
-  }));
-
   const demo = $('#demo-video');
   if (demo) {
     const showMissing = () => { demo.hidden = true; $('.demo-status').hidden = false; };
