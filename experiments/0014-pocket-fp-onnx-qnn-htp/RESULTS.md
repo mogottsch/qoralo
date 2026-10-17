@@ -205,6 +205,41 @@ controlled inputs, graph identity and full trajectory comparisons. Exact
 historical audio causality remains unverified, but the source bug now has a
 specific, replay-supported failure mechanism.
 
+**Subsequent phone check directly observes the input and tests a lifetime-only
+repair.** One CPU-only window ran four rebuilt variants twice each using the
+same reconstructed graph, Alba cache and noise. The diagnostic variant of the
+original runner printed all 32 BOS words immediately before `Run()`: all were
+zero in both runs. Retaining the vector through consumption instead produced
+32 NaN words (`0x7fc00000`) in both diagnostic runs. These observations belong
+to the instrumented builds; printing can itself perturb allocation.
+
+The rebuilt, unmodified original reproduced the historical rejected WAV
+**byte-for-byte** in its first run (`cdf77f6e…f5c4b6`), as did both diagnostic
+runs: first logit `-10.2709`, no EOS and 134 frames / 10.72 s. Its second run
+produced a different wrong WAV (`d4297712…ada44`) and first logit `-4.37185`,
+still without EOS. Its input contents were not dumped. In contrast, the
+lifetime-only repaired runner, with and without diagnostics, produced the same
+WAV (`465ac270…d7c72`) in all four runs, with first logit `-9.8847`, EOS step 53
+and 56 frames / 4.48 s. Pi independently checked the eight raw results, input
+dumps and WAV hashes. There is no new listening verdict for the repaired WAV.
+
+This establishes a reproducible input-lifetime failure and successful
+lifetime-only repair in the rebuilt phone test, including reproduction of the
+exact old rejected audio. It does not recover the missing historical executable,
+make the reconstructed graph identical to the old export, observe the
+unmodified second run's buffer, or establish why this allocator yielded zeros.
+The earlier runtime-only interpretation must not be used to blame Android/ORT.
+
+The window's controller initially reported **cleanup incomplete** because its
+termination scan timed out; that failed cleanup receipt remains. A subsequent
+lock-held manual cleanup verified all eight owned PID/start identities absent,
+no process with the stage as its working directory, and explicit stage absence
+on the reachable phone. The separately recorded preflight/parser corrections
+and reduction of the memory gate from 3 to 1.5 GiB are protocol changes, not a
+claim that the original 3 GiB admission passed. See the
+[phone evidence packet](../../docs/qoralo-blog/evidence/phone-bos-check/) for
+source/configuration identities, all planned runs and both cleanup receipts.
+
 ## Accepted physical QNN/HTP path
 
 The observed fixed-Alba path invoked:
