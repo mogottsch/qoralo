@@ -47,6 +47,9 @@ blockquote { max-width:52ch; font-size:23px; line-height:1.5; margin:24px 0; let
 .bench .npu { color:var(--htp); }
 .bench td.blocked { color:var(--failed); }
 .bench td.muted { color:var(--muted); }
+.bench .gpu { color:var(--gpu); }
+.bench.llm td[data-reads], .bench.llm td[data-writes] { text-align:right; padding-right:28px; }
+.bench.llm thead th:nth-child(3), .bench.llm thead th:nth-child(4) { text-align:right; padding-right:28px; }
 .bench td:last-child { color:var(--muted); padding-right:0; }
 .note-box { display:flex; flex-wrap:wrap; align-items:center; gap:8px 24px; width:fit-content; max-width:100%; margin-top:16px; padding:12px 18px; border:1px solid var(--line); font-size:14px; line-height:1.6; color:var(--muted); }
 .formula { color:var(--ink); }
@@ -129,6 +132,9 @@ summary { cursor:pointer; color:var(--muted); font-size:13px; padding:8px 0; wid
   .bench td[data-label]::before { content:attr(data-label); display:block; color:var(--muted); font-size:12px; font-weight:400; }
   .bench td:last-child { grid-column:1 / -1; margin-top:4px; }
   .bench td:last-child::before { content:none; }
+  .bench.llm tr { grid-template-columns:1fr 1fr 1fr; }
+  .bench.llm td[data-reads], .bench.llm td[data-writes] { text-align:left; padding-right:0; }
+  .bench.llm td:last-child:empty { display:none; }
 }
 @media (prefers-reduced-motion:reduce) {
   button { transition:none; }

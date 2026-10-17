@@ -42,3 +42,5 @@ Approved by Moritz: title, intro and question frozen; demo video right after the
 Status: the merged "What we tried" section is in (five-row CPU/NPU table from `evidence/benchmark-table.json`, small RTF note, separate Gemma sentence; wording vetted by Pi). Still to come: the system flow diagram, then moving the Pocket TTS section after it.
 
 Status: the system flow diagram is in (nik's, Pi-reviewed, replaces the earlier processor-route figure); order is demo, What we tried, Where it ends up, the Pocket clips, Why it went wrong, the fix, the closing link. Figures: demo video slot, system flow (HTML/CSS, no script), stop-score chart; plus the five-row table.
+
+Status: "What we tried" has two subsections: Speech (five-row CPU RTF / NPU RTF table, rendered RTF formula, one footnote) and Script writing (seven-row reads/writes tokens-per-second table grouped by model, generic-text caption, the Gemma NPU repetition failure visible, no ratio headline). Both tables are generated from committed packets and checked value by value in the browser suite.

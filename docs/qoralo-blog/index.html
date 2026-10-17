@@ -56,7 +56,28 @@
         </div>
         <p class="table-foot" data-edit="table-foot">Warm medians without setup; workloads differ by model, so compare across a row. HTP versions are rewritten graphs, checked by ear. Pocket's samples differ from the clips below.</p>
         <h3 class="sub" data-edit="llm-title">Script writing</h3>
-        <p data-edit="llm-copy">Separate text benchmarks measured Gemma 4 E2B at <span class="nowrap">12–16 tokens</span> per second on the GPU; the app uses it to write the scripts.</p>
+        <p data-edit="llm-copy">For the script we need a language model. The app uses Gemma 4 E2B on the GPU. We also tried it on the NPU, where it ran but repeated itself on long prompts.</p>
+<!-- llm-table:start -->
+        <div class="table-wrap">
+          <table class="bench llm" role="table">
+            <caption class="sr-only">Reading and writing speed in tokens per second for three language models on the phone, on CPU, GPU and NPU</caption>
+            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader">Backend</th><th scope="col" role="columnheader">Reads, tokens/s</th><th scope="col" role="columnheader">Writes, tokens/s</th><th scope="col" role="columnheader">Note</th></tr></thead>
+            <tbody>
+            <tr role="row"><th scope="row" role="rowheader">Gemma 4 E2B</th><td class="cpu" data-label="Backend">CPU</td><td data-label="Reads" data-reads="67.64734174920667">68</td><td data-label="Writes" data-writes="8.653682548802903">8.7</td><td data-label="Note"></td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Gemma 4 E2B</th><td class="gpu" data-label="Backend">GPU</td><td data-label="Reads" data-reads="981.4313853136699">981</td><td data-label="Writes" data-writes="16.30177358042202">16.3</td><td data-label="Note">What the app uses</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Gemma 4 E2B</th><td class="npu" data-label="Backend">NPU</td><td data-label="Reads" data-reads="740.74072265625">741</td><td class="blocked" data-label="Writes">not comparable</td><td data-label="Note">Different build. Repeated itself on long prompts</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Qwen3.5-2B</th><td class="cpu" data-label="Backend">CPU</td><td data-label="Reads" data-reads="33.80412925688063">34</td><td data-label="Writes" data-writes="6.404535577794518">6.4</td><td data-label="Note"></td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Qwen3.5-2B</th><td class="gpu" data-label="Backend">GPU</td><td data-label="Reads" data-reads="86.100442558957">86</td><td data-label="Writes" data-writes="8.613776712050061">8.6</td><td data-label="Note"></td></tr>
+            <tr role="row"><th scope="row" role="rowheader">LFM2.5-2.6B</th><td class="cpu" data-label="Backend">CPU</td><td data-label="Reads" data-reads="29.01430276811393">29</td><td data-label="Writes" data-writes="6.872234469963799">6.9</td><td data-label="Note"></td></tr>
+            <tr role="row"><th scope="row" role="rowheader">LFM2.5-2.6B</th><td class="gpu" data-label="Backend">GPU</td><td data-label="Reads" data-reads="63.64881643005777">64</td><td data-label="Writes" data-writes="7.040341490078473">7.0</td><td data-label="Note"></td></tr>
+            </tbody>
+          </table>
+        </div>
+<!-- llm-table:end -->
+        <div class="note-box">
+          <span data-edit="llm-note">Reads is how fast the model takes in the prompt, writes is how fast it produces text. Both in tokens per second, higher is faster; a token is a piece of text, not a word.</span>
+        </div>
+        <p class="table-foot" data-edit="llm-foot">Generic long-text tests, not the app's script pipeline and not script quality. Medians of five requests with the model already loaded, the same input for every row; compare backends within a model, since tokenizers differ.</p>
       </section>
 
       <section aria-labelledby="system-heading">
@@ -197,10 +218,12 @@ Run(main, inputs); // the tensor still points at it</code></pre>
     <details id="records">
       <summary>Sources &amp; technical notes</summary>
       <div class="records-body">
+        <p>Script-writing table: the median of five loaded long-prompt requests per route from the Android LLM benchmark registry, with the same input bytes for all seven routes. The runs are not thermally normalized; some campaigns ended at Android thermal status 3 or 4. Output sanity only checks for corruption and repetition, not quality. The Gemma NPU row is a different mobile-QAT build, and all five of its long outputs repeated themselves. Its writing rate is withheld because the runtime does not define whether the first token counts, which is a separate issue from the repetition. The registry has no NPU rows for Qwen or LFM, and GPU-private memory was not measured.</p>
         <p>Phone check: on the Galaxy S23 Ultra, CPU only, ONNX Runtime 1.27.1, I rebuilt the retained runner and ran four versions twice in one window. They were the unmodified source, a build that prints the 32 start values to stderr right before inference, a build that only keeps the buffer alive, and both changes. With the original lifetime the printed values were all zero, 2 of 2 runs. With the buffer kept alive they were all NaN, 2 of 2. The four kept-alive runs gave identical stop scores and audio, with a stop at frame 53. Their audio correlates 0.999996 with the earlier accepted fixed-cache recording. I made no new listening judgment.</p>
         <p>Desktop replay: the old runner's loop on ONNX Runtime 1.22.1 on a desktop CPU, changing only the first autoregressive input, with the retained fixed-Alba cache, token IDs and noise. All zeros gives 134 stop scores within 0.074 of the retained Android run (mean 0.006) with no stop. NaN gives scores that differ by up to 16.4 over the 57 frames before it stops. I also tried 62 inputs with only a prefix or suffix zeroed, and none matched. Measured as the difference divided by the correct run's size, the zero-input internal state is off by 1.05 at the first frame (median 1.21 over the 56 frames) and the frame itself by 0.76 (median 1.36). The stop score and the next frame are both read from that internal state in the model's source, and each frame is fed back as the next input in the runner's loop.</p>
         <p>Limits: the old phone executable is not retained, so the unmodified source was rebuilt with NDK 27. The exact original <code>flow_lm_main</code> graph is also missing. I used a same-size reconstruction with a different hash. It reproduced the old desktop run, and on the phone it reproduced the old failure recording byte for byte. The dump build may change allocation, and the unmodified build's start values were never printed. The second unmodified run gave a different result (first stop score −4.37, still no stop), so this failure is not deterministic. I have no explanation for why this allocator returned zeros. The earlier invalid-voice-clone failure is a different cause.</p>
         <ul>
+          <li><a href="evidence/benchmark-table.json">Speech benchmark packet</a> · <a href="evidence/llm-table.json">Script-writing packet</a> · <a href="evidence/system-flow-spec.md">System flow spec</a></li>
           <li><a href="evidence/phone-bos-check/README.md">Phone check: setup, results and limits</a> · <a href="evidence/phone-bos-check/results.json">results.json</a> · <a href="evidence/phone-bos-check/runner_variants.patch">Runner patch</a></li>
           <li><a href="evidence/bos-zero-replay.py">Replay script</a> · <a href="evidence/bos-zero-replay.json">Replay results and stop scores</a></li>
           <li><a href="evidence/source-audit.md">Source audit and AddressSanitizer reproduction</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
