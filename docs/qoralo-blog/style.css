@@ -13,6 +13,11 @@ body { margin:0; }
 ::selection { background:var(--htp); color:var(--page); }
 a { color:var(--ink); text-underline-offset:.22em; }
 a:hover { color:var(--htp); }
+/* Reference links: look like the text around them, underlined quietly; mint on hover. */
+a.ref { color:inherit; text-decoration:underline; text-decoration-color:rgba(173,186,203,.55); text-decoration-thickness:1px; text-underline-offset:.22em; }
+a.ref:hover { color:var(--htp); text-decoration-color:var(--htp); }
+.editing a.ref { pointer-events:none; }
+@media print { a.ref { text-decoration:none; } }
 :focus-visible { outline:2px solid var(--htp); outline-offset:5px; }
 .skip { position:absolute; top:-80px; left:24px; padding:12px; background:var(--htp); color:var(--page); z-index:3; }
 .skip:focus { top:12px; }

@@ -22,6 +22,11 @@ LINES = [
     ("Gemma 4 E2B", "GPU", "GPU", "gpu", "What the app uses"),
     ("Qwen3.5-2B", "CPU", "CPU", "cpu", ""),
 ]
+MODEL_URL = {
+    "Gemma 4 E2B": "https://huggingface.co/google/gemma-4-E2B-it",
+    "Qwen3.5-2B": "https://huggingface.co/Qwen/Qwen3.5-2B",
+    "LFM2.5-2.6B": "https://huggingface.co/LiquidAI/LFM2.5-2.6B",
+}
 APP_MODEL = "Gemma 4 E2B"
 
 def sort_key(line):
@@ -42,10 +47,16 @@ def cells(r):
     return reads, writes
 
 body = []
+linked = set()  # a model's name is a link on its first row only; the other rows repeat the plain name
 for model, key, label, cls, note in LINES:
     r = by[(model, key)]
+    if model in linked:
+        name = model
+    else:
+        linked.add(model)
+        name = f'<a class="ref" href="{MODEL_URL[model]}" rel="noopener noreferrer">{model}</a>'
     reads, writes = cells(r)
-    body.append(f'            <tr role="row"><th scope="row" role="rowheader">{model}</th><td class="{cls}" data-label="Backend">{label}</td>{reads}{writes}<td data-label="Note">{note}</td></tr>')
+    body.append(f'            <tr role="row"><th scope="row" role="rowheader">{name}</th><td class="{cls}" data-label="Backend">{label}</td>{reads}{writes}<td data-label="Note">{note}</td></tr>')
 assert len(body) == len(rows) == 7
 html = '''<!-- llm-table:start -->
         <div class="table-wrap">

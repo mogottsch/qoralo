@@ -22,7 +22,7 @@
     <main id="article"><article>
       <header class="intro">
         <h1 data-edit="title">Building a NotebookLM-like podcast on my phone</h1>
-        <p data-edit="intro">You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.</p>
+        <p data-edit="intro">You've probably heard of <a class="ref" href="https://blog.google/innovation-and-ai/products/notebooklm-audio-overviews/" rel="noopener noreferrer">NotebookLM</a>. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.</p>
         <p data-edit="question">So I wondered: how good could this be with all inference running on my phone?</p>
       </header>
 
@@ -34,18 +34,18 @@
       <section aria-labelledby="tried-heading">
         <h2 id="tried-heading" data-edit="tried-title">What I tried</h2>
         <h3 class="sub" data-edit="speech-title">Speech</h3>
-        <p data-edit="tried-copy">I tried five speech models on my phone's CPU, and on its NPU (Qualcomm's Hexagon Tensor Processor, HTP) wherever I could get them to run. Two made it. In these warm short-input tests, the prepared HTP versions were over twice as fast.</p>
+        <p data-edit="tried-copy">I tried five speech models on my phone's CPU, and on its NPU (Qualcomm's <a class="ref" href="https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk" rel="noopener noreferrer">Hexagon Tensor Processor, HTP</a>) wherever I could get them to run. Two made it. In these warm short-input tests, the prepared HTP versions were over twice as fast.</p>
 <!-- table:start -->
         <div class="table-wrap">
           <table class="bench" role="table">
             <caption class="sr-only">Real-time factor (RTF, lower is faster) of five speech models on the phone's CPU and NPU</caption>
             <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader" class="cpu">CPU RTF</th><th scope="col" role="columnheader" class="npu">NPU RTF</th><th scope="col" role="columnheader">What happened</th></tr></thead>
             <tbody>
-            <tr role="row"><th scope="row" role="rowheader">Supertonic 3</th><td class="cpu" data-label="CPU RTF" data-rtf="0.41519070745163383">0.42</td><td class="npu" data-label="NPU RTF" data-rtf="0.17031607024910034">0.17</td><td data-label="What happened">Both tested samples sounded good</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">Pocket TTS</th><td class="cpu" data-label="CPU RTF" data-rtf="0.414234">0.41</td><td class="npu" data-label="NPU RTF" data-rtf="0.181643">0.18</td><td data-label="What happened">Both tested samples sounded good</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">Kokoro</th><td class="cpu" data-label="CPU RTF" data-rtf="0.979973">0.98</td><td class="blocked" data-label="NPU RTF">blocked</td><td data-label="What happened">The HTP version failed a check before it reached the phone</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">MOSS-TTS-Nano</th><td class="cpu" data-label="CPU RTF" data-rtf="1.1248052010167464">1.12</td><td class="blocked" data-label="NPU RTF">blocked</td><td data-label="What happened">The HTP runtime failed to initialize on the phone</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">VibeVoice 1.5B</th><td class="blocked" data-label="CPU RTF">no speech</td><td class="muted" data-label="NPU RTF">not tried</td><td data-label="What happened">Silent, incomplete output; the package alone was 9.1 GB</td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/Supertone/supertonic-3" rel="noopener noreferrer">Supertonic 3</a></th><td class="cpu" data-label="CPU RTF" data-rtf="0.41519070745163383">0.42</td><td class="npu" data-label="NPU RTF" data-rtf="0.17031607024910034">0.17</td><td data-label="What happened">Both tested samples sounded good</td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/kyutai/pocket-tts-without-voice-cloning" rel="noopener noreferrer">Pocket TTS</a></th><td class="cpu" data-label="CPU RTF" data-rtf="0.414234">0.41</td><td class="npu" data-label="NPU RTF" data-rtf="0.181643">0.18</td><td data-label="What happened">Both tested samples sounded good</td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/hexgrad/Kokoro-82M" rel="noopener noreferrer">Kokoro</a></th><td class="cpu" data-label="CPU RTF" data-rtf="0.979973">0.98</td><td class="blocked" data-label="NPU RTF">blocked</td><td data-label="What happened">The HTP version failed a check before it reached the phone</td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX" rel="noopener noreferrer">MOSS-TTS-Nano</a></th><td class="cpu" data-label="CPU RTF" data-rtf="1.1248052010167464">1.12</td><td class="blocked" data-label="NPU RTF">blocked</td><td data-label="What happened">The HTP runtime failed to initialize on the phone</td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/microsoft/VibeVoice-1.5B" rel="noopener noreferrer">VibeVoice 1.5B</a></th><td class="blocked" data-label="CPU RTF">no speech</td><td class="muted" data-label="NPU RTF">not tried</td><td data-label="What happened">Silent, incomplete output; the package alone was 9.1 GB</td></tr>
             </tbody>
           </table>
         </div>
@@ -62,12 +62,12 @@
             <caption class="sr-only">Prefill and decode speed in tokens per second for three language models on the phone, on CPU, GPU and NPU</caption>
             <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader">Backend</th><th scope="col" role="columnheader">Prefill, tokens/s</th><th scope="col" role="columnheader">Decode, tokens/s</th><th scope="col" role="columnheader">Note</th></tr></thead>
             <tbody>
-            <tr role="row"><th scope="row" role="rowheader">Gemma 4 E2B</th><td class="gpu" data-label="Backend">GPU</td><td data-label="Prefill" data-prefill="981.4313853136699">981</td><td data-label="Decode" data-decode="16.30177358042202">16.3</td><td data-label="Note">What the app uses</td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/google/gemma-4-E2B-it" rel="noopener noreferrer">Gemma 4 E2B</a></th><td class="gpu" data-label="Backend">GPU</td><td data-label="Prefill" data-prefill="981.4313853136699">981</td><td data-label="Decode" data-decode="16.30177358042202">16.3</td><td data-label="Note">What the app uses</td></tr>
             <tr role="row"><th scope="row" role="rowheader">Gemma 4 E2B</th><td class="cpu" data-label="Backend">CPU</td><td data-label="Prefill" data-prefill="67.64734174920667">68</td><td data-label="Decode" data-decode="8.653682548802903">8.7</td><td data-label="Note"></td></tr>
             <tr role="row"><th scope="row" role="rowheader">Gemma 4 E2B</th><td class="npu" data-label="Backend">NPU</td><td data-label="Prefill" data-prefill="740.74072265625">741</td><td class="blocked" data-label="Decode">not comparable</td><td data-label="Note">Different build. Repeated itself on long prompts</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">LFM2.5-2.6B</th><td class="gpu" data-label="Backend">GPU</td><td data-label="Prefill" data-prefill="63.64881643005777">64</td><td data-label="Decode" data-decode="7.040341490078473">7.0</td><td data-label="Note"></td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/LiquidAI/LFM2.5-2.6B" rel="noopener noreferrer">LFM2.5-2.6B</a></th><td class="gpu" data-label="Backend">GPU</td><td data-label="Prefill" data-prefill="63.64881643005777">64</td><td data-label="Decode" data-decode="7.040341490078473">7.0</td><td data-label="Note"></td></tr>
             <tr role="row"><th scope="row" role="rowheader">LFM2.5-2.6B</th><td class="cpu" data-label="Backend">CPU</td><td data-label="Prefill" data-prefill="29.01430276811393">29</td><td data-label="Decode" data-decode="6.872234469963799">6.9</td><td data-label="Note"></td></tr>
-            <tr role="row"><th scope="row" role="rowheader">Qwen3.5-2B</th><td class="gpu" data-label="Backend">GPU</td><td data-label="Prefill" data-prefill="86.100442558957">86</td><td data-label="Decode" data-decode="8.613776712050061">8.6</td><td data-label="Note"></td></tr>
+            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="https://huggingface.co/Qwen/Qwen3.5-2B" rel="noopener noreferrer">Qwen3.5-2B</a></th><td class="gpu" data-label="Backend">GPU</td><td data-label="Prefill" data-prefill="86.100442558957">86</td><td data-label="Decode" data-decode="8.613776712050061">8.6</td><td data-label="Note"></td></tr>
             <tr role="row"><th scope="row" role="rowheader">Qwen3.5-2B</th><td class="cpu" data-label="Backend">CPU</td><td data-label="Prefill" data-prefill="33.80412925688063">34</td><td data-label="Decode" data-decode="6.404535577794518">6.4</td><td data-label="Note"></td></tr>
             </tbody>
           </table>
@@ -169,7 +169,7 @@
 
       <section aria-labelledby="pocket-heading">
         <h2 id="pocket-heading" data-edit="pocket-title">The first Android port</h2>
-        <p data-edit="pocket-copy">The errors you run into while working on TTS can be interesting. Before Supertonic, I tried Pocket TTS. On my laptop it said this sentence fine. Here it is twice on my phone's CPU, with the same weights, text, voice and noise. The first sounds right. The second is my first port, and it runs 10.72 seconds instead of 4.48 and sounds unhinged.</p>
+        <p data-edit="pocket-copy">The errors you run into while working on TTS can be interesting. Before Supertonic, I tried <a class="ref" href="https://github.com/kyutai-labs/pocket-tts" rel="noopener noreferrer">Pocket TTS</a>. On my laptop it said this sentence fine. Here it is twice on my phone's CPU, with the same weights, text, voice and noise. The first sounds right. The second is my first port, and it runs 10.72 seconds instead of 4.48 and sounds unhinged.</p>
         <blockquote>Pocket TTS runs entirely on this Android phone using the original floating point model.</blockquote>
         <div class="listening-pair">
           <div class="listening recovered"><h3>Fixed-cache port <span>4.48 s</span></h3><audio controls preload="none" aria-label="Accepted Pocket TTS fixed-cache Android CPU recording"><source src="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav" type="audio/wav"></audio><a href="../android-benchmarks/media/0014-pocket-alba-fixed-cpu.wav">WAV</a><p class="audio-status" role="status" hidden></p></div>
@@ -218,7 +218,7 @@
           <li><a href="evidence/source-audit.md">Source audit and AddressSanitizer reproduction</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
           <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/tools/pocket_alba_cpu_runner.cc">Original retained runner</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json">Android run and listening verdict</a></li>
         </ul>
-        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses LiteRT-LM for Gemma on GPU and ONNX Runtime with QNN for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not timing. The final app demonstration and listening review are pending. This is not a NotebookLM quality match.</p>
+        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses <a class="ref" href="https://github.com/google-ai-edge/LiteRT-LM" rel="noopener noreferrer">LiteRT-LM</a> for Gemma on GPU and <a class="ref" href="https://onnxruntime.ai/docs/execution-providers/QNN-ExecutionProvider.html" rel="noopener noreferrer">ONNX Runtime with QNN</a> for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. The system flow is a schematic of what the app does, not a timing trace. The final app demonstration and listening review are pending. This is not a NotebookLM quality match.</p>
       </div>
     </details>
   </div>

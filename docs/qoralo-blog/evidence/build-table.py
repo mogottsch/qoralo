@@ -16,6 +16,15 @@ def rtf(i):
     assert r is not None, i
     return r
 
+# Where each model can be read about (checked to resolve; GitHub's Supertonic repo is archived, so the weights page is used).
+MODEL_URL = {
+    "Supertonic 3": "https://huggingface.co/Supertone/supertonic-3",
+    "Pocket TTS": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning",
+    "Kokoro": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "MOSS-TTS-Nano": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
+    "VibeVoice 1.5B": "https://huggingface.co/microsoft/VibeVoice-1.5B",
+}
+
 # (model, cpu cell, npu cell, what happened). A number cell is ("rtf", row id); a word cell is ("word", text, css class).
 LINES = [
     ("Pocket TTS", ("rtf", "pocket-short-cpu"), ("rtf", "pocket-short-htp"), "Both tested samples sounded good"),
@@ -50,7 +59,7 @@ def cell(label, c, cls):
     return f'<td class="{c[2]}" data-label="{label}">{c[1]}</td>'
 
 body = "\n".join(
-    f'            <tr role="row"><th scope="row" role="rowheader">{m}</th>{cell("CPU RTF", c, "cpu")}{cell("NPU RTF", n, "npu")}<td data-label="What happened">{w}</td></tr>'
+    f'            <tr role="row"><th scope="row" role="rowheader"><a class="ref" href="{MODEL_URL[m]}" rel="noopener noreferrer">{m}</a></th>{cell("CPU RTF", c, "cpu")}{cell("NPU RTF", n, "npu")}<td data-label="What happened">{w}</td></tr>'
     for m, c, n, w in LINES
 )
 html = f'''<!-- table:start -->

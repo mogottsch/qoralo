@@ -28,9 +28,13 @@ CLAIM LIMITS: the phone check observed the first input as zeros in the instrumen
 
 FORM: Static figures (no animation): the system flow (generated HTML/CSS grid with exact SVG connectors, `evidence/build-system-flow.py`) and the stop-score chart (baked-in SVG from the phone raw results); two tables generated from committed packets (`evidence/build-table.py`, `build-llm-table.py`); a MathML formula; native exact-file audio players that never autoplay and never overlap; a video slot. Inline plain-text editing with local restore and `Save HTML copy`. Everything works without JavaScript except editing. No external fonts, libraries, analytics or runtime requests.
 
+## Links
+
+Reference links (`a.ref`): quiet underline, mint on hover, https with `rel="noopener noreferrer"`, none in the title. Thirteen: NotebookLM (Audio Overviews post), five speech and three language models (a model is a link on its first table row only for the script-writing table), HTP, Pocket TTS prose, and in the notes LiteRT-LM and ONNX Runtime QNN. No deep links into the repository's own docs (Moritz declined them). The browser suite pins the exact set.
+
 ## Editing contract
 
-`[data-edit]` text becomes `contenteditable="plaintext-only"` on request. Only edited paragraphs are stored (localStorage keyed by path) or exported. Saving builds from the original page source, strips editor state, and adds a `<base>` so the copy finds its assets. It never writes into the repository.
+`[data-edit]` text becomes `contenteditable="plaintext-only"` on request. Only edited paragraphs are stored (localStorage keyed by path) or exported; links in an edited paragraph round-trip as `[label](https://…)` and are rebuilt as anchors (http(s) only). Saving builds from the original page source, strips editor state, and adds a `<base>` so the copy finds its assets. It never writes into the repository.
 
 ## Verification
 

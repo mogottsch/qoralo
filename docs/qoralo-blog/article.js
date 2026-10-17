@@ -6,11 +6,32 @@
   const storageKey = `phone-podcast-copy-v3:${location.pathname}`;
   let editing = false;
   function editStatus(text) { if ($('#edit-status').textContent !== text) $('#edit-status').textContent = text; }
+  // Links survive editing: an edited paragraph is stored as text with [label](https://link) and rebuilt with real anchors.
+  // Only http(s) links are rebuilt, with DOM nodes (never innerHTML), so typed text cannot inject markup.
+  const LINK = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  function serialize(el) {
+    const walk = node => [...node.childNodes].map(n =>
+      n.nodeType === 3 ? n.nodeValue.replace(/\s+/g, ' ')
+      : n.nodeName === 'BR' ? '\n'
+      : n.nodeName === 'A' && n.getAttribute('href') ? `[${n.textContent}](${n.getAttribute('href')})`
+      : walk(n)).join('');
+    return walk(el).trim();
+  }
+  function fill(el, text) {
+    const doc = el.ownerDocument; el.textContent = '';
+    let last = 0, m; LINK.lastIndex = 0;
+    while ((m = LINK.exec(text))) {
+      if (m.index > last) el.append(doc.createTextNode(text.slice(last, m.index)));
+      const a = doc.createElement('a'); a.href = m[2]; a.className = 'ref'; a.rel = 'noopener noreferrer'; a.textContent = m[1]; el.append(a);
+      last = LINK.lastIndex;
+    }
+    if (last < text.length) el.append(doc.createTextNode(text.slice(last)));
+  }
   // Only paragraphs you actually change are stored or exported, so untouched text keeps its inline formatting.
   let edited = {};
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
-    fields.forEach(e => { if (typeof saved[e.dataset.edit] === 'string') { edited[e.dataset.edit] = saved[e.dataset.edit]; e.textContent = saved[e.dataset.edit]; } });
+    fields.forEach(e => { if (typeof saved[e.dataset.edit] === 'string') { edited[e.dataset.edit] = saved[e.dataset.edit]; fill(e, saved[e.dataset.edit]); } });
     if (Object.keys(edited).length) editStatus('Your local text edits were restored.');
   } catch { /* A saved HTML copy works even when browser storage is unavailable. */ }
   function setEditing(on) {
@@ -23,14 +44,14 @@
   }
   $('#edit-copy').addEventListener('click', () => setEditing(!editing));
   fields.forEach(field => field.addEventListener('input', () => {
-    edited[field.dataset.edit] = field.innerText;
+    edited[field.dataset.edit] = serialize(field);
     try { localStorage.setItem(storageKey, JSON.stringify(edited)); editStatus('Saved in this browser. Save HTML copy to keep a file.'); }
     catch { editStatus('Browser storage unavailable. Use Save HTML copy to keep your changes.'); }
   }));
   function saveCopy() {
     // Start from the original source, not the live DOM's transient diagram/editor state.
     const copy = new DOMParser().parseFromString(pristine, 'text/html');
-    copy.querySelectorAll('[data-edit]').forEach(e => { if (e.dataset.edit in edited) e.textContent = edited[e.dataset.edit]; });
+    copy.querySelectorAll('[data-edit]').forEach(e => { if (e.dataset.edit in edited) fill(e, edited[e.dataset.edit]); });
     copy.title = edited.title || document.title;
     let base = copy.querySelector('base');
     if (!base) { base = copy.createElement('base'); copy.head.prepend(base); }

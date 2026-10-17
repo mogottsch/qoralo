@@ -16,6 +16,28 @@ async (page) => {
   // Moritz's approved opening is frozen: title, intro and question must not drift.
   const frozen={title:'Building a NotebookLM-like podcast on my phone',intro:"You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.",question:'So I wondered: how good could this be with all inference running on my phone?'};
   for(const [k,v] of Object.entries(frozen)) check((await page.locator(`[data-edit="${k}"]`).textContent())===v,`Frozen opening text changed: ${k}`);
+  // Reference links: exactly these, each verified to resolve when added; none to a redirecting or archived address.
+  const expectedLinks={
+    'NotebookLM':'https://blog.google/innovation-and-ai/products/notebooklm-audio-overviews/',
+    'Hexagon Tensor Processor, HTP':'https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk',
+    'Supertonic 3':'https://huggingface.co/Supertone/supertonic-3',
+    'Pocket TTS@table':'https://huggingface.co/kyutai/pocket-tts-without-voice-cloning',
+    'Kokoro':'https://huggingface.co/hexgrad/Kokoro-82M',
+    'MOSS-TTS-Nano':'https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX',
+    'VibeVoice 1.5B':'https://huggingface.co/microsoft/VibeVoice-1.5B',
+    'Gemma 4 E2B':'https://huggingface.co/google/gemma-4-E2B-it',
+    'LFM2.5-2.6B':'https://huggingface.co/LiquidAI/LFM2.5-2.6B',
+    'Qwen3.5-2B':'https://huggingface.co/Qwen/Qwen3.5-2B',
+    'Pocket TTS@text':'https://github.com/kyutai-labs/pocket-tts',
+    'LiteRT-LM':'https://github.com/google-ai-edge/LiteRT-LM',
+    'ONNX Runtime with QNN':'https://onnxruntime.ai/docs/execution-providers/QNN-ExecutionProvider.html'};
+  const refs=await page.evaluate(()=>[...document.querySelectorAll('a.ref')].map(a=>({text:a.textContent.trim(),href:a.href,rel:a.rel,table:!!a.closest('table'),inNotes:!!a.closest('#records'),inH1:!!a.closest('h1')})));
+  const refKey=r=>r.text==='Pocket TTS'?'Pocket TTS@'+(r.table?'table':'text'):r.text;
+  check(refs.length===Object.keys(expectedLinks).length&&refs.every(r=>expectedLinks[refKey(r)]===r.href),'The thirteen reference links are exactly the agreed ones: '+refs.map(r=>refKey(r)).join(' | '));
+  check(refs.every(r=>/noopener/.test(r.rel)&&/^https:\/\//.test(r.href)&&!/notebooklm\.google|supertone-oss-archive|supertone-inc\/supertonic/.test(r.href)&&!r.inH1),'Links are https with noopener, none in the title, none to the redirecting NotebookLM domain or the archived Supertonic repo');
+  check(await page.locator('.bench.llm tbody tr').evaluateAll(trs=>{const names=trs.map(t=>t.querySelector('th').textContent.trim());return names.every((n,i)=>(trs[i].querySelectorAll('th a').length===1)===(names.indexOf(n)===i));}),'In the script-writing table a model name is a link on its first row only');
+  check(await page.locator('.bench:not(.llm) tbody tr th a').count()===5,'All five speech models are linked');
+  check(await page.locator('[data-edit="tried-copy"] a.ref').count()===1&&await page.locator('[data-edit="pocket-copy"] a.ref').count()===1&&await page.locator('[data-edit="intro"] a.ref').count()===1,'Links in editable paragraphs: intro, speech, Pocket');
   check(await page.locator('[data-edit="question"]').evaluate(q=>q.compareDocumentPosition(document.querySelector('#demo-figure'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#tried-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Demo video sits between the question and the first section');
   // Demo video: it plays if the file exists; otherwise the page says where to put it. Never a silent broken player.
   await page.waitForTimeout(800);
@@ -265,11 +287,23 @@ async (page) => {
     check((await page.locator('[data-edit="intro"]').innerText())==='My own intro <b>stays plain text</b>.','Local edit restore');
     check(await page.locator('[data-edit="intro"] b').count()===0,'Edits must not inject HTML');
     check((await page.locator('[data-edit="tried-copy"]').innerHTML())===triedBefore,'Untouched paragraphs are unchanged after an edit and reload');
+    // Links survive editing: an edited paragraph keeps its anchors; typed [label](https://...) becomes a link, other schemes stay text.
+    await page.locator('#edit-copy').click();
+    await page.locator('[data-edit="tried-copy"]').evaluate(e=>{e.append(document.createTextNode(' Extra words.'));e.dispatchEvent(new Event('input',{bubbles:true}));});
+    await page.locator('[data-edit="pocket-copy"]').evaluate(e=>{e.append(document.createTextNode(' See [my link](https://example.com/a) and [bad](javascript:alert(1)) and <i>x</i>.'));e.dispatchEvent(new Event('input',{bubbles:true}));});
+    await page.locator('#edit-copy').click();
+    await page.reload();
+    const tAnchor=await page.locator('[data-edit="tried-copy"] a.ref').evaluateAll(a=>a.map(x=>({t:x.textContent,h:x.href})));
+    check(tAnchor.length===1&&tAnchor[0].t==='Hexagon Tensor Processor, HTP'&&tAnchor[0].h===expectedLinks['Hexagon Tensor Processor, HTP']&&/Extra words\.$/.test(await page.locator('[data-edit="tried-copy"]').innerText()),'An edited paragraph keeps its link after reload: '+JSON.stringify(tAnchor));
+    const pAnchors=await page.locator('[data-edit="pocket-copy"] a').evaluateAll(a=>a.map(x=>({t:x.textContent,h:x.href,rel:x.rel})));
+    check(pAnchors.length===2&&pAnchors[0].h===expectedLinks['Pocket TTS@text']&&pAnchors[1].t==='my link'&&pAnchors[1].h==='https://example.com/a'&&/noopener/.test(pAnchors[1].rel),'A typed [label](https://…) becomes a link and the original link is kept: '+JSON.stringify(pAnchors));
+    check(/\[bad\]\(javascript:alert\(1\)\)/.test(await page.locator('[data-edit="pocket-copy"]').innerText())&&await page.locator('[data-edit="pocket-copy"] i').count()===0,'Other schemes and typed tags stay plain text');
     const download=page.waitForEvent('download');await page.locator('#save-copy').click();
     await(await download).saveAs('/tmp/qoralo-story-v3/phone-podcast-edited.html');
     await page.goto('file:///tmp/qoralo-story-v3/phone-podcast-edited.html');
     check((await page.locator('[data-edit="intro"]').innerText())==='My own intro <b>stays plain text</b>.','Export contains edits');
     check(await page.locator('[contenteditable]').count()===0,'Export strips live edit state');
+    check(await page.locator('[data-edit="tried-copy"] a.ref').count()===1&&await page.locator('[data-edit="pocket-copy"] a.ref').count()===2,'Export keeps the links, including a typed one');
     check(await page.locator('#edit-copy').isVisible(),'Export keeps working script');
     check(await page.locator('body').evaluate(e=>getComputedStyle(e).color)==='rgb(243, 245, 248)','Export keeps linked styles via base');
     check(await page.locator('.series').count()===2&&await page.locator('.chart').isVisible(),'Export keeps the chart');
