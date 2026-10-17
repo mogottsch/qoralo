@@ -1,0 +1,52 @@
+#include <unistd.h>
+#include <cstring>
+#include <cstdio>
+// Android CPU validation runner for the quality-accepted fixed-Alba Pocket contract.
+// Neural execution is ONNX Runtime CPU. Token IDs, state ownership, deterministic
+// noise fixtures, EOS scanning, orchestration, and WAV encoding are host/CPU work.
+#include <algorithm>
+#include <array>
+#include <chrono>
+#include <cmath>
+#include <cstdint>
+#include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <limits>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <sys/resource.h>
+#include <vector>
+#include "onnxruntime_cxx_api.h"
+namespace fs=std::filesystem;using Clock=std::chrono::steady_clock;
+static double Now(){return std::chrono::duration<double>(Clock::now().time_since_epoch()).count();}
+static long Hwm(){struct rusage r{};return getrusage(RUSAGE_SELF,&r)?-1:r.ru_maxrss;}
+static void P16(std::ostream&s,uint16_t x){char b[2]={char(x),char(x>>8)};s.write(b,2);}static void P32(std::ostream&s,uint32_t x){char b[4]={char(x),char(x>>8),char(x>>16),char(x>>24)};s.write(b,4);}
+static std::vector<float> ReadFloats(const fs::path&p,size_t count){std::ifstream s(p,std::ios::binary|std::ios::ate);if(!s||size_t(s.tellg())!=count*4)throw std::runtime_error("float fixture size: "+p.string());s.seekg(0);std::vector<float>x(count);s.read(reinterpret_cast<char*>(x.data()),count*4);if(!s)throw std::runtime_error("float fixture read");return x;}
+static void WriteWav(const fs::path&p,const std::vector<float>&v){std::ofstream s(p,std::ios::binary|std::ios::trunc);uint32_t n=v.size()*2;s.write("RIFF",4);P32(s,36+n);s.write("WAVEfmt ",8);P32(s,16);P16(s,1);P16(s,1);P32(s,24000);P32(s,48000);P16(s,2);P16(s,16);s.write("data",4);P32(s,n);for(float x:v){long q=long(std::nearbyint(std::clamp(x,-1.f,1.f)*32767.f));P16(s,uint16_t(int16_t(std::clamp(q,-32768L,32767L))));}if(!s)throw std::runtime_error("wav write");}
+struct Model{std::string name;std::unique_ptr<Ort::Session>s;std::vector<std::string>in,out;std::vector<const char*>ip,op;double create_s=0;};
+static Model Load(Ort::Env&e,const fs::path&p,const std::string&name){Ort::SessionOptions o;o.SetIntraOpNumThreads(1);o.SetInterOpNumThreads(1);o.SetExecutionMode(ExecutionMode::ORT_SEQUENTIAL);o.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);Model m;m.name=name;double t=Now();m.s=std::make_unique<Ort::Session>(e,p.c_str(),o);m.create_s=Now()-t;Ort::AllocatorWithDefaultOptions a;for(size_t i=0;i<m.s->GetInputCount();++i){auto x=m.s->GetInputNameAllocated(i,a);m.in.emplace_back(x.get());}for(size_t i=0;i<m.s->GetOutputCount();++i){auto x=m.s->GetOutputNameAllocated(i,a);m.out.emplace_back(x.get());}for(auto&x:m.in)m.ip.push_back(x.c_str());for(auto&x:m.out)m.op.push_back(x.c_str());return m;}
+static std::vector<Ort::Value> Run(Model&m,std::vector<Ort::Value>&v){if(v.size()!=m.ip.size())throw std::runtime_error(m.name+" input count");return m.s->Run(Ort::RunOptions{nullptr},m.ip.data(),v.data(),v.size(),m.op.data(),m.op.size());}
+template<class T>static Ort::Value TV(Ort::MemoryInfo&mi,std::vector<T>&v,std::initializer_list<int64_t>shape){std::vector<int64_t>s(shape);return Ort::Value::CreateTensor<T>(mi,v.data(),v.size(),s.data(),s.size());}
+static std::vector<float> CopyFloat(Ort::Value&v){auto info=v.GetTensorTypeAndShapeInfo();auto*p=v.GetTensorData<float>();return {p,p+info.GetElementCount()};}
+static std::vector<Ort::Value> InitFlowState(const std::vector<float>&packed,Ort::AllocatorWithDefaultOptions&a){constexpr size_t H=16,D=64,SRC=126,DST=1000,PER=2*SRC*H*D;if(packed.size()!=6*PER)throw std::runtime_error("Alba pack contract");std::vector<Ort::Value>state;state.reserve(18);std::array<int64_t,5>cache_shape{2,1,DST,H,D};std::array<int64_t,1>empty_shape{0},step_shape{1};for(size_t layer=0;layer<6;++layer){auto cache=Ort::Value::CreateTensor<float>(a,cache_shape.data(),cache_shape.size());float*dst=cache.GetTensorMutableData<float>();std::fill(dst,dst+2*DST*H*D,std::numeric_limits<float>::quiet_NaN());const float*src=packed.data()+layer*PER;for(size_t kv=0;kv<2;++kv)std::copy(src+kv*SRC*H*D,src+(kv+1)*SRC*H*D,dst+kv*DST*H*D);state.push_back(std::move(cache));state.push_back(Ort::Value::CreateTensor<float>(a,empty_shape.data(),empty_shape.size()));auto step=Ort::Value::CreateTensor<int64_t>(a,step_shape.data(),step_shape.size());step.GetTensorMutableData<int64_t>()[0]=126;state.push_back(std::move(step));}return state;}
+static void UpdateFlowState(std::vector<Ort::Value>&state,std::vector<Ort::Value>&result){state.clear();for(int i=0;i<18;++i)state.push_back(std::move(result[2+i]));}
+static std::vector<Ort::Value> InitDecoder(Model&m,Ort::AllocatorWithDefaultOptions&a){std::vector<Ort::Value>x;for(size_t i=1;i<m.in.size();++i){auto info=m.s->GetInputTypeInfo(i).GetTensorTypeAndShapeInfo();auto sh=info.GetShape();auto ty=info.GetElementType();auto v=Ort::Value::CreateTensor(a,sh.data(),sh.size(),ty);size_t n=info.GetElementCount();if(ty==ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT)std::fill(v.GetTensorMutableData<float>(),v.GetTensorMutableData<float>()+n,0.f);else if(ty==ONNX_TENSOR_ELEMENT_DATA_TYPE_INT64)std::fill(v.GetTensorMutableData<int64_t>(),v.GetTensorMutableData<int64_t>()+n,0);else if(ty==ONNX_TENSOR_ELEMENT_DATA_TYPE_BOOL)memset(v.GetTensorMutableRawData(),1,n);else throw std::runtime_error("decoder state dtype");x.push_back(std::move(v));}if(x.size()!=56)throw std::runtime_error("decoder state ABI");return x;}
+int main(int argc,char**argv){try{if(argc!=7)throw std::runtime_error("usage: runner MODEL_DIR ALBA_CACHE NOISE_F32 OUTPUT_WAV TEMPERATURE MAX_FRAMES");fs::path root=argv[1],cache_path=argv[2],noise_path=argv[3],wav=argv[4];float temperature=std::stof(argv[5]);int max_frames=std::stoi(argv[6]);if((temperature!=0.3f&&temperature!=0.7f)||max_frames<1||max_frames>134)throw std::runtime_error("contract range");auto packed=ReadFloats(cache_path,6*2*126*16*64);auto noise=ReadFloats(noise_path,134*32);Ort::Env env(ORT_LOGGING_LEVEL_WARNING,"pocket-alba-cpu");double l0=Now();Model text=Load(env,root/"text_conditioner.onnx","text"),main=Load(env,root/"flow_lm_main.onnx","flow_main"),flow=Load(env,root/"flow_lm_flow.onnx","flow"),decoder=Load(env,root/"mimi_decoder.onnx","decoder");double load=Now()-l0;Ort::MemoryInfo mi=Ort::MemoryInfo::CreateCpu(OrtArenaAllocator,OrtMemTypeDefault);Ort::AllocatorWithDefaultOptions alloc;double g0=Now(),tt=0,tp=0,ta=0,tf=0,td=0;
+ std::vector<int64_t>ids={1456,603,597,602,854,640,791,261,260,1332,323,288,285,287,489,594,1355,1049,265,311,2081,3697,273,519,1836,263};std::vector<Ort::Value>text_inputs;text_inputs.push_back(TV(mi,ids,{1,26}));double t=Now();auto text_result=Run(text,text_inputs);tt+=Now()-t;auto text_embedding=CopyFloat(text_result[0]);
+ auto state=InitFlowState(packed,alloc);std::vector<float>empty_sequence,empty_text;std::vector<Ort::Value>prompt;prompt.push_back(TV(mi,empty_sequence,{1,0,32}));prompt.push_back(TV(mi,text_embedding,{1,26,1024}));for(auto&x:state)prompt.push_back(std::move(x));t=Now();auto prompt_result=Run(main,prompt);tp+=Now()-t;UpdateFlowState(state,prompt_result);
+ std::vector<float>current(32),latents,logits;int eos=-1;std::vector<float>s0{0.f},t1{1.f};for(int step=0;step<max_frames;++step){std::vector<Ort::Value>inputs;
+#ifdef FIX_LIFETIME
+std::vector<float>bos(32,std::numeric_limits<float>::quiet_NaN());if(step==0){inputs.push_back(TV(mi,bos,{1,1,32}));}else
+#else
+if(step==0){std::vector<float>bos(32,std::numeric_limits<float>::quiet_NaN());inputs.push_back(TV(mi,bos,{1,1,32}));}else
+#endif
+ inputs.push_back(TV(mi,current,{1,1,32}));inputs.push_back(TV(mi,empty_text,{1,0,1024}));for(auto&x:state)inputs.push_back(std::move(x));
+#ifdef DUMP_BOS
+if(step==0){const float*q=inputs[0].GetTensorData<float>();unsigned u[32];memcpy(u,q,sizeof u);char b[640];int n=snprintf(b,sizeof b,"BOS_AT_RUN ptr=%p",(const void*)q);for(int i=0;i<32;++i)n+=snprintf(b+n,sizeof b-n," %08x",u[i]);b[n++]='\n';(void)!write(2,b,n);}
+#endif
+t=Now();auto result=Run(main,inputs);ta+=Now()-t;UpdateFlowState(state,result);float logit=result[1].GetTensorData<float>()[0];logits.push_back(logit);if(eos<0&&logit>-4.f)eos=step;if(eos>=0&&step>=eos+3)break;std::vector<float>step_noise(noise.begin()+step*32,noise.begin()+(step+1)*32);std::vector<Ort::Value>flow_inputs;flow_inputs.push_back(std::move(result[0]));flow_inputs.push_back(TV(mi,s0,{1,1}));flow_inputs.push_back(TV(mi,t1,{1,1}));flow_inputs.push_back(TV(mi,step_noise,{1,32}));t=Now();auto flow_result=Run(flow,flow_inputs);tf+=Now()-t;const float*direction=flow_result[0].GetTensorData<float>();for(int i=0;i<32;++i)current[i]=step_noise[i]+direction[i];latents.insert(latents.end(),current.begin(),current.end());}
+ int frames=int(latents.size()/32);if(!frames)throw std::runtime_error("no latents");auto decoder_state=InitDecoder(decoder,alloc);std::vector<float>audio;for(int start=0;start<frames;start+=12){int n=std::min(12,frames-start);std::vector<float>chunk(latents.begin()+start*32,latents.begin()+(start+n)*32);std::vector<Ort::Value>inputs;inputs.push_back(TV(mi,chunk,{1,n,32}));for(auto&x:decoder_state)inputs.push_back(std::move(x));t=Now();auto result=Run(decoder,inputs);td+=Now()-t;auto y=CopyFloat(result[0]);audio.insert(audio.end(),y.begin(),y.end());decoder_state.clear();for(int i=0;i<56;++i)decoder_state.push_back(std::move(result[1+i]));}if(int(audio.size())!=frames*1920)throw std::runtime_error("audio length");WriteWav(wav,audio);double generation=Now()-g0;
+ std::cout<<"{\"route\":\"controlled_fp_onnx_alba_android_cpu\",\"provider\":\"CPUExecutionProvider\",\"temperature\":"<<temperature<<",\"seed\":0,\"noise_fixture\":\"NumPy RandomState MT19937 normal\",\"max_frames\":"<<max_frames<<",\"load_seconds\":"<<load<<",\"generation_seconds\":"<<generation<<",\"component_seconds\":{\"text\":"<<tt<<",\"prompt\":"<<tp<<",\"ar\":"<<ta<<",\"flow\":"<<tf<<",\"decoder\":"<<td<<"},\"eos_step\":"<<eos<<",\"latent_frames\":"<<frames<<",\"samples\":"<<audio.size()<<",\"audio_seconds\":"<<audio.size()/24000.0<<",\"rtf\":"<<generation/(audio.size()/24000.0)<<",\"vm_hwm_kb\":"<<Hwm()<<",\"eos_logits\":[";for(size_t i=0;i<logits.size();++i){if(i)std::cout<<",";std::cout<<logits[i];}std::cout<<"]}\n";return 0;}catch(const Ort::Exception&e){std::cerr<<"ORT "<<e.GetOrtErrorCode()<<": "<<e.what()<<"\n";return 2;}catch(const std::exception&e){std::cerr<<"error: "<<e.what()<<"\n";return 3;}}

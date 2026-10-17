@@ -82,12 +82,23 @@ async (page) => {
   check(/Frame 100/.test(readout)&&/stopped/.test(readout),'After NaN replay stops: '+readout);
   check(await page.locator('#step-marker').getAttribute('x1')==='100','Marker tracks frame');
 
-  // Wording that must not become overclaiming.
+  // Wording must match the retained receipts, in both directions: no stale "inferred", no claim beyond the evidence.
   const body=await page.locator('main').innerText();
-  check(/inferred, not observed/.test(body),'Zeros stated as inferred');
-  check(!/the phone fed|phone (received|got) zeros/i.test(body),'Zeros not presented as observed');
-  check(/didn.t read the phone.s memory/.test(body),'Memory-not-read limit visible');
-  check(/62 inputs/.test(body)&&!/65 /.test(body),'Pattern-scan count is exact');
+  const notes=await page.locator('#records').evaluate(e=>e.textContent);
+  const phone=await (await page.request.get(base.split('#')[0].replace(/index\.html$/,'')+'evidence/phone-bos-check/results.json')).json();
+  const ob=phone.observations;
+  check(ob.original_lifetime_bos_all_zero_runs===2&&ob.fixed_lifetime_bos_all_nan_runs===2,'Receipt: dump builds show zeros 2/2 and NaN 2/2');
+  check(ob.unmodified_original_run1_wav_identical_to_retained_failure===true&&ob.unmodified_original_run2_wav_identical_to_retained_failure===false&&ob.unmodified_original_runs_differ,'Receipt: orig run 1 byte-identical, run 2 different');
+  const fixedRuns=phone.runs.filter(r=>/fixed/.test(r.run));
+  check(fixedRuns.length===4&&ob.fixed_runs_all_stop_at_53&&ob.fixed_runs_identical_wav,'Receipt: four fixed runs stop at 53 with identical audio');
+  check(phone.runs.length===8&&phone.runs.every(r=>r.exit===0),'Receipt: eight planned runs, all exited 0');
+  check(/a build that prints the 32 start values/.test(body)&&/32 zeros, in both runs/.test(body),'Zero observation is labelled as the instrumented build');
+  check(/four of four runs/.test(body)&&/byte for byte/.test(body)&&/different wrong answer on its second run/.test(body),'Main text states the exact run counts and the nondeterminism');
+  check(!/inferred|closest match|didn.t read the phone.s memory/i.test(body),'No stale inference wording');
+  check(!/the allocator (zeroes|zeros|clears)/i.test(body+notes),'No invented allocator explanation');
+  check(/not retained/.test(notes)&&/may change allocation/.test(notes)&&/not deterministic/.test(notes)&&/no explanation for why this allocator/i.test(notes)&&/same-size reconstruction/.test(notes),'Limits stay in the notes');
+  check(/62 inputs/.test(notes)&&!/65 /.test(body+notes),'Pattern-scan count is exact');
+  check(/I made no new listening judgment/.test(notes),'No listening claim');
 
   await page.locator('#play-explanation').count().then(n=>check(n===0,'Removed lifetime controls'));
   await page.locator('#route-controls [data-route="script"]').click();

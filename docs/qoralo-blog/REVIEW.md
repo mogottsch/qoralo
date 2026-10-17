@@ -1,5 +1,13 @@
 # Article review record
 
+## Phone check (story v4, later): inference became observation
+
+Moritz called "zeros are inferred, not observed" unacceptable and offered to connect the phone. One bounded CPU-only window ran four builds of the retained runner twice (unmodified, BOS-dump, buffer-kept-alive, both). Results, protocol record and limits: `evidence/phone-bos-check/README.md`. The page now states the observation with its exact limits (instrumented build only; old binary and original graph missing; second unmodified run differed; no allocator explanation; no new listening verdict).
+
+- Pi required controller fixes before granting the window (single 300 s window, bounded per-run timeouts, owned-process identity, explicit cleanup states, fresh no-user-work preflight) and independently verified all eight raw JSON/WAV hashes, dumps, exits and cleanup receipts.
+- Honest protocol notes: two read-only preflight-only invocations preceded the window to validate parsers; the memory gate was lowered from 3 GiB (QNN convention) to 1.5 GiB for this 712 MB CPU runner; the controller's cleanup step timed out and correctly reported incomplete, and a separate lock-held manual cleanup was verified (PIDs gone, no cwd in stage, `ABSENT` from a reachable device).
+- The browser suite now reads `phone-bos-check/results.json` and fails if the page's run counts or limits drift from the receipts.
+
 ## Current revision (story v4): the WHY is the article
 
 Moritz's latest direction: he does not care about the buffer-lifetime finding as a fix. He wants to explain where the divergence comes from, then quickly mention the fix actually applied. The WHY is the main thing.
@@ -13,7 +21,7 @@ What changed:
 - Fixed a real editor bug found by the new tests: an edit used to store and export every paragraph as plain text, which stripped inline `<code>`. Now only edited paragraphs are stored or exported.
 - The intro remains deliberately plain placeholder text for Moritz to rewrite.
 
-Claim discipline (applied after Pi's independent review): zeros are **inferred, not observed**; the phone's memory was not read. The retained source-to-binary binding is unverified. The exact original graph is missing and a same-size reconstruction was used, validated against the retained host run (first score -9.8847, stop at 53) and the retained Android fixed-cache scores. The 65-pattern scan includes one duplicate (all-zero) and the correct all-NaN case, so the page says 62 partly zeroed inputs, and it is not exhaustive. No audio was generated from the replay and no listening claim is made. The invalid-Bria/zero-encoder failure is a different cause.
+Claim discipline (applied after Pi's independent review): zeros were **inferred, not observed** at that point; the phone's memory had not been read. The phone check above has since observed them in the instrumented build. The retained source-to-binary binding is unverified. The exact original graph is missing and a same-size reconstruction was used, validated against the retained host run (first score -9.8847, stop at 53) and the retained Android fixed-cache scores. The 65-pattern scan includes one duplicate (all-zero) and the correct all-NaN case, so the page says 62 partly zeroed inputs, and it is not exhaustive. No audio was generated from the replay and no listening claim is made. The invalid-Bria/zero-encoder failure is a different cause.
 
 Provenance: Pi independently reran the replay (reproduced -9.8847/stop 53, zero first score -10.2709, 134-step max 0.0736/mean 0.00577/no stop, fixed-cache max 0.0021) and read the source, and directed the wording above. Pi did not review the final rewritten copy. This revision has no new three-pass review; the original Thomas/Pi/nik passes belong to `cdfdfb0c`. Pi separately added the `0014/RESULTS.md` correction.
 
