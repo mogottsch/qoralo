@@ -55,6 +55,30 @@ class GemmaChapterPromptTest {
         assertTrue(prompt.contains("\"Departures\""))
     }
 
+    @Test fun earlierOpeningsAreQuotedBackSoTheNextChapterStartsDifferently() {
+        val prompt = singleChapterInstruction(chapter, preceding = listOf(
+            ChapterRecap("One", opening = "So, let's talk about Sandyford."),
+            ChapterRecap("Two", "It ended here.", "Moving on to the community side.")))
+        assertTrue(prompt.contains("\"So, let's talk about Sandyford.\""))
+        assertTrue(prompt.contains("\"Moving on to the community side.\""))
+        assertTrue(prompt.contains("Open this chapter differently"))
+        assertTrue(prompt.contains("do not copy their sentence pattern"))
+        // The actual lead-in words used so far are excluded by name, derived from the run, not a fixed list.
+        assertTrue(prompt.contains("Your first word must not be \"so\", \"moving\""))
+        assertTrue(prompt.contains("Begin on a concrete subject"))
+        // Nothing is banned globally; only what previous chapters actually used is excluded.
+        val fresh = singleChapterInstruction(chapter, preceding = listOf(ChapterRecap("One")))
+        assertFalse(fresh.contains("Open this chapter differently"))
+    }
+
+    @Test fun theQuotedOpeningIsOneBoundedSentence() {
+        val text = "So, let's talk about Sandyford. It is a suburb of Dublin. More follows here."
+        assertEquals("So, let's talk about Sandyford.", chapterOpening(text))
+        assertEquals("", chapterOpening("   "))
+        assertTrue(chapterOpening("word ".repeat(200)).length <= 120)
+        assertEquals("Only one sentence", chapterOpening("Only one sentence"))
+    }
+
     @Test fun theFirstAttemptCarriesATargetAndARetryCarriesAStrictlyLowerCeiling() {
         val first = singleChapterInstruction(chapter, chapterWordCeiling(1))
         assertTrue(first.contains("about $CHAPTER_WORD_TARGET spoken words"))

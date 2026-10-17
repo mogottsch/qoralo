@@ -1,44 +1,92 @@
 # Qoralo podcast app
 
-Greenfield Android implementation of the binding UX in `../docs/app-ux-mvp.html` and architecture in `../docs/podcast-generation-app-architecture-proposal.md`.
+Android podcast app: sources → on-device script → review/edit → narrated audio,
+with a persistent player, local WAV export, episode diagnostics and deletion.
+The [UX](../docs/app-ux-mvp.html) and
+[architecture](../docs/podcast-generation-app-architecture-proposal.md) describe
+the design; the [current closeout/runbook](docs/current-closeout.md) is the entry
+point for build identities, delivery steps, evidence and remaining gaps.
 
-## Current tested internal build
+## Current state
 
-See [the installed episode diagnostics/deletion handoff](docs/episode-management-handoff-2026-09-14.md) for current app `bf53c566…` / test `f1543993…`, exact identities and scoped validation. **Library → episode ⋮ → Episode details** opens private metrics; **Delete episode** confirms the immutable target and safely waits for worker/player file leases. Default/narrow-font2 owned fixtures, six actual paired captures, the exact-pair non-neural guard and preservation checks passed. No real user podcast was deleted and no model was run to fill old statistics; actual SDK metric availability remains unverified.
+- Launcher **Qoralo**; app `dev.qoralo.podcast.internal`, instrumentation
+  `dev.qoralo.podcast.internal.test`, Kotlin namespace `dev.qoralo.podcast`.
+  The old `dev.vibevoice` app was removed; **do not use the legacy-ID build
+  selector** for current delivery. Renaming an application ID does not migrate
+  Android app data. [Rename history](docs/rebrand-qoralo.md).
+- Last recorded phone app SHA-256 begins **`677f8d6f…`**, not the old
+  `bf53c566…` episode-management build. The renamed GPU script and HTP voice
+  routes have device evidence; owned export-byte checks are separate from the
+  unproven system-picker hop. Later prompt round3/3b records and the final
+  offline candidate have distinct provenance — see the runbook, not an old
+  handoff's “current” heading.
+- The weekend closeout is **host-only**: Moritz has the phone. No install,
+  instrumentation, model inference or new listening verdict is authorized in
+  this window. The frozen final candidate is not a new device pass.
+- The Python historical scope suite is **not green**: eight retained source/hash
+  drift failures after two obsolete behavioral checks were repaired.
+  [Exact audit and reproducer](docs/host-scope-test-baseline.md).
 
-The [prior progressive Player handoff](docs/progressive-player-handoff-2026-09-13.md), on app `119e0f92…` / test `7ae210bf…`, retains its separate navigation and coverage table. Genuine muted playback advanced while HTP generated; remaining pause/navigation/transcript/finalization controls passed a zero-neural production-IO replay of the same retained audio. The original all-in-one script remains failed on optional screenshot capture—not relabelled a clean E2E pass. The app has one persistent top mini-player, attempt-bound immutable audio availability and honest passage following. Use the frozen tested APK, not arbitrary build output. The [earlier provider publication/recovery](docs/provider-app-handoff-2026-09-12.md), [chat-edit](docs/chat-edit-repair-handoff-2026-09-11.md) and [capacity](docs/app-repair-handoff-2026-09-11.md) evidence remains preserved; no new listening verdict is inferred.
+## Build on an authorized, provisioned host
 
-## Identity
-
-The launcher name is **Qoralo**. The internal application ID and Kotlin package are still `dev.qoralo.podcast.internal` and `dev.qoralo.podcast`: changing them creates a different Android app identity, which would hide the existing on-device episodes and invalidate every installed-hash evidence binding. See [the rebrand notes](docs/rebrand-qoralo.md) for the staged plan. This is deliberately not a production Play identity.
-
-## Build
+Requires Java 17, Android compile/target SDK 35 (min 29), SDK build tools,
+NDK **28.1.13356709**, CMake **3.22.1**, Python 3 and the Gradle dependency cache
+for offline builds. Native deployment target: Galaxy S23 Ultra, SM8550 / V73,
+arm64-v8a. Gradle's wrapper pins the build tool; do not run parallel builds in
+this shared checkout.
 
 ```bash
 cd podcast-app
-./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+./gradlew --offline -Ppodcast.legacyApplicationId=false -Ppodcast.shortProductE2e=false \
+  :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest \
+  :app:compileReleaseKotlin :app:lintDebug :app:testNativePolicies
+python3 -m unittest discover -s tools/tests -v  # eight documented failures, not green
+python3 -m unittest discover -s tools/provider_pipeline -p test_pipeline.py -v
 ```
 
-Compile/target SDK 35 and Java 17 are required. The physical target is a Galaxy S23 Ultra.
+Model/vendor assets are **not in Git**. A checkout alone is not a runnable neural
+build: acquire the licensed local inputs separately, prepare/verify them, and
+retain the effective configuration. Missing runtime/model assets are a genuine
+provisioning blocker, not permission for fallback. Full steps and the frozen
+candidate manifest are in the [runbook](docs/current-closeout.md).
 
-## Runtime model packs
+## Two accelerator routes, not interchangeable
 
-Licensed and large models never enter Git. Verified, data-only packs are installed into the app's no-backup private storage under `model-packs/<route>/<version>/`. Each pack contains a `manifest.json` and model/context/assets listed by size and SHA-256. Executable code is rejected from writable packs. The matched JNI, LiteRT, ONNX Runtime, and QNN integration must be supplied by the installed APK or a trusted native split. Accepted routes are exclusively:
+| Work | Model/runtime | Execution |
+| --- | --- | --- |
+| Script, outline, edits | Gemma 4 E2B, LiteRT-LM **0.16.1** | **GPU**, `GEMMA_4_E2B_LITERT_GPU` |
+| Narration | Supertonic 3 provider recipe, ORT **1.27.1** + QAIRT **2.49.0.260730** | **QNN/HTP**, `SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP` |
 
-- `GEMMA_4_E2B_LITERT_GPU`
-- `SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP`
+There is no CPU neural fallback, alternate model or silent repair route.
+Non-neural normalization and file work on CPU do not make Gemma an HTP route.
+The normal voice pack is **`supertonic-3-provider`**, manifest `423429c6…`, not
+legacy `supertonic-3` or experimental T2048/L2048. Provider-prescribed sentence
+segments use four reusable T320/L512 contexts, eight steps, speed 1.05 and their
+own predicted native duration, without stretching or forced word splitting.
+Immutable chunks permit progressive listening; the completed canonical WAV is
+the later export unit. [Provider details and numerical caveats](docs/provider-htp-integration.md).
 
-A route that is absent, invalid, incompatible, or fails to initialize stops generation. There is no CPU route, alternate model, hidden text splitting, or synthetic-audio fallback.
+## Pack and install rules
 
-Licensed local native artifacts are injected at build time under `app/runtime-libs/arm64-v8a/`; that directory is Git-ignored. The app never loads executable code from model-pack storage.
+Data-only packs live in the app's `no_backup/model-packs/<id>/current/`, with
+manifest/file sizes and SHA-256 verified against the APK's pins. Executable code
+belongs in the APK, never writable pack storage. Licensed native inputs live in
+ignored `app/runtime-libs/arm64-v8a/`; local packs, runtime provenance and APKs
+remain under ignored `.local/`. Never push model/vendor payloads or credentials.
 
-For the authorized local environment:
+When phone work is authorized, delivery includes installation and launch
+verification; do not ask for a separate install approval. Take
+`artifacts/locks/phone.lock`, pin every command to `R5CW81PR8SY`, avoid active
+user generation, and **install both APKs with `adb install -r -t --user 0`**.
+Never default/all-user install: the work profile must stay clean. Use the
+[frozen-pair procedure](docs/current-closeout.md#install-on-personal-user-0-when-the-phone-returns),
+not arbitrary shared `app/build/outputs` files. The existing
+`tools/install_local_debug.sh` has the user-0 flag, but still stages the legacy
+voice pack and installs only the app; it is **not** a complete normal-provider
+pair/provisioning path.
 
-```bash
-./tools/prepare_local_runtime.py
-./gradlew :app:assembleDebug
-```
-
-The preparation tool uses the accepted experiment artifacts by default, creates hard-linked data-only packs under `.local/model-packs`, records private runtime hashes in `.local/runtime-provenance.json`, pins both generated manifest hashes in the ignored `local.properties`, and enables the Supertonic JNI build. Gemma uses the official `litertlm-android:0.16.1` API with `Backend.GPU`; Supertonic uses the APK-packaged ORT/QNN libraries and app-owned JNI bridge. Generated model packs, QAIRT libraries, hashes that disclose private local provenance, and model bytes must never be committed or published. The current default provider pack uses T320/L512 with four reusable HTP contexts. The authorized provider1.3.1 recipe groups raw paragraphs/sentences toward300 codepoints without forcibly splitting overlong sentences, then applies the pinned Unicode14 frontend. Each segment uses its own HTP-predicted native duration/full waveform, with exact prescribed gaps and no stretching or hidden fallback. Immutable validated chunks support progressive playback; the completed canonical master supports later playback/export. The earlier T239/L238 short pack remains an explicitly separate legacy route/evidence case, not the current long-text default.
-
-`tools/install_local_debug.sh` is intentionally gated by both explicit Pi priority (`PODCAST_PHONE_PRIORITY=approved`) and `artifacts/locks/phone.lock`; do not invoke it outside an assigned phone gate.
+Historical feature reports remain valid for their own APKs, not as current
+installation nominations: [UI copy](docs/ui-minimal-handoff-2026-09-20.md),
+[episode management](docs/episode-management-handoff-2026-09-14.md),
+[progressive player](docs/progressive-player-handoff-2026-09-13.md), and
+[provider publication/recovery](docs/provider-app-handoff-2026-09-12.md).

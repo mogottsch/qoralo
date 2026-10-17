@@ -107,7 +107,8 @@ class ShortProductScopeTests(unittest.TestCase):
         self.assertIn("require(files_after is not None,'post-file inventory unavailable",controller)
     def test_library_fix_only_names_the_real_action_and_selector_uses_it(self):
         path='app/src/main/java/dev/qoralo/podcast/ui/LibraryScreen.kt'
-        original=subprocess.check_output(['git','show','3957b8d:podcast-app/'+path],cwd=PROJECT.parent).decode()
+        historical=path.replace('java/dev/qoralo/podcast/','java/dev/vibevoice/podcast/')
+        original=subprocess.check_output(['git','show','3957b8d:podcast-app/'+historical],cwd=PROJECT.parent).decode()
         expected=original.replace('icon = { Icon(Icons.Default.Add, contentDescription = null) },',
             '// Material3 clears the animated text\'s semantics; the icon must name the action.\n                                icon = { Icon(Icons.Default.Add, contentDescription = "New episode") },')
         self.assertEqual(expected,(PROJECT/path).read_text())
@@ -116,14 +117,16 @@ class ShortProductScopeTests(unittest.TestCase):
         self.assertNotIn('useUnmergedTree',driver)
     def test_observer_seams_do_not_override_normal_limits_or_profiles(self):
         source=(PROJECT/'app/src/debug/java/dev/qoralo/podcast/e2e/ShortProductDiagnostics.kt').read_text()
-        self.assertIn('conversation.sendMessage(request).toString()',source)
+        # The synchronous API now forwards the production JSON response format unchanged.
+        self.assertIn('conversation.sendMessage(request, responseFormat = responseFormat).toString()',source)
         self.assertNotIn('sendMessageAsync',source)
         self.assertNotIn('enableTtsOnly',source);self.assertNotIn('qnnProfileDirectory',source)
         self.assertIn('value.volume = 0f',source);self.assertNotIn('AudioManager',source)
         self.assertIn('require(app.repository.episode(episode).reviewEnabled)',source)
         vm=(PROJECT/'app/src/main/java/dev/qoralo/podcast/ui/PodcastViewModel.kt').read_text()
         self.assertLess(vm.index('RuntimeDiagnostics.beforeExport'),vm.index('openOutputStream'))
-        player=(PROJECT/'app/src/main/java/dev/qoralo/podcast/ui/PlayerScreen.kt').read_text()
+        # Player setup moved into the persistent session; muting still precedes prepare().
+        player=(PROJECT/'app/src/main/java/dev/qoralo/podcast/ui/EpisodePlayerSession.kt').read_text()
         self.assertLess(player.index('RuntimeDiagnostics.configurePlayer'),player.index('prepare()'))
         driver=(PROJECT/'app/src/androidTest/java/dev/qoralo/podcast/e2e/ShortProductE2eTest.kt').read_text()
         for forbidden in ['generateScript(', 'generateAudio(', 'commitGeneratedScript(', 'setContent {', 'testPackProvider', 'MediaStore', 'FLAG_ACTIVITY_CLEAR_TASK']:

@@ -10,7 +10,9 @@ BASE = 'cc7e772ca825f6f5e939071b4737ba8a7976504a'
 
 
 def frozen(path):
-    return subprocess.check_output(['git', 'show', BASE + ':podcast-app/' + path], cwd=ROOT).decode()
+    # Historical commits predate the package rename; keep their original tree paths.
+    historical = path.replace('java/dev/qoralo/podcast/', 'java/dev/vibevoice/podcast/')
+    return subprocess.check_output(['git', 'show', BASE + ':podcast-app/' + historical], cwd=ROOT).decode()
 
 
 class NormalIntegrationScopeTests(unittest.TestCase):
@@ -36,7 +38,8 @@ class NormalIntegrationScopeTests(unittest.TestCase):
 
     def test_target_prompt_binding_only_no_limits_parser_sampler_or_global_minimum(self):
         path = 'app/src/main/java/dev/qoralo/podcast/runtime/NativeEngines.kt'
-        expected = subprocess.check_output(['git','show','7980d11:podcast-app/'+path],cwd=ROOT).decode()
+        historical = path.replace('java/dev/qoralo/podcast/', 'java/dev/vibevoice/podcast/')
+        expected = subprocess.check_output(['git','show','7980d11:podcast-app/'+historical],cwd=ROOT).decode()
         expected = expected.replace('.put("requestedChapterId", chapter.id)',
             '.put("requestedChapterId", chapter.id)\n            .put("requestedChapter", JSONObject().put("id", chapter.id).put("title", chapter.title).put("brief", chapter.brief))')
         expected = expected.replace('generate("chapter", serialized)', 'generate("chapter", serialized, singleChapterInstruction(chapter))')

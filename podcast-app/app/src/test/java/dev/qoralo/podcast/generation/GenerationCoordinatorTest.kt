@@ -93,6 +93,8 @@ class GenerationCoordinatorTest {
         assertEquals(listOf("One"), llm.precedingSeen[1].map { it.title })
         assertTrue(llm.precedingSeen[1].single().ending.isNotBlank())
         assertTrue("Complete One chapter transcript.".endsWith(llm.precedingSeen[1].single().ending))
+        // The earlier run-up travels too, so the next chapter cannot reuse it.
+        assertEquals("Complete One chapter transcript.", llm.precedingSeen[1].single().opening)
     }
 
     @Test fun duplicateCompletedCommandNeverOverwritesMetricsOrRunsAgain() = runTest {

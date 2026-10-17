@@ -10,7 +10,7 @@ data class EpisodeOutline(val title: String, val chapters: List<OutlineChapter>)
 data class FrozenChapter(val id: String, val title: String, val text: String)
 
 /** What an earlier chapter already covered, so the next one continues instead of restarting. */
-data class ChapterRecap(val title: String, val ending: String = "")
+data class ChapterRecap(val title: String, val ending: String = "", val opening: String = "")
 data class AudioMetadata(val sampleRateHz: Int, val channelCount: Int, val frameCount: Long, val sha256: String)
 data class RuntimeProvenance(
     val runtimeApiVersion: Int,

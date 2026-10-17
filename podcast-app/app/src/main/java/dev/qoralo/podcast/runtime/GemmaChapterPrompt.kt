@@ -23,10 +23,18 @@ internal fun singleChapterInstruction(chapter: OutlineChapter, wordCeiling: Int?
     val continuity = if (preceding.isEmpty()) {
         "This is the opening chapter, so it is the only one that introduces the episode. "
     } else {
+        val openings = preceding.map { it.opening }.filter { it.isNotBlank() }
+        val leadIns = openings.mapNotNull { Regex("[\\w']+").find(it)?.value?.lowercase() }.distinct()
         "The episode is already under way: chapters " + preceding.joinToString(", ") { JSONObject.quote(it.title) } +
             " have been spoken already. Do NOT welcome or greet the listener, do NOT introduce the episode or its " +
             "topic again, and do NOT summarize what those chapters covered. Continue from where they left off, and " +
-            "do not repeat facts, examples or phrasings they already used. "
+            "do not repeat facts, examples or phrasings they already used. " +
+            if (openings.isEmpty()) "" else
+                "Those chapters opened with " + openings.joinToString(", ", transform = JSONObject::quote) + ". " +
+                "Open this chapter differently: reuse none of those words, and do not copy their sentence pattern " +
+                "or run-up. Your first word must not be " + leadIns.joinToString(", ", transform = JSONObject::quote) +
+                ". Begin on a concrete subject from your own material - a place, person, number, date or event - " +
+                "not a conversational lead-in. "
     }
     return "Generate ONLY this one chapter: ${JSONObject.quote(chapter.id)}, titled ${JSONObject.quote(chapter.title)}. " +
         "This is a single-chapter request, not an episode-generation request. " +
@@ -55,4 +63,12 @@ internal fun chapterEnding(text: String, sentences: Int = 2, maxChars: Int = 400
     val boundaries = Regex("[.!?]['\"\u201d\u2019]?\\s+").findAll(trimmed).map { it.range.last + 1 }.toList()
     val start = boundaries.getOrNull(boundaries.size - sentences) ?: 0
     return trimmed.substring(start).trim().takeLast(maxChars)
+}
+
+/** The run-up a later chapter must not imitate. Bounded: enough to recognise, too little to copy from. */
+internal fun chapterOpening(text: String, maxChars: Int = 120): String {
+    val trimmed = text.trim()
+    if (trimmed.isEmpty()) return ""
+    val end = Regex("[.!?]['\"\u201d\u2019]?(\\s|$)").find(trimmed)?.range?.last?.plus(1) ?: trimmed.length
+    return trimmed.substring(0, end).trim().take(maxChars)
 }

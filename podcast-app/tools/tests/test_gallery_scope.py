@@ -6,7 +6,27 @@ PROJECT = Path(__file__).resolve().parents[2]
 ANDROID = '{http://schemas.android.com/apk/res/android}'
 
 
+def main_process_block(application):
+    """Read this guard's balanced block, including its nested deletion-reaper loop."""
+    marker = 'if (getProcessName() == packageName) {'
+    start = application.index(marker) + len(marker)
+    depth = 1
+    for end in range(start, len(application)):
+        depth += (application[end] == '{') - (application[end] == '}')
+        if depth == 0:
+            return application[start:end]
+    raise ValueError('Unclosed main-process guard')
+
+
 class GalleryScopeTests(unittest.TestCase):
+    def test_process_guard_parser_handles_nested_blocks_without_accepting_outside_startup(self):
+        source = 'if (getProcessName() == packageName) { launch { while (active) { reap() } }; GenerationWatchdog() } QueuedCommandDispatcher()'
+        guarded = main_process_block(source)
+        self.assertIn('GenerationWatchdog', guarded)
+        self.assertNotIn('QueuedCommandDispatcher', guarded)
+        with self.assertRaises(ValueError):
+            main_process_block('if (getProcessName() == packageName) { launch { reap() }')
+
     def test_gallery_is_nonexported_and_in_nonproduction_process(self):
         root = E.parse(PROJECT / 'app/src/debug/AndroidManifest.xml').getroot()
         gallery = next(x for x in root.find('application').findall('activity') if x.get(ANDROID + 'name') == '.gallery.SyntheticGalleryActivity')
@@ -17,7 +37,7 @@ class GalleryScopeTests(unittest.TestCase):
         main = (PROJECT / 'app/src/main/AndroidManifest.xml').read_text()
         self.assertNotIn('SyntheticGalleryActivity', main)
         application = (PROJECT / 'app/src/main/java/dev/qoralo/podcast/PodcastApplication.kt').read_text()
-        guarded = application.split('if (getProcessName() == packageName) {', 1)[1].split('}', 1)[0]
+        guarded = main_process_block(application)
         self.assertIn('GenerationWatchdog', guarded)
         self.assertIn('QueuedCommandDispatcher', guarded)
 

@@ -57,11 +57,12 @@ class GenerationCoordinator(
                     repository.updateJobProgress(episodeId, jobId, JobKind.SCRIPT, index + 1, outline.chapters.size, "Refining ${planned.title}")
                     progress("Refining chapter ${index + 1} of ${outline.chapters.size}")
                 }
-                // Titles of everything already spoken, plus only the last chapter's tail, so the model
-                // continues the episode without re-introducing it and without eating the context budget.
+                // Titles and openings of everything already spoken, plus only the last chapter's tail: enough
+                // to continue the episode and avoid reusing a run-up, without eating the context budget.
                 val preceding = written.mapIndexed { position, done ->
                     dev.qoralo.podcast.runtime.ChapterRecap(done.title,
-                        if (position == written.lastIndex) dev.qoralo.podcast.runtime.chapterEnding(done.text) else "")
+                        if (position == written.lastIndex) dev.qoralo.podcast.runtime.chapterEnding(done.text) else "",
+                        dev.qoralo.podcast.runtime.chapterOpening(done.text))
                 }
                 val generated = withContext(retryNotice) {
                     engine.createChapter(outline, planned, preparedSources, episode.instructions, preceding)
