@@ -12,11 +12,13 @@ A short technical article about a source-to-podcast workflow with local phone in
 ## What the page contains
 
 1. **Phone placement:** Gemma on GPU, Supertonic on NPU/HTP, CPU orchestration. The route buttons show one illustrative signal; they are not timing.
-2. **The first Android port:** the exact historical Pocket TTS Android CPU recordings, listed working clip first (fixed-cache derivative, 4.48 s) and then the broken one (original dynamic graph, 10.72 s). No audio was generated, trimmed, normalized or re-encoded for the page.
-3. **Why it went wrong (the main section):** opens with a three-sentence gist (the model expects a NaN marker as its first input and swaps in its learned start vector; our phone code freed that buffer too early so it got zeros; it started from the wrong place, the stop score never passed the threshold, and it ran to the 134-frame cap, 10.72 s instead of 4.48). The detail follows: a chart of the phone's stop scores against a desktop replay that changes only the first input (frame scrubber with audio time and the stop-check verdict per frame), the phone observation (a build that prints the 32 start values showed zeros, 2 of 2; keeping the buffer alive gave NaNs, a stop at frame 53 and 4.48 s, 4 of 4), and the source excerpt. A collapsed "How a wrong start reaches the stop check" holds the step-by-step: one generation step (start vector or previous frame, then model and cache, then one internal state read out twice as the next 80 ms frame and the stop score) and the arithmetic from frame count to audio length (56 × 80 ms = 4.48 s; 134 × 80 ms = 10.72 s).
-4. **The fix we applied:** the fixed-cache graphs, built for the NPU, take no NaN marker; one short section.
+2. **The first Android port:** the exact historical Pocket TTS Android CPU recordings, working clip first (fixed-cache derivative, 4.48 s), then the broken one (original dynamic graph, 10.72 s). No audio was generated, trimmed, normalized or re-encoded for the page.
+3. **Why it went wrong:** a four-sentence gist (the model expects a NaN marker as its first input and swaps in its learned start vector; our phone code freed that buffer too early so it got zeros; it never found the end and kept talking until we cut it off; the voice went wrong too because every sound is built on that wrong start). One chart of the stop score over seconds of speech, both lines from the same controlled phone window: the original code never reaches the stop line, the same code with the buffer kept alive stops at 4.5 s. Then the five-line source excerpt.
+4. **The fix we applied:** the NPU version has the start vector built in, so there is no NaN marker to lose; one sentence and one takeaway.
 
-The whole-chapter section, the EOS-logit-only diagram, the setup chart and the buffer-lifetime stepper were removed. The chart is baked into the HTML (works without JavaScript) by `evidence/build-chart.py` from `evidence/bos-zero-replay.json`.
+Moritz asked for no meaningless values in the main text: no frame cap, raw scores, thresholds as numbers or RTF-style detail there. The step-by-step explanation, the NaN/zero rows, the toggles, the scrubber and the phone-observation paragraph were removed on request. Their content survives only in the notes at the bottom of the page and in `evidence/`. The chart is baked into the HTML (works without JavaScript) by `evidence/build-chart.py` from `evidence/phone-bos-check/raw/`.
+
+Planned and not yet written (agenda to be agreed first): the experiments (models and backends tried, with a condensed benchmark table) and the full-system flow diagram.
 
 ## What is and is not established
 
@@ -43,7 +45,7 @@ PW="$HOME/.pi/agent/skills/chrome-browser/scripts/pw"
 "$PW" -s=qoralo-story close
 ```
 
-Covers chart data and the phone-check receipts against the evidence JSON (including that the page text matches the exact run counts), five widths × three input modes with chart/tick/annotation geometry, the keyboard scrubber with exact readouts, wording guards in both directions (no stale "inferred", no invented allocator explanation, limits kept in the notes), reduced motion, muted decoding of both WAVs with exclusive playback, inline editing with local restore, an exported copy reopened from disk with a working chart, print, and script-failure fallback. Browser playback is not a human listening verdict.
+Covers the chart against the phone raw results (points and seconds axis), a main text free of meaningless numbers, five widths of chart/tick/annotation geometry, receipts that match the notes in both directions (run counts, limits, drift numbers), wording guards (no invented allocator explanation), reduced motion, muted decoding of both WAVs with exclusive playback, inline editing with local restore, an exported copy reopened from disk with a working chart, print, and script-failure fallback. Browser playback is not a human listening verdict.
 
 Reproduce the replay (about 3 s, host CPU, needs the retained local model files):
 

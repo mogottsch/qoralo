@@ -1,5 +1,13 @@
 # Article review record
 
+## Simplification (story v4, latest)
+
+Moritz called the page too elaborate: "no meaningless values", the NaN/zero rows and the phone-observation paragraph are bloat, the collapsible goes, and the cause should read "kept talking, and the voice changed because it is built on that wrong start". Removed the step diagram and collapsible, the rows, the toggles, the scrubber and readout, the phone-observation paragraph, the 134-frame cap, the raw scores and the arithmetic. Kept one simplified chart (two phone lines, seconds axis, a "stop line", no numeric scores) and the five-line source excerpt; the previous desktop-replay chart is gone from the page.
+
+The tone/voice sentence is stated as what is established: every frame is built on the wrong start (the first internal state differs by about its own size in the replay). No claim is made about what the failing audio says or why this particular sound results. The limits and numbers remain in the notes and `evidence/`; the browser suite still checks them in both directions and now also fails if meaningless numbers return to the main text.
+
+Next, pending agreement on the agenda: the experiments section (models, backends, condensed benchmark table, RTF note) and the full-system flow diagram, to be split across existing peers.
+
 ## Explaining the path to the stop check (story v4, later)
 
 Moritz understood NaN versus zero but not how that changes the sound or ends up in the stop check. Moritz then found the result too elaborate and asked for the plain gist first with detail afterwards: the Why section now opens with three sentences, followed by the chart and phone evidence, and the one-step diagram and its two paragraphs moved into a collapsed "How a wrong start reaches the stop check" (the edit mode opens it). The browser suite checks that the gist is visible without opening anything, that the detail is collapsed by default and keyboard-operable, and that the order is gist, chart, detail. Content of the detail, as first written: added a one-step diagram (start vector or previous frame, model and cache, one internal state, next frame and stop score) and two short paragraphs: the frames are the audio and the length is frames × 80 ms; the stop score is read from the same state as the next frame; zeros put the first state and frame far off, the correct run's score rises at the end of the sentence (frame 53), the zero run's never passes -7.4. The scrubber readout now gives audio time and the stop-check verdict.

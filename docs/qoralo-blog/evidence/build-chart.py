@@ -1,48 +1,46 @@
 #!/usr/bin/env python3
-"""Regenerate the stop-score chart in docs/qoralo-blog/index.html from bos-zero-replay.json.
+"""Regenerate the stop-score chart in docs/qoralo-blog/index.html from the phone-check raw results.
 
 Run from the repository root:  python3 docs/qoralo-blog/evidence/build-chart.py
-Only the block between the chart:start/chart:end markers is replaced.
+Both lines are phone runs from the same controlled window (evidence/phone-bos-check/raw):
+the original code (runner_orig-1) and the same code with only the buffer kept alive (runner_fixed-1).
+Frame i ends at (i + 1) x 80 ms of speech. Only the block between chart:start and chart:end is replaced.
 """
 import json, re
 from pathlib import Path
 
 root = Path("docs/qoralo-blog")
-data = json.loads((root / "evidence/bos-zero-replay.json").read_text())
-L = data["logits"]
-series = {"android": L["android_original_retained"], "zero": L["all_zero_bos_replay"], "nan": L["correct_nan_bos_replay"]}
-YMIN, YMAX, XMAX = -15, 9, 133
-for name, v in series.items():
-    assert YMIN < min(v) and max(v) < YMAX, name
+raw = root / "evidence/phone-bos-check/raw"
+orig = json.loads((raw / "runner_orig-1.json").read_text())["eos_logits"]            # 134 frames, never stops
+kept = json.loads((raw / "runner_fixed-1.json").read_text())["eos_logits"][:56]      # 56 emitted frames, stops
+THRESHOLD, YMIN, YMAX, XMAX = -4.0, -15, 9, 134
+assert len(orig) == 134 and len(kept) == 56 and max(orig) < THRESHOLD < max(kept)
+assert YMIN < min(orig + kept) and max(orig + kept) < YMAX
 H = YMAX - YMIN
+pts = lambda v: " ".join(f"{i + 1},{YMAX - x:.3f}" for i, x in enumerate(v))
 pct = lambda v: round((YMAX - v) / H * 100, 2)
-def pts(v): return " ".join(f"{i},{YMAX - x:.3f}" for i, x in enumerate(v))
-thr = YMAX - data["full_trajectory"]["max_logit"]["eos_threshold"]
-yticks = "".join(f'<span class="tick y" style="top:{pct(t)}%">{str(t).replace("-", chr(0x2212))}</span>' for t in (-12, -8, -4, 0, 4, 8))
-xticks = "".join(f'<span class="tick x" style="left:{round(x / XMAX * 100, 2)}%">{x}</span>' for x in (0, 53, 133))
+secs = lambda frames: f"{frames * 0.08:.1f}".rstrip("0").rstrip(".")
+xticks = "".join(f'<span class="tick x{" end" if f == XMAX else ""}" style="left:{round(f / XMAX * 100, 2)}%">{secs(f)} s</span>' for f in (0, 56, 134))
 html = f'''<!-- chart:start -->
           <div class="chart-wrap">
-            <div class="chart" role="img" aria-label="Stop score for each generated frame. The phone's retained run stays between about minus 14 and minus 7 for all 134 frames. A zero-input desktop replay follows it. A NaN-input replay rises above the minus 4 threshold at frame 53 and stops.">
+            <div class="chart" role="img" aria-label="Stop score over the seconds of speech generated. With the original code the score stays far below the stop line for the whole 10.7 seconds. With the buffer kept alive it crosses the stop line and the model stops at 4.5 seconds.">
               <svg viewBox="0 0 {XMAX} {H}" preserveAspectRatio="none" aria-hidden="true">
-                <line class="threshold" x1="0" x2="{XMAX}" y1="{thr}" y2="{thr}"/>
-                <polyline class="series android" points="{pts(series["android"])}"/>
-                <polyline class="series zero" points="{pts(series["zero"])}"/>
-                <polyline class="series nan" points="{pts(series["nan"])}"/>
-                <line id="step-marker" class="marker" x1="53" x2="53" y1="0" y2="{H}" hidden/>
+                <line class="threshold" x1="0" x2="{XMAX}" y1="{YMAX - THRESHOLD}" y2="{YMAX - THRESHOLD}"/>
+                <polyline class="series orig" points="{pts(orig)}"/>
+                <polyline class="series kept" points="{pts(kept)}"/>
               </svg>
-              {yticks}{xticks}
-              <span class="note threshold-note" style="top:{pct(-4)}%">stop threshold</span>
-              <span class="note stop-note" style="left:{round(53 / XMAX * 100, 2)}%">stops at frame 53</span>
-              <span class="axis-name y">Stop score</span><span class="axis-name x">Generated frame (cap 134)</span>
+              {xticks}
+              <span class="note threshold-note" style="top:{pct(THRESHOLD)}%">stop line</span>
+              <span class="note stop-note" style="left:{round(56 / XMAX * 100, 2)}%">stops here</span>
+              <span class="note never-note" style="top:{pct(-5.7)}%">never reaches the stop line</span>
+              <span class="axis-name y">Stop score (higher: closer to finishing)</span><span class="axis-name x">Seconds of speech generated</span>
             </div>
           </div>
-          <ul class="legend"><li class="android">Phone, retained run</li><li class="zero">Desktop replay, zero first input</li><li class="nan">Desktop replay, NaN first input</li></ul>
-          <div class="scrub enhanced" hidden><label for="why-step">Frame</label><input id="why-step" type="range" min="0" max="{XMAX}" value="53" step="1" aria-describedby="why-readout"></div>
-          <script type="application/json" id="trajectories">{json.dumps({k: [round(x, 3) for x in v] for k, v in series.items()}, separators=(",", ":"))}</script>
+          <ul class="legend"><li class="orig">Original code</li><li class="kept">Buffer kept alive</li></ul>
 <!-- chart:end -->'''
 p = root / "index.html"
 s = p.read_text()
 new, n = re.subn(r"<!-- chart:start -->.*?<!-- chart:end -->", lambda m: html, s, flags=re.S)
 assert n == 1
 p.write_text(new)
-print("chart regenerated:", {k: len(v) for k, v in series.items()})
+print("chart regenerated: orig", len(orig), "kept", len(kept))

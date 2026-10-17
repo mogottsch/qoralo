@@ -16,7 +16,6 @@
   function setEditing(on) {
     editing = on;
     document.body.classList.toggle('editing', on);
-    if (on) $$('details.more').forEach(d => { d.open = true; });
     fields.forEach(e => { if (on) e.setAttribute('contenteditable', 'plaintext-only'); else e.removeAttribute('contenteditable'); });
     $('#edit-copy').textContent = on ? 'Done editing' : 'Edit text';
     $('#edit-copy').setAttribute('aria-pressed', String(on));
@@ -54,23 +53,6 @@
     $$('#route-controls button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
   }));
 
-  const why = $('#why-figure');
-  const data = JSON.parse($('#trajectories').textContent);
-  const marker = $('#step-marker'), range = $('#why-step'), readout = $('#why-readout');
-  const fmt = v => (v < 0 ? '\u2212' : '+') + Math.abs(v).toFixed(2);
-  const verdict = v => v > -4 ? 'stop' : 'continue';
-  function readFrame() {
-    const i = Number(range.value);
-    marker.setAttribute('x1', i); marker.setAttribute('x2', i); marker.removeAttribute('hidden');
-    const nan = i < 56 ? 'NaN-input replay ' + fmt(data.nan[i]) + ', ' + verdict(data.nan[i]) : 'NaN-input replay: ended at 4.48 s';
-    readout.textContent = 'Frame ' + i + ' (' + ((i + 1) * 0.08).toFixed(2) + ' s) \u00b7 phone ' + fmt(data.android[i]) + ', ' + verdict(data.android[i]) + ' \u00b7 zero-input replay ' + fmt(data.zero[i]) + ', ' + verdict(data.zero[i]) + ' \u00b7 ' + nan;
-  }
-  range.addEventListener('input', readFrame);
-  $$('.variant-controls [data-input]').forEach(b => b.addEventListener('click', () => {
-    why.dataset.input = b.dataset.input;
-    $$('.variant-controls [data-input]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-  }));
-  readFrame();
   $$('audio').forEach(audio => {
     audio.addEventListener('play', () => $$('audio').forEach(other => { if (audio !== other) other.pause(); }));
     audio.addEventListener('error', () => { const message = audio.parentElement.querySelector('.audio-status'); message.textContent = 'Playback unavailable. Open the WAV instead.'; message.hidden = false; });
