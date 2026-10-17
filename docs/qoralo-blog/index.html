@@ -26,6 +26,11 @@
         <p data-edit="question">So I wondered: how good could this be with all inference running on my phone?</p>
       </header>
 
+      <figure class="demo" id="demo-figure" aria-label="Demo: the app turning sources into a podcast, running on the phone">
+        <video id="demo-video" controls playsinline preload="metadata"><source src="media/demo.mp4" type="video/mp4"></video>
+        <p class="demo-status" role="status" hidden>Demo video goes here. Add it as docs/qoralo-blog/media/demo.mp4.</p>
+      </figure>
+
       <section aria-labelledby="phone-heading">
         <h2 id="phone-heading" data-edit="phone-title">The phone version</h2>
         <p data-edit="phone-copy">The prototype writes a script, then reads it in one voice. Model preparation and compilation happen on a computer; inference runs on my Galaxy S23 Ultra.</p>
@@ -85,6 +90,7 @@ Run(main, inputs); // the tensor still points at it</code></pre>
         <p data-edit="fix-copy">We didn't find this bug at the time. The fix came with porting the graphs to the NPU: that version has the start vector built in, so there is no NaN marker to lose.</p>
         <p class="takeaway" data-edit="lesson">One different input at the first step produced a valid-looking file that sounded wrong. Compare first-step inputs and scores across devices, not only the finished audio.</p>
       </section>
+      <p class="closing"><span data-edit="closing">If you wanna take a look,</span> <a href="https://github.com/mogottsch/vibevoice-android-spike">here it is</a>.</p>
     </article></main>
     <details id="records">
       <summary>Sources &amp; technical notes</summary>
@@ -98,7 +104,7 @@ Run(main, inputs); // the tensor still points at it</code></pre>
           <li><a href="evidence/source-audit.md">Source audit and AddressSanitizer reproduction</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
           <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/tools/pocket_alba_cpu_runner.cc">Original retained runner</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json">Android run and listening verdict</a></li>
         </ul>
-        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses LiteRT-LM for Gemma on GPU and ONNX Runtime with QNN for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not timing. The final app demonstration and listening review are pending. This is not a NotebookLM quality match or a public release.</p>
+        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses LiteRT-LM for Gemma on GPU and ONNX Runtime with QNN for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. Processor traces are schematic, not timing. The final app demonstration and listening review are pending. This is not a NotebookLM quality match or a public release. The closing link points to the repository, which is private, so it will not open for anyone else until that changes.</p>
       </div>
     </details>
   </div>

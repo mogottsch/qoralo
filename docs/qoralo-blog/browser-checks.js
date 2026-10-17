@@ -9,9 +9,24 @@ async (page) => {
   page.on('request',r=>{const u=r.url();if(!u.startsWith(origin)&&!u.startsWith('data:')&&!u.startsWith('blob:')&&!u.startsWith('file:'))external.push(u);});
   page.on('pageerror',e=>errors.push(e.message));
   await page.reload();
-  check(await page.locator('figure').count()===2,'Two figures: processor route and the stop-score chart');
+  check(await page.locator('figure').count()===3,'Three figures: demo video, processor route and the stop-score chart');
   check(await page.locator('details.more,#step-figure,.variant-controls,.scrub,.readout,.input-path,#trajectories').count()===0,'Removed the collapsible, step diagram, toggles, scrubber and NaN/zero rows');
   check(await page.locator('audio[autoplay]').count()===0,'No autoplay audio');
+
+  // Moritz's approved opening is frozen: title, intro and question must not drift.
+  const frozen={title:'Building a NotebookLM-like podcast on my phone',intro:"You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.",question:'So I wondered: how good could this be with all inference running on my phone?'};
+  for(const [k,v] of Object.entries(frozen)) check((await page.locator(`[data-edit="${k}"]`).textContent())===v,`Frozen opening text changed: ${k}`);
+  check(await page.locator('[data-edit="question"]').evaluate(q=>q.compareDocumentPosition(document.querySelector('#demo-figure'))&Node.DOCUMENT_POSITION_FOLLOWING)>0&&await page.locator('#demo-figure').evaluate(d=>d.compareDocumentPosition(document.querySelector('#phone-heading'))&Node.DOCUMENT_POSITION_FOLLOWING)>0,'Demo video sits between the question and the first section');
+  // Demo video: it plays if the file exists; otherwise the page says where to put it. Never a silent broken player.
+  await page.waitForTimeout(800);
+  const demoState=await page.evaluate(()=>{const v=document.querySelector('#demo-video'),s=document.querySelector('.demo-status');return {loaded:v.readyState>=1&&!v.hidden,duration:v.duration,statusShown:!s.hidden,videoHidden:v.hidden,autoplay:v.autoplay};});
+  check(demoState.loaded!==demoState.statusShown,'Demo: exactly one of player or missing-file notice is shown: '+JSON.stringify(demoState));
+  check(!demoState.autoplay,'Demo video does not autoplay');
+  if(demoState.loaded)check(demoState.duration>0&&demoState.duration<180,'Demo video is a short clip: '+demoState.duration);
+  // Closing line.
+  check((await page.locator('[data-edit="closing"]').textContent())==='If you wanna take a look,'&&await page.locator('.closing a').textContent()==='here it is'&&(await page.locator('.closing a').getAttribute('href'))==='https://github.com/mogottsch/vibevoice-android-spike','Closing: "If you wanna take a look, here it is" linking the repository');
+  check(await page.locator('.closing').evaluate(c=>c===document.querySelector('article').lastElementChild),'Closing is the last thing in the article');
+  check(!/What.s left|one voice instead|final demo/i.test(await page.locator('main').innerText()),'No "what is left" section');
 
   // Gist first, plain, and free of numbers nobody needs.
   const body=await page.locator('main').innerText();
@@ -44,7 +59,7 @@ async (page) => {
       const thr=box(document.querySelector('.threshold')), orig=box(document.querySelector('.series.orig')), never=box(document.querySelector('.never-note'));
       return {
         overflow:document.documentElement.scrollWidth>innerWidth,
-        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.model,.model-path,.chart,.legend,.phone,.editor,pre,.axis-name,.note')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
+        bad:[...document.querySelectorAll('h1,h2,h3,p,figure,.model,.model-path,.chart,.legend,.phone,.editor,pre,.axis-name,.note,.demo video,.demo-status,.closing')].filter(e=>{const r=box(e);return r.width&&(r.left<-1||r.right>innerWidth+1);}).map(e=>e.id||e.className||e.tagName),
         preOverflow:[...document.querySelectorAll('pre')].some(p=>p.scrollWidth>p.clientWidth+1),
         modelOverlap:[...document.querySelectorAll('.model')].some(e=>{const[a,b]=[...e.children].map(x=>x.getBoundingClientRect());return a.right>b.left+.5;}),
         tickOverlap:xt.some((a,i)=>xt.some((b,j)=>j>i&&overlaps(a,b)))||xt.some(a=>[...document.querySelectorAll('.axis-name')].some(n=>overlaps(a,box(n))))||xt.some(a=>a.height>20),

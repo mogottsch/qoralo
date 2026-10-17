@@ -1,5 +1,9 @@
 # Article review record
 
+## Agenda and structure (story v4, latest)
+
+Moritz approved everything up to the "So I wondered" question as final and agreed the agenda (question, demo video, what we tried, the numbers, the system diagram, the Pocket TTS failure, then a "here it is" link), dropping the "what's left" section. Added the demo-video slot (explicit missing-asset notice, no synthetic footage), the closing line, and a test that freezes his opening text. Benchmark table and system diagram were delegated to Thomas and nik through Pi, with Pi's review vetoes passed to them (see README). The Pocket TTS section moves after the system section once that exists.
+
 ## Simplification (story v4, latest)
 
 Moritz called the page too elaborate: "no meaningless values", the NaN/zero rows and the phone-observation paragraph are bloat, the collapsible goes, and the cause should read "kept talking, and the voice changed because it is built on that wrong start". Removed the step diagram and collapsible, the rows, the toggles, the scrubber and readout, the phone-observation paragraph, the 134-frame cap, the raw scores and the arithmetic. Kept one simplified chart (two phone lines, seconds axis, a "stop line", no numeric scores) and the five-line source excerpt; the previous desktop-replay chart is gone from the page.

@@ -18,7 +18,16 @@ A short technical article about a source-to-podcast workflow with local phone in
 
 Moritz asked for no meaningless values in the main text: no frame cap, raw scores, thresholds as numbers or RTF-style detail there. The step-by-step explanation, the NaN/zero rows, the toggles, the scrubber and the phone-observation paragraph were removed on request. Their content survives only in the notes at the bottom of the page and in `evidence/`. The chart is baked into the HTML (works without JavaScript) by `evidence/build-chart.py` from `evidence/phone-bos-check/raw/`.
 
-Planned and not yet written (agenda to be agreed first): the experiments (models and backends tried, with a condensed benchmark table) and the full-system flow diagram.
+## Agenda (agreed with Moritz) and status
+
+1. The question: title, intro and question, **approved and frozen** (the browser suite fails if their text changes).
+2. **Demo video** directly after the question. Slot only: `media/demo.mp4` does not exist yet, so the page shows an explicit "Demo video goes here" notice instead of a broken player. No synthetic footage.
+3. What we tried (models and backends), and 4. the numbers (a small benchmark table, with a small RTF note): **to do**, table being built by Thomas from the benchmark registry.
+5. Where it ends up: the full-system flow diagram (sources to audio, each neural step tagged GPU/NPU/CPU, computer-side preparation visibly separate): **to do**, being built by nik.
+6. The funniest failure: the Pocket TTS NaN bug (done, currently placed second; it moves after the system section).
+7. Close: "If you wanna take a look, here it is" linking the repository, which is private, so the link will not open for others until that changes. There is deliberately no "what is left" section.
+
+Pi reviews the table and diagram before integration. Review vetoes recorded: RTFs only within named comparable groups and shown as plain values; "sounds good" only for a row's own exact reviewed output; a package size is not measured memory; LLM rates stay separate from TTS RTF; flow tags describe the selected neural routes, not every operation.
 
 ## What is and is not established
 

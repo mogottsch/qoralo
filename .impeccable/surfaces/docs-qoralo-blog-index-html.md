@@ -34,3 +34,7 @@ Focal moment: the user flips the first input between NaN and zeros and watches w
 See REVIEW.md. Browser suite passed chart data against the evidence JSON, five widths × three input modes with geometry checks, keyboard scrubber exact readouts, wording guards against overclaiming, reduced motion, exact WAV decoding, editing, local restore, a saved copy reopened from disk with a working chart, print and script-failure fallback. Pi independently reran the replay and directed the claim limits; no new three-pass review of this copy.
 
 Disposition: finish at this scope for Moritz to edit and review. Final app demo/audio and any public publication remain separate.
+
+## Agenda update
+
+Approved by Moritz: title, intro and question frozen; demo video right after them (missing-asset notice until the file exists); then what we tried and a small benchmark table (RTF explained in a small note box, plain values within comparable groups only); then the full-system flow diagram (computer preparation separate from phone inference); then the Pocket TTS failure; the ending is "If you wanna take a look, here it is" (private repository link). No "what is left" section. Everything condensed; numbers only if a reader would care (RTF yes, frame cap no).

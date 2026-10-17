@@ -53,8 +53,16 @@
     $$('#route-controls button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
   }));
 
+  const demo = $('#demo-video');
+  if (demo) {
+    const showMissing = () => { demo.hidden = true; $('.demo-status').hidden = false; };
+    demo.querySelector('source').addEventListener('error', showMissing);
+    const checkMissing = () => { if (demo.networkState === 3 || demo.error) showMissing(); };
+    window.addEventListener('load', checkMissing); checkMissing();
+    demo.addEventListener('play', () => $$('audio').forEach(a => a.pause()));
+  }
   $$('audio').forEach(audio => {
-    audio.addEventListener('play', () => $$('audio').forEach(other => { if (audio !== other) other.pause(); }));
+    audio.addEventListener('play', () => { $$('audio').forEach(other => { if (audio !== other) other.pause(); }); if (demo) demo.pause(); });
     audio.addEventListener('error', () => { const message = audio.parentElement.querySelector('.audio-status'); message.textContent = 'Playback unavailable. Open the WAV instead.'; message.hidden = false; });
   });
   $$('.enhanced').forEach(e => { e.hidden = false; });
