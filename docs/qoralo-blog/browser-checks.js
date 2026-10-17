@@ -70,7 +70,16 @@ async (page) => {
   const llm=tbl.llm_side_separate_from_tts.lines[0];
   check(/12\.3\u201316\.3/.test(llm)&&/Separate text benchmarks measured Gemma 4 E2B at 12\u201316 tokens per second on the GPU; the app uses it to write the scripts/.test(mainText),'Gemma line matches the packet (12.3-16.3 shown as 12-16) and does not claim app throughput');
   check(!/RTF.{0,40}(Gemma|tokens)/.test(mainText.replace(/\n/g,' '))&&!/tokens.{0,60}RTF/.test(mainText.replace(/\n/g,' ')),'LLM rate and TTS RTF are not mixed');
-  check(/generation time divided by audio length/.test(mainText)&&/below 1 is faster than playback/.test(mainText)&&/warm medians with setup excluded/.test(mainText)&&/Workloads differ between models, so compare across a row, not down a column/.test(mainText)&&/rewritten graphs/.test(mainText)&&/checked by ear/.test(mainText)&&/table samples differ from the Pocket clips below/.test(mainText),'RTF note states the definition, the limits and that the Pocket samples differ');
+  const heads=await page.locator('.bench thead th').allInnerTexts();
+  check(heads.join('|')==='Model|CPU RTF|NPU RTF|What happened','Column headers say RTF: '+heads.join('|'));
+  check(await page.locator('.bench td[data-rtf]').evaluateAll(tds=>tds.every(td=>/RTF$/.test(td.dataset.label))),'Mobile labels say RTF too');
+  const fm=await page.evaluate(()=>{const f=document.querySelector('.formula'),m=f.querySelector('math'),t=[...m.querySelectorAll('mtext')].map(e=>e.getBoundingClientRect()),r=m.getBoundingClientRect();return {w:r.width,h:r.height,numeratorAbove:t.length===2&&t[0].bottom<=t[1].top+1,sameCentre:t.length===2&&Math.abs((t[0].left+t[0].right)/2-(t[1].left+t[1].right)/2)<6,label:f.getAttribute('aria-label'),mathHidden:m.getAttribute('aria-hidden'),isMath:m.namespaceURI,txt:m.textContent.replace(/\s+/g,' ').trim(),noteLen:document.querySelector('.note-box').textContent.replace(/\s+/g,' ').trim().length,color:getComputedStyle(f).color};});
+  check(fm.isMath==='http://www.w3.org/1998/Math/MathML'&&fm.w>60&&fm.h>24&&fm.numeratorAbove&&fm.sameCentre,'RTF formula renders as a fraction: '+JSON.stringify(fm));
+  check(/RTF equals generation time divided by audio length/.test(fm.label)&&fm.mathHidden==='true'&&/RTF\s*=\s*generation time\s*audio length/.test(fm.txt),'Formula has one accessible name and reads RTF = generation time over audio length: '+fm.txt);
+  check(fm.noteLen<140,'RTF note box is short: '+fm.noteLen+' characters');
+  check(/Below 1 is faster than playback: at 0\.5, ten seconds of speech takes five\./.test(mainText),'One-line RTF example');
+  check(/Warm medians without setup; workloads differ by model, so compare across a row\. HTP versions are rewritten graphs, checked by ear\. Pocket's samples differ from the clips below\./.test(mainText),'One footnote carries the reviewed limits');
+  check(!/generation time divided by audio length/.test(mainText),'No long prose definition of RTF');
   check(/In these warm short-input tests, the prepared HTP versions were over twice as fast/.test(mainText)&&!/NPU is (about )?(2|two)/.test(mainText),'Speed claim is qualified to these tests');
   check(!/bug hunt|after the bug/.test(mainText),'Table does not borrow the Pocket bug story');
   check(shown[3].cells[2].text==='The HTP runtime failed to initialize on the phone'&&/Both tested samples sounded good/.test(shown[1].cells[2].text),'MOSS and Pocket notes use the reviewed wording');

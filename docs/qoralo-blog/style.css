@@ -48,7 +48,15 @@ blockquote { max-width:52ch; font-size:23px; line-height:1.5; margin:24px 0; let
 .bench td.blocked { color:var(--failed); }
 .bench td.muted { color:var(--muted); }
 .bench td:last-child { color:var(--muted); padding-right:0; }
-.note-box { max-width:62ch; margin-top:16px; padding:11px 15px; border:1px solid var(--line); font-size:13px; line-height:1.65; color:var(--muted); }
+.note-box { display:flex; flex-wrap:wrap; align-items:center; gap:8px 24px; width:fit-content; max-width:100%; margin-top:16px; padding:12px 18px; border:1px solid var(--line); font-size:14px; line-height:1.6; color:var(--muted); }
+.formula { color:var(--ink); }
+.formula math { font-size:17px; font-family:"Latin Modern Math","STIX Two Math","Cambria Math",math,serif; }
+.formula mtext { font-family:"Segoe UI","Aptos",Helvetica,sans-serif; font-size:.8em; }
+.formula mfrac { padding:0 .15em; }
+.formula mfrac mtext { padding:.1em .25em; }
+.table-foot { max-width:70ch; margin-top:12px; font-size:13px; line-height:1.65; }
+.sub { margin:38px 0 8px; font-size:17px; font-weight:600; letter-spacing:-.01em; line-height:1.4; }
+.sub:first-of-type { margin-top:22px; }
 .demo { margin:8px 0 12px; }
 .demo video { display:block; width:100%; max-height:min(78vh,720px); background:#05080c; border:1px solid var(--line); }
 .demo-status { max-width:none; padding:56px 24px; border:1px dashed #526175; text-align:center; font-size:15px; }

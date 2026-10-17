@@ -36,14 +36,14 @@ def cell(label, c, cls):
     return f'<td class="{c[2]}" data-label="{label}">{c[1]}</td>'
 
 body = "\n".join(
-    f'            <tr role="row"><th scope="row" role="rowheader">{m}</th>{cell("CPU", c, "cpu")}{cell("NPU", n, "npu")}<td data-label="What happened">{w}</td></tr>'
+    f'            <tr role="row"><th scope="row" role="rowheader">{m}</th>{cell("CPU RTF", c, "cpu")}{cell("NPU RTF", n, "npu")}<td data-label="What happened">{w}</td></tr>'
     for m, c, n, w in LINES
 )
 html = f'''<!-- table:start -->
         <div class="table-wrap">
           <table class="bench" role="table">
-            <caption class="sr-only">Real-time factor of five speech models on the phone's CPU and NPU</caption>
-            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader" class="cpu">CPU</th><th scope="col" role="columnheader" class="npu">NPU</th><th scope="col" role="columnheader">What happened</th></tr></thead>
+            <caption class="sr-only">Real-time factor (RTF, lower is faster) of five speech models on the phone's CPU and NPU</caption>
+            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader" class="cpu">CPU RTF</th><th scope="col" role="columnheader" class="npu">NPU RTF</th><th scope="col" role="columnheader">What happened</th></tr></thead>
             <tbody>
 {body}
             </tbody>

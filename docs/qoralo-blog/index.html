@@ -33,23 +33,30 @@
 
       <section aria-labelledby="tried-heading">
         <h2 id="tried-heading" data-edit="tried-title">What we tried</h2>
-        <p data-edit="tried-copy">We tried five speech models on the phone's CPU, and on its NPU (Qualcomm's Hexagon Tensor Processor, HTP) wherever we could get them to run. Two made it. In these warm short-input tests, the prepared HTP versions were over twice as fast. Separate text benchmarks measured Gemma 4 E2B at <span class="nowrap">12–16 tokens</span> per second on the GPU; the app uses it to write the scripts.</p>
+        <h3 class="sub" data-edit="speech-title">Speech</h3>
+        <p data-edit="tried-copy">We tried five speech models on the phone's CPU, and on its NPU (Qualcomm's Hexagon Tensor Processor, HTP) wherever we could get them to run. Two made it. In these warm short-input tests, the prepared HTP versions were over twice as fast.</p>
 <!-- table:start -->
         <div class="table-wrap">
           <table class="bench" role="table">
-            <caption class="sr-only">Real-time factor of five speech models on the phone's CPU and NPU</caption>
-            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader" class="cpu">CPU</th><th scope="col" role="columnheader" class="npu">NPU</th><th scope="col" role="columnheader">What happened</th></tr></thead>
+            <caption class="sr-only">Real-time factor (RTF, lower is faster) of five speech models on the phone's CPU and NPU</caption>
+            <thead><tr role="row"><th scope="col" role="columnheader">Model</th><th scope="col" role="columnheader" class="cpu">CPU RTF</th><th scope="col" role="columnheader" class="npu">NPU RTF</th><th scope="col" role="columnheader">What happened</th></tr></thead>
             <tbody>
-            <tr role="row"><th scope="row" role="rowheader">Supertonic 3</th><td class="cpu" data-label="CPU" data-rtf="0.41519070745163383">0.42</td><td class="npu" data-label="NPU" data-rtf="0.17031607024910034">0.17</td><td data-label="What happened">Both tested samples sounded good</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">Pocket TTS</th><td class="cpu" data-label="CPU" data-rtf="0.414234">0.41</td><td class="npu" data-label="NPU" data-rtf="0.181643">0.18</td><td data-label="What happened">Both tested samples sounded good</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">Kokoro</th><td class="cpu" data-label="CPU" data-rtf="0.979973">0.98</td><td class="blocked" data-label="NPU">blocked</td><td data-label="What happened">The HTP version failed a check before it reached the phone</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">MOSS-TTS-Nano</th><td class="cpu" data-label="CPU" data-rtf="1.1248052010167464">1.12</td><td class="blocked" data-label="NPU">blocked</td><td data-label="What happened">The HTP runtime failed to initialize on the phone</td></tr>
-            <tr role="row"><th scope="row" role="rowheader">VibeVoice 1.5B</th><td class="blocked" data-label="CPU">no speech</td><td class="muted" data-label="NPU">not tried</td><td data-label="What happened">Silent, incomplete output; the package alone was 9.1 GB</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Supertonic 3</th><td class="cpu" data-label="CPU RTF" data-rtf="0.41519070745163383">0.42</td><td class="npu" data-label="NPU RTF" data-rtf="0.17031607024910034">0.17</td><td data-label="What happened">Both tested samples sounded good</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Pocket TTS</th><td class="cpu" data-label="CPU RTF" data-rtf="0.414234">0.41</td><td class="npu" data-label="NPU RTF" data-rtf="0.181643">0.18</td><td data-label="What happened">Both tested samples sounded good</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Kokoro</th><td class="cpu" data-label="CPU RTF" data-rtf="0.979973">0.98</td><td class="blocked" data-label="NPU RTF">blocked</td><td data-label="What happened">The HTP version failed a check before it reached the phone</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">MOSS-TTS-Nano</th><td class="cpu" data-label="CPU RTF" data-rtf="1.1248052010167464">1.12</td><td class="blocked" data-label="NPU RTF">blocked</td><td data-label="What happened">The HTP runtime failed to initialize on the phone</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">VibeVoice 1.5B</th><td class="blocked" data-label="CPU RTF">no speech</td><td class="muted" data-label="NPU RTF">not tried</td><td data-label="What happened">Silent, incomplete output; the package alone was 9.1 GB</td></tr>
             </tbody>
           </table>
         </div>
 <!-- table:end -->
-        <p class="note-box" data-edit="rtf-note">RTF (real-time factor) is generation time divided by audio length. At 0.5, ten seconds of speech takes five seconds to make; below 1 is faster than playback. These are warm medians with setup excluded. Workloads differ between models, so compare across a row, not down a column. The HTP versions are rewritten graphs, each clip was checked by ear, and the table samples differ from the Pocket clips below.</p>
+        <div class="note-box">
+          <span class="formula" role="img" aria-label="RTF equals generation time divided by audio length"><math display="inline" aria-hidden="true"><mi>RTF</mi><mo>=</mo><mfrac><mtext>generation time</mtext><mtext>audio length</mtext></mfrac></math></span>
+          <span data-edit="rtf-note">Below 1 is faster than playback: at 0.5, ten seconds of speech takes five.</span>
+        </div>
+        <p class="table-foot" data-edit="table-foot">Warm medians without setup; workloads differ by model, so compare across a row. HTP versions are rewritten graphs, checked by ear. Pocket's samples differ from the clips below.</p>
+        <h3 class="sub" data-edit="llm-title">Script writing</h3>
+        <p data-edit="llm-copy">Separate text benchmarks measured Gemma 4 E2B at <span class="nowrap">12–16 tokens</span> per second on the GPU; the app uses it to write the scripts.</p>
       </section>
 
       <section aria-labelledby="system-heading">
