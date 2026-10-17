@@ -1,5 +1,9 @@
 # Article review record
 
+## No notes section on the page (story v4, latest)
+
+Moritz asked for "Notes and sources" to be removed. The collapsed section and its toolbar link are gone from `index.html`. Its text (the limits, the receipts and the evidence links) moved unchanged into `docs/qoralo-blog/NOTES.md`, so nothing is lost; the browser suite now reads that file for the receipt, limit and caveat checks and also checks that every evidence link in it resolves. Two reference links (LiteRT-LM and ONNX Runtime's QNN page) only existed in that section and are now only in `NOTES.md`; the page has eleven links. The page therefore makes no claim about its limits itself beyond what each table, caption-free diagram and chart shows; the caveats are one click away in the repository.
+
 ## Headings, no diagram caption, demo at the end, tl;dr (story v4, latest)
 
 Moritz liked "Building a NotebookLM-like podcast on my phone" and "What I tried" and found the rest AI-ish. Headings are now "Where I ended up", "Pocket TTS on my phone", "So what went wrong?", "The demo" and, for the clips, "The one that works" / "The one that doesn't"; "Speech" and "Script writing" are his own words and stay, the notes disclosure is "Notes and sources". The diagram caption is removed (the lanes carry the meaning; the screen-reader description stays). The demo moved to the end, right before the closing line, and a one-line "tl;dr" under the frozen question links to it. Tests pin the headings, the order (question, tl;dr, what I tried, where I ended up, Pocket TTS, what went wrong, the demo, closing), the link target and that clicking it scrolls the demo into view.

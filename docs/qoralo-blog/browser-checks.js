@@ -17,10 +17,10 @@ async (page) => {
   const frozen={title:'Building a NotebookLM-like podcast on my phone',intro:"You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.",question:'So I wondered: how good could this be with all inference running on my phone?'};
   for(const [k,v] of Object.entries(frozen)) check((await page.locator(`[data-edit="${k}"]`).textContent())===v,`Frozen opening text changed: ${k}`);
   // Headings in Moritz's voice: his two kept as they were, the rest plain and first person.
-  const headText=await page.evaluate(()=>({h1:document.querySelector('h1').textContent,h2:[...document.querySelectorAll('main h2')].map(h=>h.textContent.trim()),sub:[...document.querySelectorAll('main h3.sub')].map(h=>h.textContent.trim()),clips:[...document.querySelectorAll('.listening h3')].map(h=>h.firstChild.textContent.trim()),notes:document.querySelector('#records > summary').textContent.trim()}));
-  check(headText.h1==='Building a NotebookLM-like podcast on my phone'&&headText.h2.join('|')==='What I tried|Where I ended up|Pocket TTS on my phone|So what went wrong?|The demo'&&headText.sub.join('|')==='Speech|Script writing'&&headText.clips.join('|')==="The one that works|The one that doesn't"&&headText.notes==='Notes and sources','Headings: '+JSON.stringify(headText));
-  check(!/Where it ends up|The first Android port|Why it went wrong|Fixed-cache port|Original Android port|technical notes/i.test(await page.locator('main h2,main h3,#records > summary').allInnerTexts().then(a=>a.join(' | '))),'No leftover old headings');
-  // Reference links: exactly these, each verified to resolve when added; none to a redirecting or archived address.
+  const headText=await page.evaluate(()=>({h1:document.querySelector('h1').textContent,h2:[...document.querySelectorAll('main h2')].map(h=>h.textContent.trim()),sub:[...document.querySelectorAll('main h3.sub')].map(h=>h.textContent.trim()),clips:[...document.querySelectorAll('.listening h3')].map(h=>h.firstChild.textContent.trim()),hasNotes:!!document.querySelector('#records,details,.records-body'),notesLink:!!document.querySelector('a[href="#records"]')}));
+  check(headText.h1==='Building a NotebookLM-like podcast on my phone'&&headText.h2.join('|')==='What I tried|Where I ended up|Pocket TTS on my phone|So what went wrong?|The demo'&&headText.sub.join('|')==='Speech|Script writing'&&headText.clips.join('|')==="The one that works|The one that doesn't"&&!headText.hasNotes&&!headText.notesLink,'Headings, and no notes section or link on the page: '+JSON.stringify(headText));
+  check(!/Where it ends up|The first Android port|Why it went wrong|Fixed-cache port|Original Android port|technical notes|notes and sources/i.test(await page.locator('main h2,main h3,summary').allInnerTexts().then(a=>a.join(' | '))),'No leftover old headings');
+  // Reference links on the page: exactly these (LiteRT-LM and ONNX Runtime QNN were only in the removed notes; NOTES.md keeps them), each verified to resolve when added; none to a redirecting or archived address.
   const expectedLinks={
     'NotebookLM':'https://blog.google/innovation-and-ai/products/notebooklm-audio-overviews/',
     'Hexagon Tensor Processor, HTP':'https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk',
@@ -33,11 +33,10 @@ async (page) => {
     'LFM2.5-2.6B':'https://huggingface.co/LiquidAI/LFM2.5-2.6B',
     'Qwen3.5-2B':'https://huggingface.co/Qwen/Qwen3.5-2B',
     'Pocket TTS@text':'https://github.com/kyutai-labs/pocket-tts',
-    'LiteRT-LM':'https://github.com/google-ai-edge/LiteRT-LM',
-    'ONNX Runtime with QNN':'https://onnxruntime.ai/docs/execution-providers/QNN-ExecutionProvider.html'};
+    };
   const refs=await page.evaluate(()=>[...document.querySelectorAll('a.ref')].map(a=>({text:a.textContent.trim(),href:a.href,rel:a.rel,table:!!a.closest('table'),inNotes:!!a.closest('#records'),inH1:!!a.closest('h1')})));
   const refKey=r=>r.text==='Pocket TTS'?'Pocket TTS@'+(r.table?'table':'text'):r.text;
-  check(refs.length===Object.keys(expectedLinks).length&&refs.every(r=>expectedLinks[refKey(r)]===r.href),'The thirteen reference links are exactly the agreed ones: '+refs.map(r=>refKey(r)).join(' | '));
+  check(refs.length===Object.keys(expectedLinks).length&&refs.every(r=>expectedLinks[refKey(r)]===r.href),'The eleven reference links on the page are exactly the agreed ones: '+refs.map(r=>refKey(r)).join(' | '));
   check(refs.every(r=>/noopener/.test(r.rel)&&/^https:\/\//.test(r.href)&&!/notebooklm\.google|supertone-oss-archive|supertone-inc\/supertonic/.test(r.href)&&!r.inH1),'Links are https with noopener, none in the title, none to the redirecting NotebookLM domain or the archived Supertonic repo');
   check(await page.locator('.bench.llm tbody tr').evaluateAll(trs=>{const names=trs.map(t=>t.querySelector('th').textContent.trim());return names.every((n,i)=>(trs[i].querySelectorAll('th a').length===1)===(names.indexOf(n)===i));}),'In the script-writing table a model name is a link on its first row only');
   check(await page.locator('.bench:not(.llm) tbody tr th a').count()===5,'All five speech models are linked');
@@ -107,7 +106,7 @@ async (page) => {
   check(byId['moss-htp-blocked'].speed.rtf===null&&byId['vibevoice-incomplete'].speed.rtf===null,'Packet agrees: blocked and incomplete rows have no RTF');
   const ratio=(a,b)=>byId[a].speed.rtf/byId[b].speed.rtf;
   check(ratio('supertonic-short-cpu','supertonic-short-htp')>2&&ratio('pocket-short-cpu','pocket-short-htp')>2,'"More than twice as fast" holds within the two rows that ran on the NPU');
-  const notes0=await page.locator('#records').evaluate(e=>e.textContent);
+  const notes0=await page.evaluate(async()=>(await fetch('NOTES.md')).text());
   const lt=await getJson('evidence/llm-table.json');
   const lrows=await page.locator('.bench.llm tbody tr').evaluateAll(trs=>trs.map(tr=>({model:tr.querySelector('th').textContent,cells:[...tr.querySelectorAll('td')].map(td=>({text:td.textContent.trim(),prefill:td.dataset.prefill===undefined?null:Number(td.dataset.prefill),decode:td.dataset.decode===undefined?null:Number(td.dataset.decode),cls:td.className}))})));
   const pkey=r=>r.model.split(' (')[0].replace(' IT','')+'/'+(r.backend==='NPU(HTP)'?'NPU':r.backend);
@@ -250,13 +249,14 @@ async (page) => {
     check(layout.neverBetween,`${width} "never reaches" label is not between the stop line and the original line`);
     check(layout.tableFits&&!layout.tableCellsClipped,`${width} benchmark table fits without sideways scrolling or clipped cells`);
     check(layout.axisInside&&layout.legendVisible&&layout.chartW>200&&layout.chartH>200,`${width} axis names/legend/chart size`);
-    await page.locator('#records > summary').focus();await page.keyboard.press('Enter');
-    check(await page.locator('.records-body').isVisible(),`${width} keyboard sources`);
-    await page.keyboard.press('Enter');
   }
 
+  check(notes0.startsWith('# Notes and sources')&&/\]\(evidence\/phone-bos-check\/README\.md\)/.test(notes0)&&/\[LiteRT-LM\]\(https:\/\/github\.com\/google-ai-edge\/LiteRT-LM\)/.test(notes0)&&/QNN-ExecutionProvider/.test(notes0),'NOTES.md holds the moved notes, the evidence links and the two runtime links');
+  const noteLinks=[...notes0.matchAll(/\]\((evidence\/[^)]+|\.\.\/\.\.\/experiments\/[^)]+)\)/g)].map(m=>m[1]);
+  const missing=[];for(const l of noteLinks){const ok=await page.evaluate(async u=>(await fetch(u,{method:'HEAD'})).ok,l);if(!ok)missing.push(l);}
+  check(noteLinks.length>=10&&!missing.length,'Every evidence link in NOTES.md resolves: '+missing.join(', '));
   // Receipts must match what the notes state, in both directions.
-  const notes=await page.locator('#records').evaluate(e=>e.textContent);
+  const notes=notes0;
   const phone=await getJson('evidence/phone-bos-check/results.json');
   const ob=phone.observations;
   check(ob.original_lifetime_bos_all_zero_runs===2&&ob.fixed_lifetime_bos_all_nan_runs===2,'Receipt: dump builds show zeros 2/2 and NaN 2/2');
@@ -331,7 +331,6 @@ async (page) => {
   await page.route('**/article.js',route=>route.abort());await page.reload();
   check(await page.locator('.chart').isVisible()&&await page.locator('.series').count()===2,'Static chart remains without script');
   check(!(await page.locator('.editor').isVisible()),'Unavailable controls hidden');
-  await page.locator('#records > summary').click();check(await page.locator('.records-body').isVisible(),'Native sources without script');
   await page.unroute('**/article.js');await page.reload();
   await page.setViewportSize({width:1440,height:1000});
   check(!external.length,'External runtime requests: '+external.join(','));

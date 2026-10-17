@@ -23,8 +23,7 @@ a.ref:hover { color:var(--htp); text-decoration-color:var(--htp); }
 .skip:focus { top:12px; }
 .skip:hover { color:var(--page); }
 .page { max-width:1080px; margin:auto; padding:0 36px 32px; }
-.editor { display:flex; flex-wrap:wrap; align-items:center; gap:10px; border-bottom:1px solid var(--line); padding:17px 0; }
-.editor > a { margin-right:auto; color:var(--muted); font-size:13px; }
+.editor { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:10px; border-bottom:1px solid var(--line); padding:17px 0; }
 #edit-status { flex-basis:100%; color:var(--muted); font-size:13px; line-height:1.6; }
 #edit-status:empty { display:none; }
 button { color:var(--ink); background:transparent; border:1px solid #526175; padding:10px 14px; min-height:44px; border-radius:4px; cursor:pointer; font:inherit; font-size:13px; transition:background-color 150ms,border-color 150ms; }
@@ -104,13 +103,7 @@ audio { display:block; width:100%; height:42px; }
 .legend li::before { content:""; display:inline-block; width:22px; margin-right:8px; vertical-align:middle; border-top:3px solid; }
 .editing [data-edit] { outline:1px dashed var(--htp); outline-offset:6px; cursor:text; overflow-wrap:anywhere; }
 .editing [data-edit]:focus { outline:2px solid var(--htp); }
-#records { border-top:1px solid var(--line); padding-top:20px; }
 summary { cursor:pointer; color:var(--muted); font-size:13px; padding:8px 0; width:fit-content; }
-.records-body { max-width:80ch; padding-top:18px; color:var(--muted); }
-.records-body p, .records-body li { font-size:14px; line-height:1.75; }
-.records-body ul { padding-left:20px; margin:16px 0; }
-.records-body li + li { margin-top:10px; }
-.records-body a { color:var(--cpu); }
 @media (max-width:760px) {
   h1 { font-size:43px; }
   .page { padding:0 24px 26px; }

@@ -14,7 +14,6 @@
   <a class="skip" href="#article">Skip to article</a>
   <div class="page">
     <header class="editor enhanced" hidden>
-      <a href="#records">Notes and sources</a>
       <button type="button" id="edit-copy" aria-pressed="false">Edit text</button>
       <button type="button" id="save-copy">Save HTML copy</button>
       <span id="edit-status" role="status"></span>
@@ -205,25 +204,6 @@
 
       <p class="closing"><span data-edit="closing">If you wanna take a look,</span> <a href="https://github.com/mogottsch/vibevoice-android-spike">here it is</a>.</p>
     </article></main>
-    <details id="records">
-      <summary>Notes and sources</summary>
-      <div class="records-body">
-        <p>Speech table: warm medians of five runs after setup, with each model on its own test text, so compare CPU with NPU within a row, not across rows. Rows are sorted by how far each model got (ran on the NPU, ran on the CPU only, produced no speech), then by speed inside each group. The HTP versions are rewritten graphs, and each clip was checked by ear. The Pocket samples behind the table are not the clips in the next section.</p>
-        <p>Script-writing table: these are generic long-text tests, not the app's script pipeline and not script quality. Each row is the median of five loaded long-prompt requests from the Android LLM benchmark registry, with the same input bytes for all seven routes; tokenizers differ, so compare backends within a model. Models are grouped, the app's model first, and sorted by decode speed inside each model. The runs are not thermally normalized; some campaigns ended at Android thermal status 3 or 4. Output sanity only checks for corruption and repetition, not quality. The Gemma NPU row is a different mobile-QAT build, and all five of its long outputs repeated themselves. Its decode rate is withheld because the runtime does not define whether the first token counts, which is a separate issue from the repetition. The registry has no NPU rows for Qwen or LFM, and GPU-private memory was not measured.</p>
-
-        <p>Phone check: on the Galaxy S23 Ultra, CPU only, ONNX Runtime 1.27.1, I rebuilt the retained runner and ran four versions twice in one window. They were the unmodified source, a build that prints the 32 start values to stderr right before inference, a build that only keeps the buffer alive, and both changes. With the original lifetime the printed values were all zero, 2 of 2 runs. With the buffer kept alive they were all NaN, 2 of 2. The four kept-alive runs gave identical stop scores and audio, with a stop at frame 53. Their audio correlates 0.999996 with the earlier accepted fixed-cache recording. I made no new listening judgment.</p>
-        <p>Desktop replay: the old runner's loop on ONNX Runtime 1.22.1 on a desktop CPU, changing only the first autoregressive input, with the retained fixed-Alba cache, token IDs and noise. All zeros gives 134 stop scores within 0.074 of the retained Android run (mean 0.006) with no stop. NaN gives scores that differ by up to 16.4 over the 57 frames before it stops. I also tried 62 inputs with only a prefix or suffix zeroed, and none matched. Measured as the difference divided by the correct run's size, the zero-input internal state is off by 1.05 at the first frame (median 1.21 over the 56 frames) and the frame itself by 0.76 (median 1.36). The stop score and the next frame are both read from that internal state in the model's source, and each frame is fed back as the next input in the runner's loop.</p>
-        <p>Limits: the old phone executable is not retained, so the unmodified source was rebuilt with NDK 27. The exact original <code>flow_lm_main</code> graph is also missing. I used a same-size reconstruction with a different hash. It reproduced the old desktop run, and on the phone it reproduced the old failure recording byte for byte. The dump build may change allocation, and the unmodified build's start values were never printed. The second unmodified run gave a different result (first stop score −4.37, still no stop), so this failure is not deterministic. I have no explanation for why this allocator returned zeros. The earlier invalid-voice-clone failure is a different cause.</p>
-        <ul>
-          <li><a href="evidence/benchmark-table.json">Speech benchmark packet</a> · <a href="evidence/llm-table.json">Script-writing packet</a> · <a href="evidence/system-flow-spec.md">System flow spec</a></li>
-          <li><a href="evidence/phone-bos-check/README.md">Phone check: setup, results and limits</a> · <a href="evidence/phone-bos-check/results.json">results.json</a> · <a href="evidence/phone-bos-check/runner_variants.patch">Runner patch</a></li>
-          <li><a href="evidence/bos-zero-replay.py">Replay script</a> · <a href="evidence/bos-zero-replay.json">Replay results and stop scores</a></li>
-          <li><a href="evidence/source-audit.md">Source audit and AddressSanitizer reproduction</a> · <a href="evidence/bos-lifetime-repro.cc">Reproducer</a></li>
-          <li><a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/tools/pocket_alba_cpu_runner.cc">Original retained runner</a> · <a href="../../experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json">Android run and listening verdict</a></li>
-        </ul>
-        <p>Both players are unchanged historical Pocket TTS Android CPU recordings, not current Supertonic output. The current prototype, Qoralo, uses <a class="ref" href="https://github.com/google-ai-edge/LiteRT-LM" rel="noopener noreferrer">LiteRT-LM</a> for Gemma on GPU and <a class="ref" href="https://onnxruntime.ai/docs/execution-providers/QNN-ExecutionProvider.html" rel="noopener noreferrer">ONNX Runtime with QNN</a> for Supertonic on HTP, Qualcomm's Hexagon Tensor Processor. The system flow is a schematic of what the app does, not a timing trace. The final app demonstration and listening review are pending. This is not a NotebookLM quality match.</p>
-      </div>
-    </details>
   </div>
 </body>
 </html>
