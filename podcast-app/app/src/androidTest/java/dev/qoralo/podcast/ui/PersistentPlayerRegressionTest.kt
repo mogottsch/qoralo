@@ -72,7 +72,7 @@ class PersistentPlayerRegressionTest {
                 // Mirror PodcastApp's edge-to-edge inset ownership, not a bare fixture Column.
                 Column(Modifier.fillMaxSize().then(if (!expanded) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)) {
                     val active = host.active
-                    if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true })
+                    if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true }, onClose = host::close)
                     if (active != null && expanded) PlayerScreen(active.episode, active.chapters, active.audio, null, null,
                         onBack = { expanded = false }, onExport = {}, onPersist = { _, _, _ -> }, sharedPlayback = active)
                     else Text(route)

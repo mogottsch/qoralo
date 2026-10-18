@@ -132,6 +132,13 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
             if (showMiniPlayer) Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
                 MiniPlayer(activePlayback.episode.title, activePlayback.session,
                     onOpen = { viewModel.reopenPlayer(activePlayback.identity.episodeId, activePlayback.identity.liveBinding) },
+                    onClose = {
+                        try { playbackHost.close() }
+                        catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+                        catch (_: Exception) {
+                            actionsScope.launch { snackbar.showSnackbar("Couldn’t close the player. Try again.") }
+                        }
+                    },
                     modifier = Modifier.widthIn(max = 600.dp))
             }
             Box(Modifier.fillMaxWidth().weight(1f)) {

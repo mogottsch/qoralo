@@ -135,7 +135,7 @@ class LiveCollectorRegressionTest {
                     Surface(color = MaterialTheme.colorScheme.surface) {
                         Column(Modifier.fillMaxSize().then(if (!expanded) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)) {
                             val active = currentHost.active
-                            if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true })
+                            if (active != null && !expanded) MiniPlayer(active.episode.title, active.session, { expanded = true }, onClose = currentHost::close)
                             Box(Modifier.weight(1f)) {
                                 if (active != null && expanded) PlayerScreen(active.episode, active.chapters, active.audio, null, null,
                                     onBack = { expanded = false; route = "Library" }, onExport = {}, onPersist = { _, _, _ -> },

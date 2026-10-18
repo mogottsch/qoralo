@@ -3,6 +3,7 @@ package dev.qoralo.podcast.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
@@ -39,7 +40,13 @@ data class MiniPlayerPresentation(val status: String, val pauseAction: Boolean, 
 
 /** Persistent top surface only: owns no player, timeline, coroutine, or playback lifecycle. */
 @Composable
-fun MiniPlayer(title: String, session: EpisodePlayerSession, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+fun MiniPlayer(
+    title: String,
+    session: EpisodePlayerSession,
+    onOpen: () -> Unit,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val presentation = MiniPlayerPresentation.from(session.isPlaying, session.wantsPlayback, session.waiting,
         session.streamState, session.error, session.durationMs > 0 && session.positionMs >= session.durationMs)
     val largeText = LocalDensity.current.fontScale >= 1.4f
@@ -55,6 +62,11 @@ fun MiniPlayer(title: String, session: EpisodePlayerSession, onOpen: () -> Unit,
                     if (!largeText) Text("${formatDuration(session.positionMs)} · ${session.speed}×", style = MaterialTheme.typography.labelSmall)
                 }
                 if (!largeText) MiniPlayerControls(session, presentation)
+                // A quiet, separate action: always available, even for stale/buffering audio.
+                IconButton(onClick = onClose, modifier = Modifier.size(48.dp)) {
+                    Icon(Icons.Default.Close, contentDescription = "Close player", modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
             }
             if (largeText) Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
