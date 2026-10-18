@@ -132,14 +132,15 @@ fun PlayerScreen(
                                 Text("+15", style = MaterialTheme.typography.labelLarge, maxLines = 1, softWrap = false)
                             }
                         }
-                        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            AssistChip(onClick = {
+                        PlayerOptions(
+                            speed = speed,
+                            sleepMinutes = sleepMinutes,
+                            onSpeedClick = {
                                 session.changeSpeed(when (speed) { 1f -> 1.25f; 1.25f -> 1.5f; 1.5f -> 2f; else -> 1f })
-                            }, label = { Text("${speed}×") }, modifier = Modifier.heightIn(min = 48.dp))
-                            AssistChip(onClick = { session.showTranscript(true) }, leadingIcon = { Icon(Icons.Default.ClosedCaption, null) }, label = { Text("Transcript") }, modifier = Modifier.heightIn(min = 48.dp))
-                            AssistChip(onClick = session::cycleSleepTimer,
-                                leadingIcon = { Icon(Icons.Default.Timer, null) }, label = { Text(sleepMinutes?.let { "$it min" } ?: "Sleep") }, modifier = Modifier.heightIn(min = 48.dp))
-                        }
+                            },
+                            onTranscriptClick = { session.showTranscript(true) },
+                            onSleepClick = session::cycleSleepTimer,
+                        )
                     }
                 }
             },
