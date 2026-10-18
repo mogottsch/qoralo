@@ -201,12 +201,45 @@ class ModelPackVerifierTest {
         assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
     }
 
-    @Test fun preflightCannotWeakenSupertonicVerification() {
+    @Test fun supertonicPreflightMatchesFullVerificationForIntactPack() {
         val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
-        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
-        val file = File(pack.root, "assets/config.json")
+        val verifier = ModelPackVerifier()
+        assertEquals(verifier.verifyFully(pack.root, pack.requirement), verifier.checkForUse(pack.root, pack.requirement))
+    }
+
+    @Test fun supertonicPreflightSkipsContextDigestsButExplicitFullChecksStillCatchCorruption() {
+        val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
+        val file = File(pack.root, "contexts/vocoder-context_qnn.bin")
         file.writeBytes(ByteArray(file.length().toInt()) { 'X'.code.toByte() })
-        assertThrows(ModelPackException.Integrity::class.java) { ModelPackVerifier().verifyFully(pack.root, pack.requirement) }
+        val verifier = ModelPackVerifier()
+        assertEquals(13, verifier.checkForUse(pack.root, pack.requirement).files.size)
+        assertThrows(ModelPackException.Integrity::class.java) { verifier.verifyFully(pack.root, pack.requirement) }
+        assertThrows(ModelPackException.Integrity::class.java) { verifier.verify(pack.root, pack.requirement) }
+    }
+
+    @Test fun supertonicPreflightStillRejectsMissingWrongSizedOrSymlinkedFiles() {
+        for (change in listOf("missing", "size", "symlink")) {
+            val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
+            val file = File(pack.root, "contexts/text-context_qnn.bin")
+            when (change) {
+                "missing" -> assertTrue(file.delete())
+                "size" -> file.appendText("extra")
+                "symlink" -> {
+                    val outside = temporaryFolder.newFile().apply { writeText(file.readText()) }
+                    assertTrue(file.delete())
+                    Files.createSymbolicLink(file.toPath(), outside.toPath())
+                }
+            }
+            assertThrows(ModelPackException::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+        }
+    }
+
+    @Test fun supertonicPreflightStillRejectsChangedManifestAndInvalidContract() {
+        val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
+        File(pack.root, "manifest.json").appendText(" ")
+        assertThrows(ModelPackException.Integrity::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+        val invalid = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP) { it.getJSONObject("contract").put("sampleRateHz", 8000) }
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(invalid.root, invalid.requirement) }
     }
 
     private lateinit var manifestRoot: File

@@ -106,7 +106,7 @@ class GenerationCoordinator(
 
     private suspend fun generateAudioImpl(episodeId: String, jobId: String, progress: suspend (String) -> Unit) {
         val (episode, chapters) = repository.lockedChapterData(episodeId)
-        repository.claimJob(episodeId, jobId, JobKind.AUDIO, "Verifying Supertonic", chapters.size)
+        repository.claimJob(episodeId, jobId, JobKind.AUDIO, "Preparing Supertonic", chapters.size)
         val pack = loadPack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
         val recovery = repository.verifyAudioPlan(episodeId, jobId, pack)
         val stream = dev.qoralo.podcast.runtime.ProgressiveAudio.create(artifacts,
@@ -235,8 +235,7 @@ class GenerationCoordinator(
         }
         val root = artifacts.modelPackRoot(directory)
         val requirement = ModelPackRequirement(route, id, hash)
-        return if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) verifier.checkForUse(root, requirement)
-        else verifier.verifyFully(root, requirement)
+        return verifier.checkForUse(root, requirement)
     }
 
 }

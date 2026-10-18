@@ -22,7 +22,7 @@ object ProviderAudioPlan {
         ids.forEach(bytes::putLong); return hash(bytes.array())
     }
 
-    /** Manifest/indexer identity and file extents only. Full neural-file hashes/ABI are checked again at runtime load. */
+    /** Manifest/indexer identity and file extents. Full neural-file hashes are checked at provisioning; runtime checks the pack contract/ABI. */
     fun indexer(artifacts: ArtifactStore): IntArray {
         require(selected) { "Provider pack is not selected" }
         val root = artifacts.modelPackRoot(PACK_ID)

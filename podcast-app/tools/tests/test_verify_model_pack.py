@@ -5,13 +5,14 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-SPEC = importlib.util.spec_from_file_location("verify_gemma_pack", Path(__file__).resolve().parents[1] / "verify_gemma_pack.py")
+SPEC = importlib.util.spec_from_file_location("verify_model_pack", Path(__file__).resolve().parents[1] / "verify_model_pack.py")
 verifier = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(verifier)
 
 
-class VerifyGemmaPackTest(unittest.TestCase):
+class VerifyModelPackTest(unittest.TestCase):
     def setUp(self):
+        self.pack_id = "gemma-4-e2b"
         self.entries = [
             {"role": role, "path": path, "bytes": 8, "sha256": hashlib.sha256(role.encode()).hexdigest()}
             for role, path in verifier.FILES.items()
@@ -45,23 +46,23 @@ class VerifyGemmaPackTest(unittest.TestCase):
     def verify_device(self):
         _, pin = self.raw_and_pin()
         with patch.object(verifier.subprocess, "check_output", side_effect=self.fake_adb) as adb:
-            result = verifier.verify_installed_pack("adb", "phone", "dev.qoralo.podcast.internal", pin)
+            result = verifier.verify_installed_pack("adb", "phone", "dev.qoralo.podcast.internal", pin, self.pack_id)
         return result, adb
 
-    def test_hashes_both_installed_payloads_without_inference_or_install(self):
+    def test_hashes_all_installed_payloads_without_inference_or_install(self):
         result, adb = self.verify_device()
         self.assertEqual("fully_verified", result["result"])
         self.assertFalse(result["inference"])
-        self.assertEqual(2, len(result["files"]))
+        self.assertEqual(len(self.entries), len(result["files"]))
         calls = [call.args[0] for call in adb.call_args_list]
-        self.assertEqual(2, sum("sha256sum" in args for args in calls))
+        self.assertEqual(len(self.entries), sum("sha256sum" in args for args in calls))
         self.assertTrue(all("install" not in args and "instrument" not in args and "force-stop" not in args for args in calls))
 
     def test_rejects_untrusted_manifest_before_device_payload_access(self):
         raw, _ = self.raw_and_pin()
         with patch.object(verifier.subprocess, "check_output", return_value=raw) as adb:
             with self.assertRaisesRegex(ValueError, "trusted pin"):
-                verifier.verify_installed_pack("adb", "phone", "dev.qoralo.podcast.internal", "0" * 64)
+                verifier.verify_installed_pack("adb", "phone", "dev.qoralo.podcast.internal", "0" * 64, self.pack_id)
             self.assertEqual(1, adb.call_count)
 
     def test_rejects_same_size_payload_corruption(self):
@@ -83,19 +84,44 @@ class VerifyGemmaPackTest(unittest.TestCase):
         self.entries[0]["path"] = "../escape"
         raw, pin = self.raw_and_pin()
         with self.assertRaisesRegex(ValueError, "payload path"):
-            verifier.checked_manifest(raw, pin)
+            verifier.checked_manifest(raw, pin, self.pack_id)
 
     def test_rejects_duplicate_roles(self):
         self.entries[1] = dict(self.entries[0])
         raw, pin = self.raw_and_pin()
-        with self.assertRaisesRegex(ValueError, "exactly one"):
-            verifier.checked_manifest(raw, pin)
+        with self.assertRaisesRegex(ValueError, "role inventory"):
+            verifier.checked_manifest(raw, pin, self.pack_id)
 
     def test_rejects_wrong_model_route(self):
-        self.manifest["route"] = "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP"
+        self.manifest["route"] = ("GEMMA_4_E2B_LITERT_GPU" if self.pack_id != "gemma-4-e2b"
+                                  else "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP")
         raw, pin = self.raw_and_pin()
-        with self.assertRaisesRegex(ValueError, "expected Gemma"):
-            verifier.checked_manifest(raw, pin)
+        with self.assertRaisesRegex(ValueError, "expected model pack"):
+            verifier.checked_manifest(raw, pin, self.pack_id)
+
+
+class VerifySupertonicPackTest(VerifyModelPackTest):
+    def setUp(self):
+        super().setUp()
+        self.pack_id = "supertonic-3-provider"
+        self.entries = [
+            {"role": role, "path": path, "bytes": 8, "sha256": hashlib.sha256(role.encode()).hexdigest()}
+            for role, path in verifier.SUPERTONIC_FILES.items()
+        ]
+        self.manifest = {"schemaVersion": 2, "id": self.pack_id,
+                         "route": "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP", "files": self.entries}
+
+    def test_also_verifies_the_legacy_supertonic_pack(self):
+        self.pack_id = "supertonic-3"
+        self.manifest["id"] = self.pack_id
+        result, _ = self.verify_device()
+        self.assertEqual(self.pack_id, result["packId"])
+        self.assertEqual(13, len(result["files"]))
+
+    def test_refuses_provider_manifest_at_legacy_location(self):
+        raw, pin = self.raw_and_pin()
+        with self.assertRaisesRegex(ValueError, "expected model pack"):
+            verifier.checked_manifest(raw, pin, "supertonic-3")
 
 
 if __name__ == "__main__":

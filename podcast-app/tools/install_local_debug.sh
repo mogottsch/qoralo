@@ -20,17 +20,22 @@ fi
 [[ -f "$APK" ]] || { echo "missing debug APK: $APK" >&2; exit 66; }
 [[ -f "$PACKS/gemma-4-e2b/current/manifest.json" ]] || { echo "missing prepared Gemma pack" >&2; exit 66; }
 [[ -f "$PACKS/supertonic-3/current/manifest.json" ]] || { echo "missing prepared Supertonic pack" >&2; exit 66; }
-# Use the same trusted pin as the app build, not a digest calculated from an
-# arbitrary supplied manifest. No model payload is rehashed during normal use.
-GEMMA_PIN=$(python3 - "$PROJECT/local.properties" <<'PY'
+# Use trusted pins, not digests calculated from arbitrary supplied manifests.
+# This legacy helper stages supertonic-3, not the normal provider pack.
+PINS=$(python3 - "$PROJECT/local.properties" <<'PY'
 from pathlib import Path
 import re, sys
-pins = re.findall(r'^gemma\.manifest\.sha256=([0-9a-f]{64})$', Path(sys.argv[1]).read_text(), re.MULTILINE)
-if len(pins) != 1:
-    raise SystemExit("missing or ambiguous trusted Gemma manifest pin")
-print(pins[0])
+text = Path(sys.argv[1]).read_text()
+values = []
+for name in ("gemma", "supertonic"):
+    pins = re.findall(r'^' + name + r'\.manifest\.sha256=([0-9a-f]{64})$', text, re.MULTILINE)
+    if len(pins) != 1:
+        raise SystemExit("missing or ambiguous trusted " + name + " manifest pin")
+    values.append(pins[0])
+print(" ".join(values))
 PY
 )
+read -r GEMMA_PIN SUPERTONIC_PIN <<<"$PINS"
 mkdir -p "$EVIDENCE"
 "$PROJECT/tools/verify_apk_runtime.py" --apk "$APK" --output "$EVIDENCE/apk-runtime-provenance.json" | tee "$EVIDENCE/apk-preflight.txt"
 
@@ -59,9 +64,12 @@ sha256sum "$APK" "$PACKS/gemma-4-e2b/current/manifest.json" "$PACKS/supertonic-3
 "$ADB" -s "$SERIAL" shell "run-as '$APP_ID' sha256sum no_backup/model-packs/gemma-4-e2b/current/manifest.json no_backup/model-packs/supertonic-3/current/manifest.json" 9>&- | tee "$EVIDENCE/remote-manifest-sha256.txt"
 
 # Provisioning pays the full checksum cost once on the final installed files.
-# Normal Gemma jobs retain manifest/config/inventory/size checks only.
-python3 "$PROJECT/tools/verify_gemma_pack.py" --adb "$ADB" --serial "$SERIAL" \
-  --package "$APP_ID" --expected-manifest-sha256 "$GEMMA_PIN" \
+# Normal jobs retain manifest/config/inventory/size checks only.
+python3 "$PROJECT/tools/verify_model_pack.py" --adb "$ADB" --serial "$SERIAL" \
+  --package "$APP_ID" --pack-id gemma-4-e2b --expected-manifest-sha256 "$GEMMA_PIN" \
   >"$EVIDENCE/gemma-full-verification.json"
+python3 "$PROJECT/tools/verify_model_pack.py" --adb "$ADB" --serial "$SERIAL" \
+  --package "$APP_ID" --pack-id supertonic-3 --expected-manifest-sha256 "$SUPERTONIC_PIN" \
+  >"$EVIDENCE/supertonic-full-verification.json"
 
 printf 'result=installed\nevidence=%s\n' "$EVIDENCE"

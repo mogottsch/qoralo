@@ -91,7 +91,7 @@ sealed class ModelPackException(message: String) : Exception(message) {
 
 /** Validates a data-only pack against an identity pinned into the installed app. */
 class ModelPackVerifier {
-    /** Existing callers retain full content verification, including Supertonic. */
+    /** Existing diagnostic callers retain full content verification. */
     fun verify(root: File, requirement: ModelPackRequirement): VerifiedModelPack = verifyFully(root, requirement)
 
     /** Full checksum verification for provisioning and explicit integrity checks. */
@@ -99,16 +99,12 @@ class ModelPackVerifier {
         validate(root, requirement, hashPayloads = true)
 
     /**
-     * Gemma's normal-use preflight: pinned manifest, contract, safe inventory and sizes.
+     * Normal-use preflight: pinned manifest, contract, safe inventory and sizes.
      * Provisioning must hash the installed payloads once; no cache or receipt is used.
      * Same-size content corruption is deliberately not detected by this path.
      */
-    fun checkForUse(root: File, requirement: ModelPackRequirement): VerifiedModelPack {
-        if (requirement.route != ModelRoute.GEMMA_4_E2B_LITERT_GPU) {
-            throw ModelPackException.Invalid("Lightweight preflight is only supported for Gemma")
-        }
-        return validate(root, requirement, hashPayloads = false)
-    }
+    fun checkForUse(root: File, requirement: ModelPackRequirement): VerifiedModelPack =
+        validate(root, requirement, hashPayloads = false)
 
     private fun validate(root: File, requirement: ModelPackRequirement, hashPayloads: Boolean): VerifiedModelPack {
         if (!PINNED_SHA.matches(requirement.pinnedManifestSha256.lowercase())) {
