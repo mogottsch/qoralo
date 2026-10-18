@@ -4,7 +4,7 @@
 Run from the repository root with the retained local Python environment:
 
   experiments/0024-pocket-tts-qnn-precompiled-context-startup/.local/export-venv/bin/python \
-    docs/qoralo-blog/evidence/bos-zero-replay.py
+    experiments/0014-pocket-fp-onnx-qnn-htp/evidence/bos-zero-replay.py
 
 It ports the old runner's loop (experiments/0014-.../tools/pocket_alba_cpu_runner.cc) to
 ONNX Runtime Python on host CPU and varies only the first AR input. It does not use the
@@ -23,7 +23,7 @@ import onnxruntime as ort
 
 L = Path("experiments/0024-pocket-tts-qnn-precompiled-context-startup/.local")
 R14 = Path("experiments/0014-pocket-fp-onnx-qnn-htp/results")
-OUT = Path("docs/qoralo-blog/evidence/bos-zero-replay.json")
+OUT = Path(__file__).resolve().parent / "bos-zero-replay.json"
 IDS = [1456,603,597,602,854,640,791,261,260,1332,323,288,285,287,489,594,1355,1049,265,311,2081,3697,273,519,1836,263]
 H, D, SRC, DST = 16, 64, 126, 1000
 GRAPH = L / "onnx-controlled/flow_lm_main.onnx"

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Local preview server for the article, with the one thing `python3 -m http.server` lacks: HTTP Range requests.
+"""Local preview server for the presentation, with the one thing `python3 -m http.server` lacks: HTTP Range requests.
 
-  python3 docs/qoralo-blog/tools/serve.py [PORT]        then open  http://127.0.0.1:PORT/docs/qoralo-blog/
+  python3 docs/presentation/serve.py [PORT]        then open  http://127.0.0.1:PORT/docs/presentation/
 
-Without Range support a browser cannot seek in the video or the audio (it gets the whole file with a plain 200).
+Without Range support a browser cannot seek in the audio players (it gets the whole file with a plain 200).
 Any real static host (Caddy, nginx, GitHub Pages) supports ranges already; this is only for previewing locally.
 Also sends no-store so edits show up on reload. Listens on 127.0.0.1 only and serves the repository root.
 """
 import http.server, os, re, sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]   # docs/presentation/serve.py -> repository root
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):
@@ -70,5 +70,5 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8766
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), Handler) as s:
-        print(f"serving {ROOT} at http://127.0.0.1:{port}/docs/qoralo-blog/  (Range requests supported)")
+        print(f"serving {ROOT} at http://127.0.0.1:{port}/docs/presentation/  (Range requests supported)")
         s.serve_forever()

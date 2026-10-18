@@ -2,7 +2,7 @@
 
 Qoralo is an Android prototype that turns source material into a script and narrated audio using models running on the phone. The current target is a **Galaxy S23 Ultra** with Snapdragon 8 Gen 2.
 
-**[App source and status](podcast-app/README.md)** · **[Setup guide](podcast-app/docs/getting-started.md)** · **[Visual article draft](docs/qoralo-blog/index.html)** · **[Presentation](docs/presentation/index.html)**
+**[App source and status](podcast-app/README.md)** · **[Setup guide](podcast-app/docs/getting-started.md)** · **[Article: Building a NotebookLM-like podcast on my phone](https://mogott.sh/qoralo/)** · **[Presentation](docs/presentation/index.html)**
 
 ## From sources to an episode
 
@@ -32,20 +32,19 @@ Start with the **[setup guide](podcast-app/docs/getting-started.md)** for prereq
 
 A clone alone is not a runnable neural deployment. Model weights, prepared context files and licensed native runtime libraries must be provisioned separately; they are not supplied by this repository. APKs and large local build/model artifacts remain outside Git.
 
-## Read the article and presentation locally
+## Read the presentation locally
 
-The links above open **HTML source on GitHub**, not hosted pages. No public article destination has been chosen. After cloning, serve the repository root:
+The link above opens **HTML source on GitHub**, not a hosted page. After cloning, serve the repository root:
 
 ```bash
-python3 docs/qoralo-blog/tools/serve.py 8766
+python3 docs/presentation/serve.py 8766
 ```
 
-Use this small server instead of `python3 -m http.server`: Python's built-in one cannot answer HTTP range requests, so you could not seek in the article's video or in any audio player. It serves the repository root on 127.0.0.1 only. Then open:
+Use this small server instead of `python3 -m http.server`: Python's built-in one cannot answer HTTP range requests, so you could not seek in the audio players. It serves the repository root on 127.0.0.1 only. Then open the **[Presentation](http://127.0.0.1:8766/docs/presentation/)**: the model choices, GPU/NPU architecture and speech deployment work, with optional technical detail.
 
-- **[Visual article draft](http://127.0.0.1:8766/docs/qoralo-blog/)**: the visual write-up, an unpublished draft that Moritz is still revising. It ends with a screen-recorded demo and one full episode, both made by the current app on the phone.
-- **[Presentation](http://127.0.0.1:8766/docs/presentation/)**: the model choices, GPU/NPU architecture and speech deployment work, with optional technical detail.
+Keep the repository's relative files together so diagrams, recordings and evidence links resolve. The audio in the presentation is labelled historical experiment recordings, not output of the current app.
 
-Keep the repository's relative files together so diagrams, recordings and evidence links resolve. The two Pocket TTS clips in the article and the audio in the presentation are labelled historical experiment recordings, not output of the current app; the article's demo video and full episode are from the current app.
+The visual article lives in its own repository and is published at https://mogott.sh/qoralo/. Its evidence for the Pocket TTS failure is kept with the experiment: [`experiments/0014-pocket-fp-onnx-qnn-htp/evidence/`](experiments/0014-pocket-fp-onnx-qnn-htp/evidence/).
 
 ## Research and evidence
 

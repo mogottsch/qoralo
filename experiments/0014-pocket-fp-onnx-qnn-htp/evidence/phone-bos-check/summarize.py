@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Build results.json from the raw phone-run files in this directory.
-Run from the repository root:  python3 docs/qoralo-blog/evidence/phone-bos-check/summarize.py
+Run from the repository root:  python3 experiments/0014-pocket-fp-onnx-qnn-htp/evidence/phone-bos-check/summarize.py
 """
 import json, re, hashlib
 from pathlib import Path
 
-E = Path("docs/qoralo-blog/evidence/phone-bos-check")
+E = Path(__file__).resolve().parent
 RAW = E / "raw"
 RETAINED_FAIL = "cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6"
 ACCEPTED_FIXED_CACHE = "e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a"

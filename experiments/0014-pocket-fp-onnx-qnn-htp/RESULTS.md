@@ -167,7 +167,7 @@ therefore dangling. Source SHA-256:
 A bounded host reproducer using the real ORT tensor API reports
 `heap-use-after-free` under AddressSanitizer; keeping the vector alive through
 consumption passes. It creates no session, loads no model and runs no inference.
-See the [source audit and reproduction procedure](../../docs/qoralo-blog/evidence/source-audit.md).
+See the [source audit and reproduction procedure](evidence/source-audit.md).
 
 This qualifies the runtime-localization interpretation above: matching fixture
 files do not establish valid, identical inputs when a tensor can point at freed
@@ -199,8 +199,8 @@ buffer-lifetime defect, rather than a runtime-only explanation. It is **not an
 observation of zeros in the phone's freed buffer**, proof of the old executable's
 source binding, or a replay of the exact old graph/WAV. The prefix/suffix
 partial-zero scan covers only its stated patterns, not every possible corrupt
-input. See the [replay script](../../docs/qoralo-blog/evidence/bos-zero-replay.py)
-and [saved result](../../docs/qoralo-blog/evidence/bos-zero-replay.json) for the
+input. See the [replay script](evidence/bos-zero-replay.py)
+and [saved result](evidence/bos-zero-replay.json) for the
 controlled inputs, graph identity and full trajectory comparisons. Exact
 historical audio causality remains unverified, but the source bug now has a
 specific, replay-supported failure mechanism.
@@ -237,7 +237,7 @@ no process with the stage as its working directory, and explicit stage absence
 on the reachable phone. The separately recorded preflight/parser corrections
 and reduction of the memory gate from 3 to 1.5 GiB are protocol changes, not a
 claim that the original 3 GiB admission passed. See the
-[phone evidence packet](../../docs/qoralo-blog/evidence/phone-bos-check/) for
+[phone evidence packet](evidence/phone-bos-check/) for
 source/configuration identities, all planned runs and both cleanup receipts.
 
 ## Accepted physical QNN/HTP path

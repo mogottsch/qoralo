@@ -39,7 +39,7 @@ LIB="$ROOT/experiments/0024-pocket-tts-qnn-precompiled-context-startup/.local/ex
 WORK=$(mktemp -d)
 ln -s "$LIB/libonnxruntime.so.1.22.1" "$WORK/libonnxruntime.so.1"
 g++ -std=c++17 -O1 -g -fsanitize=address -fno-omit-frame-pointer \
-  -I"$INC" docs/qoralo-blog/evidence/bos-lifetime-repro.cc \
+  -I"$INC" experiments/0014-pocket-fp-onnx-qnn-htp/evidence/bos-lifetime-repro.cc \
   -L"$LIB" -Wl,-rpath,"$LIB" -l:libonnxruntime.so.1.22.1 \
   -o "$WORK/repro"
 LD_LIBRARY_PATH="$WORK" ASAN_OPTIONS=detect_leaks=0 "$WORK/repro"
