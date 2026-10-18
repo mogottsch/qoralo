@@ -1,0 +1,113 @@
+{
+  "note": "Cut list for the demo video. Times are seconds in the raw scrcpy recording (raw-103648.mkv, 275.9 s). Segments play in order and the gaps between them are cut out (raw 4.20-5.42 s is the system file picker, removed for privacy). speed > 1 speeds a segment up, mutes it and adds a 'Nx speed, N s real time' badge (badge_y = vertical position as a fraction of the height) so nobody reads it as real time. Notes are timed on-screen captions (times in raw seconds); a note is rendered only when approved is true. Re-run make-demo.py after editing.",
+  "crop": {
+    "x": 0,
+    "y": 130,
+    "w": 1428,
+    "h": 2778,
+    "note": "Removes the status bar (top 130 px), the three-button navigation bar (bottom 180 px of 3088) and the 12 px Edge-panel handle on the right edge."
+  },
+  "output": {
+    "width": 720,
+    "fps": 30,
+    "crf": 24,
+    "audio_kbps": 128,
+    "loudness_lufs": -16,
+    "peak_ceiling_dbfs": -1.5,
+    "audio_fade_out_s": 0.6
+  },
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.2,
+      "speed": 1,
+      "note": "library, New episode, Add sources, tap Choose a file"
+    },
+    {
+      "start": 5.42,
+      "end": 13.25,
+      "speed": 1,
+      "note": "raw 4.20-5.42 (the Android file picker) is cut out on purpose; back in the app with the document attached, instructions, Create"
+    },
+    {
+      "start": 13.25,
+      "end": 64.8,
+      "speed": 10,
+      "note": "Preparing Gemma 4 E2B (wait 1)"
+    },
+    {
+      "start": 64.8,
+      "end": 132.22,
+      "speed": 8,
+      "badge_y": 0.9,
+      "note": "Gemma writes the four chapters"
+    },
+    {
+      "start": 132.22,
+      "end": 157.0,
+      "speed": 1,
+      "note": "review script, open the edit chat, type the request"
+    },
+    {
+      "start": 157.0,
+      "end": 220.4,
+      "speed": 10,
+      "note": "Preparing Gemma 4 E2B (wait 2, after the chat message)"
+    },
+    {
+      "start": 220.4,
+      "end": 234.7,
+      "speed": 1,
+      "note": "outro added, Review changes, Create audio, confirm"
+    },
+    {
+      "start": 234.7,
+      "end": 256.6,
+      "speed": 3,
+      "badge_y": 0.08,
+      "note": "Chapter 1 of 5 ... until Open player is tapped (the badge sits at the top so it does not cover the 'available' time)"
+    },
+    {
+      "start": 256.6,
+      "end": 268.267,
+      "speed": 1,
+      "note": "Open player, playback while it keeps generating; the video is cut at 1:30 on purpose (the rest of the take, raw 268.27-275.9 s, is not needed)"
+    }
+  ],
+  "notes": [
+    {
+      "id": "prep1",
+      "approved": true,
+      "raw_start": 13.4,
+      "raw_end": 64.6,
+      "y": 0.06,
+      "text": "Loading Gemma onto the phone's GPU\ntakes about a minute here. Not\noptimized yet: the model is loaded\nfrom scratch for every request.",
+      "note": "'about a minute' = 51 s and 63 s in this take; 'loaded from scratch for every request' = GemmaLiteRtGpuEngine.load + engine.close() in a finally for every job (GenerationCoordinator)."
+    },
+    {
+      "id": "prep2",
+      "approved": true,
+      "raw_start": 157.5,
+      "raw_end": 220.0,
+      "y": 0.3,
+      "text": "Again: Gemma is reloaded for every\nrequest, even a short chat message."
+    },
+    {
+      "id": "avail",
+      "approved": true,
+      "raw_start": 257.2,
+      "raw_end": 275.9,
+      "y": 0.6,
+      "highlight": {
+        "x": 1050,
+        "y": 2118,
+        "w": 330,
+        "h": 84,
+        "note": "box around the 'NN:NN available' label, in cropped-frame pixels (1428x2778)"
+      },
+      "text": "'Available' keeps growing while you listen:\nthe voice runs about 2.5x real time (RTF < 1),\nso playback can start before it's done.",
+      "fontsize": 25,
+      "note": "Only three lines fit between the track title and the seek bar; a fourth line would cover the playhead. About 2.5x real time is read off this take: 'available' went 00:40 -> 01:21 in 16 s of real time (RTF about 0.4). Approximate, not a benchmark."
+    }
+  ]
+}

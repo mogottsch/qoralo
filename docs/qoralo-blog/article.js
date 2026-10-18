@@ -73,13 +73,15 @@
   if (demo) {
     const showMissing = () => { demo.hidden = true; $('.demo-status').hidden = false; };
     demo.querySelector('source').addEventListener('error', showMissing);
-    const checkMissing = () => { if (demo.networkState === 3 || demo.error) showMissing(); };
-    window.addEventListener('load', checkMissing); checkMissing();
+    // A missing file normally fires the source's error event. As a fallback, judge "missing" only after the page has settled and only if
+    // nothing was ever loaded: right at start-up (and briefly while the browser picks a source) networkState is 3 even when the file exists.
+    const checkMissing = () => { if (demo.readyState === 0 && (demo.networkState === 3 || demo.error)) showMissing(); };
+    window.addEventListener('load', () => setTimeout(checkMissing, 1500));
     demo.addEventListener('play', () => $$('audio').forEach(a => a.pause()));
   }
   $$('audio').forEach(audio => {
     audio.addEventListener('play', () => { $$('audio').forEach(other => { if (audio !== other) other.pause(); }); if (demo) demo.pause(); });
-    audio.addEventListener('error', () => { const message = audio.parentElement.querySelector('.audio-status'); message.textContent = 'Playback unavailable. Open the WAV instead.'; message.hidden = false; });
+    audio.addEventListener('error', () => { const message = audio.parentElement.querySelector('.audio-status'); message.textContent = 'Playback unavailable. Open the audio file instead.'; message.hidden = false; });
   });
   $$('.enhanced').forEach(e => { e.hidden = false; });
 })();

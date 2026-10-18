@@ -8,6 +8,7 @@ async (page) => {
   const external=[],errors=[];
   page.on('request',r=>{const u=r.url();if(!u.startsWith(origin)&&!u.startsWith('data:')&&!u.startsWith('blob:')&&!u.startsWith('file:'))external.push(u);});
   page.on('pageerror',e=>errors.push(e.message));
+  await page.setViewportSize({width:1440,height:1000});
   await page.reload();
   check(await page.locator('figure').count()===3,'Three figures: demo video, processor route and the stop-score chart');
   check(await page.locator('details.more,#step-figure,.variant-controls,.scrub,.readout,.input-path,#trajectories').count()===0,'Removed the collapsible, step diagram, toggles, scrubber and NaN/zero rows');
@@ -17,7 +18,7 @@ async (page) => {
   const frozen={title:'Building a NotebookLM-like podcast on my phone',intro:"You've probably heard of NotebookLM. Feed it a few sources and it makes a podcast-style conversation. The output isn't as good as a real podcast, and it gives me some AI slop vibes. But it's still pretty impressive.",question:'So I wondered: how good could this be with all inference running on my phone?'};
   for(const [k,v] of Object.entries(frozen)) check((await page.locator(`[data-edit="${k}"]`).textContent())===v,`Frozen opening text changed: ${k}`);
   // Headings in Moritz's voice: his two kept as they were, the rest plain and first person.
-  const headText=await page.evaluate(()=>({h1:document.querySelector('h1').textContent,h2:[...document.querySelectorAll('main h2')].map(h=>h.textContent.trim()),sub:[...document.querySelectorAll('main h3.sub')].map(h=>h.textContent.trim()),clips:[...document.querySelectorAll('.listening h3')].map(h=>h.firstChild.textContent.trim()),hasNotes:!!document.querySelector('#records,details,.records-body'),notesLink:!!document.querySelector('a[href="#records"]')}));
+  const headText=await page.evaluate(()=>({h1:document.querySelector('h1').textContent,h2:[...document.querySelectorAll('main h2')].map(h=>h.textContent.trim()),sub:[...document.querySelectorAll('main h3.sub')].map(h=>h.textContent.trim()),clips:[...document.querySelectorAll('.listening-pair .listening h3')].map(h=>h.firstChild.textContent.trim()),hasNotes:!!document.querySelector('#records,details,.records-body'),notesLink:!!document.querySelector('a[href="#records"]')}));
   check(headText.h1==='Building a NotebookLM-like podcast on my phone'&&headText.h2.join('|')==='What I tried|Where I ended up|Pocket TTS on my phone|So what went wrong?|The demo'&&headText.sub.join('|')==='Speech|Script writing'&&headText.clips.join('|')==="The one that works|The one that doesn't"&&!headText.hasNotes&&!headText.notesLink,'Headings, and no notes section or link on the page: '+JSON.stringify(headText));
   check(!/Where it ends up|The first Android port|Why it went wrong|Fixed-cache port|Original Android port|technical notes|notes and sources/i.test(await page.locator('main h2,main h3,summary').allInnerTexts().then(a=>a.join(' | '))),'No leftover old headings');
   // Reference links on the page: exactly these (LiteRT-LM and ONNX Runtime QNN were only in the removed notes; NOTES.md keeps them), each verified to resolve when added; none to a redirecting or archived address.
@@ -48,9 +49,18 @@ async (page) => {
   // Demo video: it plays if the file exists; otherwise the page says where to put it. Never a silent broken player.
   await page.waitForTimeout(800);
   const demoState=await page.evaluate(()=>{const v=document.querySelector('#demo-video'),s=document.querySelector('.demo-status');return {loaded:v.readyState>=1&&!v.hidden,duration:v.duration,statusShown:!s.hidden,videoHidden:v.hidden,autoplay:v.autoplay};});
-  check(demoState.loaded!==demoState.statusShown,'Demo: exactly one of player or missing-file notice is shown: '+JSON.stringify(demoState));
+  const demoFileExists=await page.evaluate(async()=>(await fetch('media/demo.mp4',{method:'HEAD'})).ok);
+  check(demoFileExists?(demoState.loaded&&!demoState.statusShown&&!demoState.videoHidden):(!demoState.loaded&&demoState.statusShown),'Demo: with media/demo.mp4 present the player is shown and the notice hidden; without it the notice is shown: '+JSON.stringify({demoFileExists,...demoState}));
   check(!demoState.autoplay,'Demo video does not autoplay');
   if(demoState.loaded)check(demoState.duration>0&&demoState.duration<180,'Demo video is a short clip: '+demoState.duration);
+  // The notice must still replace the player when the file is really missing (simulated 404).
+  await page.route('**/media/demo.mp4',route=>route.fulfill({status:404,body:'missing'}));
+  await page.reload();
+  await page.waitForTimeout(2200);
+  const missingState=await page.evaluate(()=>({videoHidden:document.querySelector('#demo-video').hidden,noticeShown:!document.querySelector('.demo-status').hidden}));
+  await page.unroute('**/media/demo.mp4');
+  await page.reload();
+  check(missingState.videoHidden&&missingState.noticeShown,'With the video file missing (404) the notice replaces the player: '+JSON.stringify(missingState));
   await page.locator('.tldr a').click();
   await page.waitForTimeout(900);
   check(await page.evaluate(()=>{const r=document.querySelector('#demo-heading').getBoundingClientRect();return r.top>=-1&&r.top<innerHeight-40;}),'Clicking the tl;dr link scrolls the demo into view');
@@ -68,7 +78,7 @@ async (page) => {
     const nodes=[...f.querySelectorAll('.qflow-node')].map(n=>({id:n.id,lane:n.dataset.lane,step:Number(n.dataset.step),title:n.querySelector('.qflow-title').textContent.trim(),detail:n.querySelector('.qflow-detail').textContent.trim(),where:n.querySelector('.qflow-where').textContent.trim(),optional:n.classList.contains('qflow-optional'),mobile:n.querySelector('.qflow-mobile-only')?.textContent.trim()||''}));
     return {nodes,visible:[...f.querySelectorAll('.qflow-node,.qflow-lane,.qflow-prov-label,.qflow-loop-label,figcaption')].map(e=>e.textContent).join(' '),
       caption:f.querySelector('figcaption')?.textContent.trim()||'',children:[...f.children].map(c=>c.className||c.tagName),alt:f.querySelector('#qflow-alt')?.textContent||'',described:f.getAttribute('aria-describedby'),
-      lanes:[...f.querySelectorAll('.qflow-lane-name')].map(l=>l.innerText.replace(/\s+/g,' ').trim()),loop:f.querySelector('.qflow-loop-label')?.textContent.trim()||'',prov:f.querySelector('.qflow-prov-label')?.textContent.trim()||'',
+      lanes:[...f.querySelectorAll('.qflow-lane-name')].map(l=>[...l.childNodes].map(n=>n.textContent.trim()).filter(Boolean).join(' ')),loop:f.querySelector('.qflow-loop-label')?.textContent.trim()||'',prov:f.querySelector('.qflow-prov-label')?.textContent.trim()||'',
       edges:f.querySelectorAll('.qflow-edge').length,html:f.outerHTML};
   });
   const N=Object.fromEntries(sys.nodes.map(n=>[n.id,n]));
@@ -284,6 +294,27 @@ async (page) => {
   await page.locator('audio').nth(0).evaluate(a=>a.play());await page.locator('audio').nth(1).evaluate(a=>a.play());
   check(await page.locator('audio').nth(0).evaluate(a=>a.paused),'No overlapping audio');
   await page.locator('audio').evaluateAll(es=>es.forEach(e=>e.pause()));
+
+  // The full episode, right after the demo video: Moritz's lead-in, then a plain player for the app's own output.
+  const ep=await page.evaluate(()=>{const s=document.querySelector('#episode'),a=s&&s.querySelector('audio'),lead=document.querySelector('[data-edit="episode-copy"]');return {exists:!!a,preload:a&&a.preload,autoplay:a&&a.autoplay,src:a&&a.querySelector('source').getAttribute('src'),type:a&&a.querySelector('source').getAttribute('type'),title:s&&s.querySelector('h3').firstChild.textContent.trim(),len:s&&s.querySelector('h3 span').textContent.trim(),link:s&&s.querySelector('a').getAttribute('href'),label:a&&a.getAttribute('aria-label'),lead:lead&&lead.textContent.trim()};});
+  check(ep.exists&&ep.preload==='none'&&!ep.autoplay&&ep.src==='media/episode.m4a'&&ep.type==='audio/mp4'&&ep.link==='media/episode.m4a','Full episode player: no autoplay, loads nothing until played, plays media/episode.m4a, has a file link: '+JSON.stringify(ep));
+  check(ep.lead==='If you want to listen to a full episode:'&&/Full episode generated on the phone/.test(ep.label),'Episode lead-in is Moritz\'s line (editable) and the player has a descriptive label');
+  check(await after('#demo-figure','[data-edit="episode-copy"]')&&await after('[data-edit="episode-copy"]','#episode')&&await after('#episode','.closing')&&await page.locator('#episode').evaluate(e=>e.closest('section').querySelector('#demo-heading')!==null),'The episode sits in the demo section right after the video and before the closing line');
+  const epFile=await page.evaluate(async()=>{const r=await fetch('media/episode.m4a',{method:'HEAD'});return {ok:r.ok,type:r.headers.get('content-type'),bytes:Number(r.headers.get('content-length'))};});
+  const epDur=await page.evaluate(()=>new Promise(r=>{const a=document.querySelector('#episode audio');a.muted=true;a.load();if(a.readyState>=1)return r(a.duration);a.addEventListener('loadedmetadata',()=>r(a.duration),{once:true});}));
+  const epShown=Math.floor(epDur/60)+':'+String(Math.round(epDur%60)).padStart(2,'0');
+  check(epFile.ok&&epFile.bytes>1e6&&epFile.bytes<8e6&&/audio\/(mp4|x-m4a|aac)/.test(epFile.type||''),'The episode file exists, is a compressed AAC (not a 16 MB WAV) and is served as audio: '+JSON.stringify(epFile));
+  check(ep.len===epShown&&ep.title==='The Historical Roots of Leopardstown: From Leprosy to Racecourses','The title and length shown match the file (3:03, 183.1 s): '+ep.len+' vs '+epShown+' ('+epDur+' s)');
+  await page.evaluate(async()=>{const v=document.querySelector('#demo-video'),a=document.querySelector('#episode audio');v.muted=true;a.muted=true;try{await v.play();}catch(e){}await a.play();});
+  check(await page.evaluate(()=>document.querySelector('#demo-video').paused),'Starting the episode pauses the demo video');
+  await page.evaluate(async()=>{const v=document.querySelector('#demo-video');v.muted=true;await v.play();});
+  check(await page.evaluate(()=>document.querySelector('#episode audio').paused),'Starting the video pauses the episode');
+  // Seeking needs a server that answers HTTP Range requests: `python3 -m http.server` does not (the player then cannot seek), tools/serve.py and every real static host do.
+  const rangeProbe=await page.evaluate(async()=>{const out={};for(const f of ['media/demo.mp4','media/episode.m4a']){const r=await fetch(f,{headers:{Range:'bytes=1000-1099'}});out[f]={status:r.status,range:r.headers.get('content-range'),bytes:(await r.arrayBuffer()).byteLength,accept:r.headers.get('accept-ranges')};}return out;});
+  check(Object.values(rangeProbe).every(r=>r.status===206&&/^bytes 1000-1099\//.test(r.range||'')&&r.bytes===100&&r.accept==='bytes'),'The server answers HTTP Range requests, which browsers need to seek (serve with docs/qoralo-blog/tools/serve.py, not python -m http.server): '+JSON.stringify(rangeProbe));
+  const seek=await page.evaluate(async()=>{const go=(el,t)=>new Promise(res=>{el.muted=true;const done=()=>res({asked:t,got:el.currentTime,seekableEnd:el.seekable.length?el.seekable.end(el.seekable.length-1):0,duration:el.duration});const jump=()=>{el.addEventListener('seeked',done,{once:true});el.currentTime=t;};if(el.readyState<1){el.addEventListener('loadedmetadata',jump,{once:true});el.load();}else jump();setTimeout(done,6000);});return {video:await go(document.querySelector('#demo-video'),70),episode:await go(document.querySelector('#episode audio'),120)};});
+  check(Math.abs(seek.video.got-70)<1&&seek.video.seekableEnd>seek.video.duration-1&&Math.abs(seek.episode.got-120)<1&&seek.episode.seekableEnd>seek.episode.duration-1,'Seeking works: the demo video jumps to 1:10 and the episode to 2:00, and both are seekable to the end: '+JSON.stringify(seek));
+  await page.evaluate(()=>{document.querySelector('#demo-video').pause();document.querySelectorAll('audio').forEach(a=>a.pause());});
 
   const key=await page.evaluate(()=>`phone-podcast-copy-v3:${location.pathname}`);
   const previous=await page.evaluate(key=>localStorage.getItem(key),key);

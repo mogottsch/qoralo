@@ -67,7 +67,8 @@ blockquote { max-width:52ch; font-size:23px; line-height:1.5; margin:24px 0; let
 .tldr a { color:var(--htp); }
 .tldr a:hover { color:var(--ink); }
 .demo { margin:8px 0 12px; }
-.demo video { display:block; width:100%; max-height:min(78vh,720px); background:#05080c; border:1px solid var(--line); }
+/* The demo is a portrait phone recording: a centred column, not a full-width banner. */
+.demo video { display:block; width:auto; max-width:100%; height:auto; max-height:min(80vh,760px); margin:0 auto; background:#05080c; border:1px solid var(--line); }
 .demo-status { max-width:none; padding:56px 24px; border:1px dashed #526175; text-align:center; font-size:15px; }
 .closing { max-width:none; margin:20px 0 28px; padding-top:24px; border-top:1px solid var(--line); font-size:20px; line-height:1.6; color:var(--ink); }
 .closing a { color:var(--htp); }
@@ -79,6 +80,9 @@ blockquote { max-width:52ch; font-size:23px; line-height:1.5; margin:24px 0; let
 audio { display:block; width:100%; height:42px; }
 .listening a { display:inline-block; margin-top:10px; font-size:12px; color:var(--muted); }
 .audio-status { margin-top:12px; font-size:13px; color:var(--failed); }
+.episode-lead { margin-top:34px; }
+.episode { margin-top:14px; max-width:760px; }
+.episode h3 span { color:var(--muted); }
 .chart { position:relative; height:300px; margin:34px 16px 58px 52px; border-left:1px solid #526175; border-bottom:1px solid #526175; }
 .chart svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
 .chart line, .chart polyline { vector-effect:non-scaling-stroke; }
