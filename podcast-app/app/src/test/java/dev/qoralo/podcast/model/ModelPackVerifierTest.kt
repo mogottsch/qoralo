@@ -134,6 +134,81 @@ class ModelPackVerifierTest {
         assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
     }
 
+    @Test fun preflightMatchesFullVerificationForIntactGemma() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        val verifier = ModelPackVerifier()
+        assertEquals(verifier.verifyFully(pack.root, pack.requirement), verifier.checkForUse(pack.root, pack.requirement))
+    }
+
+    @Test fun preflightSkipsPayloadDigestsButFullVerificationCatchesSameSizeCorruption() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        val file = File(pack.root, "models/gemma-4-e2b.litertlm")
+        file.writeBytes(ByteArray(file.length().toInt()) { 'X'.code.toByte() })
+        val verifier = ModelPackVerifier()
+        val checked = verifier.checkForUse(pack.root, pack.requirement)
+        val expected = JSONObject(File(pack.root, "manifest.json").readText()).getJSONArray("files").getJSONObject(0).getString("sha256")
+        assertEquals(expected, checked.files.first().sha256)
+        assertThrows(ModelPackException.Integrity::class.java) { verifier.verifyFully(pack.root, pack.requirement) }
+        assertThrows(ModelPackException.Integrity::class.java) { verifier.verify(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightRejectsMissingPayload() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        assertTrue(File(pack.root, "models/tokenizer.model").delete())
+        assertThrows(ModelPackException.Missing::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightRejectsWrongSize() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        File(pack.root, "models/gemma-4-e2b.litertlm").appendText("extra")
+        assertThrows(ModelPackException.Integrity::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightStillHashesTheManifestEveryTime() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        val verifier = ModelPackVerifier()
+        verifier.checkForUse(pack.root, pack.requirement)
+        File(pack.root, "manifest.json").appendText(" ")
+        assertThrows(ModelPackException.Integrity::class.java) { verifier.checkForUse(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightRejectsUnpinnedManifest() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        assertThrows(ModelPackException.Missing::class.java) {
+            ModelPackVerifier().checkForUse(pack.root, pack.requirement.copy(pinnedManifestSha256 = ""))
+        }
+    }
+
+    @Test fun preflightRejectsInvalidContractEvenWhenPinned() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU) { it.getJSONObject("contract").put("contextTokens", 4096) }
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightRejectsUnsafePathsAndSymlinks() {
+        val unsafe = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU) { it.getJSONArray("files").getJSONObject(0).put("path", "../escape") }
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(unsafe.root, unsafe.requirement) }
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        val file = File(pack.root, "models/tokenizer.model")
+        val outside = temporaryFolder.newFile("outside-preflight").apply { writeText(file.readText()) }
+        assertTrue(file.delete())
+        Files.createSymbolicLink(file.toPath(), outside.toPath())
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightRejectsUnlistedFiles() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
+        File(pack.root, "extra.bin").writeText("extra")
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+    }
+
+    @Test fun preflightCannotWeakenSupertonicVerification() {
+        val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().checkForUse(pack.root, pack.requirement) }
+        val file = File(pack.root, "assets/config.json")
+        file.writeBytes(ByteArray(file.length().toInt()) { 'X'.code.toByte() })
+        assertThrows(ModelPackException.Integrity::class.java) { ModelPackVerifier().verifyFully(pack.root, pack.requirement) }
+    }
+
     private lateinit var manifestRoot: File
 
     private fun pack(route: ModelRoute, mutate: (JSONObject) -> Unit = {}): PackFixture {

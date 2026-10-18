@@ -34,7 +34,7 @@ class GenerationCoordinator(
         managedJob(episodeId, jobId, JobKind.SCRIPT) { generateScriptImpl(episodeId, jobId, progress) }
 
     private suspend fun generateScriptImpl(episodeId: String, jobId: String, progress: suspend (String) -> Unit): String? {
-        repository.claimJob(episodeId, jobId, JobKind.SCRIPT, "Verifying Gemma 4 E2B")
+        repository.claimJob(episodeId, jobId, JobKind.SCRIPT, "Preparing Gemma 4 E2B")
         val pack = loadPack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         val episode = repository.episode(episodeId)
         val sources = repository.sourceMaterials(episodeId)
@@ -83,7 +83,7 @@ class GenerationCoordinator(
         managedJob(episodeId, jobId, JobKind.AGENT_EDIT) { editDraftImpl(episodeId, jobId, progress) }
 
     private suspend fun editDraftImpl(episodeId: String, jobId: String, progress: suspend (String) -> Unit) {
-        val claim = repository.claimJob(episodeId, jobId, JobKind.AGENT_EDIT, "Verifying Gemma 4 E2B")
+        val claim = repository.claimJob(episodeId, jobId, JobKind.AGENT_EDIT, "Preparing Gemma 4 E2B")
         val pack = loadPack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         val (revision, chapters) = repository.activeRevision(episodeId)
         val userRequest = requireNotNull(claim.message) { "Agent request is missing" }
@@ -233,7 +233,10 @@ class GenerationCoordinator(
             ModelRoute.GEMMA_4_E2B_LITERT_GPU -> Triple("gemma-4-e2b", "gemma-4-e2b", BuildConfig.GEMMA_MANIFEST_SHA256)
             ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> Triple(BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_MANIFEST_SHA256)
         }
-        return verifier.verify(artifacts.modelPackRoot(directory), ModelPackRequirement(route, id, hash))
+        val root = artifacts.modelPackRoot(directory)
+        val requirement = ModelPackRequirement(route, id, hash)
+        return if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) verifier.checkForUse(root, requirement)
+        else verifier.verifyFully(root, requirement)
     }
 
 }
