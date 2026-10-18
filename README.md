@@ -37,15 +37,15 @@ A clone alone is not a runnable neural deployment. Model weights, prepared conte
 The links above open **HTML source on GitHub**, not hosted pages. No public article destination has been chosen. After cloning, serve the repository root:
 
 ```bash
-python3 -m http.server 8766 --bind 127.0.0.1
+python3 docs/qoralo-blog/tools/serve.py 8766
 ```
 
-Then open:
+Use this small server instead of `python3 -m http.server`: Python's built-in one cannot answer HTTP range requests, so you could not seek in the article's video or in any audio player. It serves the repository root on 127.0.0.1 only. Then open:
 
-- **[Visual article draft](http://127.0.0.1:8766/docs/qoralo-blog/)**: the private visual write-up. Moritz is still revising its prose.
+- **[Visual article draft](http://127.0.0.1:8766/docs/qoralo-blog/)**: the visual write-up, an unpublished draft that Moritz is still revising. It ends with a screen-recorded demo and one full episode, both made by the current app on the phone.
 - **[Presentation](http://127.0.0.1:8766/docs/presentation/)**: the model choices, GPU/NPU architecture and speech deployment work, with optional technical detail.
 
-Keep the repository's relative files together so diagrams, recordings and evidence links resolve. Any audio on those pages is labelled experimental evidence, not a current-app demo.
+Keep the repository's relative files together so diagrams, recordings and evidence links resolve. The two Pocket TTS clips in the article and the audio in the presentation are labelled historical experiment recordings, not output of the current app; the article's demo video and full episode are from the current app.
 
 ## Research and evidence
 

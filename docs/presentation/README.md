@@ -5,10 +5,10 @@ Open [`index.html`](index.html) directly in a modern browser. CSS, JavaScript an
 For a local preview, from the repository root:
 
 ```bash
-python3 -m http.server 8766 --bind 127.0.0.1
+python3 docs/qoralo-blog/tools/serve.py 8766
 ```
 
-Visit <http://localhost:8766/docs/presentation/>. Serve the repository root so the notes can open both `docs/` pages and the reconstruction's relative experiment/app evidence links. The deck still works directly from `index.html` without a server.
+Visit <http://localhost:8766/docs/presentation/>. Use this server rather than `python3 -m http.server`: Python's built-in one cannot answer HTTP range requests, so the two audio players could not seek. Serve the repository root so the notes can open both `docs/` pages and the reconstruction's relative experiment/app evidence links. The deck still works directly from `index.html` without a server.
 
 ## The seven-slide main story, with optional details
 
