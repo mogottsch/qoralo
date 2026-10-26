@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "status": "generated_not_listening_reviewed",
+  "human_listening_accepted": false,
+  "scope": "Host CPU listening samples only. No phone, S23, NPU or speed comparison claim.",
+  "generated_utc": "2026-10-26T19:20:03.560673+00:00",
+  "qoralo_base_commit": "07b197580a73411019fbb291eb16b4ffafacbca8",
+  "model": {
+    "repo_id": "Supertone/supertonic-3",
+    "revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "files": [
+      {
+        "path": "LICENSE",
+        "sha256": "0d944a9110fed9a9602d60e0423a272903e7bd21ab060490774efc77c2275e9f",
+        "bytes": 15007
+      },
+      {
+        "path": "README.md",
+        "sha256": "168fda97edbd2a80167b105ff4a3b62a169bc93fe2611b3a5d04ecf983f62438",
+        "bytes": 5390
+      },
+      {
+        "path": "onnx/duration_predictor.onnx",
+        "sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db",
+        "bytes": 3700147
+      },
+      {
+        "path": "onnx/text_encoder.onnx",
+        "sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff",
+        "bytes": 36416150
+      },
+      {
+        "path": "onnx/tts.json",
+        "sha256": "42078d3aef1cd43ab43021f3c54f47d2d75ceb4e75f627f118890128b06a0d09",
+        "bytes": 8253
+      },
+      {
+        "path": "onnx/unicode_indexer.json",
+        "sha256": "9bf7346e43883a81f8645c81224f786d43c5b57f3641f6e7671a7d6c493cb24f",
+        "bytes": 277676
+      },
+      {
+        "path": "onnx/vector_estimator.onnx",
+        "sha256": "883ac868ea0275ef0e991524dc64f16b3c0376efd7c320af6b53f5b780d7c61c",
+        "bytes": 256534781
+      },
+      {
+        "path": "onnx/vocoder.onnx",
+        "sha256": "085de76dd8e8d5836d6ca66826601f615939218f90e519f70ee8a36ed2a4c4ba",
+        "bytes": 101424195
+      },
+      {
+        "path": "voice_styles/M1.json",
+        "sha256": "e35604687f5d23694b8e91593a93eec0e4eca6c0b02bb8ed69139ab2ea6b0a5b",
+        "bytes": 291748
+      }
+    ]
+  },
+  "runtime": {
+    "package": "supertonic",
+    "version": "1.3.1",
+    "providers": {
+      "dp_ort": [
+        "CPUExecutionProvider"
+      ],
+      "text_enc_ort": [
+        "CPUExecutionProvider"
+      ],
+      "vector_est_ort": [
+        "CPUExecutionProvider"
+      ],
+      "vocoder_ort": [
+        "CPUExecutionProvider"
+      ]
+    },
+    "source_commit": "908a56486e821e833a80530ff0cae3ad0b046fce"
+  },
+  "settings": {
+    "voice": "M1/SID5",
+    "voice_asset": "voice_styles/M1.json",
+    "language": "en",
+    "steps": 8,
+    "speed": 1.05,
+    "max_chunk_length": 300,
+    "silence_duration": 0.3,
+    "gap_frames": 13230,
+    "rng": "NumPy legacy MT19937 np.random.randn cast float32",
+    "seed_per_case": 20260911,
+    "wave_extent": "FULL_NATIVE_VOCODER",
+    "intra_op_threads": 1,
+    "inter_op_threads": 1,
+    "precision": "original dynamic FP32 ONNX; not QNN app contexts"
+  },
+  "python": "3.11.17 (main, Oct 21 2026, 17:46:53) [Clang 23.1.3 ]",
+  "platform": "Linux-5.15.0-185-generic-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "dependencies": {
+    "supertonic": "1.3.1",
+    "requests": "2.34.2",
+    "soundfile": "0.13.1",
+    "iniconfig": "2.3.1",
+    "numpy": "2.3.5",
+    "flatbuffers": "25.12.19",
+    "filelock": "4.2.4",
+    "packaging": "26.3",
+    "pycparser": "3.12",
+    "pluggy": "1.7.0",
+    "fsspec": "2026.9.0",
+    "ptts": "0.4.2",
+    "protobuf": "7.36.2",
+    "pytest": "9.0.2",
+    "certifi": "2026.10.23",
+    "cffi": "2.1.1",
+    "typing_extensions": "4.16.0",
+    "charset-normalizer": "3.5.2",
+    "urllib3": "2.8.0",
+    "idna": "3.20",
+    "hf-xet": "1.7.0",
+    "pyyaml": "6.0.3",
+    "pygments": "2.21.0",
+    "tqdm": "4.70.1",
+    "onnxruntime": "1.27.0",
+    "huggingface-hub": "0.36.0"
+  },
+  "libsndfile": "1.2.2",
+  "runtime_source_files": [
+    {
+      "file": "config.py",
+      "sha256": "9684abef9023d305b87d8b511a5c955624f5b7a92c76b57aa8b3e06f8e18ce2e"
+    },
+    {
+      "file": "core.py",
+      "sha256": "26664d490509edc1cc1feca2fc0f72b1ae067fd5c5b11d39c1daeba9c3e81ff4"
+    },
+    {
+      "file": "pipeline.py",
+      "sha256": "13b16fb8556632b5985f8ba1e961096ca1ad921d01aed171972dd106df51a7cd"
+    },
+    {
+      "file": "utils.py",
+      "sha256": "8bf2e0a14783de9266edba1135597e6b77b143907e445b08dcc45f694ff51ed3"
+    },
+    {
+      "file": "loader.py",
+      "sha256": "9478b085ccae88fd44849a87d8a55d0ddada03e4fbb7f47f1707f04ac06e621f"
+    },
+    {
+      "file": "__init__.py",
+      "sha256": "98bc280f4cb2c475d3f8a9c790cadddc0f5b6d6b04411180e867d3a7e6f3bc18"
+    }
+  ],
+  "recipe_sources": {
+    "generate.py": "c65969c64e0c00ccca5cb065de01fe3153142720ed2b2d6afbd1a752580a8842",
+    "comparison.py": "88c5ea5a0acbf061bf6d78d8cfec9248892ba80256d6f0f0228f714e97e5ba58",
+    "requirements.lock": "37fbefb1c6c5eba111d70af6cf573663e5cbbdd24aa0e0cb25162bfff063381f",
+    "inputs.json": "92f1730317b866d17a67f833069f822313ffcca30d7e116b6b4d76032162738f"
+  },
+  "load_wall_seconds_diagnostic_only": 0.6491665709763765,
+  "samples": [
+    {
+      "id": "canonical",
+      "input_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+      "input_utf8_bytes": 226,
+      "frontend": {
+        "raw_chunks": [
+          "Welcome to our small studio, where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning, and what makes a conversation feel genuinely alive."
+        ],
+        "processed_chunks": [
+          "<en>Welcome to our small studio, where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning, and what makes a conversation feel genuinely alive.</en>"
+        ],
+        "text_extents": [
+          235
+        ]
+      },
+      "native": {
+        "sha256": "b2b8694fa53391a50fcb65d52e7ad65c45a8c00ded2608b5c56af7a5d5961f28",
+        "pcm_f32le_sha256": "c20d41eed8bcf3bdfae6f11db467285cff77c64f85e8830cede45e2646002589",
+        "frames": 666624,
+        "sample_rate": 44100,
+        "channels": 1,
+        "subtype": "FLOAT",
+        "duration_seconds": 15.116190476190477,
+        "finite": true,
+        "peak": 0.44711166620254517,
+        "rms": 0.051066140360829716,
+        "samples_at_or_above_full_scale": 0,
+        "path": "samples/supertonic/canonical.native.wav"
+      },
+      "playable": {
+        "sha256": "e0d5c99e80ee04a79a3f23fa123a7cf537de4126e579fce3ca6f66d88f43354e",
+        "subtype": "PCM_16",
+        "gain": 1.0,
+        "processing": "libsndfile float32 to PCM16 only; no dither, normalization, trimming, resampling or time manipulation",
+        "path": "samples/supertonic/canonical.wav"
+      },
+      "sdk_predicted_duration_seconds_not_emitted_extent": 15.107015609741211,
+      "generation_wall_seconds_diagnostic_only": 5.876292271539569
+    },
+    {
+      "id": "conversation",
+      "input_sha256": "2b5369f050972bc21a85a9abc84e4ab48962a381f187227b18936778efe7671d",
+      "input_utf8_bytes": 323,
+      "frontend": {
+        "raw_chunks": [
+          "Welcome back. Have you ever noticed how a tiny pause can change a whole conversation? I used to think a good answer had to arrive immediately. Then a friend asked me to wait, just for a moment, before replying. The silence felt awkward at first, but it gave us both room to think.",
+          "Today, let's try that experiment together."
+        ],
+        "processed_chunks": [
+          "<en>Welcome back. Have you ever noticed how a tiny pause can change a whole conversation? I used to think a good answer had to arrive immediately. Then a friend asked me to wait, just for a moment, before replying. The silence felt awkward at first, but it gave us both room to think.</en>",
+          "<en>Today, let's try that experiment together.</en>"
+        ],
+        "text_extents": [
+          289,
+          51
+        ]
+      },
+      "native": {
+        "sha256": "91e257d0fe31e7b6eddbb754b9a9d8ce76df93d1a8d39ce044cce0dc33dc1b33",
+        "pcm_f32le_sha256": "65941f3911561ab0fc5e078eff7daf0ac2b02e822bb66746190c1096d11e81c5",
+        "frames": 931758,
+        "sample_rate": 44100,
+        "channels": 1,
+        "subtype": "FLOAT",
+        "duration_seconds": 21.12829931972789,
+        "finite": true,
+        "peak": 0.525655210018158,
+        "rms": 0.05489032890307868,
+        "samples_at_or_above_full_scale": 0,
+        "path": "samples/supertonic/conversation.native.wav"
+      },
+      "playable": {
+        "sha256": "03ce99d8be9be6c7a19a6c4122671390c88bc1e9e97f9083fad981de0190e66b",
+        "subtype": "PCM_16",
+        "gain": 1.0,
+        "processing": "libsndfile float32 to PCM16 only; no dither, normalization, trimming, resampling or time manipulation",
+        "path": "samples/supertonic/conversation.wav"
+      },
+      "sdk_predicted_duration_seconds_not_emitted_extent": 21.02553939819336,
+      "generation_wall_seconds_diagnostic_only": 7.708781711757183
+    },
+    {
+      "id": "structured",
+      "input_sha256": "fb70bdeb4d765884d3ce469376e3ea3ec1bb19f95ef815beb0634b32705efbf1",
+      "input_utf8_bytes": 252,
+      "frontend": {
+        "raw_chunks": [
+          "On Oct. 26, 2026, Dr. Lee reviewed the CPU report at 9:30 a.m. Version 3.1 used 128 MB of RAM and completed 42 tasks. The total was $19.95, including a 7.5% fee. Please send item No. 24 to the U.S. office by Nov. 5, 2026. The reference code is AB-2048."
+        ],
+        "processed_chunks": [
+          "<en>On Oct. 26, 2026, Dr. Lee reviewed the CPU report at 9:30 a.m. Version 3.1 used 128 MB of RAM and completed 42 tasks. The total was $19.95, including a 7.5% fee. Please send item No. 24 to the U.S. office by Nov. 5, 2026. The reference code is AB-2048.</en>"
+        ],
+        "text_extents": [
+          261
+        ]
+      },
+      "native": {
+        "sha256": "fd7904410f3672483952eb98e2229f602365af5df96568b7856491d98b56ec15",
+        "pcm_f32le_sha256": "95e6f1fa1ad64dd057af2ae8433901fee87f5551a4427c87e063d999c2dd38fd",
+        "frames": 1127424,
+        "sample_rate": 44100,
+        "channels": 1,
+        "subtype": "FLOAT",
+        "duration_seconds": 25.56517006802721,
+        "finite": true,
+        "peak": 0.5133025050163269,
+        "rms": 0.05276277028482917,
+        "samples_at_or_above_full_scale": 0,
+        "path": "samples/supertonic/structured.native.wav"
+      },
+      "playable": {
+        "sha256": "9260582b609ce0b97133a799434b8b15bd8a04b18022c231e59e955e56fe777d",
+        "subtype": "PCM_16",
+        "gain": 1.0,
+        "processing": "libsndfile float32 to PCM16 only; no dither, normalization, trimming, resampling or time manipulation",
+        "path": "samples/supertonic/structured.wav"
+      },
+      "sdk_predicted_duration_seconds_not_emitted_extent": 25.513813018798828,
+      "generation_wall_seconds_diagnostic_only": 9.134193543344736
+    }
+  ]
+}

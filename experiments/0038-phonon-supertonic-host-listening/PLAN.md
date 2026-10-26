@@ -1,0 +1,8 @@
+# Bounded host listening comparison
+
+1. Inspect current main app authority and experiment 0037. Freeze three original/public inputs, model revisions and isolated runtime dependencies. Use Supertonic 1.3.1, original FP32 weights at 724fb5abbf5502583fb520898d45929e62f02c0b, M1/SID5, English, eight steps, speed 1.05, raw sentence grouping target 300, 0.3 s chunk gaps and full native vocoder extent. Use Phonon 31m q8 with its documented stock default voice and English normalization; record all exposed sampling defaults.
+2. Write tests before helpers. Implement bounded sequential CPU generation, fail-if-output-exists, native FLOAT WAV preservation and machine-readable provenance with hashes. Never normalize, trim, resample or time-stretch output. Preserve original model-produced arrays before playable encoding.
+3. Generate exactly three matched-text pairs: canonical-v2 repo benchmark, original conversational podcast passage, original structured-data passage. Verify independently with FFmpeg decoding/probing and finite/peak/frame/hash checks. Produce a static local HTML audition with labeled players and exact input text.
+4. Document licensing, app fidelity/deviations and unresolved human listening review. Review diff, run all helper tests and verifier, commit locally on experiment branch; do not push, deploy, change app backends or claim S23/NPU speed.
+
+The host SDK recipe can match app semantics but is not the app's QNN execution or its previously accepted WAV. Different stock speakers and model-native normalization are explicit confounds. Seed controls do not imply matched random inputs across architectures. Technical checks do not grant subjective acceptance.
