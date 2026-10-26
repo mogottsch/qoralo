@@ -60,10 +60,10 @@ cp README.md .local/repro-01/README.md
 
 `generate.py` sequentially downloads only pinned, SHA-verified assets under ignored `.local/models/`. It enforces the dependency versions and Python 3.11, bounds each invocation by a 30-minute alarm, keeps CPU tensor/ORT threads at one and refuses existing sample directories. Run models in separate sequential processes. No PyTorch/GPU dependency was necessary. Versions and hashes pin the recipe, but cross-machine bit-for-bit model inference is not promised; compare actual new PCM/file hashes rather than assuming equal seeds prove equality. FLOAT WAV metadata may also vary independently of identical PCM.
 
-Open `index.html` directly, or serve the experiment locally with `python3 -m http.server 8765 --bind 127.0.0.1` and visit `http://127.0.0.1:8765/`. Nothing is pushed, hosted publicly, deployed or changed in the app backend by this experiment.
+Open `index.html` directly, or serve the experiment locally with `python3 -m http.server 8765 --bind 127.0.0.1` and visit `http://127.0.0.1:8765/`. The experiment is published as repository data only. No separately hosted comparison or app-backend deployment is performed.
 
 ## Source/output licensing
 
 See [LICENSES.md](LICENSES.md). Phonon **31m** weights/tokenizer/default voice are Apache-2.0 (not the NC 40m model); its separate runtime is MIT OR Apache-2.0. Supertonic-3 weights/preset voice are OpenRAIL-M; its Python SDK is MIT. The pinned OpenRAIL-M license’s **section 6** says the licensor claims no rights in generated output except the license’s conditions; output use cannot contravene the license. Its Attachment A(e) requires an intelligible machine-generated disclosure, present on this page and audition. These benign original text-to-speech listening samples may be distributed with those notices; they are outputs, not weights or a derivative model. No claim that all audio/model rights become Apache-2.0 merely because the Qoralo app is Apache-2.0, no voice impersonation, and no endorsement by either provider.
 
-**Remaining review:** human listening to these exact hashes and independent code/artifact review before any publication. Numerical checks and browser playback are not human acceptance.
+**Independent code/artifact review passed:** 10 tests, all twelve WAVs and six browser players rechecked with no important defects. **Remaining review:** human listening to these exact hashes. Numerical checks and browser playback are not human acceptance.
